@@ -1,0 +1,39 @@
+class Elm_File_Icon (Elm_Layout)
+{
+   eo_prefix: elm_obj_file_icon;
+   data: Elm_File_Icon_Data;
+   properties {
+      fm_monitor_file {
+        set {
+
+        }
+        get {
+
+        }
+        values {
+          FM_Monitor_File *file;
+        }
+      }
+   }
+   methods {
+      fill_sample {
+        params {
+          @in const(char) **group;
+          @in const(char) **file;
+        }
+      }
+      mime_ready {
+
+      }
+   }
+   implements {
+     Evas.Object_Smart.del;
+     Evas.Object_Smart.add;
+     Evas.Object_Smart.resize;
+   }
+   events {
+     name,changed;
+     edit,start;
+     edit,done;
+   }
+}

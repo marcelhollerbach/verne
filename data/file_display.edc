@@ -1,0 +1,317 @@
+collections {
+   #define FONT_SIZE 15
+   images {
+      image: "diagonal_stripes.png" COMP;
+      image: "outline_glow.png" COMP;
+      image: "icon_arrow_right.png" COMP;
+   }
+   group{ name: "elm/file_display/file_preview/default";
+      parts {
+         part { name: "base";
+            type: RECT;
+            description { state: "default" 0.0;
+               color: 0 0 0 0;
+            }
+         }
+         part { name: "thumb";
+            type: SWALLOW;
+            description { state: "default" 0.0;
+               aspect: 1.0 1.0;
+               rel1.to: "base";
+               rel1.relative: 0.0 0.0;
+               rel2.to: "base";
+               rel2.relative: 1.0 0.0;
+               align: 0.5 0.0;
+               fixed: 1 1;
+            }
+         }
+         part { name: "content";
+            type: SWALLOW;
+            description { state: "default" 0.0;
+               rel1.to_y: "thumb";
+               rel1.to_x: "base";
+               rel1.relative: 0.0 1.0;
+               rel2.to: "base";
+               color: 0 0 0 0;
+            }
+         }
+      }
+   }
+   group{ name: "elm/file_display/file_text_preview/default";
+      parts {
+         part { name: "base";
+            type: RECT;
+            description { state: "default" 0.0;
+               aspect: 1.0 1.0;
+               align: 0.0 0.0;
+            }
+         }
+         part { name: "content";
+            type: SWALLOW;
+            description { state: "default" 0.0;
+               rel1.to: "base";
+               rel2.relative: 1.0 1.0;
+               rel2.to: "base";
+            }
+         }
+      }
+    }
+   group { name: "elm/file_display/base/default";
+      parts {
+         part { name: "base";
+            type: RECT;
+            description { state: "default" 0.0;
+            }
+         }
+         part { name: "bookmark_holder";
+            clip_to: "base";
+            
+            type: RECT;
+            description { state: "default" 0.0;
+               rel2.relative: 0.0 1.0;
+               rel2.offset: 200 0.0;
+               color: 0 0 0 0;
+            }
+            description { state: "hidden" 0.0;
+               inherit: "default";
+               rel2.offset: 20 0.0;
+               rel1.offset: -180 0.0;
+            }
+            description { state: "invisible" 0.0;
+               inherit: "default";
+               rel1.relative: 0.0 0.0;
+               rel1.offset: -200 0.0;
+               rel2.relative: 0.0 1.0;
+               rel2.offset: -2 0;
+            }
+         }
+         part { name: "bookmark_sign";
+            clip_to: "base";
+            description { state: "default" 0.0;
+               image.normal: "icon_arrow_right.png";
+               rel1.to: "bookmark_holder";
+               rel1.relative: 1.0 0.5;
+               rel1.offset: -20 -10;
+               rel2.to: "bookmark_holder";
+               rel2.relative: 1.0 0.5;
+               rel2.offset: 0 10;
+               map {
+                  on: 1;
+                  perspective_on: 1;
+                  rotation {
+                     z: 180;
+                  }
+               }
+            }
+            description { state: "hidden" 0.0;
+               inherit: "default" 0.0;
+               map {
+                  rotation {
+                     z: 0;
+                  }
+               }
+            }
+         }
+         part { name: "bookmark";
+            clip_to: "base";
+            type: SWALLOW;
+            description { state: "default" 0.0;
+               rel1.to:"bookmark_holder";
+               rel2.to:"bookmark_holder";
+               rel2.to_x:"bookmark_sign";
+               rel2.relative: 0.0 1.0;
+            }
+         }
+         part { name: "content";
+            clip_to: "base";
+            type: SWALLOW;
+            description { state: "default" 0.0;
+               rel1.to: "bookmark_holder";
+               rel1.relative: 1.0 0.0;
+               rel2.to: "filepreview_holder";
+               rel2.relative: 0.0 1.0;
+            }
+         }
+         part { name: "filepreview_holder";
+            clip_to: "base";
+            type: RECT;
+            description { state: "default" 0.0;
+               rel1.relative: 1.0 0.0;
+               rel1.offset: -200 0;
+               color: 0 0 0 0;
+            }
+            description { state: "hidden" 0.0;
+               inherit: "default" 0.0;
+               rel1.offset: -20 0;
+               rel2.offset: 180 0;
+            }
+            description { state: "invisible" 0.0;
+               inherit: "default";
+               rel1.relative: 1.0 0.0;
+               rel2.relative: 1.0 1.0;
+               rel2.offset: 200 0;
+               rel1.offset: 0 0;
+            }
+         }
+         part { name: "filepreview_sign";
+            clip_to: "base";
+            description { state: "default" 0.0;
+               rel1.to: "filepreview_holder";
+               rel1.offset: 0 -10;
+               rel1.relative: 0.0 0.5;
+               rel2.to: "filepreview_holder";
+               rel2.offset: 20 10;
+               rel2.relative: 0.0 0.5;
+               image.normal: "icon_arrow_right.png";
+	       map {
+                  on: 1;
+                  perspective_on: 1;
+                  rotation {
+                     z: 0;
+                  }
+               }
+            }
+            description { state: "hidden" 0.0;
+               inherit: "default" 0.0;
+               map {
+                  rotation {
+                     z: 180;
+                  }
+               }
+            }
+         }
+         part { name: "filepreview";
+            clip_to: "base";
+            type: SWALLOW;
+            description { state: "default" 0.0;
+               rel1.to_x: "filepreview_sign";
+               rel1.to_y: "filepreview_holder";
+               rel1.relative: 1.0 0.0;
+               rel2.to: "filepreview_holder";
+               rel2.relative: 1.0 1.0;
+            }
+         }
+      }
+      programs {
+         program { name: "inwi";
+            signal: "mouse,clicked,1";
+            source: "bookmark_sign";
+            filter: "bookmark_sign" "default";
+            transition: LINEAR 0.2;
+            action: STATE_SET "hidden" 0.0;
+            target: "bookmark_sign";
+            target: "bookmark_holder";
+         }
+          program { name: "inwi2";
+            signal: "mouse,clicked,1";
+            source: "bookmark_sign";
+            filter: "bookmark_sign" "hidden";
+            transition: LINEAR 0.2;
+            action: STATE_SET "default" 0.0;
+            target: "bookmark_sign";
+            target: "bookmark_holder";
+         }
+          program { name: "inwif";
+            signal: "mouse,clicked,1";
+            source: "filepreview_sign";
+            filter: "filepreview_sign" "default";
+            transition: LINEAR 0.2;
+            action: STATE_SET "hidden" 0.0;
+            target: "filepreview_sign";
+            target: "filepreview_holder";
+         }
+          program { name: "inwif2";
+            signal: "mouse,clicked,1";
+            source: "filepreview_sign";
+            filter: "filepreview_sign" "hidden";
+            transition: LINEAR 0.2;
+            action: STATE_SET "default" 0.0;
+            target: "filepreview_sign";
+            target: "filepreview_holder";
+         }
+         program {
+            signal: "filepreview,invisible";
+            source: "elm";
+            action: STATE_SET "invisible" 0.0;
+            target: filepreview_holder;
+         }
+         program {
+            signal: "filepreview,visible";
+            source: "elm";
+            action: STATE_SET "default" 0.0;
+            target: filepreview_holder;
+         }
+         program {
+            signal: "bookmark,invisible";
+            source: "elm";
+            action: STATE_SET "invisible" 0.0;
+            target: bookmark_holder;
+         }
+         program {
+            signal: "bookmark,visible";
+            source: "elm";
+            action: STATE_SET "default" 0.0;
+            target: bookmark_holder;
+         }
+      }
+   }
+   group { name: "elm/file_display/selection/default";
+      parts {
+         part { name: "outline";
+            description { state: "default" 0.0;
+               image {
+                  normal: "outline_glow.png";
+                  border: 2 2 2 2;
+               }
+            }
+         }
+         part { name: "logo";
+            type: IMAGE;
+            description { state: "default" 0.0;
+               color: 255 255 255 25;
+               image {
+                   normal: "diagonal_stripes.png";
+               }
+                fill {
+                   size {
+                      relative: 0.0 0.0;
+                      offset: 240 240;
+                  }
+               }
+            }
+         }
+      }
+   }
+   group { name: "elm/file_display/drag_icon/default";
+      parts {
+         part { name: "img1";
+            type: SWALLOW;
+         }
+         part { name: "img2";
+            type: SWALLOW;
+            description { state: "default" 0.0;
+               color: 0 0 0 100;
+               map {
+                  on: 1;
+                  perspective_on: 1;
+                  rotation {
+                     z: 15;
+                  }
+               }
+            }
+         }
+         part { name: "img3";
+            type: SWALLOW;
+            description { state: "default" 0.0;
+               color: 0 0 0 200;
+               map {
+                  on: 1;
+                  perspective_on: 1;
+                  rotation {
+                     z: -15;
+                  }
+               }
+            }
+         }
+     }
+}

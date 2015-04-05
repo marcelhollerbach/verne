@@ -1,0 +1,126 @@
+class Elm_File_Display (Elm_Layout, Efl.File)
+{
+   eo_prefix: elm_obj_file_display;
+   properties {
+      bookmark_show {
+         get {
+
+         }
+         set {
+
+         }
+         values {
+            Eina_Bool bookmark;
+         }
+      }
+      filepreview_show {
+         get {
+
+         }
+         set {
+
+         }
+         values {
+            Eina_Bool filepreview;
+         }
+      }
+      views {
+         get {
+
+         }
+         values {
+            Eina_List *views;
+         }
+      }
+      view {
+         /*@ impl me */
+         set {
+
+         }
+         get {
+
+         }
+         values {
+            const(char) *t;
+         }
+      }
+      show_icon_size {
+         /*@ impl me */
+         set {
+
+         }
+         get {
+
+         }
+         values {
+            int size;
+         }
+      }
+      show_hidden_file {
+         /*@ impl me */
+         set {
+
+         }
+         get {
+
+         }
+         values {
+            Eina_Bool hidden;
+         }
+      }
+      sort_type {
+         /*@ impl me */
+         set {
+
+         }
+         get {
+
+         }
+         values {
+            Elm_File_Display_Sort_Type t;
+         }
+      }
+      folder_placement {
+         set {
+
+         }
+         get {
+
+         }
+         values {
+            Elm_File_Display_Folder_Placement t;
+         }
+      }
+      reverse_sort {
+         set {
+
+         }
+         get {
+
+         }
+         values {
+            Eina_Bool b;
+         }
+      }
+   }
+
+   implements {
+      Eo.Base.constructor;
+      Eo.Base.destructor;
+      Evas.Object_Smart.add;
+      Evas.Object_Smart.show;
+      Evas.Object_Smart.hide;
+      Efl.File.file.set;
+      Efl.File.file.get;
+   }
+   events {
+      path,changed;
+      item,selected;
+      item,choosen;
+      dnd,drop,target,item;
+      hook,menu,selector,start;
+      hook,menu,selector,end;
+      hook,menu,bookmarls,start;
+      hook,menu,bookmarks,end;
+   }
+}

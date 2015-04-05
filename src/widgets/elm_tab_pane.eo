@@ -1,0 +1,23 @@
+class Elm_Tab_Pane (Elm_Layout)
+{
+   eo_prefix: elm_obj_tab_pane;
+
+   methods {
+      item_add{
+        params {
+          @in Evas_Object *active;
+          @in Evas_Object *content;
+        }
+      }
+   }
+   implements {
+      Eo.Base.constructor;
+      Eo.Base.destructor;
+      Evas.Object_Smart.add;
+      Evas.Object_Smart.resize;
+   }
+   events {
+      item,add;
+      item,del;
+   }
+}

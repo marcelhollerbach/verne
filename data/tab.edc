@@ -1,0 +1,260 @@
+collections {
+   images {
+       image: "t4_active_r.png" COMP;
+       image: "t4_active_l.png" COMP;
+       image: "t4_active_m.png" COMP;
+       image: "t4_inactive_m.png" COMP;
+       image: "t4_inactive_r.png" COMP;
+       image: "t4_inactive_l.png" COMP;
+       image: "icon_arrow_left.png" COMP;
+       image: "icon_arrow_right.png" COMP;
+   }
+   group { name: "elm/tab_pane/add_item/default";
+      parts {
+         part { name: "base";
+            type: RECT;
+            description { state: "default" 0.0;
+            	aspect: 1 1;
+            	align: 0.0 1.0;
+            }
+         }
+         part { name: "add_x";
+            type: RECT;
+            description { state: "default" 0.0;
+               rel1.to: "base";
+               rel1.offset: 5 5;
+               rel2.to: "base";
+               rel2.offset: -5 -5;
+               color: 255 0 0 255;
+            }
+         }
+         programs {
+            program { name: "add_call";
+               source: "add_x";
+               signal: "mouse,clicked,1";
+               action: SIGNAL_EMIT "add" "w";
+            }
+         }
+      }
+   }
+   #define GAP 10
+   group { name: "elm/tab_pane/item/default";
+      parts {
+         part { name: "base"; type: RECT;
+            description { state: "default" 0.0;
+               //rel1.offset: 0 1;
+               //color: 0 0 0 0;
+            }
+         }
+         part { name: "content"; type: RECT;
+            description { state: "default" 0.0;
+               rel1.to: "base";
+               rel1.offset: 5 5;
+               rel2.to: "base";
+               rel2.offset: -5 0;
+               color: 50 50 50 255;
+            }
+            description { state: "inactive" 0.0;
+               inherit: "default" 0.0;
+               color: 100 100 100 255;
+            }
+         }
+         part { name: "elm.content";
+            type: SWALLOW;
+            description { state: "default" 0.0;
+               rel1.to: "content";
+               rel2.to: "close_x_place";
+               rel2.relative: 0.0 1.0;
+            }
+         }
+         part { name: "close_x_place";
+            type: RECT;
+            description { state: "default" 0.0;
+               rel1.to: "content";
+               rel1.relative: 1.0 0.0;
+               rel2.to: "content";
+               rel2.relative: 1.0 1.0;
+               rel1.offset: -20 0;
+               color: 0 0 0 0;
+            }
+            description { state: "close_active" 0.0;
+               inherit: "default" 0.0;
+            }
+        }
+         part { name: "close_x";
+            type: RECT;
+            description { state: "default" 0.0;
+               rel1.to: "close_x_place";
+               rel2.to: "close_x_place";
+               color: 255 0 0 255;
+            }
+            description { state: "hover" 0.0;
+               inherit: "default" 0.0;
+               color: 0 255 0 255;
+            }
+            description { state: "clicked" 0.0;
+               inherit: "default" 0.0;
+               color: 0 0 255 255;
+            }
+            description { state: "inactive" 0.0;
+               inherit: "default" 0.0;
+               visible: 0;
+            }
+         }
+         part { name: "event_rect";
+            type: RECT;
+            repeat_events: 1;
+            description { state: "default" 0.0;
+               rel1.to: "base";
+               rel2.to: "base";
+               color: 0 0 0 0;
+            }
+         }
+      }
+      programs {
+         program { name: "active_clicked";
+            source: "event_rect";
+            signal: "mouse,clicked,1";
+            action: SIGNAL_EMIT "selected" "w";
+         }
+         program { name: "active";
+            signal: "active";
+            source: "elm";
+            action: STATE_SET "default" 0.0;
+            target: "close_x";
+            target: "content";
+         }
+         program { name: "disable";
+            signal: "disable";
+            source: "elm";
+            action: STATE_SET "inactive" 0.0;
+            target: "close_x";
+            target: "content";
+         } 
+         program { name: "clicked";
+            source: "close_x";
+            signal: "mouse,down,1";
+            action: STATE_SET "clicked" 0.0;
+            target: "close_x";
+         }
+          program { name: "clicked1";
+            source: "close_x";
+            signal: "mouse,up,1";
+            action: STATE_SET "hover" 0.0;
+            target: "close_x";
+         }
+         program { name: "hover_in";
+            source: "close_x";
+            signal: "mouse,in";
+            action: STATE_SET "hover" 0.0;
+            target: "close_x";
+         }
+          program { name: "hover_out";
+            source: "close_x";
+            signal: "mouse,out";
+            action: STATE_SET "default" 0.0;
+            target: "close_x";
+         }
+         program { name: "close";
+            source: "close_x";
+            signal: "mouse,clicked,1";
+            action: SIGNAL_EMIT "close" "w";
+         }
+      }
+   }
+   group { name: "elm/tab_pane/base/default";
+      parts {
+         part { name: "base"; type: RECT;
+            description { state: "default" 0.0;
+               color: 0 0 0 0;
+            }
+         }
+         part { name: "tabs_bg"; type: RECT;
+            description { state: "default" 0.0;
+               rel1.to: "tabs_holder";
+               rel2.to: "tabs_holder";
+               color: 23 23 23 255;
+            }
+         }
+         part { name: "tabs_holder"; type: RECT;
+            description { state: "default" 0.0;
+               rel1.to_x: "base";
+               rel1.relative: 0.0 0.0;
+               rel2.to_x: "base";
+               rel2.relative: 1.0 0.0;
+               rel2.offset: 0 30;
+               color: 0 0 0 0;
+            }
+         }
+         part { name: "left_event_zone";
+            description { state: "default" 0.0;
+               rel1.to: "tabs_holder";
+               rel2.to: "tabs_holder";
+               rel2.relative: 0.0 1.0;
+               align: 0 0;
+               image.normal: "icon_arrow_left.png";
+            }
+            description { state: "scroll" 0.0;
+               inherit: "default" 0.0;
+               aspect: 1 1;
+            }
+         }
+          part { name: "right_event_zone";
+            description { state: "default" 0.0;
+               rel1.to: "tabs_holder";
+               rel1.relative: 1.0 0.0;
+               //rel1.offset: -30 0;
+               rel2.to: "tabs_holder";
+               rel2.relative: 1.0 1.0;
+               align: 1.0 0;
+               image.normal: "icon_arrow_right.png";
+            }   
+            description { state: "scroll" 0.0;
+               inherit: "default" 0.0;
+               aspect: 1 1;
+            }
+         }
+         part { name: "tabs"; type: SWALLOW;
+            description { state: "default" 0.0;
+               rel1.to: "left_event_zone";
+               rel1.relative: 1.0 0.0;
+               rel2.to: "right_event_zone";
+               rel2.relative: 0.0 1.0;
+            }
+         }
+         part { name: "content"; type: SWALLOW;
+            description { state: "default" 0.0;
+               rel1.to: "tabs_holder";
+               rel1.relative: 0.0 1.0;
+               rel2.to: "base";
+            }
+         }
+      }
+      programs {
+         program { name: "left";
+            source:"left_event_zone";
+            signal: "mouse,clicked,1";
+            action: SIGNAL_EMIT "scroll_left" "w";
+         }
+          program { name: "right";
+            source:"right_event_zone";
+            signal: "mouse,clicked,1";
+            action: SIGNAL_EMIT "scroll_right" "w";
+         }
+         program { name: "scrollable";
+            source: "elm";
+            signal: "scroll,show";
+            action: STATE_SET "scroll" 0.0;
+            target: "right_event_zone";
+            target: "left_event_zone";
+         }
+         program { name: "!scrollable";
+            source: "elm";
+            signal: "scroll,hide";
+            action: STATE_SET "default" 0.0;
+            target: "right_event_zone";
+            target: "left_event_zone";
+         }
+      }
+   }
+}

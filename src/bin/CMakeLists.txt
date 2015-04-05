@@ -1,0 +1,30 @@
+add_executable(efm efm.c)
+
+include_directories(
+  ${EINA_INCLUDE_DIRS}
+  ${EVAS_INCLUDE_DIRS}
+  ${EFL_INCLUDE_DIRS}
+  ${EIO_INCLUDE_DIRS}
+  ${EFREET_INCLUDE_DIRS}
+  ${ECORE_INCLUDE_DIRS}
+  ${ELEMENTARY_INCLUDE_DIRS}
+  ../lib/
+  ../widgets/
+  )
+
+target_link_libraries (efm
+   ${EINA_LIBRARIES}
+   ${EVAS_LIBRARIES}
+   ${EFL_LIBRARIES}
+   ${EIO_LIBRARIES}
+   ${EO_LIBRARIES}
+   ${EFREET_LIBRARIES}
+   ${ECORE_LIBRARIES}
+   ${ELEMENTARY_LIBRARIES}
+   widgets
+   efm_lib)
+
+set(THEME_PATH_DEFINITION THEME_PATH="$(CMAKE_BINARY_DIR)/data/")
+
+set_property(TARGET efm
+   PROPERTY COMPILE_DEFINITIONS ${THEME_PATH_DEFINITION})

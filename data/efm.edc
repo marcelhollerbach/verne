@@ -1,0 +1,71 @@
+collections{
+   images {
+      image: "icon_arrow_left.png" COMP;
+      image: "icon_arrow_right.png" COMP;
+      image: "icon_arrow_up.png" COMP;
+   }
+   group { name: "headbar";
+      parts {
+         part { name: "base"; type: RECT;
+            description { state: "default" 0.0;
+               color: 0 0 0 0;
+            }
+         }
+         part { name: "back";
+            description { state: "default" 0.0;
+               aspect: 1 1;
+               rel1.to: "base";
+               rel2.to: "base";
+               rel2.relative: 0.0 1.0;
+               align: 0.0 0.0;
+               image.normal: "icon_arrow_left.png";
+               fixed: 1 1;
+            }
+         }
+          part { name: "forward";
+            description { state: "default" 0.0;
+               aspect: 1 1;
+               rel1.to: "back";
+               rel1.relative: 1.0 0.0;
+               rel2.to: "back";
+               rel2.relative: 1.0 1.0;
+               align: 0.0 0.0;
+               image.normal: "icon_arrow_right.png";
+               fixed: 1 1;
+            }
+         }
+         part { name: "up";
+            description { state: "default" 0.0;
+               aspect: 1 1;
+               rel1.to: "forward";
+               rel1.relative: 1.0 0.0;
+               rel2.to: "forward";
+               rel2.relative: 1.0 1.0;
+               align: 0.0 0.0;
+               image.normal: "icon_arrow_up.png";
+               fixed: 1 1;
+            }
+         }
+         part { name: "content"; type: SWALLOW;
+            description { state: "default" 0.0;
+            	rel1.to: "up";
+	            rel1.relative: 1.0 0.0;
+               rel2.to: "up";
+	            rel2.relative: 1.0 1.0;
+               align: 0.0 0.0;
+            }
+         }
+         part { name: "spacer"; type: RECT;
+            description { state: "default" 0.0;
+               //color: 0 0 0 0;
+               aspect: 1 1;
+               rel1.to: "content";
+               rel1.relative: 1.0 0.0;
+               rel2.to: "base";
+               rel2.relative: 1.0 1.0;
+               align: 0.0 0.0;
+            }
+         }
+      }
+   }
+}

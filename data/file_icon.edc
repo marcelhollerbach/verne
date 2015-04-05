@@ -1,0 +1,71 @@
+collections {
+   group { name: "elm/file_icon/base/default";
+      parts {
+         part { name: "base";
+            type: RECT;
+            description { state: "default" 0.0;
+               color: 0 0 0 0;
+               align: 0.5 0.5;
+               //aspect: 1 1;
+            }
+         }
+         part { name: "content"; type: SWALLOW;
+            description { state: "default" 0.0;
+               rel1.to: "base";
+               rel1.relative: 0.0 0.0;
+               rel2.to: "base";
+               rel2.to_y: "text";
+               rel2.relative: 1.0 0.0;
+               //aspect: 1 1;
+               align: 0.5 1.0;
+            }
+         }
+          part { name: "text"; type: SWALLOW;
+            description { state: "default" 0.0;
+               color: 0 0 0 0;
+               rel1.to: "base";
+               rel1.relative: 0.0 1.0;
+               //rel1.offset: 0 -10;
+               rel2.to: "base";
+               rel2.relative: 1.0 1.0;
+               align: 0.5 1.0;
+               fixed: 1 1;
+            }
+         }
+         part { name: "edit_indicator"; type: RECT;
+            nomouse;
+            description { state: "default" 0.0;
+                rel1.to: "text";
+                rel2.to: "text";
+                color: 200 200 200 50;
+                visible: 0;
+            }
+            description { state: "visible" 0.0;
+               inherit: "default" 0.0;
+               visible: 1;
+            }
+         }
+        /* part { name: "text"; type: SWALLOW;
+            description { state: "default" 0.0;
+               rel1.to: "text_holder";
+               rel1.relative: 0.5 0.0;
+               rel2.to: "text_holder";
+               rel2.relative: 0.5 1.0;
+               fixed: 1 1;
+               align: 0.5 1.0;
+            }
+        }*/
+         programs {
+            program { name: "edit";
+               signal: "edit_start";
+               action: STATE_SET "visible" 0.0;
+               target: "edit_indicator";
+            }
+            program { name: "edit_done";
+               signal: "edit_done";
+               action: STATE_SET "default" 0.0;
+               target: "edit_indicator";
+            }
+        }
+   }
+}
