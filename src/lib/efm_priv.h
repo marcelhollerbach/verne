@@ -8,7 +8,7 @@
 #include <Ecore_File.h>
 #include <Efreet_Mime.h>
 
-struct _FM_Monitor
+struct _EFM_Monitor
 {
    const char *directory; //< The directory this monitor listens to
    Eio_Monitor *mon; //< The eio monitor which is started in the directory
@@ -29,7 +29,7 @@ struct _FM_Monitor
    Eina_Bool deletion_mark;
 };
 
-struct _FM_Monitor_File{
+struct _EFM_File{
   Eina_Bool exists; //< true if the file exists at the add event
   Eina_Bool writeable; //< true if the file is writeabke
   Eina_Bool dir; //< true if the file is a directory

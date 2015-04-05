@@ -3,7 +3,7 @@
 static Eina_List *lst;
 static Evas_Object *entry;
 
-static FM_Monitor_File*
+static EFM_File*
 debug_item_get(Evas_Object *ww EINA_UNUSED, int x, int y)
 {
    int x2, y2, w, h;

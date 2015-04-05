@@ -37,7 +37,7 @@ typedef struct
 typedef struct
 {
    /* should return a pointer or NULL if or if not a item is below this coord */
-   FM_Monitor_File* (*item_get)(Evas_Object *wid, int x, int y);
+   EFM_File* (*item_get)(Evas_Object *wid, int x, int y);
    /* should select the items within this region */
    void (*items_select)(Evas_Object *wid, int x1, int y1, int w, int h);
    /* should return a list of item which currently are selected*/
@@ -109,7 +109,7 @@ extern Elm_File_Display_View_Callbacks tree;
 
 //== calls which are just calling the cb of the view, but secure
 
-Evas_Object* icon_create(Evas_Object *par, FM_Monitor_File *file);
+Evas_Object* icon_create(Evas_Object *par, EFM_File *file);
 
 /*
  * helper functions to interact with the view
@@ -117,7 +117,7 @@ Evas_Object* icon_create(Evas_Object *par, FM_Monitor_File *file);
 void             view_call_dir_changed(Elm_File_Display_Data *pd, const char *path);
 Evas_Object*     view_call_obj_get(Elm_File_Display_Data *pd, Evas_Object *par);
 void             view_call_items_select(Elm_File_Display_Data *pd, int x1, int y1, int x2, int y2);
-FM_Monitor_File* view_call_item_get(Elm_File_Display_Data *pd, int x, int y);
+EFM_File* view_call_item_get(Elm_File_Display_Data *pd, int x, int y);
 Eina_List *      view_call_selectes_get(Elm_File_Display_Data *pd);
 Eina_Bool        view_call_selected_get(Elm_File_Display_Data *pd, int x, int y);
 
@@ -127,12 +127,12 @@ Eina_Bool        view_call_selected_get(Elm_File_Display_Data *pd, int x, int y)
  *
  * The events CHOOSEN and PATH_CHANGE will be called
  */
-void util_item_selected(Evas_Object *w, FM_Monitor_File *f);
+void util_item_selected(Evas_Object *w, EFM_File *f);
 
 /*
  *
  */
-void util_item_select(Evas_Object *w, FM_Monitor_File *f);
+void util_item_select(Evas_Object *w, EFM_File *f);
 
 /*
  * Helper function to add the bookmarklist
@@ -140,7 +140,7 @@ void util_item_select(Evas_Object *w, FM_Monitor_File *f);
 Evas_Object* bookmark_add(Evas_Object *w);
 
 
-void filepreview_file_set(Evas_Object *w, FM_Monitor_File *file);
+void filepreview_file_set(Evas_Object *w, EFM_File *file);
 Evas_Object* filepreview_add(Evas_Object *w);
 
 

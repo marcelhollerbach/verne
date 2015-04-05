@@ -9,7 +9,7 @@ const char* FILEENDINGS[] = {"tar", "zip", "tar.gz", NULL};
 const char *lasterror;
 
 Eina_Bool
-eio_fm_archive_file_supported(const char *fileending)
+efm_archive_file_supported(const char *fileending)
 {
    int i = 0;
 
@@ -24,7 +24,7 @@ eio_fm_archive_file_supported(const char *fileending)
 }
 
 Eina_Bool
-eio_fm_archive_file_extract(const char *file, const char *goal)
+efm_archive_file_extract(const char *file, const char *goal)
 {
    struct archive *a;
    struct archive *out;
@@ -89,7 +89,7 @@ eio_fm_archive_file_extract(const char *file, const char *goal)
 }
 
 const char*
-eio_fm_archive_lasterror_get(void)
+efm_archive_lasterror_get(void)
 {
    return lasterror;
 }

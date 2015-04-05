@@ -18,7 +18,7 @@ typedef enum{
 
 typedef struct{
    Evas_Object *menu;
-   FM_Monitor_File *file;
+   EFM_File *file;
 } Elm_File_Display_Menu_Hook_Event;
 
 #ifdef EFL_EO_API_SUPPORT

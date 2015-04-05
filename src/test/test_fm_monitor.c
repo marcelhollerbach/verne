@@ -4,10 +4,10 @@
 #include <Elementary.h>
 #include <Efm.h>
 
-static FM_Monitor *mon;
+static EFM_Monitor *mon;
 
 void
-add_cb(void *data EINA_UNUSED, FM_Monitor *mon EINA_UNUSED, FM_Monitor_File *icon)
+add_cb(void *data EINA_UNUSED, EFM_Monitor *mon EINA_UNUSED, EFM_File *icon)
 {
    printf("FILE PATH: %s\n", efm_file_path_get(icon));
    printf("FILE FILE %s\n", efm_file_filename_get(icon));
@@ -15,19 +15,19 @@ add_cb(void *data EINA_UNUSED, FM_Monitor *mon EINA_UNUSED, FM_Monitor_File *ico
 }
 
 void
-del_cb(void *data EINA_UNUSED, FM_Monitor *mon EINA_UNUSED, FM_Monitor_File *icon)
+del_cb(void *data EINA_UNUSED, EFM_Monitor *mon EINA_UNUSED, EFM_File *icon)
 {
    printf("DEL... %s\n", efm_file_path_get(icon));
 }
 
 void
-err_cb(void *data EINA_UNUSED, FM_Monitor *mon EINA_UNUSED)
+err_cb(void *data EINA_UNUSED, EFM_Monitor *mon EINA_UNUSED)
 {
    printf("ERR...\n");
 }
 
 void
-sdel_cb(void *data EINA_UNUSED, FM_Monitor *mon EINA_UNUSED)
+sdel_cb(void *data EINA_UNUSED, EFM_Monitor *mon EINA_UNUSED)
 {
    printf("SDEL...\n");
 }
@@ -58,7 +58,7 @@ del2(void *data EINA_UNUSED)
 int
 main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 {
-   FM_Monitor *fm;
+   EFM_Monitor *fm;
    fm_monitor_init();
 
    fm = fm_monitor_start("/home/marcel/", add_cb, del_cb, NULL,

@@ -1,7 +1,7 @@
 #include "elm_file_display_priv.h"
 //#include "../lib/eio_fm_priv.h"
 Evas_Object*
-icon_create(Evas_Object *par, FM_Monitor_File *file)
+icon_create(Evas_Object *par, EFM_File *file)
 {
    Evas_Object *ic;
    #if 1
@@ -37,7 +37,7 @@ view_call_items_select(Elm_File_Display_Data *pd, int x1, int y1, int x2, int y2
    pd->view->cb.items_select(pd->cached_view,x1, y1, x2, y2);
 }
 
-FM_Monitor_File*
+EFM_File*
 view_call_item_get(Elm_File_Display_Data *pd, int x, int y)
 {
    if (!pd->view->cb.item_get) return NULL;
@@ -54,7 +54,7 @@ view_call_selectes_get(Elm_File_Display_Data *pd)
 static int
 sort_name_func(const void *data1, const void *data2)
 {
-   FM_Monitor_File *f1 = ((FM_Monitor_File*)data1), *f2 = ((FM_Monitor_File*)data2);
+   EFM_File *f1 = ((EFM_File*)data1), *f2 = ((EFM_File*)data2);
    if (config->sort.type == SORT_TYPE_NAME)
      {
         const char *n1 = efm_file_filename_get(f1);
@@ -110,7 +110,7 @@ sort_name_func(const void *data1, const void *data2)
 int
 sort_func(const void *data1, const void *data2)
 {
-   FM_Monitor_File *f1, *f2;
+   EFM_File *f1, *f2;
    int mul;
 
    f1 = elm_object_item_data_get(data1);
@@ -150,7 +150,7 @@ sort_func(const void *data1, const void *data2)
 }
 
 void
-util_item_select(Evas_Object *w, FM_Monitor_File *f)
+util_item_select(Evas_Object *w, EFM_File *f)
 {
    Elm_File_Display_Data *pd = eo_data_scope_get(w, ELM_FILE_DISPLAY_CLASS);
 
@@ -158,7 +158,7 @@ util_item_select(Evas_Object *w, FM_Monitor_File *f)
 }
 
 void
-util_item_selected(Evas_Object *w, FM_Monitor_File *f)
+util_item_selected(Evas_Object *w, EFM_File *f)
 {
    char buf[PATH_MAX];
    const char *path, *fileending, *filename;
@@ -187,13 +187,13 @@ util_item_selected(Evas_Object *w, FM_Monitor_File *f)
     * if it is a archiv
     * extract it and change the directory
     */
-   if (eio_fm_archive_file_supported(fileending))
+   if (efm_archive_file_supported(fileending))
      {
         /* gen dir */
         snprintf(buf, sizeof(buf), "/tmp/%s", filename);
         if (!ecore_file_exists(buf))
           /* extract the file */
-          eio_fm_archive_file_extract(path, buf);
+          efm_archive_file_extract(path, buf);
         /* set path to the archive */
         eo_do(w,
           efl_file_set(buf, NULL);

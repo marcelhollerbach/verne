@@ -12,7 +12,7 @@ typedef struct
 } Filepreview;
  #if 0
 static const char*
-_preview_read_file(FM_Monitor_File *file)
+_preview_read_file(EFM_File *file)
 {
    FILE *f;
    char buf[PATH_MAX];
@@ -32,7 +32,7 @@ _preview_read_file(FM_Monitor_File *file)
 }
 #endif
 void
-filepreview_file_set(Evas_Object *w, FM_Monitor_File *file)
+filepreview_file_set(Evas_Object *w, EFM_File *file)
 {
   Filepreview *f;
   Evas_Object *o;

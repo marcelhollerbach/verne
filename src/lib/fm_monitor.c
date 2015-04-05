@@ -19,7 +19,7 @@ static Context *ctx;
    if (!fmm) return EINA_TRUE;
 
 static Eina_Bool
-_filter_cb(const char *file, FM_Monitor *fm)
+_filter_cb(const char *file, EFM_Monitor *fm)
 {
    const char *filename = ecore_file_file_get(file);
 
@@ -38,8 +38,8 @@ _filter_cb(const char *file, FM_Monitor *fm)
 static void
 _thread_cb(void *data, Ecore_Thread *et)
 {
-   FM_Monitor *fm;
-   FM_Monitor_File *fmf;
+   EFM_Monitor *fm;
+   EFM_File *fmf;
    Eina_List *it;
    const char *mime_type;
 
@@ -83,8 +83,8 @@ _thread_cb(void *data, Ecore_Thread *et)
 static void
 _notify_cb(void *data, Ecore_Thread *et, void *pass)
 {
-   FM_Monitor_File *fmf = pass;
-   FM_Monitor *fmm = data;
+   EFM_File *fmf = pass;
+   EFM_Monitor *fmm = data;
 
    if (ecore_thread_check(et))
      return;
@@ -99,7 +99,7 @@ _notify_cb(void *data, Ecore_Thread *et, void *pass)
 static void
 _thread_end(void *data, Ecore_Thread *et)
 {
-   FM_Monitor *fm;
+   EFM_Monitor *fm;
 
    if (ecore_thread_check(et))
      return;
@@ -109,7 +109,7 @@ _thread_end(void *data, Ecore_Thread *et)
 }
 
 static void
-_mime_type_scheudle(FM_Monitor *fm, FM_Monitor_File *fmf)
+_mime_type_scheudle(EFM_Monitor *fm, EFM_File *fmf)
 {
    //do not scheudle a mime type fetch if we are in deletion
    if (fm->deletion_mark) return;
@@ -130,16 +130,16 @@ _mime_type_scheudle(FM_Monitor *fm, FM_Monitor_File *fmf)
    eina_lock_release(&fm->thread.lock);
 }
 
-static FM_Monitor_File*
-_ref_create(FM_Monitor *fmm, const char *filename, Eina_Bool dir)
+static EFM_File*
+_ref_create(EFM_Monitor *fmm, const char *filename, Eina_Bool dir)
 {
    const char *ref;
-   FM_Monitor_File *fmm_file;
+   EFM_File *fmm_file;
    int end;
 
    ref = eina_stringshare_add((filename));
 
-   fmm_file = calloc(1, sizeof(FM_Monitor_File));
+   fmm_file = calloc(1, sizeof(EFM_File));
 
    //simple path
    fmm_file->path = ref;
@@ -185,16 +185,16 @@ _ref_create(FM_Monitor *fmm, const char *filename, Eina_Bool dir)
 }
 
 static void
-_ref_unref(FM_Monitor *fmm, const char *filename)
+_ref_unref(EFM_Monitor *fmm, const char *filename)
 {
   eina_hash_del(fmm->file_icons, filename, NULL);
 }
 
-static FM_Monitor_File*
-_ref_find(FM_Monitor *fmm, const char *filename)
+static EFM_File*
+_ref_find(EFM_Monitor *fmm, const char *filename)
 {
    const char *path;
-   FM_Monitor_File *fmm_file;
+   EFM_File *fmm_file;
 
    path = eina_stringshare_add(filename);
    fmm_file = eina_hash_find(fmm->file_icons, path);
@@ -207,8 +207,8 @@ static Eina_Bool
 _file_add(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 {
    Eio_Monitor_Event *ev = event;
-   FM_Monitor *fmm;
-   FM_Monitor_File *file;
+   EFM_Monitor *fmm;
+   EFM_File *file;
 
    EVENT_ENTRY_GETTER
 
@@ -224,8 +224,8 @@ static Eina_Bool
 _file_del(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 {
    Eio_Monitor_Event *ev = event;
-   FM_Monitor *fmm;
-   FM_Monitor_File *fmm_file;
+   EFM_Monitor *fmm;
+   EFM_File *fmm_file;
 
    EVENT_ENTRY_GETTER
 
@@ -248,8 +248,8 @@ static Eina_Bool
 _dir_add(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 {
    Eio_Monitor_Event *ev = event;
-   FM_Monitor *fmm;
-   FM_Monitor_File *path;
+   EFM_Monitor *fmm;
+   EFM_File *path;
 
    EVENT_ENTRY_GETTER
 
@@ -263,8 +263,8 @@ static Eina_Bool
 _dir_del(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 {
    Eio_Monitor_Event *ev = event;
-   FM_Monitor *fmm;
-   FM_Monitor_File *fmm_file;
+   EFM_Monitor *fmm;
+   EFM_File *fmm_file;
 
    EVENT_ENTRY_GETTER
 
@@ -287,7 +287,7 @@ static Eina_Bool
 _mon_err(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 {
    Eio_Monitor_Event *ev = event;
-   FM_Monitor *fmm;
+   EFM_Monitor *fmm;
 
    EVENT_ENTRY_GETTER
 
@@ -302,7 +302,7 @@ static Eina_Bool
 _mon_del(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 {
    Eio_Monitor_Event *ev = event;
-   FM_Monitor *fmm;
+   EFM_Monitor *fmm;
 
    EVENT_ENTRY_GETTER
 
@@ -388,8 +388,8 @@ _eio_filter_cb(void *data EINA_UNUSED, Eio_File *handler EINA_UNUSED, const char
 static void
 _eio_main_cb(void *data, Eio_File *handler EINA_UNUSED, const char *file)
 {
-   FM_Monitor *fmm = data;
-   FM_Monitor_File *path = NULL;
+   EFM_Monitor *fmm = data;
+   EFM_File *path = NULL;
 
    if (eio_file_check(handler)) return;
 
@@ -404,7 +404,7 @@ _eio_main_cb(void *data, Eio_File *handler EINA_UNUSED, const char *file)
 static void
 _eio_done_cb(void *data, Eio_File *handler EINA_UNUSED)
 {
-   FM_Monitor *fmm = data;
+   EFM_Monitor *fmm = data;
    /* now we are ready for new files etc. */
    eina_hash_add(ctx->open_monitors, &(fmm->mon), fmm);
    fmm->file = NULL;
@@ -413,7 +413,7 @@ _eio_done_cb(void *data, Eio_File *handler EINA_UNUSED)
 static void
 _eio_error_cb(void *data EINA_UNUSED, Eio_File *handler, int error EINA_UNUSED)
 {
-   FM_Monitor *fmm = data;
+   EFM_Monitor *fmm = data;
 
    if (eio_file_check(handler)) return;
 
@@ -426,13 +426,13 @@ _eio_error_cb(void *data EINA_UNUSED, Eio_File *handler, int error EINA_UNUSED)
 void
 _mon_hash_free(void *data)
 {
-   FM_Monitor_File *file = data;
+   EFM_File *file = data;
 
    eina_stringshare_del(file->path);
    free(file);
 }
 
-FM_Monitor*
+EFM_Monitor*
 fm_monitor_start(const char *directory, File_Cb add_cb,
                  File_Cb del_cb, File_Cb mime_ready_cb, Err_Cb selfdel_cb, Err_Cb err_cb,
                  void *data, Eina_Bool hidden_files, Eina_Bool only_folder)
@@ -447,7 +447,7 @@ fm_monitor_start(const char *directory, File_Cb add_cb,
         ERR("The path has to be a directory!");
         return NULL;
      }
-   FM_Monitor *fmm = calloc(1, sizeof(FM_Monitor));
+   EFM_Monitor *fmm = calloc(1, sizeof(EFM_Monitor));
 
    fmm->only_folder = only_folder;
    fmm->hidden_files = hidden_files;
@@ -478,7 +478,7 @@ _deletion_idle(void *data)
 }
 
 void
-fm_monitor_stop(FM_Monitor *mon)
+fm_monitor_stop(EFM_Monitor *mon)
 {
    Eina_Bool realdel = EINA_TRUE;
    //idle the delete
@@ -515,43 +515,43 @@ fm_monitor_stop(FM_Monitor *mon)
 }
 
 const char*
-fm_monitor_path_get(FM_Monitor *mon)
+fm_monitor_path_get(EFM_Monitor *mon)
 {
    return mon->directory;
 }
 
 const char*
-efm_file_filename_get(FM_Monitor_File *f)
+efm_file_filename_get(EFM_File *f)
 {
    return f->file;
 }
 
 const char*
-efm_file_path_get(FM_Monitor_File *f)
+efm_file_path_get(EFM_File *f)
 {
    return f->path;
 }
 
 const char*
-efm_file_fileending_get(FM_Monitor_File *f)
+efm_file_fileending_get(EFM_File *f)
 {
    return f->fileending;
 }
 
 const char*
-efm_file_mimetype_get(FM_Monitor_File *f)
+efm_file_mimetype_get(EFM_File *f)
 {
    return f->mime_type;
 }
 
 Eina_Bool
-efm_file_is_dir(FM_Monitor_File *f)
+efm_file_is_dir(EFM_File *f)
 {
    return f->dir;
 }
 
 struct stat*
-efm_file_stat_get(FM_Monitor_File *f)
+efm_file_stat_get(EFM_File *f)
 {
    return &f->stat;
 }

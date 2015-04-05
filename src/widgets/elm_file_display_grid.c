@@ -3,7 +3,7 @@
 typedef struct
 {
    Elm_Gengrid_Item_Class *gic;
-   FM_Monitor *fm;
+   EFM_Monitor *fm;
    Eina_Hash *files;
 } View_Context;
 
@@ -11,7 +11,7 @@ static Evas_Object *
 _grid_content_get(void *data, Evas_Object *obj, const char *part)
 {
    Evas_Object *ic;
-   FM_Monitor_File *file;
+   EFM_File *file;
 
    if (!!strcmp(part, "elm.swallow.icon")) return NULL;
 
@@ -32,7 +32,7 @@ static void
 _double_click(void *data EINA_UNUSED, Evas_Object *obj, void *event_info)
 {
    Elm_Object_Item *it = event_info;
-   FM_Monitor_File *fmm_file = elm_object_item_data_get(it);
+   EFM_File *fmm_file = elm_object_item_data_get(it);
 
    util_item_selected(elm_object_parent_widget_get(obj), fmm_file);
 }
@@ -79,11 +79,11 @@ object_init(Evas_Object *par)
    return grid_obj;
 }
 
-static FM_Monitor_File*
+static EFM_File*
 item_get(Evas_Object *grid_obj, int x, int y)
 {
    Elm_Object_Item *it;
-   FM_Monitor_File *fm_file;
+   EFM_File *fm_file;
 
    it = elm_gengrid_at_xy_item_get(grid_obj, x, y, NULL, NULL);
    if (!it)
@@ -114,7 +114,7 @@ selections_get(Evas_Object *grid_obj)
    const Eina_List *sel_list, *node;
    Eina_List *result = NULL;
    Elm_Object_Item *it;
-   FM_Monitor_File *file;
+   EFM_File *file;
    File_Display_View_DND *dnd;
    Evas_Object *content;
    int x = 0, y = 0, w = 20, h = 20;
@@ -151,7 +151,7 @@ _sel(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 }
 
 static void
-add_cb(void *data EINA_UNUSED, FM_Monitor *mon EINA_UNUSED, FM_Monitor_File *icon)
+add_cb(void *data EINA_UNUSED, EFM_Monitor *mon EINA_UNUSED, EFM_File *icon)
 {
    View_Context *ctx = evas_object_data_get(data, "__ctx");
    Elm_Object_Item *it;
@@ -161,7 +161,7 @@ add_cb(void *data EINA_UNUSED, FM_Monitor *mon EINA_UNUSED, FM_Monitor_File *ico
 }
 
 static void
-mime_cb(void *data EINA_UNUSED, FM_Monitor *mon EINA_UNUSED, FM_Monitor_File *icon)
+mime_cb(void *data EINA_UNUSED, EFM_Monitor *mon EINA_UNUSED, EFM_File *icon)
 {
   View_Context *ctx = evas_object_data_get(data, "__ctx");
   Elm_Object_Item *it;
@@ -179,7 +179,7 @@ mime_cb(void *data EINA_UNUSED, FM_Monitor *mon EINA_UNUSED, FM_Monitor_File *ic
 }
 
 static void
-del_cb(void *data EINA_UNUSED, FM_Monitor *mon EINA_UNUSED, FM_Monitor_File *icon)
+del_cb(void *data EINA_UNUSED, EFM_Monitor *mon EINA_UNUSED, EFM_File *icon)
 {
    View_Context *ctx = evas_object_data_get(data, "__ctx");
    Elm_Object_Item *it;
@@ -189,13 +189,13 @@ del_cb(void *data EINA_UNUSED, FM_Monitor *mon EINA_UNUSED, FM_Monitor_File *ico
 }
 
 static void
-err_cb(void *data, FM_Monitor *mon EINA_UNUSED)
+err_cb(void *data, EFM_Monitor *mon EINA_UNUSED)
 {
    elm_gengrid_clear(data);
 }
 
 static void
-sdel_cb(void *data EINA_UNUSED, FM_Monitor *mon EINA_UNUSED)
+sdel_cb(void *data EINA_UNUSED, EFM_Monitor *mon EINA_UNUSED)
 {
    CRI("PANIC DELETE EVERYTHING ...\n");
    elm_gengrid_clear(data);

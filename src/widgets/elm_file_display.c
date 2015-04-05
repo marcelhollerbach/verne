@@ -154,7 +154,7 @@ _ctx_disable_preview(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_
 }
 
 static void
-_ctx_menu_open(Eo* obj, int x, int y, FM_Monitor_File *file)
+_ctx_menu_open(Eo* obj, int x, int y, EFM_File *file)
 {
    Evas_Object *menu;
    Elm_Object_Item *it, *it2;
@@ -585,7 +585,7 @@ _event_rect_mouse_down(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UN
 {
   W_DATA(data)
   Evas_Event_Mouse_Down *ev = event;
-  FM_Monitor_File *file;
+  EFM_File *file;
 
   //check if there is a item under it and save it if it is
   file = view_call_item_get(pd, ev->output.x, ev->output.y);
@@ -777,8 +777,6 @@ view_register(Elm_File_Display_Data *pd, const char *name, Elm_File_Display_View
 EOLIAN void
 _elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd)
 {
-  //XXX shutdown
-  log_init();
   fm_monitor_init();
   config_init();
   pd->show_filepreview = EINA_TRUE;
@@ -796,7 +794,6 @@ _elm_file_display_eo_base_destructor(Eo *obj, Elm_File_Display_Data *pd EINA_UNU
    evas_object_del(pd->cached_view);
    fm_monitor_shutdown();
    config_shutdown();
-   log_shutdown();
    eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, eo_destructor());
 }
 

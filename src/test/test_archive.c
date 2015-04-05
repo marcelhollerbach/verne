@@ -7,9 +7,9 @@
 int
 main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 {
-   if (!eio_fm_archive_file_extract("/home/marcel/Abschluss.zip", "/tmp/"))
+   if (!efm_archive_file_extract("Abschluss.zip", "/tmp/"))
      {
-        printf("FAILED!! %s\n", eio_fm_archive_lasterror_get());
+        printf("FAILED!! %s\n", efm_archive_lasterror_get());
      }
    else
      {

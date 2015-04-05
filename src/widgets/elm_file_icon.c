@@ -14,7 +14,7 @@
 
 typedef struct
 {
-   FM_Monitor_File *file;
+   EFM_File *file;
    Evas_Object *icon;
    Evas_Object *label;
 
@@ -90,7 +90,7 @@ _elm_file_icon_evas_object_smart_resize(Eo *obj, Elm_File_Icon_Data *pd, Evas_Co
 }
 
 EOLIAN static void
-_elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, FM_Monitor_File *file)
+_elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, EFM_File *file)
 {
 
    const char *path;
@@ -122,7 +122,7 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, FM_Monitor_F
    elm_object_text_set(pd->label, efm_file_filename_get(file));
 }
 
-EOLIAN static FM_Monitor_File *
+EOLIAN static EFM_File *
 _elm_file_icon_fm_monitor_file_get(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
 {
    return pd->file;

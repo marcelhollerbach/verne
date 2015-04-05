@@ -11,7 +11,7 @@ class Elm_File_Icon (Elm_Layout)
 
         }
         values {
-          FM_Monitor_File *file;
+          EFM_File *file;
         }
       }
    }
