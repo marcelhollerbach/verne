@@ -253,6 +253,21 @@ _fm_tab_entry_unfocused(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, vo
    _anchors_do(obj, tab->path);
 }
 
+
+static Eina_Bool
+_fm_tab_item_open(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
+{
+   const char *file = event;
+   char cmd[PATH_MAX];
+
+   snprintf(cmd, sizeof(cmd), "xdg-open \"%s\"", file);
+   printf("Executing %s\n", cmd);
+
+   ecore_exe_run(cmd, NULL);
+
+   return EINA_FALSE;
+}
+
 static void
 _open_tab(const char *path)
 {
@@ -339,6 +354,8 @@ _open_tab(const char *path)
    eo_do(content,
          eo_event_callback_add(&_ELM_FILE_DISPLAY_EVENT_PATH_CHANGED,
                                _fm_tab_dir_changed, tab);
+         eo_event_callback_add(&_ELM_FILE_DISPLAY_EVENT_ITEM_CHOOSEN,
+                               _fm_tab_item_open, NULL);
          eo_event_callback_add(&_ELM_FILE_DISPLAY_EVENT_HOOK_MENU_SELECTOR_START,
                                _fm_tab_menu_hook_start, NULL);
          efl_file_set(path, NULL);
@@ -369,6 +386,7 @@ on_done(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info E
    // quit the mainloop (elm_run function will return)
    elm_exit();
 }
+
 
 EAPI_MAIN int
 elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
