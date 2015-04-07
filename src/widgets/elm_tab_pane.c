@@ -100,7 +100,7 @@ _elm_tab_pane_evas_object_smart_add(Eo *obj, Elm_Tab_Pane_Data *pd)
    //adding scroller for the top box
    pd->scroller = sc = elm_scroller_add(obj);
    elm_scroller_policy_set(sc, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
-   elm_scroller_movement_block_set(sc, ELM_SCROLLER_MOVEMENT_BLOCK_VERTICAL);
+   elm_scroller_movement_block_set(sc, ELM_SCROLLER_MOVEMENT_BLOCK_HORIZONTAL);
    elm_object_content_set(sc, pd->box);
 
    elm_object_part_content_set(obj, "tabs", sc);

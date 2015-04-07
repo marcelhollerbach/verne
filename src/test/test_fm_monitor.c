@@ -37,7 +37,6 @@ func(void *data EINA_UNUSED)
 {
    mon = fm_monitor_start("/home/marcel/", add_cb, del_cb, NULL,
          err_cb, sdel_cb, NULL, EINA_FALSE, EINA_FALSE);
-
    return EINA_FALSE;
 }
 
