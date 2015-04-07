@@ -1,13 +1,21 @@
 collections {
    images {
-       image: "t4_active_r.png" COMP;
-       image: "t4_active_l.png" COMP;
-       image: "t4_active_m.png" COMP;
-       image: "t4_inactive_m.png" COMP;
-       image: "t4_inactive_r.png" COMP;
-       image: "t4_inactive_l.png" COMP;
        image: "icon_arrow_left.png" COMP;
        image: "icon_arrow_right.png" COMP;
+       image: "close_btn_n.png" COMP;
+       image: "close_btn_h.png" COMP;
+       image: "close_btn_c.png" COMP;
+       image: "add_btn_n.png" COMP;
+       image: "add_btn_hover.png" COMP;
+       image: "t4lua.png" COMP;
+       image: "t4rua.png" COMP;
+       image: "t4mua.png" COMP;
+       image: "t4lla.png" COMP;
+       image: "t4lma.png" COMP;
+       image: "t4mma.png" COMP;
+       image: "t4rla.png" COMP;
+       image: "t4rma.png" COMP;
+       image: "t4mla.png" COMP;
    }
    group { name: "elm/tab_pane/add_item/default";
       parts {
@@ -16,16 +24,20 @@ collections {
             description { state: "default" 0.0;
             	aspect: 1 1;
             	align: 0.0 1.0;
+                    color: 0 0 0 0;
             }
          }
          part { name: "add_x";
-            type: RECT;
             description { state: "default" 0.0;
                rel1.to: "base";
                rel1.offset: 5 5;
                rel2.to: "base";
                rel2.offset: -5 -5;
-               color: 255 0 0 255;
+               image.normal: "add_btn_n.png";
+            }
+            description { state: "hover" 0.0;
+               inherit: "default" 0.0;
+               image.normal: "add_btn_hover.png";
             }
          }
          programs {
@@ -34,6 +46,18 @@ collections {
                signal: "mouse,clicked,1";
                action: SIGNAL_EMIT "add" "w";
             }
+            program { name: "hover_out";
+              source: "add_x";
+              signal: "mouse,out";
+              action: STATE_SET "default" 0.0;
+              target: "add_x";
+         }
+         program { name: "close";
+            source: "add_x";
+            signal: "mouse,in";
+              action: STATE_SET "hover" 0.0;
+               target: "add_x";
+         }
          }
       }
    }
@@ -43,20 +67,113 @@ collections {
          part { name: "base"; type: RECT;
             description { state: "default" 0.0;
                //rel1.offset: 0 1;
-               //color: 0 0 0 0;
+               color: 0 0 0 0;
             }
          }
-         part { name: "content"; type: RECT;
+         part { name: "left_upper";
             description { state: "default" 0.0;
                rel1.to: "base";
-               rel1.offset: 5 5;
-               rel2.to: "base";
-               rel2.offset: -5 0;
-               color: 50 50 50 255;
+               rel2.to: "content";
+               rel2.relative: 0.0 0.0;
+               image.normal: "t4lua.png";
             }
             description { state: "inactive" 0.0;
                inherit: "default" 0.0;
-               color: 100 100 100 255;
+                visible: 0;
+            }
+         }
+         part { name: "left_middle";
+            description { state: "default" 0.0;
+               rel1.to: "left_upper";
+               rel1.relative: 0.0 1.0;
+               rel2.to: "left_lower";
+               rel2.relative: 1.0 0.0;
+               image.normal: "t4lma.png";
+            }
+            description { state: "inactive" 0.0;
+               inherit: "default" 0.0;
+               visible: 0;
+            }
+         }
+         part { name: "left_lower";
+            description { state: "default" 0.0;
+               rel1.to_y: "content";
+               rel1.to_x: "base";
+               rel1.relative: 0.0 1.0;
+               rel2.to_y: "base";
+               rel2.to_x: "content";
+               rel2.relative: 0.0 1.0;
+               image.normal: "t4lla.png";
+            }
+            description { state: "inactive" 0.0;
+               inherit: "default" 0.0;
+            }
+         }
+          part { name: "right_upper";
+            description { state: "default" 0.0;
+               rel1.to_y: "base";
+               rel1.to_x: "content";
+               rel1.relative: 1.0 0.0;
+               rel2.to_y: "content";
+               rel2.to_x: "base";
+               rel2.relative: 1.0 0.0;
+               image.normal: "t4rua.png";
+            }
+            description { state: "inactive" 0.0;
+               inherit: "default" 0.0;
+               visible: 0;
+            }
+         }
+         part { name: "right_middle";
+            description { state: "default" 0.0;
+               rel1.to: "right_upper";
+               rel1.relative: 0.0 1.0;
+               rel2.to: "right_lower";
+               rel2.relative: 1.0 0.0;
+               image.normal: "t4rma.png";
+            }
+            description { state: "inactive" 0.0;
+               inherit: "default" 0.0;
+               visible: 0;
+            }
+         }
+         part { name: "right_lower";
+            description { state: "default" 0.0;
+               rel1.to: "content";
+               rel1.relative: 1.0 1.0;
+               rel2.to: "base";
+               image.normal: "t4rla.png";
+            }
+         }
+         part { name: "middle_upper";
+            description { state: "default" 0.0;
+               rel1.to: "left_upper";
+               rel1.relative: 1.0 0.0;
+               rel2.to: "right_upper";
+               rel2.relative: 0.0 1.0;
+               image.normal: "t4mua.png";
+            }
+            description { state: "inactive" 0.0;
+               inherit: "default" 0.0;
+               visible: 0;
+            }
+         }
+         part { name: "middle_lower";
+            description { state: "default" 0.0;
+               rel1.to: "left_lower";
+               rel1.relative: 1.0 0.0;
+               rel2.to: "right_lower";
+               rel2.relative: 0.0 1.0;
+               image.normal: "t4mla.png";
+            }
+         }
+         part { name: "content";
+            description { state: "default" 0.0;
+               rel1.to: "base";
+               rel1.offset: 10 8;
+               rel2.to: "base";
+               rel2.offset: -10 -8;
+               image.normal: "t4mma.png";
             }
          }
          part { name: "elm.content";
@@ -74,7 +191,7 @@ collections {
                rel1.relative: 1.0 0.0;
                rel2.to: "content";
                rel2.relative: 1.0 1.0;
-               rel1.offset: -20 0;
+               rel1.offset: -30 0;
                color: 0 0 0 0;
             }
             description { state: "close_active" 0.0;
@@ -82,19 +199,20 @@ collections {
             }
         }
          part { name: "close_x";
-            type: RECT;
             description { state: "default" 0.0;
                rel1.to: "close_x_place";
+               rel1.offset: 5 0;
                rel2.to: "close_x_place";
-               color: 255 0 0 255;
+               rel2.offset: -5 0;
+               image.normal: "close_btn_n.png";
             }
             description { state: "hover" 0.0;
                inherit: "default" 0.0;
-               color: 0 255 0 255;
+               image.normal: "close_btn_h.png";
             }
             description { state: "clicked" 0.0;
                inherit: "default" 0.0;
-               color: 0 0 255 255;
+               image.normal: "close_btn_c.png";
             }
             description { state: "inactive" 0.0;
                inherit: "default" 0.0;
@@ -123,6 +241,14 @@ collections {
             action: STATE_SET "default" 0.0;
             target: "close_x";
             target: "content";
+            target: "left_upper";
+            target: "left_middle";
+            target: "left_lower";
+            target: "right_upper";
+            target: "right_middle";
+            target: "right_lower";
+            target: "middle_upper";
+            target: "middle_lower";
          }
          program { name: "disable";
             signal: "disable";
@@ -130,7 +256,15 @@ collections {
             action: STATE_SET "inactive" 0.0;
             target: "close_x";
             target: "content";
-         } 
+            target: "left_upper";
+            target: "left_middle";
+            target: "left_lower";
+            target: "right_upper";
+            target: "right_middle";
+            target: "right_lower";
+            target: "middle_upper";
+            target: "middle_lower";
+         }
          program { name: "clicked";
             source: "close_x";
             signal: "mouse,down,1";
@@ -182,7 +316,7 @@ collections {
                rel1.relative: 0.0 0.0;
                rel2.to_x: "base";
                rel2.relative: 1.0 0.0;
-               rel2.offset: 0 30;
+               rel2.offset: 0 35;
                color: 0 0 0 0;
             }
          }
@@ -208,7 +342,7 @@ collections {
                rel2.relative: 1.0 1.0;
                align: 1.0 0;
                image.normal: "icon_arrow_right.png";
-            }   
+            }
             description { state: "scroll" 0.0;
                inherit: "default" 0.0;
                aspect: 1 1;
