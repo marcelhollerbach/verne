@@ -777,7 +777,7 @@ view_register(Elm_File_Display_Data *pd, const char *name, Elm_File_Display_View
 EOLIAN void
 _elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd)
 {
-  fm_monitor_init();
+  efm_init();
   config_init();
   pd->show_filepreview = EINA_TRUE;
   pd->current_path = eina_stringshare_add("/");
@@ -792,7 +792,7 @@ EOLIAN void
 _elm_file_display_eo_base_destructor(Eo *obj, Elm_File_Display_Data *pd EINA_UNUSED)
 {
    evas_object_del(pd->cached_view);
-   fm_monitor_shutdown();
+   efm_shutdown();
    config_shutdown();
    eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, eo_destructor());
 }

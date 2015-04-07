@@ -59,7 +59,7 @@ int
 main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 {
    EFM_Monitor *fm;
-   fm_monitor_init();
+   efm_init();
 
    fm = fm_monitor_start("/home/marcel/", add_cb, del_cb, NULL,
          err_cb, sdel_cb, NULL, EINA_FALSE, EINA_FALSE);
@@ -70,6 +70,6 @@ main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    ecore_timer_add(20.0, del2, NULL);
 
    ecore_main_loop_begin();
-   fm_monitor_shutdown();
+   efm_shutdown();
    return 1;
 }

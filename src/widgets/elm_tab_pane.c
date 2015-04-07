@@ -184,6 +184,8 @@ static void
 _check_size(Eo *obj, Elm_Tab_Pane_Data *pd)
 {
   Evas_Object *sc = pd->scroller;
+  Item *it;
+
   Evas_Coord w;
   Evas_Coord h;
   int x,y,wv,hv;
@@ -196,6 +198,11 @@ _check_size(Eo *obj, Elm_Tab_Pane_Data *pd)
     elm_object_signal_emit(obj, "scroll,show","elm");
   else
     elm_object_signal_emit(obj, "scroll,hide","elm");
+
+  it = eina_list_data_get(pd->items);
+
+  evas_object_size_hint_min_get(it->item, &w, &h);
+  evas_object_size_hint_min_set(sc, -1, h);
 }
 EOLIAN static void
 _elm_tab_pane_evas_object_smart_resize(Eo *obj, Elm_Tab_Pane_Data *pd, Evas_Coord w, Evas_Coord h)

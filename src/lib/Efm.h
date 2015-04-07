@@ -12,11 +12,11 @@ typedef void(*Err_Cb)(void *data, EFM_Monitor *mon);
 /*
  * Inits the fm_monitor
  */
-int fm_monitor_init();
+int efm_init();
 /*
   shutdown the fm_monitor
  */
-void fm_monitor_shutdown();
+void efm_shutdown();
 
 /*
   Start the service on the passed directory.

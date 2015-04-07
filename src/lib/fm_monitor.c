@@ -1,11 +1,7 @@
 #include "efm_priv.h"
 
-#define CRI(...) printf(__VA_ARGS__)
-#define ERR(...) printf(__VA_ARGS__)
-
 typedef struct
 {
-   int refcount;
    Ecore_Event_Handler *fadd, *fdel,
                        *dadd, *ddel,
                        *err, *selfdel;
@@ -320,15 +316,7 @@ fm_monitor_init()
    efreet_mime_init();
    eio_init();
 
-   if (ctx)
-     {
-       ctx->refcount ++;
-       return ctx->refcount;
-     }
-
    ctx = calloc(1, sizeof(Context));
-
-   ctx->refcount = 1;
 
    ctx->open_monitors = eina_hash_pointer_new(NULL);
 
@@ -349,17 +337,16 @@ fm_monitor_init()
    ctx->err = ecore_event_handler_add(EIO_MONITOR_ERROR, _mon_err, ctx);
    EINA_SAFETY_ON_NULL_GOTO(ctx->err,err);
 
-   return ctx->refcount;
+   return 1;
 err:
    fm_monitor_shutdown();
-   return -1;
+
+   return 0;
 }
 
 void
 fm_monitor_shutdown()
 {
-   ctx->refcount --;
-   if (ctx->refcount > 0) return;
 
    ecore_event_handler_del(ctx->fadd);
    ecore_event_handler_del(ctx->fdel);

@@ -3,7 +3,6 @@
 #include <archive.h>
 #include <archive_entry.h>
 
-
 const char* FILEENDINGS[] = {"tar", "zip", "tar.gz", NULL};
 
 const char *lasterror;
