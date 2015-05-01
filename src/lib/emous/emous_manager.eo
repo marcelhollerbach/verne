@@ -1,0 +1,31 @@
+class Emous_Manager (Eo.Base)
+{
+   methods {
+      device_classes_get @class {
+         return: Eina_List*;
+      }
+      device_class_get @class {
+         params {
+            const(char) *name;
+         }
+         return: Emous_Device_Class*;
+      }
+      device_class_add @class {
+         /*@ call this to get a new emous device class*/
+         params {
+            const(char) *name;
+         }
+         return : Emous_Device_Class*;
+      }
+      object_get @class {
+         /*@ this will just return allways the same object of Emous_Manager you can listen on signals with this object.*/
+         return: Emous_Manager *;
+      }
+   }
+   events{
+      mount,add; /*a device got magically mounted */
+      mount,del; /*a device got magically umounted */
+      mount,request,add; /* called if **someone** called something to mount or umount*/
+      mount,request,end; /* called if **some** (u)mountrequesthas come to an end*/
+   }
+}

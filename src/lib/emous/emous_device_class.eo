@@ -1,0 +1,70 @@
+type Emous_Mountpoint: struct {
+   source: const(char)*;
+   mountpoint: const(char)*;
+};
+
+class Emous_Device_Class (Eo.Base)
+{
+   properties {
+      name {
+         values {
+            const(char) *name;
+         }
+         get {
+
+         }
+      }
+   }
+   methods {
+      device_add {
+         params {
+            const(char) *name;
+            const(char) *param;
+         }
+         return: Emous_Device*;
+      }
+      type_add {
+         params {
+            const(char) *type;
+         }
+      }
+      type_test {
+         params {
+            const(char) *type;
+         }
+         return: Eina_Bool;
+      }
+      construct {
+         params {
+            const(char) *name;
+         }
+      }
+      mountpoint_added {
+         params {
+            const(char) *mountpoint;
+            const(char) *source;
+         }
+      }
+      mountpoint_removed {
+         params {
+            const(char) *mountpoint;
+         }
+      }
+   }
+   constructors {
+      .construct;
+   }
+   events {
+      device,add; /* device added */
+      device,del; /* device deleted */
+      mountpoint,check,add; /*@
+Should check if this mountpoint could belong to any device the class has added.
+This signal is a result on calling the mount_point_check function. it is just called on a class where the name of the class is the same than the type of the mountpoint.
+*/
+      mountpoint,check,del; /*@ The subsystem is notifing that a mountpoint disappeared.
+      */
+   }
+   implements {
+      Eo.Base.destructor;
+   }
+}

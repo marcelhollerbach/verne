@@ -1,0 +1,81 @@
+type Device_State: enum _Device_State{
+   mounted,
+   umounted,
+   mountreq,
+   umountreq
+};
+
+class Emous_Device (Eo.Base)
+{
+   properties {
+      state {
+         values {
+            Device_State mounted;
+         }
+         set {
+            /*@
+            Set the state of this device.
+            Setting a state here will not call or effect anything expecting calling the changed event.
+
+            If you want to mount or umount the device you have to call the mount/umount functions.
+            */
+         }
+         get {
+            /*@
+            True if this device is mounted, false if not.
+            */
+         }
+      }
+      displayname {
+         values {
+            const(char) *name;
+         }
+         get{
+
+         }
+      }
+      params {
+         values {
+            const(char) *params;
+         }
+         get {
+
+         }
+      }
+   }
+   methods {
+      mount {
+         /*@
+         send a mount request, the backend which requested this device should handle that.
+         */
+      }
+      umount {
+         /*@
+         Send a umount request, the backend which requested this device should handle this
+         */
+      }
+      construct {
+         params {
+            const(char) *displayname;
+            const(char) *params;
+         }
+      }
+   }
+   constructors {
+      .construct;
+   }
+   events {
+      state,changed; /* the device state has changed */
+      mount,request; /*@
+called if someone called mount, do not listen to this unless you are the backend which requested this device
+*/
+      umount,request; /*@
+someone requested a umount!
+@see the mount,request event
+*/
+
+   }
+   implements {
+      Eo.Base.destructor;
+   }
+}
