@@ -4,6 +4,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 project(efm)
 
+enable_testing()
+
 set(CMAKE_BUILD_TYPE DEBUG)
 add_definitions ("-Wall -Wextra")
 find_package(Eina REQUIRED)
