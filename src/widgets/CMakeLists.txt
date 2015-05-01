@@ -59,7 +59,7 @@ include_directories(
   ${EINA_INCLUDE_DIRS}
   ${EO_INCLUDE_DIRS}
   ${ELEMENTARY_INCLUDE_DIRS}
-  ../lib/
+  ../lib/efm
 )
 
 target_link_libraries(widgets

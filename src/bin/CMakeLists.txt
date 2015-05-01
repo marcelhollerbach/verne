@@ -8,7 +8,7 @@ include_directories(
   ${EFREET_INCLUDE_DIRS}
   ${ECORE_INCLUDE_DIRS}
   ${ELEMENTARY_INCLUDE_DIRS}
-  ../lib/
+  ../lib/efm
   ../widgets/
   )
 

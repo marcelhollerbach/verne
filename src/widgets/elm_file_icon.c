@@ -5,7 +5,7 @@
 #include <Evas.h>
 #include <Elementary.h>
 
-#include "../lib/Efm.h"
+#include <Efm.h>
 #include "elm_file_icon.eo.h"
 
 

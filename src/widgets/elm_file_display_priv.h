@@ -4,7 +4,7 @@
 #define EFL_BETA_API_SUPPORT
 #define EFL_EO_API_SUPPORT
 
-#include "../lib/Efm.h"
+#include <Efm.h>
 
 #include <Elementary.h>
 #include <Ecore.h>

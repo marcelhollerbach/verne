@@ -24,7 +24,7 @@ add_executable(filedisplay_test filedisplay.c)
 
 include_directories(
   ${ELEMENTARY_INCLUDE_DIRS}
-  ../lib/
+  ../lib/efm
 )
 
 target_link_libraries (filedisplay_test

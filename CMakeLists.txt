@@ -20,7 +20,7 @@ find_package(Elementary 1.13.0 REQUIRED)
 
 
 add_subdirectory(data)
-add_subdirectory(src/lib)
+add_subdirectory(src/lib/efm)
 add_subdirectory(src/widgets)
 add_subdirectory(src/test)
 add_subdirectory(src/bin)
