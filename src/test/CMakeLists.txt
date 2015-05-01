@@ -81,13 +81,13 @@ set_property(TARGET test_tab
    PROPERTY COMPILE_DEFINITIONS ${THEME_PATH_DEFINITION})
 
 
-add_executable(test_resolver test_resolver.c)
-
-include_directories(
-   ../lib/
-)
+add_executable(test_resolver test_mount.c)
 
 target_link_libraries (test_resolver
    ${ECORE_LIBRARIES}
-   efm_lib
+   ${EO_LIBRARIES}
+   emous
+   check
 )
+
+add_test(test1 test_resolver)
