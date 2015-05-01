@@ -120,7 +120,7 @@ bookmark_entry_internal_add(Evas_Object *w, const char *dir,
    b->name = eina_stringshare_add(name);
    b->removable = removable;
 
-   elm_genlist_item_append(w, ic, b, par, 0, _item_sel, b);
+   elm_genlist_item_append(w, ic, b, par, ELM_GENLIST_ITEM_NONE, _item_sel, b);
 }
 
 void
@@ -141,20 +141,25 @@ _setup_list(Evas_Object *o)
 
    elm_genlist_clear(o);
 
-   bookmark_entry_internal_add(o, "/", "Root", "start-here", EINA_FALSE, NULL);
-
-   if ((tmp = getenv("HOME")))
-     bookmark_entry_internal_add(o, tmp, "Home", "user-home", EINA_FALSE, NULL);
-
-   if ((tmp = efreet_trash_dir_get(NULL)))
-     bookmark_entry_internal_add(o, tmp, "Trash", "user-trash", EINA_FALSE, NULL);
-
-   if ((tmp = efreet_desktop_dir_get()))
-     bookmark_entry_internal_add(o, tmp, "Desktop", "user-desktop", EINA_FALSE, NULL);
-
    gr = evas_object_data_get(o, "__gr_ic");
 
-   it = elm_genlist_item_append(o, gr, eina_stringshare_add("Elm"), NULL, 0, NULL, NULL);
+   it = elm_genlist_item_append(o, gr, eina_stringshare_add("Places"), NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
+
+   bookmark_entry_internal_add(o, "/", "Root", "start-here", EINA_FALSE, it);
+
+   if ((tmp = getenv("HOME")))
+     bookmark_entry_internal_add(o, tmp, "Home", "user-home", EINA_FALSE, it);
+
+   if ((tmp = efreet_trash_dir_get(NULL)))
+     bookmark_entry_internal_add(o, tmp, "Trash", "user-trash", EINA_FALSE, it);
+
+   if ((tmp = efreet_desktop_dir_get()))
+     bookmark_entry_internal_add(o, tmp, "Desktop", "user-desktop", EINA_FALSE, it);
+
+   it = elm_genlist_item_append(o, gr, eina_stringshare_add("Devices"), NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
+   //TODO FIXME FIXME
+
+   it = elm_genlist_item_append(o, gr, eina_stringshare_add("Bookmarks"), NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
 
    if (!config) return;
 
@@ -166,7 +171,6 @@ _setup_list(Evas_Object *o)
 
    if(!config->display_gtk) return;
 
-   it = elm_genlist_item_append(o, gr, eina_stringshare_add("GTK"), NULL, 0, NULL, NULL);
    Eina_List *lst = util_bookmarks_load_gtk();
 
    EINA_LIST_FREE(lst, tmp)
