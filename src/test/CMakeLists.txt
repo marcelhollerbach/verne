@@ -1,5 +1,11 @@
-
 set(THEME_PATH_DEFINITION THEME_PATH="$(CMAKE_BINARY_DIR)/data/")
+
+include_directories(
+  ${ELEMENTARY_INCLUDE_DIRS}
+   ../widgets/
+   ../lib/emous
+   ../lib/efm
+)
 
 #add_executable(fileicon_test fileicon.c)
 
@@ -22,11 +28,6 @@ set(THEME_PATH_DEFINITION THEME_PATH="$(CMAKE_BINARY_DIR)/data/")
 
 add_executable(filedisplay_test filedisplay.c)
 
-include_directories(
-  ${ELEMENTARY_INCLUDE_DIRS}
-  ../lib/efm
-)
-
 target_link_libraries (filedisplay_test
    ${EINA_LIBRARIES}
    ${EVAS_LIBRARIES}
@@ -43,10 +44,6 @@ set_property(TARGET filedisplay_test
 
 add_executable(test_fm_monitor test_fm_monitor.c)
 
-include_directories(
-
-  )
-
 target_link_libraries (test_fm_monitor
    ${ECORE_LIBRARIES}
    efm_lib
@@ -54,20 +51,11 @@ target_link_libraries (test_fm_monitor
 
 add_executable(test_archive test_archive.c)
 
-include_directories(
-
-  )
-
 target_link_libraries (test_archive
    efm_lib
 )
 
 add_executable(test_tab test_pane.c)
-
-include_directories(
-   ${ELEMENTARY_INCLUDE_DIRS}
-   ../widgets/
-)
 
 target_link_libraries (test_tab
    ${EVAS_LIBRARIES}
