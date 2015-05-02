@@ -61,6 +61,9 @@ eina_err:
 EAPI void
 emous_shutdown(void)
 {
+   ref --;
+   if (ref  != 0)
+     return;
    _emous_mount_point_shutdown();
    mount_shutdown();
    eio_shutdown();
