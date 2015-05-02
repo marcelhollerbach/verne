@@ -170,6 +170,13 @@ START_TEST(file_backend)
 }
 END_TEST
 
+START_TEST(normal_init)
+{
+   ck_assert_int_eq(emous_init(), 1);
+   emous_shutdown();
+}
+END_TEST
+
 Suite * emous_suite(void)
 {
     Suite *s;
@@ -182,6 +189,7 @@ Suite * emous_suite(void)
 
     tcase_add_test(tc_core, test_something);
     tcase_add_test(tc_core, file_backend);
+    tcase_add_test(tc_core, normal_init);
 
     suite_add_tcase(s, tc_core);
 
