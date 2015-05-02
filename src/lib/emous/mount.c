@@ -313,7 +313,7 @@ _emous_manager_device_class_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const
 
    eina_iterator_free(it);
 
-   return d;
+   return NULL;
 }
 
 static Emous_Device_Class*
