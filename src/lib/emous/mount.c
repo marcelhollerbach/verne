@@ -130,7 +130,7 @@ _emous_device_class_mountpoint_added(Eo *obj, Emous_Device_Class_Data *pd EINA_U
 {
    Emous_Mountpoint *emp;
 
-   emp = calloc(1, sizeof(emp));
+   emp = calloc(1, sizeof(Emous_Mountpoint));
 
    emp->mountpoint = mountpoint;
    emp->source = source;
