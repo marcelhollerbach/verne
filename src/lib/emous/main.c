@@ -3,6 +3,16 @@
 int ref = 0;
 int _log_domain;
 
+static Eina_Array *modules = NULL;
+
+static Eina_Bool
+_module_load_cb(Eina_Module *m, void *data EINA_UNUSED)
+{
+   //we take everything!
+   INF("Loading module %s", eina_module_file_get(m));
+   return EINA_TRUE;
+}
+
 EAPI int
 emous_init(void)
 {
@@ -43,6 +53,12 @@ emous_init(void)
 
    _emous_mount_point_init();
 
+   //loading modules
+   modules = eina_module_list_get(modules, EMOUS_MODULE_PATH, EINA_FALSE, _module_load_cb, NULL);
+
+   //load all found modules
+   eina_module_list_load(modules);
+
    _emous_mm_init();
 
     return 1;
@@ -64,6 +80,7 @@ emous_shutdown(void)
    ref --;
    if (ref  != 0)
      return;
+   eina_module_list_unload(modules);
    _emous_mount_point_shutdown();
    mount_shutdown();
    eio_shutdown();

@@ -6,6 +6,8 @@ include_directories(
   /usr/include/libmount/
 )
 
+set (EMOUS_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/lib/meous/")
+
 string(REPLACE "\n" "" EOLIAN_EO_DIR_WITHOUT_NEWLINE
 "${EOLIAN_EO_DIR}")
 
@@ -55,3 +57,6 @@ target_link_libraries(emous
 INSTALL(TARGETS emous
   LIBRARY DESTINATION lib
 )
+
+set_property(TARGET emous
+             PROPERTY COMPILE_DEFINITIONS EMOUS_MODULE_PATH="${EMOUS_MODULE_PATH}")
