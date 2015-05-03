@@ -23,6 +23,8 @@ class Emous_Manager (Eo.Base)
       }
    }
    events{
+      device,add; /* a device appeared */
+      device,del; /* a device dissapeared */
       mount,add; /*a device got magically mounted */
       mount,del; /*a device got magically umounted */
       mount,request,add; /* called if **someone** called something to mount or umount*/

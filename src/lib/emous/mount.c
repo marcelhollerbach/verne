@@ -264,15 +264,28 @@ _emous_device_umount(Eo *obj, Emous_Device_Data *pd EINA_UNUSED)
 }
 
 static void
-_emous_device_construct(Eo *obj EINA_UNUSED, Emous_Device_Data *pd, const char *displayname, const char *params)
+_emous_device_construct(Eo *obj EINA_UNUSED, Emous_Device_Data *pd, const char *displayname)
 {
    pd->displayname = eina_stringshare_add(displayname);
-   pd->params = eina_stringshare_add(params);
 }
 
 //===============================
 //emous_manager_device implement
 //===============================
+
+static Eina_Bool
+_class_proxy_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc, void *event EINA_UNUSED)
+{
+   if (desc == EMOUS_DEVICE_CLASS_EVENT_DEVICE_ADD)
+     {
+        eo_do(manager, eo_event_callback_call(EMOUS_MANAGER_EVENT_DEVICE_ADD, NULL));
+     }
+   else if (desc == EMOUS_DEVICE_CLASS_EVENT_DEVICE_DEL)
+     {
+        eo_do(manager, eo_event_callback_call(EMOUS_MANAGER_EVENT_DEVICE_DEL, NULL));
+     }
+   return EINA_TRUE;
+}
 
 static Eina_List *
 _emous_manager_device_classes_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
@@ -320,6 +333,11 @@ _emous_manager_device_class_add(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const
 
    sname = eina_stringshare_add(name);
    class = eo_add(EMOUS_DEVICE_CLASS_CLASS, NULL, emous_device_class_construct(sname));
+
+   eo_do(class,  eo_event_callback_add(EMOUS_DEVICE_CLASS_EVENT_DEVICE_ADD, _class_proxy_cb, obj);
+                  eo_event_callback_add(EMOUS_DEVICE_CLASS_EVENT_DEVICE_DEL, _class_proxy_cb, obj);
+                );
+
    eina_hash_add(sd->hash, sname, class);
 
    return class;
