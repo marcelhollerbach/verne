@@ -19,7 +19,6 @@ class Emous_Device_Class (Eo.Base)
       device_add {
          params {
             const(char) *name;
-            const(char) *param;
          }
          return: Emous_Device*;
       }

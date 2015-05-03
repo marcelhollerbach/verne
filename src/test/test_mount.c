@@ -93,7 +93,7 @@ START_TEST(test_something)
    eo_do(EMOUS_MANAGER_CLASS, c = emous_manager_device_class_add("test_class"));
    ck_assert_ptr_ne(c,NULL);
 
-   eo_do(c, d = emous_device_class_device_add("test_device","params"));
+   eo_do(c, d = emous_device_class_device_add("test_device"));
    ck_assert_ptr_ne(d, NULL);
 
    eo_do(d, eo_event_callback_add(EMOUS_DEVICE_EVENT_MOUNT_REQUEST, _mount_req, NULL);

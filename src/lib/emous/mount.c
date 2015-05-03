@@ -10,7 +10,6 @@ typedef struct {
 
 typedef struct {
    const char *displayname;
-   const char *params;
    Device_State state;
 } Emous_Device_Data;
 
@@ -179,15 +178,19 @@ _device_del(void *data, Eo *obj, const Eo_Event_Description *desc EINA_UNUSED, v
 
    cd->devices = eina_list_remove(cd->devices, obj);
 
+   eo_do(obj,
+        eo_event_callback_call(EMOUS_DEVICE_CLASS_EVENT_DEVICE_DEL, obj);
+        );
+
    return EINA_TRUE;
 }
 
 static Emous_Device*
-_emous_device_class_device_add(Eo *obj, Emous_Device_Class_Data *pd, const char *name, const char *param)
+_emous_device_class_device_add(Eo *obj, Emous_Device_Class_Data *pd, const char *name)
 {
    Emous_Device *result;
    //create new device
-   result = eo_add(EMOUS_DEVICE_CLASS, obj, emous_device_construct(name, param));
+   result = eo_add(EMOUS_DEVICE_CLASS, obj, emous_device_construct(name));
 
    //add proxy redirects
    eo_do(result,  eo_event_callback_add(EO_BASE_EVENT_DEL, _device_del, obj);
@@ -219,17 +222,10 @@ _emous_device_displayname_get(Eo *obj EINA_UNUSED, Emous_Device_Data *pd)
    return pd->displayname;
 }
 
-static const char*
-_emous_device_params_get(Eo *obj EINA_UNUSED, Emous_Device_Data *pd)
-{
-   return pd->params;
-}
-
 static void
 _emous_device_eo_base_destructor(Eo *obj, Emous_Device_Data *pd EINA_UNUSED)
 {
    eina_stringshare_del(pd->displayname);
-   eina_stringshare_del(pd->params);
 
    eo_do_super(obj, EMOUS_DEVICE_CLASS, eo_destructor());
 }

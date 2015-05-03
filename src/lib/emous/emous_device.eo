@@ -34,14 +34,6 @@ class Emous_Device (Eo.Base)
 
          }
       }
-      params {
-         values {
-            const(char) *params;
-         }
-         get {
-
-         }
-      }
    }
    methods {
       mount {
@@ -57,7 +49,6 @@ class Emous_Device (Eo.Base)
       construct {
          params {
             const(char) *displayname;
-            const(char) *params;
          }
       }
    }
