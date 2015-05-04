@@ -17,13 +17,13 @@ _emous_mount_add(const char *type, const char *mount_point, const char *source)
    Mount_Point *m;
    Emous_Device_Class *c;
 
-   INF("Adding %s %s %s", type, mount_point, source);
+   DBG("Adding %s %s %s", type, mount_point, source);
 
    eo_do(EMOUS_MANAGER_CLASS, c = emous_manager_device_class_get(type));
 
    if (!c)
      {
-        INF("Noone cared about type %s. ...dropping!", type);
+        DBG("Noone cared about type %s. ...dropping!", type);
         return;
      }
 
@@ -43,7 +43,7 @@ _emous_mount_del(const char *mount_point)
    Mount_Point *mp;
    const char *mnt_point = eina_stringshare_add(mount_point);
 
-   INF("Deleting %s", mnt_point);
+   DBG("Deleting %s", mnt_point);
 
    mp = eina_hash_find(mount_points, mnt_point);
 

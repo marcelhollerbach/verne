@@ -9,7 +9,7 @@ static Eina_Bool
 _module_load_cb(Eina_Module *m, void *data EINA_UNUSED)
 {
    //we take everything!
-   INF("Loading module %s", eina_module_file_get(m));
+   DBG("Loading module %s", eina_module_file_get(m));
    return EINA_TRUE;
 }
 
@@ -31,8 +31,6 @@ emous_init(void)
    _log_domain = eina_log_domain_register("emous", NULL);
    if (!_log_domain)
      return 0;
-
-   eina_log_domain_level_set("emous",EINA_LOG_LEVEL_DBG);
 
    if (!ecore_init())
      {
@@ -108,8 +106,6 @@ emous_test_init(void)
    _log_domain = eina_log_domain_register("emous", NULL);
    if (!_log_domain)
      return 0;
-
-   eina_log_domain_level_set("emous",EINA_LOG_LEVEL_DBG);
 
    if (!ecore_init())
      {
