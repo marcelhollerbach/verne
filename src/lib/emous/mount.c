@@ -197,10 +197,7 @@ _emous_device_class_device_add(Eo *obj, Emous_Device_Class_Data *pd, const char 
                   eo_event_callback_add(EMOUS_DEVICE_EVENT_STATE_CHANGED, _device_events_proxy, NULL));
    //add list
    pd->devices = eina_list_append(pd->devices, result);
-   //emit add signal
-   eo_do(obj,
-        eo_event_callback_call(EMOUS_DEVICE_CLASS_EVENT_DEVICE_ADD, result);
-        );
+
    return result;
 }
 
@@ -210,11 +207,20 @@ _emous_device_class_construct(Eo *obj EINA_UNUSED, Emous_Device_Class_Data *pd, 
    pd->name = eina_stringshare_add(name);
 }
 
-
 //==========================
 // emous_device implement
 //==========================
 
+static void
+_emous_device_populate(Eo *obj, Emous_Device_Data *pd)
+{
+   Emous_Device_Class *c;
+   eo_do(obj, c = eo_parent_get());
+
+   eo_do(c,
+        eo_event_callback_call(EMOUS_DEVICE_CLASS_EVENT_DEVICE_ADD, obj);
+        );
+}
 
 static const char*
 _emous_device_displayname_get(Eo *obj EINA_UNUSED, Emous_Device_Data *pd)

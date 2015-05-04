@@ -46,6 +46,11 @@ class Emous_Device (Eo.Base)
          Send a umount request, the backend which requested this device should handle this
          */
       }
+      populate {
+         /*@
+         This call will notify the ecosystem about the new device
+         */
+      }
       construct {
          params {
             const(char) *displayname;
