@@ -282,13 +282,14 @@ _emous_device_construct(Eo *obj EINA_UNUSED, Emous_Device_Data *pd, const char *
 static Eina_Bool
 _class_proxy_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc, void *event EINA_UNUSED)
 {
+   Emous_Device *d = event;
    if (desc == EMOUS_DEVICE_CLASS_EVENT_DEVICE_ADD)
      {
-        eo_do(manager, eo_event_callback_call(EMOUS_MANAGER_EVENT_DEVICE_ADD, NULL));
+        eo_do(manager, eo_event_callback_call(EMOUS_MANAGER_EVENT_DEVICE_ADD, d));
      }
    else if (desc == EMOUS_DEVICE_CLASS_EVENT_DEVICE_DEL)
      {
-        eo_do(manager, eo_event_callback_call(EMOUS_MANAGER_EVENT_DEVICE_DEL, NULL));
+        eo_do(manager, eo_event_callback_call(EMOUS_MANAGER_EVENT_DEVICE_DEL, d));
      }
    return EINA_TRUE;
 }
