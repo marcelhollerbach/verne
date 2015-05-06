@@ -34,8 +34,28 @@ class Emous_Device (Eo.Base)
 
          }
       }
+      mountpoints {
+         values {
+            Eina_List *mountpoints;
+         }
+         get {
+            /*@
+            Get all a  list where this is device is mounted.
+            */
+         }
+      }
    }
    methods {
+      mountpoint_add {
+         params {
+            const(char) *mnt_point;
+         }
+      }
+      moutpoint_del {
+         params {
+            const(char) *mnt_point;
+         }
+      }
       mount {
          /*@
          send a mount request, the backend which requested this device should handle that.

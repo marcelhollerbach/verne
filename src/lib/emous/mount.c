@@ -11,6 +11,7 @@ typedef struct {
 typedef struct {
    const char *displayname;
    Device_State state;
+   Eina_List *mountpoints;
 } Emous_Device_Data;
 
 typedef struct {
@@ -211,8 +212,26 @@ _emous_device_class_construct(Eo *obj EINA_UNUSED, Emous_Device_Class_Data *pd, 
 // emous_device implement
 //==========================
 
+static Eina_List*
+_emous_device_mountpoints_get(Eo *obj EINA_UNUSED, Emous_Device_Data *pd)
+{
+   return pd->mountpoints;
+}
+
 static void
-_emous_device_populate(Eo *obj, Emous_Device_Data *pd)
+_emous_device_mountpoint_add(Eo *obj EINA_UNUSED, Emous_Device_Data *pd, const char *mnt_point)
+{
+   pd->mountpoints = eina_list_append(pd->mountpoints, eina_stringshare_add(mnt_point));
+}
+
+static void
+_emous_device_moutpoint_del(Eo *obj EINA_UNUSED, Emous_Device_Data *pd, const char *mnt_point)
+{
+   pd->mountpoints = eina_list_remove(pd->mountpoints, eina_stringshare_add(mnt_point));
+}
+
+static void
+_emous_device_populate(Eo *obj, Emous_Device_Data *pd EINA_UNUSED)
 {
    Emous_Device_Class *c;
    eo_do(obj, c = eo_parent_get());
