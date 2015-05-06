@@ -21,6 +21,10 @@ class Emous_Manager (Eo.Base)
          /*@ this will just return allways the same object of Emous_Manager you can listen on signals with this object.*/
          return: Emous_Manager *;
       }
+      devices_get @class {
+         /*@ Returns a list of all available devices */
+         return: Eina_List *;
+      }
    }
    events{
       device,add; /* a device appeared */

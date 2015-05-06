@@ -6,6 +6,7 @@ typedef struct {
 
 typedef struct {
    Eina_Hash *hash;
+   Eina_List *devices;
 } Emous_Manager_Static_Data;
 
 typedef struct {
@@ -304,13 +305,21 @@ _class_proxy_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Desc
    Emous_Device *d = event;
    if (desc == EMOUS_DEVICE_CLASS_EVENT_DEVICE_ADD)
      {
+        sd->devices = eina_list_append(sd->devices, d);
         eo_do(manager, eo_event_callback_call(EMOUS_MANAGER_EVENT_DEVICE_ADD, d));
      }
    else if (desc == EMOUS_DEVICE_CLASS_EVENT_DEVICE_DEL)
      {
+        sd->devices = eina_list_remove(sd->devices, d);
         eo_do(manager, eo_event_callback_call(EMOUS_MANAGER_EVENT_DEVICE_DEL, d));
      }
    return EINA_TRUE;
+}
+
+static Eina_List *
+_emous_manager_devices_get(Eo *obj, void *pd)
+{
+   return sd->devices;
 }
 
 static Eina_List *
