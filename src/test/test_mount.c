@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <Emous.h>
+#include <Ecore.h>
 #include "../lib/emous/Emous_Test.h"
 //=============================================================================
 
@@ -178,6 +179,46 @@ START_TEST(normal_init)
 }
 END_TEST
 
+//==============================================
+
+static Eina_Bool device_add;
+
+static Eina_Bool
+_add(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Emous_Device *d = event;
+   printf("appeared %p\n", d);
+   device_add = EINA_TRUE;
+   return EINA_TRUE;
+}
+
+static Eina_Bool
+_stop(void *data)
+{
+   ecore_main_loop_quit();
+   return EINA_FALSE;
+}
+
+START_TEST(mainloop_fireup_test)
+{
+   Emous_Manager *m;
+   device_add = EINA_FALSE;
+   ecore_init();
+   ck_assert_int_eq(emous_init(), 1);
+
+   eo_do(EMOUS_MANAGER_CLASS, m = emous_manager_object_get());
+
+   eo_do(m, eo_event_callback_add(EMOUS_MANAGER_EVENT_DEVICE_ADD, _add, NULL));
+
+   ecore_timer_add(5, _stop, NULL);
+
+   ecore_main_loop_begin();
+   ck_assert(device_add == EINA_TRUE);
+   ecore_shutdown();
+   emous_shutdown();
+}
+END_TEST
+
 Suite * emous_suite(void)
 {
     Suite *s;
@@ -188,9 +229,11 @@ Suite * emous_suite(void)
     /* Core test case */
     tc_core = tcase_create("Mount");
 
+    tcase_set_timeout(tc_core, 7);
     tcase_add_test(tc_core, test_something);
     tcase_add_test(tc_core, file_backend);
     tcase_add_test(tc_core, normal_init);
+    tcase_add_test(tc_core, mainloop_fireup_test);
 
     suite_add_tcase(s, tc_core);
 
