@@ -13,6 +13,7 @@ typedef struct {
    const char *displayname;
    Device_State state;
    Eina_List *mountpoints;
+   Eina_Bool populated;
 } Emous_Device_Data;
 
 typedef struct {
@@ -71,6 +72,12 @@ static Eina_Bool
 _device_events_proxy(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
 {
    Device_State s;
+   Emous_Device_Data *pd;
+
+   pd = eo_data_scope_get(obj, EMOUS_DEVICE_CLASS);
+   if (!pd->populated)
+     return EINA_TRUE;
+
 
    eo_do(obj, s = emous_device_state_get());
    if (s == _DEVICE_STATE_MOUNTED)
@@ -240,6 +247,7 @@ _emous_device_populate(Eo *obj, Emous_Device_Data *pd EINA_UNUSED)
    eo_do(c,
         eo_event_callback_call(EMOUS_DEVICE_CLASS_EVENT_DEVICE_ADD, obj);
         );
+   pd->populated = EINA_TRUE;
 }
 
 static const char*
