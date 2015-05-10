@@ -60,3 +60,14 @@ INSTALL(TARGETS emous
 
 set_property(TARGET emous
              PROPERTY COMPILE_DEFINITIONS EMOUS_MODULE_PATH="${EMOUS_MODULE_PATH}")
+
+LIST(APPEND EMOUS_UDISK_FILES
+   ./modules/udisk/udisk.c
+   ./modules/udisk/udisk_dbus.c
+   )
+
+add_library(emous_udisk MODULE ${EMOUS_UDISK_FILES})
+
+INSTALL(TARGETS emous_udisk
+  DESTINATION ${EMOUS_MODULE_PATH}
+)
