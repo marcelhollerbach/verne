@@ -34,3 +34,5 @@ set_property(TARGET efm_lib
 INSTALL(TARGETS efm_lib
   LIBRARY DESTINATION lib
 )
+INSTALL(FILES Efm.h
+  DESTINATION include)
