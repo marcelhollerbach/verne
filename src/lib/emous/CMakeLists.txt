@@ -59,8 +59,8 @@ INSTALL(TARGETS emous
   LIBRARY DESTINATION lib
 )
 
-INSTALL(FILES Emous.h
-  DESTINATION "include"
+INSTALL(FILES Emous.h emous_device.eo.h emous_device_class.eo.h emous_manager.eo.h
+  DESTINATION "include/emous-1/"
 )
 
 set_property(TARGET emous
