@@ -4,9 +4,10 @@ include_directories(
   ${EFREET_MIME_INCLUDE_DIRS}
   ${ECORE_FILE_INCLUDE_DIRS}
   /usr/include/libmount/
+  ./
 )
 
-set (EMOUS_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/lib/meous/")
+set (EMOUS_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/lib/emous/")
 
 string(REPLACE "\n" "" EOLIAN_EO_DIR_WITHOUT_NEWLINE
 "${EOLIAN_EO_DIR}")
