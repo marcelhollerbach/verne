@@ -73,12 +73,17 @@ mountpoint_update_cb(void *data EINA_UNUSED, const Eldbus_Message *msg, Eldbus_P
         return;
      }
 
+   if (!var)
+     return;
+
    if (!eldbus_message_iter_arguments_get(var, "aay", &mountpoints))
      {
         printf("Failed to receive mountpoints");
         return;
       }
 
+   if (!mountpoints)
+     return;
    do 
      {
         Eina_Bool add = EINA_TRUE;
@@ -86,10 +91,7 @@ mountpoint_update_cb(void *data EINA_UNUSED, const Eldbus_Message *msg, Eldbus_P
         mp = _util_fuckyouglib_convert(mountpoints);
         
         if (!mp)
-          {
-             ERR("Getting mountpoint string failed...");
-             continue;
-          }
+          continue;
 
         EINA_LIST_FOREACH(ex_mountpoints, node, mountpoint)
           {
