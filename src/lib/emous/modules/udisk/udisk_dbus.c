@@ -216,7 +216,6 @@ _device_handle(Eldbus_Message_Iter *dict)
         return;
      }
 
-   //TODO listen for changed mountpoints
    eldbus_proxy_properties_changed_callback_add(proxy, _prop_changed_cb, d);
 
    proxy = NULL;
