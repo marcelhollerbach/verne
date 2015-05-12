@@ -193,7 +193,7 @@ _add(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *de
 }
 
 static Eina_Bool
-_stop(void *data)
+_stop(void *data EINA_UNUSED)
 {
    ecore_main_loop_quit();
    return EINA_FALSE;

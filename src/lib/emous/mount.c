@@ -325,7 +325,7 @@ _class_proxy_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Desc
 }
 
 static Eina_List *
-_emous_manager_devices_get(Eo *obj, void *pd)
+_emous_manager_devices_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 {
    return sd->devices;
 }
