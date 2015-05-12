@@ -161,7 +161,7 @@ _device_item_sel(void *data, Evas_Object *obj, void *event EINA_UNUSED)
      }
    else
      {
-       //TODO mount and enter dir if it is mounted or raise error
+        //TODO add a option pane which asks if you want to mount this device
      }
 }
 

@@ -197,8 +197,9 @@ err_cb(void *data, EFM_Monitor *mon EINA_UNUSED)
 static void
 sdel_cb(void *data EINA_UNUSED, EFM_Monitor *mon EINA_UNUSED)
 {
-   CRI("PANIC DELETE EVERYTHING ...\n");
+   View_Context *ctx = evas_object_data_get(data, "__ctx");
    elm_gengrid_clear(data);
+   ctx->fm = NULL;
 }
 
 static void
