@@ -380,8 +380,15 @@ Eina_Bool
 udisk_umount(Device *d)
 {
    Eldbus_Message *msg;
+   Eldbus_Message_Iter *array, *main_iter;
 
    msg = eldbus_proxy_method_call_new(d->proxy, "Unmount");
+   main_iter = eldbus_message_iter_get(msg);
+
+   if (!eldbus_message_iter_arguments_append(main_iter, "a{sv}", &array))
+     ERR("Failed to construct arguments!");
+
+   eldbus_message_iter_container_close(main_iter, array);
    return !!eldbus_proxy_send(d->proxy, msg, _umount_cb, d, -1);
 }
 
