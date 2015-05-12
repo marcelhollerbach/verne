@@ -18,7 +18,7 @@ _mount_request_cb(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description *d
 
    eo_do(d->device, emous_device_state_set(DEVICE_STATE_MOUNTREQ));
 
-   if (udisk_mount(d))
+   if (!udisk_mount(d))
      {
         ERR("Mount failed!");
      }
