@@ -59,13 +59,7 @@ mountpoint_update_cb(void *data EINA_UNUSED, const Eldbus_Message *msg, Eldbus_P
    Eldbus_Message_Iter *var, *mountpoints;
    Device *d = data;
    Eina_List *list = NULL, *node = NULL, *ex_mountpoints = NULL;
-   const char *mp, *mountpoint;
-
-   //seperate in which state we are, if this is init state d->device is NULL so we add it in the tmp list
-   if (d->device)
-     eo_do(d->device, ex_mountpoints = emous_device_mountpoints_get());
-   else
-     ex_mountpoints = NULL;
+   const char *mp;
 
    if (!eldbus_message_arguments_get(msg, "v", &var))
      {
@@ -86,33 +80,33 @@ mountpoint_update_cb(void *data EINA_UNUSED, const Eldbus_Message *msg, Eldbus_P
      return;
    do 
      {
-        Eina_Bool add = EINA_TRUE;
-
         mp = _util_fuckyouglib_convert(mountpoints);
-        
+
         if (!mp)
           continue;
 
-        EINA_LIST_FOREACH(ex_mountpoints, node, mountpoint)
-          {
-             if (mountpoint == mp)
-               {
-                  add = EINA_FALSE;
-                  break;
-               }
-          }
-
-        if (add)
-          list = eina_list_append(list, mp);
+        list = eina_list_append(list, mp);
      }
    while(eldbus_message_iter_next(mountpoints));
    
+   if (!d->device)
+     {
+        d->tmp_list = list;
+        return;
+     } 
+   eo_do(d->device, ex_mountpoints = emous_device_mountpoints_get(););
+
+   ex_mountpoints = eina_list_clone(ex_mountpoints);
+
    EINA_LIST_FOREACH(list, node, mp)
      {
-        if (d->device)
-          eo_do(d->device, emous_device_mountpoint_add(mp));
-        else
-          d->tmp_list = eina_list_append(d->tmp_list, mp);
+        ex_mountpoints = eina_list_remove(ex_mountpoints, mp);
+        eo_do(d->device, emous_device_mountpoint_add(mp));
+     }
+   //the remaining ex_mountpoints are those which dissappeared
+   EINA_LIST_FREE(ex_mountpoints, mp)
+     {
+        eo_do(d->device, emous_device_moutpoint_del(mp));
      }
 
    if (d->device)
