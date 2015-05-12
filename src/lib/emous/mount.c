@@ -184,10 +184,9 @@ _device_del(void *data, Eo *obj, const Eo_Event_Description *desc EINA_UNUSED, v
    Emous_Device_Class_Data *cd;
 
    cd = eo_data_scope_get(cl, EMOUS_DEVICE_CLASS_CLASS);
-
    cd->devices = eina_list_remove(cd->devices, obj);
 
-   eo_do(obj,
+   eo_do(cl,
         eo_event_callback_call(EMOUS_DEVICE_CLASS_EVENT_DEVICE_DEL, obj);
         );
 
