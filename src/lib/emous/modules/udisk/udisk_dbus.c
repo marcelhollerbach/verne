@@ -112,6 +112,13 @@ mountpoint_update_cb(void *data EINA_UNUSED, const Eldbus_Message *msg, Eldbus_P
         else
           d->tmp_list = eina_list_append(d->tmp_list, mp);
      }
+
+   if (d->device)
+     {
+        eo_do(d->device, list = emous_device_mountpoints_get());
+        if (list)
+          eo_do(d->device, emous_device_state_set(DEVICE_STATE_MOUNTED));
+     }
 }
 
 static void
