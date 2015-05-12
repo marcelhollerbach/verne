@@ -229,6 +229,19 @@ _emous_device_mountpoints_get(Eo *obj EINA_UNUSED, Emous_Device_Data *pd)
 static void
 _emous_device_mountpoint_add(Eo *obj EINA_UNUSED, Emous_Device_Data *pd, const char *mnt_point)
 {
+   Eina_List *node;
+   const char *existing;
+   const char *news;
+
+   news = eina_stringshare_add(mnt_point);
+
+   EINA_LIST_FOREACH(pd->mountpoints, node, existing)
+     {
+        //this thing exists
+        if (news == existing)
+          return;
+     }
+
    pd->mountpoints = eina_list_append(pd->mountpoints, eina_stringshare_add(mnt_point));
 }
 
