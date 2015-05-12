@@ -1,9 +1,9 @@
-class Elm_File_Icon (Elm_Layout)
+class Elm_File_Icon (Elm.Layout)
 {
    eo_prefix: elm_obj_file_icon;
    data: Elm_File_Icon_Data;
-   properties {
-      fm_monitor_file {
+   methods {
+      @property fm_monitor_file {
         set {
 
         }
@@ -14,8 +14,6 @@ class Elm_File_Icon (Elm_Layout)
           EFM_File *file;
         }
       }
-   }
-   methods {
       fill_sample {
         params {
           @in const(char) **group;

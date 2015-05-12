@@ -332,7 +332,7 @@ _mount_cb(void *data, const Eldbus_Message *msg, Eldbus_Pending *pen EINA_UNUSED
    DBG("Mount call was successfully at %s", point);
 end:
    eo_do(d->device, mnt_points = emous_device_mountpoints_get());
-   eo_do(d->device, emous_device_state_set(eina_list_count(mnt_points) > 0 ? _DEVICE_STATE_MOUNTED : _DEVICE_STATE_UMOUNTED));
+   eo_do(d->device, emous_device_state_set(eina_list_count(mnt_points) > 0 ? DEVICE_STATE_MOUNTED : DEVICE_STATE_UMOUNTED));
 }
 
 Eina_Bool
@@ -365,7 +365,7 @@ _umount_cb(void *data, const Eldbus_Message *msg, Eldbus_Pending *pen EINA_UNUSE
      }
 
    eo_do(d->device, mnt_points = emous_device_mountpoints_get());
-   eo_do(d->device, emous_device_state_set(eina_list_count(mnt_points) > 0 ? _DEVICE_STATE_MOUNTED : _DEVICE_STATE_UMOUNTED));
+   eo_do(d->device, emous_device_state_set(eina_list_count(mnt_points) > 0 ? DEVICE_STATE_MOUNTED : DEVICE_STATE_UMOUNTED));
 }
 
 Eina_Bool

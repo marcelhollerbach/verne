@@ -1,12 +1,12 @@
-type Emous_Mountpoint: struct {
+struct Emous_Mountpoint {
    source: const(char)*;
    mountpoint: const(char)*;
-};
+}
 
 class Emous_Device_Class (Eo.Base)
 {
-   properties {
-      name {
+   methods {
+      @property name {
          values {
             const(char) *name;
          }
@@ -14,8 +14,6 @@ class Emous_Device_Class (Eo.Base)
 
          }
       }
-   }
-   methods {
       device_add {
          params {
             const(char) *name;

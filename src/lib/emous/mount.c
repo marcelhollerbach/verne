@@ -80,11 +80,11 @@ _device_events_proxy(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description
 
 
    eo_do(obj, s = emous_device_state_get());
-   if (s == _DEVICE_STATE_MOUNTED)
+   if (s == DEVICE_STATE_MOUNTED)
      {
         M_SIGNAL(EMOUS_MANAGER_EVENT_MOUNT_ADD);
      }
-   else if (s == _DEVICE_STATE_UMOUNTREQ || s == _DEVICE_STATE_MOUNTREQ)
+   else if (s == DEVICE_STATE_UMOUNTREQ || s == DEVICE_STATE_MOUNTREQ)
      {
         M_SIGNAL(EMOUS_MANAGER_EVENT_MOUNT_REQUEST_ADD);
      }
@@ -93,8 +93,8 @@ _device_events_proxy(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description
         M_SIGNAL(EMOUS_MANAGER_EVENT_MOUNT_DEL);
      }
 
-   if (((Device_State) event) == _DEVICE_STATE_MOUNTREQ ||
-       ((Device_State) event) == _DEVICE_STATE_UMOUNTREQ)
+   if (((Device_State) event) == DEVICE_STATE_MOUNTREQ ||
+       ((Device_State) event) == DEVICE_STATE_UMOUNTREQ)
      {
         M_SIGNAL(EMOUS_MANAGER_EVENT_MOUNT_REQUEST_END);
      }

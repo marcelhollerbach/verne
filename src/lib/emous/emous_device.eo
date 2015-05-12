@@ -1,14 +1,14 @@
-type Device_State: enum _Device_State{
+enum Device_State{
    mounted,
    umounted,
    mountreq,
    umountreq
-};
+}
 
 class Emous_Device (Eo.Base)
 {
-   properties {
-      state {
+   methods {
+      @property state {
          values {
             Device_State mounted;
          }
@@ -26,7 +26,7 @@ class Emous_Device (Eo.Base)
             */
          }
       }
-      displayname {
+      @property displayname {
          values {
             const(char) *name;
          }
@@ -34,7 +34,7 @@ class Emous_Device (Eo.Base)
 
          }
       }
-      mountpoints {
+      @property mountpoints {
          values {
             Eina_List *mountpoints;
          }
@@ -44,8 +44,6 @@ class Emous_Device (Eo.Base)
             */
          }
       }
-   }
-   methods {
       mountpoint_add {
          params {
             const(char) *mnt_point;

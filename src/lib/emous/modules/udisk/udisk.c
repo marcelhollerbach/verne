@@ -16,7 +16,7 @@ _mount_request_cb(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description *d
 
    d = eina_hash_find(devices, &obj);
 
-   eo_do(d->device, emous_device_state_set(_DEVICE_STATE_MOUNTREQ));
+   eo_do(d->device, emous_device_state_set(DEVICE_STATE_MOUNTREQ));
 
    if (udisk_mount(d))
      {
@@ -33,7 +33,7 @@ _umount_request_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_D
 
    d = eina_hash_find(devices, &obj);
 
-   eo_do(d->device, emous_device_state_set(_DEVICE_STATE_UMOUNTREQ));
+   eo_do(d->device, emous_device_state_set(DEVICE_STATE_UMOUNTREQ));
 
    if (!udisk_umount(d))
      {
@@ -62,9 +62,9 @@ _device_add(Device *d)
         }
    }
    if (mountpoints == NULL)
-     eo_do(dev, emous_device_state_set(_DEVICE_STATE_UMOUNTED));
+     eo_do(dev, emous_device_state_set(DEVICE_STATE_UMOUNTED));
    else
-     eo_do(dev, emous_device_state_set(_DEVICE_STATE_MOUNTED));
+     eo_do(dev, emous_device_state_set(DEVICE_STATE_MOUNTED));
   
    //connect them
    d->device = dev;

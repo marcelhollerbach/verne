@@ -50,8 +50,8 @@ static Eina_Bool
 _mount_req(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
 {
    mount_call = EINA_TRUE;
-      eo_do(obj, emous_device_state_set(_DEVICE_STATE_MOUNTREQ);
-                 emous_device_state_set(_DEVICE_STATE_MOUNTED));
+      eo_do(obj, emous_device_state_set(DEVICE_STATE_MOUNTREQ);
+                 emous_device_state_set(DEVICE_STATE_MOUNTED));
    return EINA_TRUE;
 }
 
@@ -59,8 +59,8 @@ static Eina_Bool
 _umount_req(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
 {
    umount_call = EINA_TRUE;
-   eo_do(obj, emous_device_state_set(_DEVICE_STATE_UMOUNTREQ);
-              emous_device_state_set(_DEVICE_STATE_UMOUNTED));
+   eo_do(obj, emous_device_state_set(DEVICE_STATE_UMOUNTREQ);
+              emous_device_state_set(DEVICE_STATE_UMOUNTED));
    return EINA_TRUE;
 }
 
