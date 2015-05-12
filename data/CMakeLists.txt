@@ -1,6 +1,7 @@
 LIST(APPEND WIDGET_THEME
    file_display.edc
    file_icon.edc
+   efm.edc
    tab.edc
    )
 
