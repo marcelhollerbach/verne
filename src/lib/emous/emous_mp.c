@@ -47,6 +47,10 @@ _emous_mount_del(const char *mount_point)
 
    mp = eina_hash_find(mount_points, mnt_point);
 
+   //check if this mountpoint is registered or not
+   if (!mp)
+     return;
+
    eo_do(mp->class, emous_device_class_mountpoint_removed(mnt_point));
 
    eina_hash_del(mount_points, mnt_point, mp);
