@@ -4,6 +4,60 @@ collections {
       image: "diagonal_stripes.png" COMP;
       image: "outline_glow.png" COMP;
       image: "icon_arrow_right.png" COMP;
+      image: "icon_efm_hdd.png" COMP;
+      image: "led_light.png" COMP;
+      image: "led_dark.png" COMP;
+      image: "led_red_light.png" COMP;
+   }
+   group { name: "elm/file_display/mount_indicator/default";
+      parts {
+         part { name: "logo";
+            type: IMAGE;
+            description { state: "default" 0.0;
+               rel1.relative: 0.0 0.0;
+               rel2.relative: 1.0 1.0;
+               image.normal: "icon_efm_hdd.png";
+               aspect: 1 1;
+               aspect_preference: BOTH;
+            }
+         }
+         part { name: "indicator";
+            description { state: "default" 0.0;
+               rel1.relative: 1.0 1.0;
+               rel2.relative: 1.0 1.0;
+               rel1.offset: -10 -10;
+               image.normal: "led_dark.png";
+            }
+            description { state: "mounted" 0.0;
+               inherit: "default";
+               image.normal: "led_light.png";
+            }
+            description { state: "pending" 0.0;
+               inherit: "default";
+               image.normal: "led_red_light.png";
+            }
+         }
+      }
+      programs {
+         program {
+            signal: "mountreqest";
+            source: "elm";
+            action: STATE_SET "pending" 0.0;
+            target: "indicator";
+         }
+         program {
+            signal: "mounted";
+            source: "elm";
+            action: STATE_SET "mounted" 0.0;
+            target: "indicator";
+         }
+         program {
+            signal: "unmounted";
+            source: "elm";
+            action: STATE_SET "default" 0.0;
+            target: "indicator";
+         }
+      }
    }
    group{ name: "elm/file_display/file_preview/default";
       parts {
