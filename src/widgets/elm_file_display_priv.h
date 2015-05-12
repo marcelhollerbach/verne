@@ -5,6 +5,7 @@
 #define EFL_EO_API_SUPPORT
 
 #include <Efm.h>
+#include <Emous.h>
 
 #include <Elementary.h>
 #include <Ecore.h>

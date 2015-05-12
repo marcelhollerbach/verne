@@ -60,6 +60,7 @@ include_directories(
   ${EO_INCLUDE_DIRS}
   ${ELEMENTARY_INCLUDE_DIRS}
   ../lib/efm
+  ../lib/emous
 )
 
 target_link_libraries(widgets
@@ -68,4 +69,5 @@ target_link_libraries(widgets
   ${ELEMENTARY_LIRBRARIES}
   ${EFREET_TRASH}
   efm_lib
+  emous
 )
