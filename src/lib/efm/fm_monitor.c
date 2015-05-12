@@ -288,8 +288,8 @@ _mon_err(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
    EVENT_ENTRY_GETTER
 
    fmm->err_cb(fmm->data, fmm);
-
-   eina_hash_free(fmm->file_icons);
+   
+   fm_monitor_stop(fmm);
 
    return EINA_FALSE;
 }
@@ -304,7 +304,7 @@ _mon_del(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 
    fmm->selfdel_cb(fmm->data, fmm);
 
-   eina_hash_free(fmm->file_icons);
+   //a self delete will end in a error, so stop is called there
 
    return EINA_FALSE;
 }
@@ -407,7 +407,7 @@ _eio_error_cb(void *data EINA_UNUSED, Eio_File *handler, int error EINA_UNUSED)
    if (fmm->deletion_mark) return;
 
    fmm->err_cb(fmm->data, fmm);
-   eina_hash_free(fmm->file_icons);
+   fm_monitor_stop(fmm);
 }
 
 void
