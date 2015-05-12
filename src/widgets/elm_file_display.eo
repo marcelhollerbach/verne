@@ -120,7 +120,9 @@ class Elm_File_Display (Elm.Layout, Efl.File)
       dnd,drop,target,item;
       hook,menu,selector,start;
       hook,menu,selector,end;
-      hook,menu,bookmarls,start;
+      hook,menu,bookmarks,start;
       hook,menu,bookmarks,end;
+      hook,menu,device,start;
+      hook,menu,device,end;
    }
 }
