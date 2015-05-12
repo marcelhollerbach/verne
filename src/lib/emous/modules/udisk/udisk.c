@@ -8,6 +8,7 @@ static Emous_Device_Class *c;
 
 //internal device map
 static Eina_Hash *devices;
+static Eina_Hash *device_name;
 
 static Eina_Bool
 _mount_request_cb(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
@@ -70,6 +71,7 @@ _device_add(Device *d)
    d->device = dev;
 
    eina_hash_add(devices, &dev, d);
+   eina_hash_add(device_name, d->opath, d);
 
    eo_do(dev, eo_event_callback_add(EMOUS_DEVICE_EVENT_MOUNT_REQUEST, _mount_request_cb, NULL);
               eo_event_callback_add(EMOUS_DEVICE_EVENT_UMOUNT_REQUEST, _umount_request_cb, NULL);
@@ -82,7 +84,25 @@ _device_add(Device *d)
 void
 _device_del(const char *opath)
 {
-   //TODO
+   Device *d;
+   const char *path;
+
+   path = eina_stringshare_add(opath);
+
+   d = eina_hash_find(device_name, path);
+
+   eina_stringshare_del(path);
+
+   if (!d)
+     return;
+
+   eina_hash_del(devices, &d->device, d);
+   eina_hash_del(device_name, opath, d);
+
+   eo_del(d->device);
+
+   eina_stringshare_del(d->opath);
+   free(d);
 }
 
 static Eina_Bool
@@ -116,6 +136,7 @@ _module_init(void)
          );
 
    devices = eina_hash_pointer_new(NULL/*FIXME*/);
+   device_name = eina_hash_stringshared_new(NULL);
    EINA_SAFETY_ON_NULL_RETURN_VAL(devices, EINA_FALSE);
 
    return EINA_TRUE;
@@ -125,6 +146,7 @@ static void
 _module_shutdown(void)
 {
    eina_hash_free(devices);
+   eina_hash_free(device_name);
    eo_del(c);
 
    udisk_dbus_shutdown();

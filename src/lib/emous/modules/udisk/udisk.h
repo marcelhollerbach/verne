@@ -26,7 +26,7 @@ typedef struct {
 } Device;
 
 void _device_add(Device *d);
-void _device_del(/*FIXME*/);
+void _device_del(const char *opath);
 
 Eina_Bool udisk_mount(Device *d);
 Eina_Bool udisk_umount(Device *d);
