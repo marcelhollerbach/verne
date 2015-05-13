@@ -53,7 +53,7 @@ target_link_libraries(emous
   ${ECORE_FILE_LIBRARIES}
   ${EFREET_MIME_LIBRARIES}
   -lmount
-  -lpthread
+  pthread
 )
 
 INSTALL(TARGETS emous

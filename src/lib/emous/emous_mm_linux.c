@@ -50,14 +50,18 @@ mnt_event(void)
 
    while(!mnt_tabdiff_next_change(diff, itr, &old, &new, &change))
      {
-        const char *src, *mnt_point, *type;
-        const char *omnt_point;
+        const char *src = NULL, *mnt_point, *type;
+        const char *omnt_point = NULL;
 
-        src = mnt_fs_get_source(new);
+        //null if the entry is gone
+        if (new)
+          src = mnt_fs_get_source(new);
+
         mnt_point = mnt_fs_get_target(new);
         type = mnt_fs_get_fstype(new);
 
-        omnt_point = mnt_fs_get_target(old);
+        if (old)
+          omnt_point = mnt_fs_get_target(old);
 
         switch(change)
           {
