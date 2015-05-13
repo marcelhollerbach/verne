@@ -59,7 +59,7 @@ _emous_mount_del(const char *mount_point)
 static void
 _free_cb(void *data)
 {
-   Emous_Mount_Point *p;
+   Mount_Point *p;
 
    p = data;
 

@@ -19,15 +19,6 @@
 # include "emous_manager.eo.legacy.h"
 #endif
 
-typedef struct _Emous_Mount_Point Emous_Mount_Point;
-
-//TODO move this to eo
-struct _Emous_Mount_Point {
-   Emous_Device_Class *type;
-   const char *source;
-   const char *mount_point;
-};
-
 EAPI int emous_init(void);
 EAPI void emous_shutdown(void);
 
