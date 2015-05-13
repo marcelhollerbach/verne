@@ -163,7 +163,7 @@ START_TEST(file_backend)
 
    checked = EINA_FALSE;
    eo_do(EMOUS_MANAGER_CLASS, c = emous_manager_device_class_add("file"));
-   eo_do(c, emous_device_class_type_add("ext4");
+   eo_do(c, emous_device_class_keyword_add("ext4");
             eo_event_callback_add(EMOUS_DEVICE_CLASS_EVENT_MOUNTPOINT_CHECK_ADD, _check, NULL));
    emous_test_init2();
    ck_assert(checked == EINA_TRUE);

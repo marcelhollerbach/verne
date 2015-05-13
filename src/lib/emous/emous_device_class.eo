@@ -20,12 +20,12 @@ class Emous_Device_Class (Eo.Base)
          }
          return: Emous_Device*;
       }
-      type_add {
+      keyword_add {
          params {
             const(char) *type;
          }
       }
-      type_test {
+      keyword_test {
          params {
             const(char) *type;
          }

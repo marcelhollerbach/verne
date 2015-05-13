@@ -102,13 +102,13 @@ _device_events_proxy(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description
 }
 
 static void
-_emous_device_class_type_add(Eo *obj EINA_UNUSED, Emous_Device_Class_Data *pd, const char *type)
+_emous_device_class_keyword_add(Eo *obj EINA_UNUSED, Emous_Device_Class_Data *pd, const char *type)
 {
    pd->keywords = eina_list_append(pd->keywords, eina_stringshare_add(type));
 }
 
 static Eina_Bool
-_emous_device_class_type_test(Eo *obj EINA_UNUSED, Emous_Device_Class_Data *pd, const char *type)
+_emous_device_class_keyword_test(Eo *obj EINA_UNUSED, Emous_Device_Class_Data *pd, const char *type)
 {
    const char *words;
    Eina_List *lst;
@@ -370,7 +370,7 @@ _emous_manager_device_class_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const
    EINA_ITERATOR_FOREACH(it, d)
      {
         eo_do(d,
-                 if (emous_device_class_type_test(name))
+                 if (emous_device_class_keyword_test(name))
                    return d;
               );
      }
