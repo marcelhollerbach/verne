@@ -5,7 +5,7 @@ enum Device_State{
    umountreq
 }
 
-class Emous_Device (Eo.Base)
+class Emous.Device (Eo.Base)
 {
    methods {
       @property state {

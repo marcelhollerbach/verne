@@ -4,7 +4,7 @@ int EMOUS_MOUNT_DEL;
 int EMOUS_MOUNT_ADD;
 
 typedef struct {
-   Emous_Device_Class *class;
+   Emous_Device_Type *class;
    const char *mount_point;
    const char *source;
 } Mount_Point;
@@ -15,7 +15,7 @@ void
 _emous_mount_add(const char *type, const char *mount_point, const char *source)
 {
    Mount_Point *m;
-   Emous_Device_Class *c;
+   Emous_Device_Type *c;
 
    DBG("Adding %s %s %s", type, mount_point, source);
 
@@ -32,7 +32,7 @@ _emous_mount_add(const char *type, const char *mount_point, const char *source)
    m->source = eina_stringshare_add(source);
    m->mount_point = eina_stringshare_add(mount_point);
 
-   eo_do(c, emous_device_class_mountpoint_added(m->mount_point, m->source));
+   eo_do(c, emous_device_type_mountpoint_added(m->mount_point, m->source));
 
    eina_hash_add(mount_points, m->mount_point, m);
 }
@@ -51,7 +51,7 @@ _emous_mount_del(const char *mount_point)
    if (!mp)
      return;
 
-   eo_do(mp->class, emous_device_class_mountpoint_removed(mnt_point));
+   eo_do(mp->class, emous_device_type_mountpoint_removed(mnt_point));
 
    eina_hash_del(mount_points, mnt_point, mp);
 }

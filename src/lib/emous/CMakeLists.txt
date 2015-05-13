@@ -40,8 +40,8 @@ LIST(APPEND EMOUS_FILES
    emous_manager.eo.h
    emous_device.eo.x
    emous_device.eo.h
-   emous_device_class.eo.x
-   emous_device_class.eo.h
+   emous_device_type.eo.x
+   emous_device_type.eo.h
    )
 
 add_library(emous SHARED ${EMOUS_FILES})
@@ -60,7 +60,7 @@ INSTALL(TARGETS emous
   LIBRARY DESTINATION lib
 )
 
-INSTALL(FILES Emous.h emous_device.eo.h emous_device_class.eo.h emous_manager.eo.h
+INSTALL(FILES Emous.h emous_device.eo.h emous_device_type.eo.h emous_manager.eo.h
   DESTINATION "include/emous-1/"
 )
 

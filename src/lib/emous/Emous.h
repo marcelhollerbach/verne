@@ -10,7 +10,7 @@
 # else
 
 #   include "emous_device.eo.h"
-#   include "emous_device_class.eo.h"
+#   include "emous_device_type.eo.h"
 #   include "emous_manager.eo.h"
 # endif
 #else

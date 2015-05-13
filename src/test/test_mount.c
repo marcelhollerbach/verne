@@ -75,7 +75,7 @@ _state_changed(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Descr
 START_TEST(test_something)
 {
    Emous_Manager *m;
-   Emous_Device_Class *c;
+   Emous_Device_Type *c;
    Emous_Device *d;
 
    ck_assert_int_eq(emous_test_init(), 1);
@@ -91,10 +91,10 @@ START_TEST(test_something)
             );
 
 
-   eo_do(EMOUS_MANAGER_CLASS, c = emous_manager_device_class_add("test_class"));
+   eo_do(EMOUS_MANAGER_CLASS, c = emous_manager_device_type_add("test_class"));
    ck_assert_ptr_ne(c,NULL);
 
-   eo_do(c, d = emous_device_class_device_add("test_device"));
+   eo_do(c, d = emous_device_type_device_add("test_device"));
    ck_assert_ptr_ne(d, NULL);
 
    eo_do(d, emous_device_populate();
@@ -157,14 +157,14 @@ _check(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *
 
 START_TEST(file_backend)
 {
-   Emous_Device_Class *c;
+   Emous_Device_Type *c;
 
    ck_assert_int_eq(emous_test_init(), 1);
 
    checked = EINA_FALSE;
-   eo_do(EMOUS_MANAGER_CLASS, c = emous_manager_device_class_add("file"));
-   eo_do(c, emous_device_class_keyword_add("ext4");
-            eo_event_callback_add(EMOUS_DEVICE_CLASS_EVENT_MOUNTPOINT_CHECK_ADD, _check, NULL));
+   eo_do(EMOUS_MANAGER_CLASS, c = emous_manager_device_type_add("file"));
+   eo_do(c, emous_device_type_keyword_add("ext4");
+            eo_event_callback_add(EMOUS_DEVICE_TYPE_EVENT_MOUNTPOINT_CHECK_ADD, _check, NULL));
    emous_test_init2();
    ck_assert(checked == EINA_TRUE);
 

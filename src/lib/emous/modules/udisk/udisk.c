@@ -4,7 +4,7 @@
 int _log_domain;
 
 //emous objects
-static Emous_Device_Class *c;
+static Emous_Device_Type *c;
 
 //internal device map
 static Eina_Hash *devices;
@@ -49,8 +49,9 @@ _device_add(Device *d)
 {
    Emous_Device *dev;
    Eina_List *mountpoints;
-   eo_do(c, dev = emous_device_class_device_add(d->displayname));
-   
+
+   eo_do(c, dev = emous_device_type_device_add(d->displayname));
+
    mountpoints = d->tmp_list;
 
    {
@@ -66,7 +67,7 @@ _device_add(Device *d)
      eo_do(dev, emous_device_state_set(DEVICE_STATE_UMOUNTED));
    else
      eo_do(dev, emous_device_state_set(DEVICE_STATE_MOUNTED));
-  
+
    //connect them
    d->device = dev;
 
@@ -128,11 +129,11 @@ _module_init(void)
 
    udisk_dbus_init();
 
-   eo_do(EMOUS_MANAGER_CLASS, c = emous_manager_device_class_add("udisk"));
+   eo_do(EMOUS_MANAGER_CLASS, c = emous_manager_device_type_add("udisk"));
    EINA_SAFETY_ON_NULL_RETURN_VAL(c, EINA_FALSE);
 
-   eo_do(c, eo_event_callback_add(EMOUS_DEVICE_CLASS_EVENT_MOUNTPOINT_CHECK_ADD, _add_cb, NULL);
-            eo_event_callback_add(EMOUS_DEVICE_CLASS_EVENT_MOUNTPOINT_CHECK_DEL, _del_cb, NULL);
+   eo_do(c, eo_event_callback_add(EMOUS_DEVICE_TYPE_EVENT_MOUNTPOINT_CHECK_ADD, _add_cb, NULL);
+            eo_event_callback_add(EMOUS_DEVICE_TYPE_EVENT_MOUNTPOINT_CHECK_DEL, _del_cb, NULL);
          );
 
    devices = eina_hash_pointer_new(NULL/*FIXME*/);

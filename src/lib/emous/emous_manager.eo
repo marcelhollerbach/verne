@@ -1,4 +1,4 @@
-class Emous_Manager (Eo.Base)
+class Emous.Manager (Eo.Base)
 {
    methods {
       device_classes_get @class {
@@ -8,14 +8,14 @@ class Emous_Manager (Eo.Base)
          params {
             const(char) *name;
          }
-         return: Emous_Device_Class*;
+         return: Emous_Device_Type*;
       }
-      device_class_add @class {
+      device_type_add @class {
          /*@ call this to get a new emous device class*/
          params {
             const(char) *name;
          }
-         return : Emous_Device_Class*;
+         return : Emous_Device_Type*;
       }
       object_get @class {
          /*@ this will just return allways the same object of Emous_Manager you can listen on signals with this object.*/
