@@ -347,8 +347,8 @@ _dnd_droped(void *data EINA_UNUSED, Evas_Object *obj, Elm_Selection_Data *ev)
 
         eina_stringshare_del(rawdata);
      }
-   _setup_list(obj);
    _dnd_leave(NULL, obj);
+   _setup_list(obj);
    return EINA_FALSE;
 }
 

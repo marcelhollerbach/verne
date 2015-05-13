@@ -451,6 +451,7 @@ _drag_anim_play(void *data, double pos)
      {
         _drag_start(as->icons, as->obj, as->ptr);
         _drag_anim_hide(as);
+        as->anim.timer = NULL;
         return ECORE_CALLBACK_CANCEL;
      }
 
