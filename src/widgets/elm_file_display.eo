@@ -10,7 +10,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 
          }
          values {
-            Eina_Bool bookmark;
+            bool bookmark;
          }
       }
       @property filepreview_show {
@@ -21,7 +21,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 
          }
          values {
-            Eina_Bool filepreview;
+            bool filepreview;
          }
       }
       @property views {
@@ -65,7 +65,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 
          }
          values {
-            Eina_Bool hidden;
+            bool hidden;
          }
       }
       @property sort_type {
@@ -99,7 +99,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 
          }
          values {
-            Eina_Bool b;
+            bool b;
          }
       }
    }
