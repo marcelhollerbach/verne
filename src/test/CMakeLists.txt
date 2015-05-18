@@ -1,5 +1,3 @@
-set(THEME_PATH_DEFINITION THEME_PATH="$(CMAKE_BINARY_DIR)/data/")
-
 include_directories(
   ${ELEMENTARY_INCLUDE_DIRS}
    ../widgets/
@@ -39,9 +37,6 @@ target_link_libraries (filedisplay_test
    efm_lib
 )
 
-set_property(TARGET filedisplay_test
-   PROPERTY COMPILE_DEFINITIONS ${THEME_PATH_DEFINITION})
-
 add_executable(test_fm_monitor test_fm_monitor.c)
 
 target_link_libraries (test_fm_monitor
@@ -64,10 +59,6 @@ target_link_libraries (test_tab
    ${ELEMENTARY_LIBRARIES}
    widgets
 )
-
-set_property(TARGET test_tab
-   PROPERTY COMPILE_DEFINITIONS ${THEME_PATH_DEFINITION})
-
 
 add_executable(test_resolver test_mount.c)
 

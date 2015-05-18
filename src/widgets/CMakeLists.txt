@@ -1,3 +1,7 @@
+set(THEME_INSTALL_PATH "${CMAKE_BINARY_DIR}/data/")
+
+set(THEME_PATH_DEFINITION THEME_PATH="${THEME_INSTALL_PATH}")
+
 LIST(APPEND WIDGET_LIBRARY
    Elementary_Ext.h
    elementary_ext.c
@@ -72,3 +76,6 @@ target_link_libraries(widgets
   efm_lib
   emous
 )
+
+set_property(TARGET widgets
+   PROPERTY COMPILE_DEFINITIONS ${THEME_PATH_DEFINITION})

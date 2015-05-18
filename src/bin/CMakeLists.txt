@@ -23,8 +23,3 @@ target_link_libraries (efm
    ${ELEMENTARY_LIBRARIES}
    widgets
    efm_lib)
-
-set(THEME_PATH_DEFINITION THEME_PATH="$(CMAKE_BINARY_DIR)/data/")
-
-set_property(TARGET efm
-   PROPERTY COMPILE_DEFINITIONS ${THEME_PATH_DEFINITION})
