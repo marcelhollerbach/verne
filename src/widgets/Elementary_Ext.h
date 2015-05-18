@@ -4,20 +4,13 @@
 #include "elm_file_display.h"
 #include "elm_tab_pane.eo.h"
 
-static inline void
-elm_ext_init()
-{
+extern int log_domain;
 
-   Elm_Theme *th = elm_theme_default_get();
+#define CRI(...) EINA_LOG_DOM_CRIT(log_domain, __VA_ARGS__)
+#define ERR(...) EINA_LOG_DOM_ERR(log_domain, __VA_ARGS__)
+#define INF(...) EINA_LOG_DOM_INF(log_domain, __VA_ARGS__)
+#define DBG(...) EINA_LOG_DOM_DBG(log_domain, __VA_ARGS__)
 
-   elm_theme_extension_add(th, THEME_PATH"file_icon.edc.edj");
-   elm_theme_extension_add(th, THEME_PATH"tab.edc.edj");
-   elm_theme_extension_add(th, THEME_PATH"file_display.edc.edj");
-
-   elm_theme_flush(th);
-}
-
-void log_init(void);
-void log_shutdown(void);
+void elm_ext_init();
 
 #endif

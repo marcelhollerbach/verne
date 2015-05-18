@@ -18,12 +18,7 @@
  * rightclick:
  *  - Context menu depending on the
  */
-
-#include <Eo.h>
-#include <Elementary.h>
-
 #include "elm_file_display_priv.h"
-#include "elm_file_icon.eo.h"
 
 #define W_DATA(w) Elm_File_Display_Data *pd = eo_data_scope_get(w, ELM_FILE_DISPLAY_CLASS);
 

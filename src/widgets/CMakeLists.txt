@@ -1,4 +1,6 @@
 LIST(APPEND WIDGET_LIBRARY
+   Elementary_Ext.h
+   elementary_ext.c
    elm_file_icon.eo
    elm_file_icon.eo.x
    elm_file_icon.eo.h
@@ -7,7 +9,6 @@ LIST(APPEND WIDGET_LIBRARY
    elm_file_display.c
    elm_file_display.h
    elm_file_display_config.c
-   elm_file_display_log.c
    elm_file_display_bookmark.c
    elm_file_display_preview.c
    elm_file_display_helper.c

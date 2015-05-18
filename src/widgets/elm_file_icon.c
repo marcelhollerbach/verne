@@ -6,11 +6,8 @@
 #include <Elementary.h>
 
 #include <Efm.h>
+#include "Elementary_Ext.h"
 #include "elm_file_icon.eo.h"
-
-
-#define CRI(...) printf(__VA_ARGS__)
-#define ERR(...) printf(__VA_ARGS__)
 
 typedef struct
 {
