@@ -5,8 +5,8 @@ class Elm_Tab_Pane (Elm.Layout)
    methods {
       item_add{
         params {
-          @in Evas_Object *active;
-          @in Evas_Object *content;
+          @in active : Evas_Object*;
+          @in content : Evas_Object*;
         }
       }
    }

@@ -10,7 +10,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 
          }
          values {
-            bool bookmark;
+            bookmark : bool;
          }
       }
       @property filepreview_show {
@@ -21,7 +21,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 
          }
          values {
-            bool filepreview;
+            filepreview : bool;
          }
       }
       @property views {
@@ -29,7 +29,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 
          }
          values {
-            Eina_List *views;
+            views : Eina_List*;
          }
       }
       @property view {
@@ -41,7 +41,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 
          }
          values {
-            const(char) *t;
+            t : const(char)*;
          }
       }
       @property show_icon_size {
@@ -53,7 +53,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 
          }
          values {
-            int size;
+            size : int;
          }
       }
       @property show_hidden_file {
@@ -65,7 +65,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 
          }
          values {
-            bool hidden;
+            hidden : bool;
          }
       }
       @property sort_type {
@@ -77,7 +77,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 
          }
          values {
-            Elm_File_Display_Sort_Type t;
+            t : Elm_File_Display_Sort_Type;
          }
       }
       @property folder_placement {
@@ -88,7 +88,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 
          }
          values {
-            Elm_File_Display_Folder_Placement t;
+            t : Elm_File_Display_Folder_Placement;
          }
       }
       @property reverse_sort {
@@ -99,7 +99,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 
          }
          values {
-            bool b;
+            b : bool;
          }
       }
    }

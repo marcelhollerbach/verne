@@ -10,7 +10,7 @@ class Emous.Device (Eo.Base)
    methods {
       @property state {
          values {
-            Device_State mounted;
+            mounted : Device_State;
          }
          set {
             /*@
@@ -28,7 +28,7 @@ class Emous.Device (Eo.Base)
       }
       @property displayname {
          values {
-            const(char) *name;
+            name : const(char)*;
          }
          get{
 
@@ -36,7 +36,7 @@ class Emous.Device (Eo.Base)
       }
       @property mountpoints {
          values {
-            Eina_List *mountpoints;
+            mountpoints : Eina_List*;
          }
          get {
             /*@
@@ -46,12 +46,12 @@ class Emous.Device (Eo.Base)
       }
       mountpoint_add {
          params {
-            const(char) *mnt_point;
+            mnt_point : const(char)*;
          }
       }
       moutpoint_del {
          params {
-            const(char) *mnt_point;
+            mnt_point : const(char)*;
          }
       }
       mount {
@@ -71,7 +71,7 @@ class Emous.Device (Eo.Base)
       }
       construct {
          params {
-            const(char) *displayname;
+            displayname : const(char)*;
          }
       }
    }

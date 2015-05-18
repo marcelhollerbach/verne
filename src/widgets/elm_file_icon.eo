@@ -11,13 +11,13 @@ class Elm_File_Icon (Elm.Layout)
 
         }
         values {
-          EFM_File *file;
+           file : EFM_File*;
         }
       }
       fill_sample {
         params {
-          @in const(char) **group;
-          @in const(char) **file;
+          @in group : const(char)**;
+          @in file : const(char)**;
         }
       }
       mime_ready {
