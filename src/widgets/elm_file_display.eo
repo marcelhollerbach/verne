@@ -114,10 +114,12 @@ class Elm_File_Display (Elm.Layout, Efl.File)
       Efl.File.file.get;
    }
    events {
-      path,changed;
-      item,selected;
-      item,choosen;
-      dnd,drop,target,item;
+      path,changed; /*@ path has changed */
+      item,selected; /*@ a item was clicked , once */
+      item,choosen; /*@ a item was double clicked */
+      dnd,item,hover; /*@ a item was hovered above another item */
+      dnd,item,droped; /*@ item was droped above another item */
+      dnd,droped; /*@ Item droped in the file display */
       hook,menu,selector,start;
       hook,menu,selector,end;
       hook,menu,bookmarks,start;

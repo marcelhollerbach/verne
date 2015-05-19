@@ -1,12 +1,34 @@
 #include "elm_file_display_priv.h"
 
+
+static Eina_Bool
+_drop_cb(void *data, Eo *obj, const Eo_Event_Description *desc, void *event)
+{
+ eo_do(data,
+         eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_DND_ITEM_DROPED, NULL));
+   return EINA_FALSE;
+}
+
+static Eina_Bool
+_hover_cb(void *data, Eo *obj, const Eo_Event_Description *desc, void *event)
+{
+   eo_do(data,
+         eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_DND_ITEM_HOVER, NULL));
+   return EINA_FALSE;
+}
+
 Evas_Object*
 icon_create(Evas_Object *par, EFM_File *file)
 {
-   Evas_Object *ic;
+   Evas_Object *ic, *widget;
+
+   widget = elm_object_parent_widget_get(par);
+
    #if 1
       ic = eo_add(ELM_FILE_ICON_CLASS, par);
-      eo_do(ic, elm_obj_file_icon_fm_monitor_file_set(file));
+      eo_do(ic, elm_obj_file_icon_fm_monitor_file_set(file);
+                eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_DROP, _drop_cb, widget);
+                eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_HOVER, _hover_cb, widget));
    #else
       ic = elm_label_add(par);
       elm_object_text_set(ic, file);
