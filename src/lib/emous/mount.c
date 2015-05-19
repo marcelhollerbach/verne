@@ -343,7 +343,7 @@ _emous_manager_devices_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 }
 
 static Eina_List *
-_emous_manager_device_classes_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
+_emous_manager_device_types_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 {
    Eina_Iterator *it;
    Eina_List *result = NULL;
@@ -360,7 +360,7 @@ _emous_manager_device_classes_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 }
 
 static Emous_Device_Type *
-_emous_manager_device_class_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *name)
+_emous_manager_device_type_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *name)
 {
    Eina_Iterator *it;
    Emous_Device_Type *d;

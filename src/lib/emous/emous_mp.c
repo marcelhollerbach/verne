@@ -19,7 +19,7 @@ _emous_mount_add(const char *type, const char *mount_point, const char *source)
 
    DBG("Adding %s %s %s", type, mount_point, source);
 
-   eo_do(EMOUS_MANAGER_CLASS, c = emous_manager_device_class_get(type));
+   eo_do(EMOUS_MANAGER_CLASS, c = emous_manager_device_type_get(type));
 
    if (!c)
      {

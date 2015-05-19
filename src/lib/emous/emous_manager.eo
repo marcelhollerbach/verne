@@ -1,10 +1,10 @@
 class Emous.Manager (Eo.Base)
 {
    methods {
-      device_classes_get @class {
+      device_types_get @class {
          return: list<Emous.Device.Type*>*;
       }
-      device_class_get @class {
+      device_type_get @class {
          params {
             name : const(char)*;
          }
