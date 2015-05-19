@@ -16,7 +16,10 @@ typedef struct
    Evas_Object *label;
 
    Eina_Bool picmode;
+   Ecore_Timer *t;
 } Elm_File_Icon_Data;
+
+#define PRIV_DATA  Elm_File_Icon_Data *pd = eo_data_scope_get(obj, ELM_FILE_ICON_CLASS);
 
 static void
 _content_set(Evas_Object *obj, Evas_Object *c)
@@ -30,10 +33,51 @@ _content_set(Evas_Object *obj, Evas_Object *c)
    evas_object_show(c);
 }
 
+static Eina_Bool
+_long_cb(void *data)
+{
+   Evas_Object *obj = data;
+   PRIV_DATA
+
+   ecore_timer_del(pd->t);
+   eo_do(obj, eo_event_callback_call(ELM_FILE_ICON_EVENT_ITEM_HOVER, NULL));
+   pd->t = NULL;
+
+   return EINA_FALSE;
+}
+
 EOLIAN static void
 _elm_file_icon_evas_object_smart_del(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED)
 {
   eo_do_super(obj, ELM_FILE_ICON_CLASS, evas_obj_smart_del());
+}
+
+static void
+_enter_cb(void *data EINA_UNUSED, Evas_Object *obj)
+{
+   PRIV_DATA
+
+   pd->t = ecore_timer_add(1.0, _long_cb, obj);
+   elm_layout_signal_emit(obj, "file_icon,mode,drop", "elm");
+}
+
+static void
+_leave_cb(void *data EINA_UNUSED, Evas_Object *obj)
+{
+   PRIV_DATA
+
+   if (pd->t)
+     ecore_timer_del(pd->t);
+   pd->t = NULL;
+   elm_layout_signal_emit(obj, "file_icon,mode,display", "elm");
+}
+
+static Eina_Bool
+_drop_cb(void *data EINA_UNUSED, Evas_Object *obj, Elm_Selection_Data *ev)
+{
+   eo_do(obj, eo_event_callback_call(ELM_FILE_ICON_EVENT_ITEM_DROP, ev));
+   elm_layout_signal_emit(obj, "file_icon,mode,display", "elm");
+   return EINA_FALSE;
 }
 
 EOLIAN static void
@@ -65,9 +109,7 @@ mime_type_resize(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, int w, int h)
    if (pd->picmode)
     return;
 
-   theme = getenv("E_ICON_THEME");
-   if (!theme)
-     theme = "hicolor";
+   eo_do(ELM_FILE_ICON_CLASS, theme = elm_obj_file_icon_util_icon_theme_get());
 
    file = efreet_mime_type_icon_get(mime_type, theme, (w > h) ? h : w);
 
@@ -77,6 +119,29 @@ mime_type_resize(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, int w, int h)
     elm_image_file_set(pd->icon, file, NULL);
 
    evas_object_show(pd->icon);
+}
+
+EOLIAN static const char *
+_elm_file_icon_util_icon_theme_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
+{
+   const char *theme;
+
+   theme = getenv("E_ICON_THEME");
+   if (!theme)
+     theme = "hicolor";
+
+   return strdup(theme);
+}
+
+
+static void
+mime_ready(Eo *obj, Elm_File_Icon_Data *pd)
+{
+  int w, h, x, y;
+
+  evas_object_geometry_get(obj, &x, &y, &w, &h);
+
+  mime_type_resize(obj, pd, w, h);
 }
 
 EOLIAN static void
@@ -92,17 +157,29 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, EFM_File *fi
 
    const char *path;
 
+   elm_drop_target_del(obj, ELM_SEL_FORMAT_TARGETS, _enter_cb, obj,_leave_cb, NULL, NULL, NULL, _drop_cb, NULL);
    pd->file = file;
    path = efm_file_path_get(pd->file);
 
-   if (!efm_file_is_dir(pd->file) && evas_object_image_extension_can_load_fast_get(path))
-     pd->picmode = EINA_TRUE;
+   if (efm_file_is_dir(pd->file))
+     {
+        //add dnd
+        elm_drop_target_add(obj, ELM_SEL_FORMAT_TARGETS, _enter_cb, obj,_leave_cb, NULL, NULL, NULL, _drop_cb, NULL);
+     }
    else
-     pd->picmode = EINA_FALSE;
+     {
+        //check if this file can be loaded
+        if (evas_object_image_extension_can_load_fast_get(path))
+          pd->picmode = EINA_TRUE;
+        else
+          pd->picmode = EINA_FALSE;
+      }
 
+   //delete existing partwidgets
    if (pd->icon)
      evas_object_del(pd->icon);
 
+   //create new display icons
    if (pd->picmode)
      {
         pd->icon = elm_thumb_add(obj);
@@ -111,11 +188,16 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, EFM_File *fi
    else
      pd->icon = elm_icon_add(obj);
 
+   //set the new conecnt
    _content_set(obj, pd->icon);
 
-   if (efm_file_mimetype_get(pd->file))
-     eo_do(obj, elm_obj_file_icon_mime_ready());
+   //if the mime type is allready set FIXME fix it
+   if (!efm_file_mimetype_get(pd->file))
+     {}//TODO listen for ready event - need to wait until efm is done with eo ...
+   else
+     mime_ready(obj, pd);
 
+   //set the text of the filename
    elm_object_text_set(pd->label, efm_file_filename_get(file));
 }
 
@@ -130,21 +212,10 @@ _elm_file_icon_fill_sample(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, const ch
 {
    const char *theme;
 
-   theme = getenv("E_ICON_THEME");
-   if (!theme)
-     theme = "hicolor";
+   eo_do(ELM_FILE_ICON_CLASS, theme = elm_obj_file_icon_util_icon_theme_get());
+
    *group = NULL;
    *file = efreet_mime_type_icon_get(efm_file_mimetype_get(pd->file), theme, 8);
-}
-
-EOLIAN static void
-_elm_file_icon_mime_ready(Eo *obj, Elm_File_Icon_Data *pd)
-{
-  int w, h, x, y;
-
-  evas_object_geometry_get(obj, &x, &y, &w, &h);
-
-  mime_type_resize(obj, pd, w, h);
 }
 
 #include "elm_file_icon.eo.x"

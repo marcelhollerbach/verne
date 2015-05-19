@@ -4,6 +4,10 @@ class Elm_File_Icon (Elm.Layout)
    data: Elm_File_Icon_Data;
    methods {
       @property fm_monitor_file {
+        /**@
+          Sets a EFM_File to be displayed. It does not matter in which state the EFM_FIle is, if no mime_type is found it will listen for one.
+          Once the mime_type appears the icon will be displayed
+        */
         set {
 
         }
@@ -20,8 +24,11 @@ class Elm_File_Icon (Elm.Layout)
           @in file : const(char)**;
         }
       }
-      mime_ready {
-
+      util_icon_theme_get @class{
+         /*@ Will return the name of the icon theme
+             The returned string must be freeed
+          */
+         return : const(char)*;
       }
    }
    implements {
@@ -33,5 +40,7 @@ class Elm_File_Icon (Elm.Layout)
      name,changed;
      edit,start;
      edit,done;
+     item,drop;
+     item,hover;
    }
 }
