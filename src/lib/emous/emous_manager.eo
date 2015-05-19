@@ -2,7 +2,7 @@ class Emous.Manager (Eo.Base)
 {
    methods {
       device_classes_get @class {
-         return: Eina_List*;
+         return: list<Emous.Device.Type*>*;
       }
       device_class_get @class {
          params {
@@ -23,7 +23,7 @@ class Emous.Manager (Eo.Base)
       }
       devices_get @class {
          /*@ Returns a list of all available devices */
-         return: Eina_List *;
+         return: list<Emous.Device*>*;
       }
    }
    events{

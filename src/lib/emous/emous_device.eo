@@ -36,7 +36,7 @@ class Emous.Device (Eo.Base)
       }
       @property mountpoints {
          values {
-            mountpoints : Eina_List*;
+            mountpoints : list<Eina_Stringshare*>*;
          }
          get {
             /*@

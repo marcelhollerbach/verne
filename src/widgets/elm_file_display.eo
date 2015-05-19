@@ -29,7 +29,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 
          }
          values {
-            views : Eina_List*;
+            views : list<Eina_Stringshare*>*;
          }
       }
       @property view {
