@@ -49,6 +49,9 @@ _long_cb(void *data)
 EOLIAN static void
 _elm_file_icon_evas_object_smart_del(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED)
 {
+  if (pd->t)
+    ecore_timer_del(pd->t);
+  pd->t = NULL;
   eo_do_super(obj, ELM_FILE_ICON_CLASS, evas_obj_smart_del());
 }
 
