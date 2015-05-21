@@ -199,6 +199,8 @@ _check_size(Eo *obj, Elm_Tab_Pane_Data *pd)
   else
     elm_object_signal_emit(obj, "scroll,hide","elm");
 
+  if (!pd->items) return;
+
   it = eina_list_data_get(pd->items);
 
   evas_object_size_hint_min_get(it->item, &w, &h);
