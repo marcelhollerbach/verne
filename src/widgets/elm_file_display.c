@@ -770,7 +770,7 @@ view_register(Elm_File_Display_Data *pd, const char *name, Elm_File_Display_View
    pd->views = eina_list_append(pd->views, view);
 }
 
-EOLIAN void
+EOLIAN Eo*
 _elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd)
 {
   efm_init();
@@ -781,7 +781,7 @@ _elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd)
   view_register(pd, "Debug", debug);
   view_register(pd, "Grid", grid);
   pd->obj = obj;
-  eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, eo_constructor());
+  eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, return eo_constructor());
 }
 
 

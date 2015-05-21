@@ -26,11 +26,11 @@ typedef struct
 #define CRI(...) printf(__VA_ARGS__)
 #define ERR(...) printf(__VA_ARGS__)
 
-EOLIAN static void
+EOLIAN static Eo*
 _elm_tab_pane_eo_base_constructor(Eo *obj, Elm_Tab_Pane_Data *pd EINA_UNUSED)
 {
 
-   eo_do_super(obj, ELM_TAB_PANE_CLASS, eo_constructor());
+   eo_do_super(obj, ELM_TAB_PANE_CLASS, return eo_constructor());
 }
 
 EOLIAN static void
