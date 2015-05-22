@@ -193,7 +193,7 @@ dir_changed(Evas_Object *ww, const char *dir)
 {
    View_Context *ctx = evas_object_data_get(ww, "__ctx");
    if (ctx->fm)
-     eo_del(ctx->fm);
+     eo_do(ctx->fm, efm_monitor_obj_stop());
    eina_hash_free(ctx->files);
    ctx->files = eina_hash_pointer_new(NULL);
    elm_gengrid_clear(ww);
