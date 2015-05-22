@@ -30,6 +30,9 @@ class Efm.Monitor(Eo.Base)
                 path : bool;
             }
         }
+        stop {
+
+        }
     }
     implements {
         Eo.Base.destructor;
