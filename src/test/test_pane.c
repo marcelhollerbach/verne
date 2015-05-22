@@ -75,7 +75,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    elm_win_resize_object_add(win, tabbed_pane);
    evas_object_resize(win, 200,200);
    evas_object_show(win);
-
+   eo_unref(tabbed_pane);
    elm_run();
    return 0;
 }

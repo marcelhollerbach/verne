@@ -79,6 +79,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    evas_object_size_hint_weight_set(ic, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    elm_box_pack_end(bx, ic);
    evas_object_show(ic);
+   eo_unref(ic);
 #if 1
    ic = eo_add(ELM_FILE_DISPLAY_CLASS, win);
    eo_do(ic, efl_file_set("/home/marcel", NULL);
@@ -89,6 +90,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    evas_object_size_hint_weight_set(ic, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    elm_box_pack_end(bx, ic);
    evas_object_show(ic);
+   eo_unref(ic);
 #endif
    elm_win_resize_object_add(win, bx);
    evas_object_resize(win, 200,200);

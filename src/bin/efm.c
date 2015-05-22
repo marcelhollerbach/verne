@@ -363,6 +363,7 @@ _open_tab(const char *path)
    evas_object_show(content);
 
    elm_box_pack_end(bx, content);
+   eo_unref(content);
 
    tab->label = lb2 = elm_label_add(pane);
    elm_object_text_set(lb2, tab->path);
@@ -424,7 +425,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    elm_win_resize_object_add(win, bx);
    evas_object_resize(win, 200,200);
    evas_object_show(win);
-
+   eo_unref(pane);
    elm_run();
    return 0;
 }
