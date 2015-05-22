@@ -39,19 +39,22 @@ _add(Efm_Monitor *mon, const char *file)
    pd = eo_data_scope_get(mon, EFM_MONITOR_CLASS);
 
    eina_hash_add(pd->file_icons, path, ef);
-   eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_ADD, NULL));
+   eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_ADD, ef));
 }
 
 static void
 _del(Efm_Monitor *mon, const char *file)
 {
    Efm_Monitor_Data *pd;
+   Efm_File *f;
    const char *files;
 
    files = eina_stringshare_add(file);
    pd = eo_data_scope_get(mon, EFM_MONITOR_CLASS);
+   f = eina_hash_find(pd->file_icons, files);
+
+   eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_DEL, f));
    eina_hash_del(pd->file_icons, files, NULL);
-   eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_DEL, NULL));
 }
 
 void
