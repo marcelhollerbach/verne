@@ -155,7 +155,7 @@ _elm_file_icon_evas_object_smart_resize(Eo *obj, Elm_File_Icon_Data *pd, Evas_Co
 }
 
 EOLIAN static void
-_elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, EFM_File *file)
+_elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
 {
 
    const char *path;
@@ -164,7 +164,7 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, EFM_File *fi
    pd->file = file;
    path = efm_file_path_get(pd->file);
 
-   if (efm_file_is_dir(pd->file))
+   if (efm_file_dir_get(pd->file))
      {
         //add dnd
         elm_drop_target_add(obj, ELM_SEL_FORMAT_TARGETS, _enter_cb, obj,_leave_cb, NULL, NULL, NULL, _drop_cb, NULL);
@@ -204,7 +204,7 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, EFM_File *fi
    elm_object_text_set(pd->label, efm_file_filename_get(file));
 }
 
-EOLIAN static EFM_File *
+EOLIAN static Efm_File *
 _elm_file_icon_fm_monitor_file_get(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
 {
    return pd->file;

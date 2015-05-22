@@ -5,7 +5,7 @@ class Elm_File_Icon (Elm.Layout)
    methods {
       @property fm_monitor_file {
         /**@
-          Sets a EFM_File to be displayed. It does not matter in which state the EFM_FIle is, if no mime_type is found it will listen for one.
+          Sets a Efm_File to be displayed. It does not matter in which state the EFM_FIle is, if no mime_type is found it will listen for one.
           Once the mime_type appears the icon will be displayed
         */
         set {
@@ -15,7 +15,7 @@ class Elm_File_Icon (Elm.Layout)
 
         }
         values {
-           file : EFM_File*;
+           file : Efm.File*;
         }
       }
       fill_sample {

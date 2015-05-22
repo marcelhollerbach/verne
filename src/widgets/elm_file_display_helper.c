@@ -18,7 +18,7 @@ _hover_cb(void *data, Eo *obj, const Eo_Event_Description *desc, void *event)
 }
 
 Evas_Object*
-icon_create(Evas_Object *par, EFM_File *file)
+icon_create(Evas_Object *par, Efm_File *file)
 {
    Evas_Object *ic, *widget;
 
@@ -59,7 +59,7 @@ view_call_items_select(Elm_File_Display_Data *pd, int x1, int y1, int x2, int y2
    pd->view->cb.items_select(pd->cached_view,x1, y1, x2, y2);
 }
 
-EFM_File*
+Efm_File*
 view_call_item_get(Elm_File_Display_Data *pd, int x, int y)
 {
    if (!pd->view->cb.item_get) return NULL;
@@ -76,7 +76,7 @@ view_call_selectes_get(Elm_File_Display_Data *pd)
 static int
 sort_name_func(const void *data1, const void *data2)
 {
-   EFM_File *f1 = ((EFM_File*)data1), *f2 = ((EFM_File*)data2);
+   Efm_File *f1 = ((Efm_File*)data1), *f2 = ((Efm_File*)data2);
    if (config->sort.type == SORT_TYPE_NAME)
      {
         const char *n1 = efm_file_filename_get(f1);
@@ -132,7 +132,7 @@ sort_name_func(const void *data1, const void *data2)
 int
 sort_func(const void *data1, const void *data2)
 {
-   EFM_File *f1, *f2;
+   Efm_File *f1, *f2;
    int mul;
 
    f1 = elm_object_item_data_get(data1);
@@ -143,11 +143,11 @@ sort_func(const void *data1, const void *data2)
    else
      mul = 1;
 
-   if (efm_file_is_dir(f1) && efm_file_is_dir(f2))
+   if (efm_file_dir_get(f1) && efm_file_dir_get(f2))
      {
        return sort_name_func(f1, f2) * mul;
      }
-   else if (efm_file_is_dir(f1) && !efm_file_is_dir(f2))
+   else if (efm_file_dir_get(f1) && !efm_file_dir_get(f2))
      {
         if (config->sort.folder_placement == FOLDER_FIRST)
           return -1;
@@ -156,7 +156,7 @@ sort_func(const void *data1, const void *data2)
         else
           return sort_name_func(f1, f2) * mul;
      }
-   else if (!efm_file_is_dir(f1) && efm_file_is_dir(f2))
+   else if (!efm_file_dir_get(f1) && efm_file_dir_get(f2))
      {
         if (config->sort.folder_placement == FOLDER_FIRST)
           return 1;
@@ -172,7 +172,7 @@ sort_func(const void *data1, const void *data2)
 }
 
 void
-util_item_select(Evas_Object *w, EFM_File *f)
+util_item_select(Evas_Object *w, Efm_File *f)
 {
    Elm_File_Display_Data *pd = eo_data_scope_get(w, ELM_FILE_DISPLAY_CLASS);
 
@@ -180,7 +180,7 @@ util_item_select(Evas_Object *w, EFM_File *f)
 }
 
 void
-util_item_selected(Evas_Object *w, EFM_File *f)
+util_item_selected(Evas_Object *w, Efm_File *f)
 {
    char buf[PATH_MAX];
    const char *path, *fileending, *filename;
@@ -195,7 +195,7 @@ util_item_selected(Evas_Object *w, EFM_File *f)
     * if it is a standart directory
     * open it
     */
-   if (efm_file_is_dir(f))
+   if (efm_file_dir_get(f))
      {
         /*call path changed */
         eo_do(w,

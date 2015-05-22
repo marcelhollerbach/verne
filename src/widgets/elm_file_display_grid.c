@@ -11,7 +11,7 @@ static Evas_Object *
 _grid_content_get(void *data, Evas_Object *obj, const char *part)
 {
    Evas_Object *ic;
-   EFM_File *file;
+   Efm_File *file;
 
    if (!!strcmp(part, "elm.swallow.icon")) return NULL;
 
@@ -32,7 +32,7 @@ static void
 _double_click(void *data EINA_UNUSED, Evas_Object *obj, void *event_info)
 {
    Elm_Object_Item *it = event_info;
-   EFM_File *fmm_file = elm_object_item_data_get(it);
+   Efm_File *fmm_file = elm_object_item_data_get(it);
 
    util_item_selected(elm_object_parent_widget_get(obj), fmm_file);
 }
@@ -79,11 +79,11 @@ object_init(Evas_Object *par)
    return grid_obj;
 }
 
-static EFM_File*
+static Efm_File*
 item_get(Evas_Object *grid_obj, int x, int y)
 {
    Elm_Object_Item *it;
-   EFM_File *fm_file;
+   Efm_File *fm_file;
 
    it = elm_gengrid_at_xy_item_get(grid_obj, x, y, NULL, NULL);
    if (!it)

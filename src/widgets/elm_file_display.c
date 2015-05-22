@@ -149,7 +149,7 @@ _ctx_disable_preview(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_
 }
 
 static void
-_ctx_menu_open(Eo* obj, int x, int y, EFM_File *file)
+_ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
 {
    Evas_Object *menu;
    Elm_Object_Item *it, *it2;
@@ -581,7 +581,7 @@ _event_rect_mouse_down(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UN
 {
   W_DATA(data)
   Evas_Event_Mouse_Down *ev = event;
-  EFM_File *file;
+  Efm_File *file;
 
   //check if there is a item under it and save it if it is
   file = view_call_item_get(pd, ev->output.x, ev->output.y);

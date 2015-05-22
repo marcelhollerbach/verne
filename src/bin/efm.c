@@ -42,7 +42,7 @@ static void _anchors_undo(Evas_Object *obj, const char *path);
 static void
 _new_tab_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
-   EFM_File *file;
+   Efm_File *file;
    const char *path;
 
    file = data;
