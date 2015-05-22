@@ -1,0 +1,69 @@
+class Efm.File(Eo.Base)
+{
+    eo_prefix: efm_file_obj;
+    methods {
+        @property filename {
+            get {
+
+            }
+            values {
+                filename : const(char)*;
+            }
+        }
+        @property path {
+            get {
+
+            }
+            values {
+                path : const(char)*;
+            }
+        }
+        @property fileending {
+            get {
+
+            }
+            values {
+                path : const(char)*;
+            }
+        }
+        @property mimetype {
+            get {
+
+            }
+            values {
+                mimetype : const(char)*;
+            }
+        }
+        @property stat {
+            get {
+
+            }
+            values {
+                stat : Efm_Stat*;
+            }
+        }
+        @property dir {
+            get {
+
+            }
+            values {
+                dir : bool;
+            }
+        }
+        generate {
+            /*@ A constructor of the Efm_File
+                Once its called the file will be scheudled to get stat and mimetype of the file */
+            params {
+                @in filename : const(char)*;
+            }
+
+            return : bool;
+        }
+    }
+    constructors {
+        .generate;
+    }
+    events {
+        fsquery,done;
+    }
+}

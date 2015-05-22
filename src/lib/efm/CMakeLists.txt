@@ -6,10 +6,39 @@ include_directories(
   ${ECORE_FILE_INCLUDE_DIRS}
 )
 
-set(RESOLVER_DIR_DEFINITION RESOLVER_DIR="$(CMAKE_SOURCE_DIR)/data/resolver/")
+set (EMOUS_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/lib/emous/")
+
+string(REPLACE "\n" "" EOLIAN_EO_DIR_WITHOUT_NEWLINE
+"${EOLIAN_EO_DIR}")
+
+file(GLOB files "*.eo")
+
+foreach(filename ${files})
+add_custom_command(
+   OUTPUT ${filename}.x
+   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} --gc --eo --legacy -o ${filename}.x ${filename}
+   DEPENDS ${filename}
+)
+
+add_custom_command(
+   OUTPUT ${filename}.h
+   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} --gh --eo -o ${filename}.h ${filename}
+   DEPENDS ${filename}
+)
+
+add_custom_command(
+   OUTPUT ${filename}.legacy.h
+   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} --gh --legacy -o ${filename}.legacy.h ${filename}
+   DEPENDS ${filename}
+)
+
+endforeach()
 
 LIST(APPEND FM_MONITOR
-   fm_monitor.c
+   efm_file.c
+   efm_file.eo.x
+   efm_file.eo.h
+   efm_file.eo.legacy.h
    archive.c
    main.c
    Efm.h
@@ -34,5 +63,5 @@ set_property(TARGET efm_lib
 INSTALL(TARGETS efm_lib
   LIBRARY DESTINATION lib
 )
-INSTALL(FILES Efm.h
+INSTALL(FILES Efm.h efm_file.eo.h efm_file.eo.legacy.h
   DESTINATION include)

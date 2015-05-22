@@ -40,8 +40,11 @@ target_link_libraries (filedisplay_test
 add_executable(test_fm_monitor test_fm_monitor.c)
 
 target_link_libraries (test_fm_monitor
+   ${EINA_LIBRARIES}
    ${ECORE_LIBRARIES}
+   ${EO_LIBRARIES}
    efm_lib
+   check
 )
 
 add_executable(test_archive test_archive.c)
@@ -70,3 +73,4 @@ target_link_libraries (test_resolver
 )
 
 add_test(test1 test_resolver)
+add_test(efm_test test_fm_monitor)

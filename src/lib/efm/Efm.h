@@ -2,14 +2,22 @@
 #define EIO_FM_H
 
 #include <Eina.h>
+#include <Eo.h>
+
+typedef struct stat Efm_Stat;
+
+#ifdef EFL_BETA_API_SUPPORT
+# include "efm_file.eo.h"
+#else
+# include "efm_file.eo.legacy.h"
+#endif
 
 extern int MOUNT_REQUEST_ENDED;
 extern int MOUNT_REQUEST_STARTED;
 
 typedef struct _EFM_Monitor EFM_Monitor;
-typedef struct _EFM_File EFM_File;
 
-typedef void(*File_Cb)(void *data, EFM_Monitor *mon, EFM_File *file);
+typedef void(*File_Cb)(void *data, EFM_Monitor *mon, Efm_File *file);
 typedef void(*Err_Cb)(void *data, EFM_Monitor *mon);
 
 /*
@@ -37,21 +45,6 @@ void        fm_monitor_stop(EFM_Monitor *mon);
 
 const char* fm_monitor_path_get(EFM_Monitor *mon);
 
-/*
- * Efm files
- */
-
-const char* efm_file_filename_get(EFM_File *f);
-
-const char* efm_file_path_get(EFM_File *f);
-
-const char* efm_file_fileending_get(EFM_File *f);
-
-const char* efm_file_mimetype_get(EFM_File *f);
-
-Eina_Bool efm_file_is_dir(EFM_File *f);
-
-struct stat* efm_file_stat_get(EFM_File *f);
 
 /*
  * Efm archive stuff
