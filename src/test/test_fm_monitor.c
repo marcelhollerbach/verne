@@ -9,6 +9,10 @@
 #define TEST_FILE_ITER "/tmp/bla%d.txt"
 #define TEST_FILE_ITER_MAX 100
 
+#define TEST_DIRECTORY "/tmp/test"
+#define TEST_DIRECTORY_FILES_MAX 100
+#define TEST_DIRECTORY_FILES "/tmp/test/test_file%d.txt"
+
 START_TEST(efm_file_invalid_name)
 {
    Efm_File *file;
@@ -116,6 +120,70 @@ START_TEST(efm_stresstest)
    eina_shutdown();
 }
 END_TEST
+
+Eina_Bool error;
+int files;
+
+static Eina_Bool
+_error(void *data, Eo *obj, const Eo_Event_Description *desc,  void *event)
+{
+   error = EINA_TRUE;
+   ecore_mainloop_quit();
+   return EINA_TRUE;
+}
+
+#if 0
+static Eina_Bool
+_del(void *data, Eo *obj, const Eo_Event_Description *desc,  void *event)
+{
+   return EINA_TRUE;
+}
+#endif
+
+static Eina_Bool
+_add(void *data, Eo *obj, const Eo_Event_Description *desc,  void *event)
+{
+   files ++;
+   if (files >= TEST_DIRECTORY_FILES_MAX)
+     ecore_main_loop_quit();
+   return EINA_TRUE;
+}
+
+START_TEST(efm_monitor_test)
+{
+   Efm_Monitor *mon;
+   int i;
+
+   system("mkdir "TEST_DIRECTORY);
+
+   for(i = 0; i < TEST_DIRECTORY_FILES_MAX; i++)
+     {
+        char buf[PATH_MAX];
+        snprintf(buf, sizeof(buf), "touch "TEST_DIRECTORY_FILES, i);
+        system(buf);
+     }
+
+   error = EINA_FALSE;
+   files = 0;
+
+   efm_init();
+
+   eo_do(EFM_MONITOR_CLASS, mon = efm_monitor_obj_start(TEST_DIRECTORY, EINA_TRUE, EINA_FALSE));
+   eo_do (mon,
+//      eo_event_callback_add(EFM_MONITOR_EVENT_FILE_DEL, _del, NULL);
+      eo_event_callback_add(EFM_MONITOR_EVENT_FILE_ADD, _add, NULL);
+      eo_event_callback_add(EFM_MONITOR_EVENT_ERROR, _error, NULL);
+   );
+
+   ecore_main_loop_begin();
+
+   ck_assert_int_eq(error, 0);
+   ck_assert_int_eq(files, TEST_DIRECTORY_FILES_MAX);
+   efm_shutdown();
+}
+END_TEST
+
+
 Suite * efm_suite(void)
 {
     Suite *s;
@@ -124,12 +192,15 @@ Suite * efm_suite(void)
     s = suite_create("efm_monitor");
 
     /* Core test case */
-    tc_core = tcase_create("fm_monitor");
+    tc_core = tcase_create("efm_file");
 
     tcase_set_timeout(tc_core, 7);
     tcase_add_test(tc_core, efm_file_invalid_name);
     tcase_add_test(tc_core, efm_valid_file);
     tcase_add_test(tc_core, efm_stresstest);
+
+    tc_core = tcase_create("efm_monitor");
+    tcase_add_test(tc_core, efm_monitor_test);
 
     suite_add_tcase(s, tc_core);
 
@@ -144,7 +215,6 @@ int main(void)
 
     s = efm_suite();
     sr = srunner_create(s);
-    //srunner_set_fork_status(sr, CK_NOFORK);
 
     srunner_run_all(sr, CK_NORMAL);
     number_failed = srunner_ntests_failed(sr);
