@@ -191,22 +191,4 @@ efm_file_init(void)
     eina_lock_new(&readlock);
 }
 
-EFM_Monitor* fm_monitor_start(const char *directory, File_Cb add_cb,
-                             File_Cb del_cb, File_Cb mime_ready,
-                             Err_Cb selfdel_cb, Err_Cb err_cb, void *data,
-                             Eina_Bool hidden_files, Eina_Bool only_folder)
-{
-    return NULL;
-}
-void        fm_monitor_stop(EFM_Monitor *mon)
-{
-
-}
-
-const char* fm_monitor_path_get(EFM_Monitor *mon)
-{
-    return NULL;
-}
-
-
 #include "efm_file.eo.x"
