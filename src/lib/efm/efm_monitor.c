@@ -26,13 +26,19 @@ _add(Efm_Monitor *mon, const char *file)
    const char *path;
    Efm_File *ef;
    Efm_Monitor_Data *pd;
+   Eina_Bool result;
 
    path = eina_stringshare_add(file);
 
-   ef = eo_add(EFM_FILE_CLASS, mon, efm_file_obj_generate(path));
+   ef = eo_add(EFM_FILE_CLASS, mon, result = efm_file_obj_generate(path));
 
    if (!ef)
      return;
+
+   if (!result)
+     {
+       eo_del(ef);
+     }
 
    pd = eo_data_scope_get(mon, EFM_MONITOR_CLASS);
 
