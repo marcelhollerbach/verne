@@ -1,9 +1,11 @@
+#define EFM_EO_NEED
+
 #include "elm_file_display_priv.h"
 
 typedef struct
 {
    Elm_Gengrid_Item_Class *gic;
-   EFM_Monitor *fm;
+   Efm_Monitor *fm;
    Eina_Hash *files;
 } View_Context;
 

@@ -1,12 +1,19 @@
 #ifndef ELM_FILE_DISPLAY_PRIV_H
 #define ELM_FILE_DISPLAY_PRIV_H
 
+#ifndef EFM_EO_NEED
+# include <Efm.h>
+#endif
+
 #define EFL_BETA_API_SUPPORT
 #define EFL_EO_API_SUPPORT
 
 #include <Emous.h>
 
-#include <Efm.h>
+#ifdef EFM_EO_NEED
+# include <Efm.h>
+#endif
+
 #include <Elementary.h>
 #include <Ecore.h>
 #include <Evas.h>
