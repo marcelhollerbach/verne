@@ -79,6 +79,7 @@ _notify_cb(void *data EINA_UNUSED, Ecore_Thread *et EINA_UNUSED, void *pass)
     file = thdata->file;
     pd = eo_data_scope_get(file, EFM_FILE_CLASS);
 
+    pd->mimetype = pd->data.mimetype;
     pd->dir = thdata->stat.st_mode == S_IFDIR ? EINA_TRUE : EINA_FALSE;
 
     //we dont need it anymore
