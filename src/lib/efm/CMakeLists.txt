@@ -35,6 +35,11 @@ add_custom_command(
 endforeach()
 
 LIST(APPEND FM_MONITOR
+   fm_monitor.c
+   efm_monitor.c
+   efm_monitor.eo.x
+   efm_monitor.eo.h
+   efm_monitor.eo.legacy.h
    efm_file.c
    efm_file.eo.x
    efm_file.eo.h
@@ -63,5 +68,5 @@ set_property(TARGET efm_lib
 INSTALL(TARGETS efm_lib
   LIBRARY DESTINATION lib
 )
-INSTALL(FILES Efm.h efm_file.eo.h efm_file.eo.legacy.h
+INSTALL(FILES Efm.h efm_file.eo.h efm_file.eo.legacy.h efm_monitor.eo.h efm_monitor.eo.legacy.h
   DESTINATION include)
