@@ -182,10 +182,11 @@ _efm_monitor_eo_base_destructor(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
    if (pd->file)
      eio_file_cancel(pd->file);
 
+   fm_monitor_del(obj, pd->mon);
    eio_monitor_del(pd->mon);
    eina_stringshare_del(pd->directory);
-
    eina_hash_free(pd->file_icons);
+
    eo_do_super(obj, EFM_MONITOR_CLASS, eo_destructor());
 }
 #include "efm_monitor.eo.x"
