@@ -1,10 +1,11 @@
-#include <Efm.h>
+
 #define EFL_BETA_API_SUPPORT
 #define EFL_EO_API_SUPPORT
 
 #include <Eo.h>
 #include <Evas.h>
 #include <Elementary.h>
+#include <Efm.h>
 
 #include "Elementary_Ext.h"
 #include "elm_file_icon.eo.h"
@@ -105,10 +106,11 @@ mime_type_resize(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, int w, int h)
 {
    const char *theme, *file, *mime_type;;
 
-   mime_type = efm_file_mimetype_get(pd->file);
+   eo_do(pd->file, mime_type = efm_file_obj_mimetype_get());
 
-   if (!efm_file_mimetype_get(pd->file))
+   if (!mime_type)
      return;
+
    if (pd->picmode)
     return;
 
@@ -154,17 +156,27 @@ _elm_file_icon_evas_object_smart_resize(Eo *obj, Elm_File_Icon_Data *pd, Evas_Co
    mime_type_resize(obj, pd, w, h);
 }
 
+static Eina_Bool
+_mime_ready(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+   mime_ready(obj, data);
+   return EINA_TRUE;
+}
+
 EOLIAN static void
 _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
 {
-
-   const char *path;
+   Eina_Bool dir;
+   const char *path, *mime_type, *filename;
 
    elm_drop_target_del(obj, ELM_SEL_FORMAT_TARGETS, _enter_cb, obj,_leave_cb, NULL, NULL, NULL, _drop_cb, NULL);
    pd->file = file;
-   path = efm_file_path_get(pd->file);
+   eo_do(pd->file, path = efm_file_obj_path_get();
+                   dir = efm_file_obj_dir_get();
+                   mime_type = efm_file_obj_mimetype_get();
+                   filename = efm_file_obj_filename_get());
 
-   if (efm_file_dir_get(pd->file))
+   if (dir)
      {
         //add dnd
         elm_drop_target_add(obj, ELM_SEL_FORMAT_TARGETS, _enter_cb, obj,_leave_cb, NULL, NULL, NULL, _drop_cb, NULL);
@@ -186,7 +198,7 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *fi
    if (pd->picmode)
      {
         pd->icon = elm_thumb_add(obj);
-        eo_do(pd->icon, efl_file_set(efm_file_path_get(file), NULL));
+        eo_do(pd->icon, efl_file_set(path, NULL));
      }
    else
      pd->icon = elm_icon_add(obj);
@@ -195,13 +207,14 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *fi
    _content_set(obj, pd->icon);
 
    //if the mime type is allready set FIXME fix it
-   if (!efm_file_mimetype_get(pd->file))
-     {}//TODO listen for ready event - need to wait until efm is done with eo ...
-   else
-     mime_ready(obj, pd);
 
+    if (!mime_type)
+      eo_do(pd->file, eo_event_callback_add(EFM_FILE_EVENT_FSQUERY_DONE,
+                      _mime_ready, pd));
+    else
+      mime_ready(obj, pd);
    //set the text of the filename
-   elm_object_text_set(pd->label, efm_file_filename_get(file));
+   elm_object_text_set(pd->label, filename);
 }
 
 EOLIAN static Efm_File *
@@ -214,11 +227,13 @@ EOLIAN static void
 _elm_file_icon_fill_sample(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, const char **group, const char **file)
 {
    const char *theme;
+   const char *mimetype;
 
    eo_do(ELM_FILE_ICON_CLASS, theme = elm_obj_file_icon_util_icon_theme_get());
+   eo_do(pd->file, mimetype = efm_file_obj_mimetype_get());
 
    *group = NULL;
-   *file = efreet_mime_type_icon_get(efm_file_mimetype_get(pd->file), theme, 8);
+   *file = efreet_mime_type_icon_get(mimetype, theme, 8);
 }
 
 #include "elm_file_icon.eo.x"
