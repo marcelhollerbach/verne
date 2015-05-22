@@ -159,7 +159,11 @@ _elm_file_icon_evas_object_smart_resize(Eo *obj, Elm_File_Icon_Data *pd, Evas_Co
 static Eina_Bool
 _mime_ready(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
 {
-   mime_ready(obj, data);
+   Eo *icon = data;
+   Elm_File_Icon_Data *pd;
+
+   pd = eo_data_scope_get(icon, ELM_FILE_ICON_CLASS);
+   mime_ready(icon, pd);
    return EINA_TRUE;
 }
 
@@ -210,7 +214,7 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *fi
 
     if (!mime_type)
       eo_do(pd->file, eo_event_callback_add(EFM_FILE_EVENT_FSQUERY_DONE,
-                      _mime_ready, pd));
+                      _mime_ready, obj));
     else
       mime_ready(obj, pd);
    //set the text of the filename
