@@ -47,7 +47,7 @@ _del(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, void *event 
    elm_gengrid_clear(obj);
 
    if (ctx->fm)
-     fm_monitor_stop(ctx->fm);
+     eo_del(ctx->fm);
 
    eina_hash_free(ctx->files);
    elm_gengrid_item_class_free(ctx->gic);
@@ -116,7 +116,7 @@ selections_get(Evas_Object *grid_obj)
    const Eina_List *sel_list, *node;
    Eina_List *result = NULL;
    Elm_Object_Item *it;
-   EFM_File *file;
+   Efm_File *file;
    File_Display_View_DND *dnd;
    Evas_Object *content;
    int x = 0, y = 0, w = 20, h = 20;
@@ -136,7 +136,7 @@ selections_get(Evas_Object *grid_obj)
         dnd->h = h;
 
         file = elm_object_item_data_get(it);
-        dnd->path = efm_file_path_get(file);
+        eo_do(file, dnd->path = efm_file_obj_path_get());
 
         dnd->thumb_path = NULL;
         dnd->thumb_group = NULL;
@@ -152,56 +152,40 @@ _sel(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
    util_item_select(elm_object_parent_widget_get(obj), data);
 }
 
-static void
-add_cb(void *data EINA_UNUSED, EFM_Monitor *mon EINA_UNUSED, EFM_File *icon)
+static Eina_Bool
+_file_del(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
 {
-   View_Context *ctx = evas_object_data_get(data, "__ctx");
-   Elm_Object_Item *it;
-
-   it = elm_gengrid_item_sorted_insert(data, ctx->gic, icon, sort_func, _sel, icon);
-   eina_hash_add(ctx->files, &icon, it);
-}
-
-static void
-mime_cb(void *data EINA_UNUSED, EFM_Monitor *mon EINA_UNUSED, EFM_File *icon)
-{
-  View_Context *ctx = evas_object_data_get(data, "__ctx");
-  Elm_Object_Item *it;
-  Evas_Object *ic;
-
-  it = eina_hash_find(ctx->files, &icon);
-  if (!it)
-    return;
-
-  ic = elm_object_item_part_content_get(it, "elm.swallow.icon");
-  if (!ic)
-    return;
-  //FIXME
-  //eo_do(ic, elm_obj_file_icon_mime_set(icon->mime_type));
-}
-
-static void
-del_cb(void *data EINA_UNUSED, EFM_Monitor *mon EINA_UNUSED, EFM_File *icon)
-{
+   Efm_File *icon = event;
    View_Context *ctx = evas_object_data_get(data, "__ctx");
    Elm_Object_Item *it;
 
    it = eina_hash_find(ctx->files, &icon);
    elm_object_item_del(it);
+
+   return EINA_TRUE;
 }
 
-static void
-err_cb(void *data, EFM_Monitor *mon EINA_UNUSED)
+static Eina_Bool
+_file_add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
 {
-   elm_gengrid_clear(data);
+   Efm_File *icon = event;
+   View_Context *ctx = evas_object_data_get(data, "__ctx");
+   Elm_Object_Item *it;
+
+   it = elm_gengrid_item_sorted_insert(data, ctx->gic, icon, sort_func, _sel, icon);
+   eina_hash_add(ctx->files, &icon, it);
+
+   return EINA_TRUE;
 }
 
-static void
-sdel_cb(void *data EINA_UNUSED, EFM_Monitor *mon EINA_UNUSED)
+static Eina_Bool
+_error(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
 {
    View_Context *ctx = evas_object_data_get(data, "__ctx");
    elm_gengrid_clear(data);
    ctx->fm = NULL;
+
+   return EINA_TRUE;
 }
 
 static void
@@ -209,15 +193,17 @@ dir_changed(Evas_Object *ww, const char *dir)
 {
    View_Context *ctx = evas_object_data_get(ww, "__ctx");
    if (ctx->fm)
-     fm_monitor_stop(ctx->fm);
+     eo_del(ctx->fm);
    eina_hash_free(ctx->files);
    ctx->files = eina_hash_pointer_new(NULL);
    elm_gengrid_clear(ww);
    elm_gengrid_item_size_set(ww, config->icon_size, config->icon_size);
-   ctx->fm = fm_monitor_start(dir, add_cb, del_cb,
-                              mime_cb, err_cb, sdel_cb,
-                              ww, config->hidden_files,
-                              EINA_FALSE);
+   eo_do(EFM_MONITOR_CLASS, ctx->fm = efm_monitor_obj_start(dir, config->hidden_files,
+                              EINA_FALSE));
+   eo_do(ctx->fm, eo_event_callback_add(EFM_MONITOR_EVENT_FILE_ADD, _file_add, ww);
+                  eo_event_callback_add(EFM_MONITOR_EVENT_FILE_DEL, _file_del, ww);
+                  eo_event_callback_add(EFM_MONITOR_EVENT_ERROR, _error, ww);
+        );
 }
 
 Elm_File_Display_View_Callbacks grid = {
