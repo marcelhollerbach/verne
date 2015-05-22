@@ -13,8 +13,6 @@ typedef struct
 
    Eina_Hash *file_icons; // < Hash table of all listed FM_Monitor_Files
 
-   Ecore_Thread *mime_thread; //< the thread which is querying the mime types
-
    struct {
       Eina_Bool only_folder;
       Eina_Bool hidden_files;
