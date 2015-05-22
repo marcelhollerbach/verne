@@ -1,0 +1,42 @@
+class Efm.Monitor(Eo.Base)
+{
+    eo_prefix: efm_monitor_obj;
+    methods {
+        start @class {
+            params {
+                @in directory : const(char)*;
+                @in hidden_files : bool;
+                @in only_folder : bool;
+            }
+            return : Efm.Monitor*;
+        }
+        @property path{
+            get {
+
+            }
+            values {
+                path : const(char)*;
+            }
+        }
+
+        @property config_hidden_files {
+            values {
+                hidden : bool;
+            }
+        }
+
+        @property config_only_folder {
+            values {
+                path : bool;
+            }
+        }
+    }
+    implements {
+        Eo.Base.destructor;
+    }
+    events {
+        file,del;
+        file,add;
+        error;
+    }
+}
