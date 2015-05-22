@@ -10,6 +10,7 @@ efm_init()
    eina_init();
    ecore_init();
    efreet_init();
+   eio_init();
    if (counter > 0)
      goto inc;
 
@@ -43,6 +44,7 @@ efm_shutdown()
 
    eina_log_domain_unregister(_log_domain);
 
+   eio_shutdown();
    efreet_shutdown();
    ecore_shutdown();
    eina_shutdown();
