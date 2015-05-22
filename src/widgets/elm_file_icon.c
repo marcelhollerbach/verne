@@ -1,3 +1,4 @@
+#include <Efm.h>
 #define EFL_BETA_API_SUPPORT
 #define EFL_EO_API_SUPPORT
 
@@ -5,13 +6,12 @@
 #include <Evas.h>
 #include <Elementary.h>
 
-#include <Efm.h>
 #include "Elementary_Ext.h"
 #include "elm_file_icon.eo.h"
 
 typedef struct
 {
-   EFM_File *file;
+   Efm_File *file;
    Evas_Object *icon;
    Evas_Object *label;
 
