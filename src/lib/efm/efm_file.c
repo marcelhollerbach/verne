@@ -82,10 +82,15 @@ _notify_cb(void *data EINA_UNUSED, Ecore_Thread *et EINA_UNUSED, void *pass)
     pd->dir = thdata->stat.st_mode == S_IFDIR ? EINA_TRUE : EINA_FALSE;
 
     //we dont need it anymore
-    eo_unref(thdata->file);
+    if (eo_ref_get(file) > 1)
+      {
+        eo_unref(file);
+        //notify that this efm_file is ready for the world
+        eo_do(file, eo_event_callback_call(EFM_FILE_EVENT_FSQUERY_DONE, NULL));
+      }
+    else
+      eo_unref(file);
 
-    //notify that this efm_file is ready for the world
-    eo_do(file, eo_event_callback_call(EFM_FILE_EVENT_FSQUERY_DONE, NULL));
 }
 
 static void

@@ -136,12 +136,14 @@ _eio_done_cb(void *data, Eio_File *handler EINA_UNUSED)
   pd->mon = eio_monitor_stringshared_add(pd->directory);
   fm_monitor_add(data, pd->mon, _fm_action);
   pd->file = NULL;
+  eo_unref(data);
 }
 
 static void
 _eio_error_cb(void *data, Eio_File *handler EINA_UNUSED, int error EINA_UNUSED)
 {
   _error(data);
+  eo_unref(data);
 }
 
 void
@@ -167,6 +169,7 @@ _efm_monitor_start(Eo *obj EINA_UNUSED, void *data EINA_UNUSED, const char *dire
 
    pd->file_icons = eina_hash_stringshared_new(_mon_hash_free);
 
+   eo_ref(mon);
    pd->file = eio_file_ls(pd->directory, _eio_filter_cb, _eio_main_cb,
                            _eio_done_cb, _eio_error_cb, mon);
 
