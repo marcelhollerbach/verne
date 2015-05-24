@@ -8,12 +8,11 @@ static Eina_List *query_stuff;
 static Eina_Lock readlock;
 
 typedef struct {
-    Eina_Lock lock;
     const char *path;
     const char *mimetype;
 
-    Efm_File *file;
-} Thread_Data;
+    Eo *obj;
+} Thread_Job;
 
 typedef struct
 {
@@ -22,7 +21,6 @@ typedef struct
     const char *fileending;
     const char *mimetype;
 
-    Thread_Data data;
     struct stat st;
     Efm_File_Stat stat;
 } Efm_File_Data;
@@ -31,7 +29,7 @@ static void
 _fs_cb(void *dat EINA_UNUSED, Ecore_Thread *thread)
 {
     Eina_List *copy;
-    Thread_Data *data;
+    Thread_Job *data;
 
     while(query_stuff)
       {
@@ -43,18 +41,16 @@ _fs_cb(void *dat EINA_UNUSED, Ecore_Thread *thread)
 
         EINA_LIST_FREE(copy, data)
           {
+             if (!data->obj)
+               continue;
+
              const char *mime_type;
 
              mime_type = efreet_mime_special_type_get(data->path);
              if (!mime_type) mime_type = efreet_mime_globs_type_get(data->path);
              if (!mime_type) mime_type = efreet_mime_fallback_type_get(data->path);
 
-             eina_lock_take(&data->lock);
-
              data->mimetype = mime_type;
-
-             eina_lock_release(&data->lock);
-
              ecore_thread_feedback(thread, data);
           }
         if (!query_stuff)
@@ -67,23 +63,25 @@ _notify_cb(void *data EINA_UNUSED, Ecore_Thread *et EINA_UNUSED, void *pass)
 {
     Efm_File *file;
     Efm_File_Data *pd;
+    Thread_Job *job;
 
-    Thread_Data *thdata = pass;
+    job = pass;
 
-    file = thdata->file;
+    //check if our object is still valid
+    if (!job->obj)
+      return;
+
+    //we have a still valid object
+    file = job->obj;
     pd = eo_data_scope_get(file, EFM_FILE_CLASS);
 
-    pd->mimetype = pd->data.mimetype;
+    //set the mimetpye
+    pd->mimetype = job->mimetype;
 
-    //we dont need it anymore
-    if (eo_ref_get(file) > 1)
-      {
-        eo_unref(file);
-        //notify that this efm_file is ready for the world
-        eo_do(file, eo_event_callback_call(EFM_FILE_EVENT_FSQUERY_DONE, NULL));
-      }
-    else
-      eo_unref(file);
+    //Remove weak reference
+    eo_do(job->obj, eo_wref_del(&job->obj));
+    //notify that this efm_file is ready for the world
+    eo_do(file, eo_event_callback_call(EFM_FILE_EVENT_FSQUERY_DONE, NULL));
 
 }
 
@@ -100,14 +98,19 @@ _cancel_cb(void *data EINA_UNUSED, Ecore_Thread *th  EINA_UNUSED)
 }
 
 static void
-_scheudle(Thread_Data *data)
+_scheudle(Eo *obj, Efm_File_Data *pd)
 {
-    eo_ref(data->file);
+    Thread_Job *job;
+
+    job = calloc(1, sizeof(Thread_Job));
+
+    eo_do(obj, eo_wref_add(&job->obj));
+    job->path = pd->path;
 
     eina_lock_take(&readlock);
-    query_stuff = eina_list_append(query_stuff, data);
+    query_stuff = eina_list_append(query_stuff, job);
     eina_lock_release(&readlock);
-
+    //if there is a running thread the list will be took
     if (!fs_query)
       fs_query = ecore_thread_feedback_run(_fs_cb, _notify_cb,
                                            _end_cb, _cancel_cb,
@@ -187,10 +190,6 @@ _efm_file_generate(Eo *obj, Efm_File_Data *pd, const char *filename)
     //safe this name
     pd->path = eina_stringshare_add(filename);
 
-    pd->data.path = pd->path;
-    pd->data.file = obj;
-
-    eina_lock_new(&pd->data.lock);
     //get the filename
     pd->filename = ecore_file_file_get(pd->path);
 
@@ -205,7 +204,7 @@ _efm_file_generate(Eo *obj, Efm_File_Data *pd, const char *filename)
         end --;
     } while(end > 0);
 
-    _scheudle(&pd->data);
+    _scheudle(obj, pd);
     return EINA_TRUE;
 }
 
