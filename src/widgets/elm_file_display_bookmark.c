@@ -578,7 +578,7 @@ bookmark_add(Evas_Object *w)
    pd = calloc(1, sizeof(Bookmark_Pd));
 
    o = elm_genlist_add(w);
-
+   //elm_object_style_set(o, "filepreview_bookmark");
    evas_object_data_set(o, "__bookmark_pd", pd);
 
    evas_object_event_callback_add(o, EVAS_CALLBACK_DEL, _del, NULL);
@@ -595,7 +595,7 @@ bookmark_add(Evas_Object *w)
    pd->place_item->func.del = _item_del;
 
    pd->group_item = elm_genlist_item_class_new();
-   pd->group_item->item_style = strdup("group_index");
+   pd->group_item->item_style = strdup("group_index_filedisplay_bookmark");
    pd->group_item->func.text_get = _group_label_get;
    pd->group_item->func.del = _group_del;
 

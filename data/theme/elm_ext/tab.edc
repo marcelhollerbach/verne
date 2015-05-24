@@ -1,4 +1,3 @@
-collections {
    images {
        image: "icon_arrow_left.png" COMP;
        image: "icon_arrow_right.png" COMP;
@@ -391,4 +390,3 @@ collections {
          }
       }
    }
-}

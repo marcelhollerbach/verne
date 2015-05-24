@@ -21,7 +21,8 @@ find_package(Ecore COMPONENTS file)
 find_package(Elementary 1.13.0 REQUIRED)
 
 
-add_subdirectory(data)
+add_subdirectory(data/theme/elm_ext)
+add_subdirectory(data/theme/efm)
 add_subdirectory(src/lib/emous)
 add_subdirectory(src/lib/efm)
 add_subdirectory(src/widgets)

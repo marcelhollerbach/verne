@@ -1,0 +1,5 @@
+collections {
+    #include "file_display.edc"
+    #include "file_icon.edc"
+    #include "tab.edc"
+}

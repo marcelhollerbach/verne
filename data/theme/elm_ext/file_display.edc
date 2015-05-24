@@ -1,4 +1,3 @@
-collections {
    #define FONT_SIZE 15
    images {
       image: "diagonal_stripes.png" COMP;
@@ -8,6 +7,93 @@ collections {
       image: "led_light.png" COMP;
       image: "led_dark.png" COMP;
       image: "led_red_light.png" COMP;
+   }
+   #include "copyed/fonts.edc"
+   #include "copyed/macros.edc"
+   //#include "copyed/genlist.edc"
+
+   group { "elm/genlist/item/group_index_filedisplay_bookmark/default"; nomouse; program_source: "elm";
+      data.item: "texts" "elm.text";
+      data.item: "contents" "elm.swallow.icon elm.swallow.end";
+      data.item: "treesize" 19;
+
+      images.image: "horizontal_separated_bar_small_glow.png" COMP;
+
+      parts {
+         text { "elm.text";
+            effect: SHADOW BOTTOM;
+            scale;
+            desc { "default";
+               rel1.offset: 2 3;
+               rel1.relative: 1.0 0.0;
+               rel1.to_x: "elm.swallow.icon";
+               rel2.offset: -3 -3;
+               rel2.relative: 0.0 1.0;
+               rel2.to_x: "elm.swallow.end";
+               color: FN_COL_DEFAULT;
+               color_class: "list_group_item";
+               text { font: FNBD; size: 10;
+                  min: 1 1;
+                  ellipsis: -1;
+                  align: 0.0 0.5;
+                  text_class: "list_group_item";
+               }
+               link.base: "elm,state,enabled";
+            }
+            desc { "disabled";
+               inherit: "default";
+               color: FN_COL_DISABLE;
+               color_class: "list_group_item_disabled";
+               link.base: "elm,state,disabled";
+            }
+         }
+         swallow { "elm.swallow.pad"; mouse;
+            desc { "default";
+               fixed: 1 0;
+               align: 0.0 0.5;
+               rel1.offset: 2 2;
+               rel2.relative: 0.0 1.0;
+               rel2.offset: 2 -3;
+            }
+         }
+         swallow { "elm.swallow.icon"; mouse;
+            desc { "default";
+               fixed: 1 0;
+               align: 0.0 0.5;
+               rel1.to_x: "elm.swallow.pad";
+               rel1.relative: 1.0 0.0;
+               rel1.offset: -1 2;
+               rel2.to_x: "elm.swallow.pad";
+               rel2.relative: 1.0 1.0;
+               rel2.offset: -1 -3;
+            }
+         }
+         swallow { "elm.swallow.end"; mouse;
+            desc { "default";
+               fixed: 1 0;
+               align: 1.0 0.5;
+               rel1.offset: -3 2;
+               rel1.relative: 1.0 0.0;
+               rel2.offset: -3 -3;
+            }
+         }
+         image { "bar";
+            desc { "default";
+               image.normal: "horizontal_separated_bar_small_glow.png";
+               image.border: 4 4 4 4;
+               fill.smooth: 0;
+               rel1.relative: 0.0 1.0;
+               rel1.offset: -3 -6;
+               rel2.offset: 2 3;
+               link.base: "elm,state,enabled";
+            }
+            desc { "disabled";
+               inherit: "default";
+                color: 255 255 255 64;
+                link.base: "elm,state,disabled";
+            }
+         }
+      }
    }
    group { name: "elm/file_display/mount_indicator/default";
       parts {
@@ -119,7 +205,7 @@ collections {
          }
          part { name: "bookmark_holder";
             clip_to: "base";
-            
+
             type: RECT;
             description { state: "default" 0.0;
                rel2.relative: 0.0 1.0;
@@ -368,4 +454,4 @@ collections {
             }
          }
      }
-}
+ }
