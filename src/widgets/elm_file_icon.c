@@ -106,7 +106,7 @@ mime_type_resize(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, int w, int h)
 {
    const char *theme, *file, *mime_type;;
 
-   if (pd->file)
+   if (!pd->file)
      return;
 
    eo_do(pd->file, mime_type = efm_file_obj_mimetype_get());
@@ -176,7 +176,7 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *fi
    Eina_Bool dir;
    const char *path, *mime_type, *filename;
 
-   if (pd->file)
+   if (!pd->file)
      eo_do(pd->file, eo_wref_del(&pd->file));
    eo_do(file, eo_wref_add(&pd->file));
 
@@ -239,7 +239,7 @@ _elm_file_icon_fill_sample(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, const ch
    const char *theme;
    const char *mimetype;
 
-   if (pd->file)
+   if (!pd->file)
      return;
 
    eo_do(ELM_FILE_ICON_CLASS, theme = elm_obj_file_icon_util_icon_theme_get());
