@@ -125,7 +125,7 @@ Eina_Bool error;
 int files;
 
 static Eina_Bool
-_error(void *data, Eo *obj, const Eo_Event_Description *desc,  void *event)
+_error(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED,  void *event EINA_UNUSED)
 {
    error = EINA_TRUE;
    ecore_mainloop_quit();
@@ -141,7 +141,7 @@ _del(void *data, Eo *obj, const Eo_Event_Description *desc,  void *event)
 #endif
 
 static Eina_Bool
-_add(void *data, Eo *obj, const Eo_Event_Description *desc,  void *event)
+_add(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED,  void *event EINA_UNUSED)
 {
    files ++;
    if (files >= TEST_DIRECTORY_FILES_MAX)
