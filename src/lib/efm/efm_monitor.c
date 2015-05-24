@@ -287,13 +287,6 @@ _efm_monitor_start(Eo *obj EINA_UNUSED, void *data EINA_UNUSED, const char *dire
    return mon;
 }
 
-EOLIAN static void
-_efm_monitor_stop(Eo *obj, Efm_Monitor_Data *pd)
-{
-   eo_del(obj);
-}
-
-
 static void
 _efm_monitor_eo_base_destructor(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
 {
