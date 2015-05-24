@@ -24,10 +24,11 @@ static void
 _add(Efm_Monitor *mon, const char *file)
 {
    const char *path;
+   const char *filename;
    Efm_File *ef;
    Efm_Monitor_Data *pd;
    Eina_Bool result;
-
+   Eina_Bool dir;
    path = eina_stringshare_add(file);
 
    ef = eo_add(EFM_FILE_CLASS, mon, result = efm_file_obj_generate(path));
@@ -37,10 +38,18 @@ _add(Efm_Monitor *mon, const char *file)
 
    if (!result)
      {
+       ERR("Creation of %s failed, this is ... strange", file);
        eo_del(ef);
+       return;
      }
 
    pd = eo_data_scope_get(mon, EFM_MONITOR_CLASS);
+
+   if (pd->config.only_folder && eo_do_ret(ef, dir, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)))
+     return;
+
+   if (!pd->config.hidden_files && eo_do_ret(ef, filename, efm_file_obj_filename_get())[0] == '.')
+     return;
 
    eina_hash_add(pd->file_icons, path, ef);
    eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_ADD, ef));
