@@ -100,24 +100,24 @@ sort_name_func(const void *data1, const void *data2)
      }
    else if (config->sort.type == SORT_TYPE_SIZE)
      {
-        struct stat *st1, *st2;
+       Efm_File_Stat *st1, *st2;
 
         st1 = efm_file_stat_get(f1);
         st2 = efm_file_stat_get(f2);
 
-        if (st1->st_mtime > st2->st_mtime)
+        if (st1->mtime > st2->mtime)
           return 1;
         else
           return -1;
      }
    else if (config->sort.type == SORT_TYPE_DATE)
      {
-        struct stat *st1, *st2;
+        Efm_File_Stat *st1, *st2;
 
         st1 = efm_file_stat_get(f1);
         st2 = efm_file_stat_get(f2);
 
-        if (st1->st_size > st2->st_size)
+        if (st1->size > st2->size)
           return 1;
         else
           return -1;
@@ -143,11 +143,11 @@ sort_func(const void *data1, const void *data2)
    else
      mul = 1;
 
-   if (efm_file_dir_get(f1) && efm_file_dir_get(f2))
+   if (efm_file_is_type(f1, EFM_FILE_TYPE_DIRECTORY) && efm_file_is_type(f2, EFM_FILE_TYPE_DIRECTORY))
      {
        return sort_name_func(f1, f2) * mul;
      }
-   else if (efm_file_dir_get(f1) && !efm_file_dir_get(f2))
+   else if (efm_file_is_type(f1, EFM_FILE_TYPE_DIRECTORY) && !efm_file_is_type(f2, EFM_FILE_TYPE_DIRECTORY))
      {
         if (config->sort.folder_placement == FOLDER_FIRST)
           return -1;
@@ -156,7 +156,7 @@ sort_func(const void *data1, const void *data2)
         else
           return sort_name_func(f1, f2) * mul;
      }
-   else if (!efm_file_dir_get(f1) && efm_file_dir_get(f2))
+   else if (!efm_file_is_type(f1, EFM_FILE_TYPE_DIRECTORY) && efm_file_is_type(f2, EFM_FILE_TYPE_DIRECTORY))
      {
         if (config->sort.folder_placement == FOLDER_FIRST)
           return 1;
@@ -195,7 +195,7 @@ util_item_selected(Evas_Object *w, Efm_File *f)
     * if it is a standart directory
     * open it
     */
-   if (efm_file_dir_get(f))
+   if (efm_file_is_type(f, EFM_FILE_TYPE_DIRECTORY))
      {
         /*call path changed */
         eo_do(w,

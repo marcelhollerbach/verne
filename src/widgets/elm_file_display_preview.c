@@ -39,7 +39,7 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
   char buf[PATH_MAX];
   const char *path;
   const char *mime_type;
-  struct stat *st;
+  Efm_File_Stat *st;
 
   //char[] bytes = {"B", "KB", "MB", "GB", "TB", "PM", "EM", NULL}
   f = evas_object_data_get(w, "__ctx");
@@ -113,18 +113,18 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
 
   st = efm_file_stat_get(file);
 
-  snprintf(buf, sizeof(buf), "%zu B", st->st_size);
+  snprintf(buf, sizeof(buf), "%zu B", st->size);
   elm_object_text_set(f->size, buf);
 
-  snprintf(buf, sizeof(buf), "%s", ctime(&st->st_mtim.tv_sec));
+  snprintf(buf, sizeof(buf), "%s", ctime(&st->mtime));
   elm_object_text_set(f->mtime, buf);
 
-  snprintf(buf, sizeof(buf), "%s", ctime(&st->st_ctim.tv_sec));
+  snprintf(buf, sizeof(buf), "%s", ctime(&st->ctime));
   elm_object_text_set(f->ctime, buf);
 
   {
     struct passwd *pw;
-    pw = getpwuid(st->st_uid);
+    pw = getpwuid(st->uid);
 
     snprintf(buf, sizeof(buf), "%s", pw->pw_name);
     elm_object_text_set(f->user, buf);
@@ -133,7 +133,7 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
   {
     struct group *gr;
 
-    gr = getgrgid(st->st_gid);
+    gr = getgrgid(st->gid);
 
     snprintf(buf, sizeof(buf), "%s", gr->gr_name);
     elm_object_text_set(f->group, buf);

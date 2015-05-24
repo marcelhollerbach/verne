@@ -176,7 +176,7 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *fi
    elm_drop_target_del(obj, ELM_SEL_FORMAT_TARGETS, _enter_cb, obj,_leave_cb, NULL, NULL, NULL, _drop_cb, NULL);
    pd->file = file;
    eo_do(pd->file, path = efm_file_obj_path_get();
-                   dir = efm_file_obj_dir_get();
+                   dir = efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY);
                    mime_type = efm_file_obj_mimetype_get();
                    filename = efm_file_obj_filename_get());
 
