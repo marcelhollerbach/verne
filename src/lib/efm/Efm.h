@@ -4,9 +4,6 @@
 #include <Eina.h>
 #include <Eo.h>
 
-//TODO ugly remove
-typedef struct stat Efm_Stat;
-
 #ifdef EFL_BETA_API_SUPPORT
 # include "efm_file.eo.h"
 # include "efm_monitor.eo.h"
