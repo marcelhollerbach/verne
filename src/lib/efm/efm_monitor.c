@@ -19,6 +19,10 @@ typedef struct
    } config;
 } Efm_Monitor_Data;
 
+typedef struct {
+  Eo *monitor;
+} Efm_Monitor_Eio_Job;
+
 #define MARK_POPULATED eo_key_data_set("__populated", NULL, NULL);
 #define UNMARK_POPULATED eo_key_data_del("__populated");
 
@@ -171,19 +175,6 @@ _efm_monitor_config_only_folder_get(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
    return pd->config.only_folder;
 }
 
-static Eina_Bool
-_eio_filter_cb(void *data EINA_UNUSED, Eio_File *handler EINA_UNUSED, const char *file EINA_UNUSED)
-{
-   //We take everything, so the configuration can be easily changed later
-   return EINA_TRUE;
-}
-
-static void
-_eio_main_cb(void *data, Eio_File *handler EINA_UNUSED, const char *file)
-{
-   _add(data, file);
-}
-
 static void
 _fm_action(void *data EINA_UNUSED, Efm_Monitor *mon, const char *file, Fm_Action action)
 {
@@ -204,24 +195,61 @@ _fm_action(void *data EINA_UNUSED, Efm_Monitor *mon, const char *file, Fm_Action
      }
 }
 
+static Eina_Bool
+_eio_filter_cb(void *data EINA_UNUSED, Eio_File *handler EINA_UNUSED, const char *file EINA_UNUSED)
+{
+   //We take everything, so the configuration can be easily changed later
+   return EINA_TRUE;
+}
+
+static void
+_eio_main_cb(void *data, Eio_File *handler EINA_UNUSED, const char *file)
+{
+  Efm_Monitor_Eio_Job *job;
+
+  job = data;
+
+  if (!job->monitor)
+    return;
+
+   _add(job->monitor, file);
+}
+
 static void
 _eio_done_cb(void *data, Eio_File *handler EINA_UNUSED)
 {
+  Efm_Monitor_Eio_Job *job;
   Efm_Monitor_Data *pd;
 
-  pd = eo_data_scope_get(data, EFM_MONITOR_CLASS);
+   job = data;
 
-  pd->mon = eio_monitor_stringshared_add(pd->directory);
-  fm_monitor_add(data, pd->mon, _fm_action);
-  pd->file = NULL;
-  eo_unref(data);
+   if (!job->monitor)
+     return;
+
+   pd = eo_data_scope_get(job->monitor, EFM_MONITOR_CLASS);
+
+   pd->mon = eio_monitor_stringshared_add(pd->directory);
+   fm_monitor_add(job->monitor, pd->mon, _fm_action);
+   pd->file = NULL;
+
+   eo_do(job->monitor, eo_wref_del(&job->monitor));
+   free(job);
 }
 
 static void
 _eio_error_cb(void *data, Eio_File *handler EINA_UNUSED, int error EINA_UNUSED)
 {
-  _error(data);
-  eo_unref(data);
+   Efm_Monitor_Eio_Job *job;
+
+   job = data;
+
+   if (job->monitor)
+     return;
+
+   _error(job->monitor);
+
+   eo_do(job->monitor, eo_wref_del(&job->monitor));
+   free(job);
 }
 
 void
@@ -247,17 +275,21 @@ _efm_monitor_start(Eo *obj EINA_UNUSED, void *data EINA_UNUSED, const char *dire
 
    pd->file_icons = eina_hash_stringshared_new(_mon_hash_free);
 
-   eo_ref(mon);
-   pd->file = eio_file_ls(pd->directory, _eio_filter_cb, _eio_main_cb,
-                           _eio_done_cb, _eio_error_cb, mon);
+   {
+     Efm_Monitor_Eio_Job *job;
 
+     job = calloc(1, sizeof(Efm_Monitor_Eio_Job));
+     eo_do(mon, eo_wref_add(&job->monitor));
+
+     pd->file = eio_file_ls(pd->directory, _eio_filter_cb, _eio_main_cb,
+                           _eio_done_cb, _eio_error_cb, job);
+   }
    return mon;
 }
 
 EOLIAN static void
 _efm_monitor_stop(Eo *obj, Efm_Monitor_Data *pd)
 {
-   eo_do(obj, eo_event_freeze());
    eo_del(obj);
 }
 
