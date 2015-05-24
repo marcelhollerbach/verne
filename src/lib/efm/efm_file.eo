@@ -1,3 +1,16 @@
+struct Efm.File.Stat{
+    size : long;
+    uid : int;
+    gid : int;
+    mtime : long;
+    ctime : long;
+    atime : long;
+}
+
+enum Efm.File.Type {
+    REGULAR_FILE , DIRECTORY, CHARACTER_DEVICE, BLOCK_DEVICE, FIFO, SYM_LINK, SOCKET
+}
+
 class Efm.File(Eo.Base)
 {
     eo_prefix: efm_file_obj;
@@ -39,16 +52,14 @@ class Efm.File(Eo.Base)
 
             }
             values {
-                stat : Efm_Stat*;
+                stat : Efm.File.Stat*;
             }
         }
-        @property dir {
-            get {
-
+        is_type {
+            params {
+                type: Efm.File.Type;
             }
-            values {
-                dir : bool;
-            }
+            return : bool;
         }
         generate {
             /*@ A constructor of the Efm_File

@@ -22,10 +22,9 @@ typedef struct
     const char *fileending;
     const char *mimetype;
 
-    Eina_Bool dir;
-
     Thread_Data data;
     struct stat st;
+    Efm_File_Stat stat;
 } Efm_File_Data;
 
 static void
@@ -75,7 +74,6 @@ _notify_cb(void *data EINA_UNUSED, Ecore_Thread *et EINA_UNUSED, void *pass)
     pd = eo_data_scope_get(file, EFM_FILE_CLASS);
 
     pd->mimetype = pd->data.mimetype;
-    pd->dir = thdata->stat.st_mode == S_IFDIR ? EINA_TRUE : EINA_FALSE;
 
     //we dont need it anymore
     if (eo_ref_get(file) > 1)
@@ -141,16 +139,29 @@ _efm_file_mimetype_get(Eo *obj EINA_UNUSED, Efm_File_Data *pd)
     return pd->mimetype;
 }
 
-EOLIAN static Efm_Stat *
+EOLIAN static Efm_File_Stat *
 _efm_file_stat_get(Eo *obj EINA_UNUSED, Efm_File_Data *pd)
 {
-    return &pd->data.stat;
+    return &pd->stat;
 }
-
 EOLIAN static Eina_Bool
-_efm_file_dir_get(Eo *obj EINA_UNUSED, Efm_File_Data *pd)
+_efm_file_is_type(Eo *obj, Efm_File_Data *pd, Efm_File_Type type)
 {
-    return pd->dir;
+   if (type == EFM_FILE_TYPE_SOCKET && S_ISSOCK(pd->st.st_mode))
+     return EINA_TRUE;
+   else if (type == EFM_FILE_TYPE_FIFO && S_ISFIFO(pd->st.st_mode))
+     return EINA_TRUE;
+   else if (type == EFM_FILE_TYPE_DIRECTORY && S_ISDIR(pd->st.st_mode))
+     return EINA_TRUE;
+   else if (type == EFM_FILE_TYPE_SYM_LINK && S_ISLNK(pd->st.st_mode))
+     return EINA_TRUE;
+   else if (type == EFM_FILE_TYPE_REGULAR_FILE && S_ISREG(pd->st.st_mode))
+     return EINA_TRUE;
+   else if (type == EFM_FILE_TYPE_CHARACTER_DEVICE && S_ISCHR(pd->st.st_mode))
+     return EINA_TRUE;
+   else if (type == EFM_FILE_TYPE_BLOCK_DEVICE && S_ISBLK(pd->st.st_mode))
+     return EINA_TRUE;
+   return EINA_FALSE;
 }
 
 EOLIAN static Eina_Bool
@@ -159,10 +170,19 @@ _efm_file_generate(Eo *obj, Efm_File_Data *pd, const char *filename)
     int end;
 
     //get the stat
-    if (!stat(filename, &pd->st))
+    if (stat(filename, &pd->st) < 0)
       {
          return EINA_FALSE;
       }
+
+    //parse stat to the eo struct
+    pd->stat.uid = pd->st.st_uid;
+    pd->stat.gid = pd->st.st_gid;
+    pd->stat.size = pd->st.st_size;
+
+    pd->stat.atime = pd->st.st_atim.tv_sec;
+    pd->stat.ctime = pd->st.st_ctim.tv_sec;
+    pd->stat.mtime = pd->st.st_mtim.tv_sec;
 
     //safe this name
     pd->path = eina_stringshare_add(filename);
@@ -174,16 +194,16 @@ _efm_file_generate(Eo *obj, Efm_File_Data *pd, const char *filename)
     //get the filename
     pd->filename = ecore_file_file_get(pd->path);
 
-   //parse the fileending
-   end = strlen(pd->path);
-   do {
-       if (pd->path[end] == '.')
-         {
-            pd->fileending = pd->path + end + 1;
-            break;
-         }
-       end --;
-   } while(end > 0);
+    //parse the fileending
+    end = strlen(pd->path);
+    do {
+        if (pd->path[end] == '.')
+          {
+             pd->fileending = pd->path + end + 1;
+             break;
+          }
+        end --;
+    } while(end > 0);
 
     _scheudle(&pd->data);
     return EINA_TRUE;
