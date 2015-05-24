@@ -116,10 +116,17 @@ debug_dir_changed(Evas_Object *w EINA_UNUSED, const char *dir EINA_UNUSED)
 
 }
 
+static void
+debug_size_get(Evas_Object *wid EINA_UNUSED, int *x EINA_UNUSED, int *y EINA_UNUSED, int *w EINA_UNUSED, int *h EINA_UNUSED)
+{
+
+}
+
 Elm_File_Display_View_Callbacks debug = {
    debug_item_get,
    debug_items_get,
    debug_selections_get,
    debug_object_get,
-   debug_dir_changed
+   debug_dir_changed,
+   debug_size_get
 };

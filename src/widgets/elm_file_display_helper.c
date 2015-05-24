@@ -73,6 +73,12 @@ view_call_selectes_get(Elm_File_Display_Data *pd)
    return pd->view->cb.selections_get(pd->cached_view);
 }
 
+void
+view_call_size_get(Elm_File_Display_Data *pd, int *x, int *y, int *w, int *h)
+{
+   if (!pd->view->cb.size_get) return;
+   pd->view->cb.size_get(pd->cached_view, x, y, w, h);
+}
 static int
 sort_name_func(const void *data1, const void *data2)
 {

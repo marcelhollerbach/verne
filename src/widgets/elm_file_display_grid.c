@@ -206,10 +206,18 @@ dir_changed(Evas_Object *ww, const char *dir)
         );
 }
 
+static void
+size_get(Evas_Object *wid, int *x, int *y, int *w, int *h)
+{
+  eo_do(wid,
+    elm_interface_scrollable_content_viewport_geometry_get(x, y, w, h));
+}
+
 Elm_File_Display_View_Callbacks grid = {
    item_get, /* item_get */
    items_select, /* items_select */
    selections_get, /* selections_get */
    object_init, /* obj_get */
-   dir_changed /* dir_changed */
+   dir_changed, /* dir_changed */
+   size_get
 };

@@ -176,7 +176,7 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *fi
    Eina_Bool dir;
    const char *path, *mime_type, *filename;
 
-   if (!pd->file)
+   if (pd->file)
      eo_do(pd->file, eo_wref_del(&pd->file));
    eo_do(file, eo_wref_add(&pd->file));
 

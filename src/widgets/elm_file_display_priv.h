@@ -48,6 +48,8 @@ typedef struct
    Evas_Object* (*obj_get)(Evas_Object *par);
    /* this is called when the standart dir has changed */
    void (*dir_changed)(Evas_Object *wid, const char *dir);
+   /* called to get the actual size where selection and dnd is done */
+   void (*size_get)(Evas_Object *wid, int *x, int *y, int *w, int *h);
 } Elm_File_Display_View_Callbacks;
 
 typedef struct
@@ -116,12 +118,13 @@ Evas_Object* icon_create(Evas_Object *par, Efm_File *file);
 /*
  * helper functions to interact with the view
  */
-void             view_call_dir_changed(Elm_File_Display_Data *pd, const char *path);
-Evas_Object*     view_call_obj_get(Elm_File_Display_Data *pd, Evas_Object *par);
-void             view_call_items_select(Elm_File_Display_Data *pd, int x1, int y1, int x2, int y2);
+void view_call_dir_changed(Elm_File_Display_Data *pd, const char *path);
+Evas_Object* view_call_obj_get(Elm_File_Display_Data *pd, Evas_Object *par);
+void view_call_items_select(Elm_File_Display_Data *pd, int x1, int y1, int x2, int y2);
 Efm_File* view_call_item_get(Elm_File_Display_Data *pd, int x, int y);
-Eina_List *      view_call_selectes_get(Elm_File_Display_Data *pd);
-Eina_Bool        view_call_selected_get(Elm_File_Display_Data *pd, int x, int y);
+Eina_List* view_call_selectes_get(Elm_File_Display_Data *pd);
+Eina_Bool view_call_selected_get(Elm_File_Display_Data *pd, int x, int y);
+void view_call_size_get(Elm_File_Display_Data *pd, int *x, int *y, int *w, int *h);
 
 /*
  * Utilfunction to call when a item is selected by a view

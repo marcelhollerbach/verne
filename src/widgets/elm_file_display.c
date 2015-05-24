@@ -691,14 +691,13 @@ _event_rect_mouse_move(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UN
 }
 
 static void
-_view_resize_cb(void *data, Evas *e EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
+_view_resize_cb(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
   Elm_File_Display_Data *pd;
   int x, y, w, h;
 
   pd = data;
-
-  evas_object_geometry_get(obj, &x, &y, &w, &h);
+  view_call_size_get(pd, &x, &y, &w, &h);
 
   evas_object_resize(pd->event.rect, w, h);
   evas_object_move(pd->event.rect, x, y);
