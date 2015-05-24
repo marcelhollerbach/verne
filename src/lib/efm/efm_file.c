@@ -148,7 +148,7 @@ _efm_file_stat_get(Eo *obj EINA_UNUSED, Efm_File_Data *pd)
     return &pd->stat;
 }
 EOLIAN static Eina_Bool
-_efm_file_is_type(Eo *obj, Efm_File_Data *pd, Efm_File_Type type)
+_efm_file_is_type(Eo *obj EINA_UNUSED, Efm_File_Data *pd, Efm_File_Type type)
 {
    if (type == EFM_FILE_TYPE_SOCKET && S_ISSOCK(pd->st.st_mode))
      return EINA_TRUE;
