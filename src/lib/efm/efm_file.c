@@ -10,7 +10,6 @@ static Eina_Lock readlock;
 typedef struct {
     Eina_Lock lock;
     const char *path;
-    struct stat stat;
     const char *mimetype;
 
     Efm_File *file;
@@ -26,6 +25,7 @@ typedef struct
     Eina_Bool dir;
 
     Thread_Data data;
+    struct stat st;
 } Efm_File_Data;
 
 static void
@@ -51,11 +51,6 @@ _fs_cb(void *dat EINA_UNUSED, Ecore_Thread *thread)
              if (!mime_type) mime_type = efreet_mime_fallback_type_get(data->path);
 
              eina_lock_take(&data->lock);
-
-             if (stat(data->path, &data->stat) < 0)
-               {
-                  ERR("Failed to fetch informations \n");
-               }
 
              data->mimetype = mime_type;
 
@@ -163,9 +158,12 @@ _efm_file_generate(Eo *obj, Efm_File_Data *pd, const char *filename)
 {
     int end;
 
-    //check if file exists
-    if (!ecore_file_exists(filename))
-      return EINA_FALSE;
+    //get the stat
+    if (!stat(filename, &pd->st))
+      {
+         return EINA_FALSE;
+      }
+
     //safe this name
     pd->path = eina_stringshare_add(filename);
 
