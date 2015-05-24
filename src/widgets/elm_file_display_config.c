@@ -112,7 +112,21 @@ config_read(void)
 void
 helper_bookmarks_add(const char *ptr)
 {
-   config->bookmarks = eina_list_append(config->bookmarks, eina_stringshare_add(ptr));
+   Eina_Iterator *iter;
+   const char *bm;
+   const char *new_bm;
+
+   new_bm = eina_stringshare_add(ptr);
+
+   iter = eina_list_iterator_new(config->bookmarks);
+
+   EINA_ITERATOR_FOREACH(iter, bm)
+     {
+        if (bm == new_bm)
+          return;
+     }
+
+   config->bookmarks = eina_list_append(config->bookmarks, ptr);
    config_save();
 }
 
