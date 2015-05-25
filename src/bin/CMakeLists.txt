@@ -1,4 +1,4 @@
-add_executable(efm efm.c)
+add_executable(efm jesus.c titlebar.c)
 
 include_directories(
   ${EINA_INCLUDE_DIRS}
