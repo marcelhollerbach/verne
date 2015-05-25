@@ -1,5 +1,5 @@
-#include "../../elementary2/data/themes/macros.edc"
-#include "../../elementary2/data/themes/fonts.edc"
+#include "../../elementary/data/themes/macros.edc"
+#include "../../elementary/data/themes/fonts.edc"
 
 collections {
     #include "file_display_genlist_style.edc"

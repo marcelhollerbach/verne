@@ -1,5 +1,5 @@
-#include "../../elementary2/data/themes/edc/elm/scroller.edc"
-#include "../../elementary2/data/themes/edc/elm/genlist.edc"
+#include "../../elementary/data/themes/edc/elm/scroller.edc"
+#include "../../elementary/data/themes/edc/elm/genlist.edc"
 
 group {
     name: "elm/genlist/base/file_display";
