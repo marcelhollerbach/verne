@@ -79,3 +79,8 @@ target_link_libraries(widgets
 
 set_property(TARGET widgets
    PROPERTY COMPILE_DEFINITIONS ${THEME_PATH_DEFINITION})
+
+INSTALL(FILES Elementary_Ext.h DESTINATION include/elm_ext-1/)
+INSTALL(TARGETS widgets
+  LIBRARY DESTINATION lib
+)
