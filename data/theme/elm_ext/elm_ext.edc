@@ -1,4 +1,8 @@
+#include "../../elementary2/data/themes/macros.edc"
+#include "../../elementary2/data/themes/fonts.edc"
+
 collections {
+    #include "file_display_genlist_style.edc"
     #include "file_display.edc"
     #include "file_icon.edc"
     #include "tab.edc"
