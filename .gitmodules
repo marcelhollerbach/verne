@@ -1,0 +1,3 @@
+[submodule "data/elementary"]
+	path = data/elementary
+	url = http://git.enlightenment.org/core/elementary.git
