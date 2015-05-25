@@ -1,0 +1,89 @@
+struct Emous_Mountpoint {
+   source: const(char)*;
+   mountpoint: const(char)*;
+}
+
+class Emous.Device.Type (Eo.Base)
+{
+   methods {
+      @property name {
+         values {
+            name : const(char)*;
+         }
+         get {
+
+         }
+      }
+      device_add {
+         /*@
+         Adds a new device to this kind of type
+
+         Signals like device,add will be emitted once the device is populated
+         */
+         params {
+            name : const(char)*;
+         }
+         return: Emous_Device*;
+      }
+      keyword_add {
+         /*@
+         Adds a keyword to the devices
+
+         If a keyword is the same than a type of a mountpoint a signal to this type is emitted, can backend can react to this event
+         */
+         params {
+            type : const(char)*;
+         }
+      }
+      keyword_test {
+         /*@
+         This call will check if the given type is in the list of keywords and return true, if it is and false if not.
+         */
+         params {
+            type : const(char)*;
+         }
+         return: bool;
+      }
+      construct {
+         /*@
+         Called to construct a type. the constructor should !!NEVER!! be called directly, better use the emous_manager_device_type_add function.
+         */
+         params {
+            name : const(char)*;
+         }
+      }
+      mountpoint_added {
+         /*@
+         Helperfunction, will result in a signal mountpoint,check,add
+         */
+         params {
+            mountpoint : const(char)*;
+            source : const(char)*;
+         }
+      }
+      mountpoint_removed {
+         /*@
+         Helperfunction, will result in a signal mountpoint,check,del
+         */
+         params {
+            mountpoint : const(char)*;
+         }
+      }
+   }
+   constructors {
+      .construct;
+   }
+   events {
+      device,add; /* device added */
+      device,del; /* device deleted */
+      mountpoint,check,add; /*@
+Should check if this mountpoint could belong to any device the class has added.
+This signal is a result on calling the mount_point_check function. it is just called on a class where the name of the class is the same than the type of the mountpoint.
+*/
+      mountpoint,check,del; /*@ The subsystem is notifing that a mountpoint disappeared.
+      */
+   }
+   implements {
+      Eo.Base.destructor;
+   }
+}
