@@ -71,6 +71,9 @@ class Efm.File(Eo.Base)
             return : bool;
         }
     }
+    implements {
+        Eo.Base.destructor;
+    }
     constructors {
         .generate;
     }

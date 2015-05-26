@@ -82,7 +82,7 @@ _notify_cb(void *data EINA_UNUSED, Ecore_Thread *et EINA_UNUSED, void *pass)
     eo_do(job->obj, eo_wref_del(&job->obj));
     //notify that this efm_file is ready for the world
     eo_do(file, eo_event_callback_call(EFM_FILE_EVENT_FSQUERY_DONE, NULL));
-
+    free(job);
 }
 
 static void
@@ -207,6 +207,14 @@ _efm_file_generate(Eo *obj, Efm_File_Data *pd, const char *filename)
     _scheudle(obj, pd);
     return EINA_TRUE;
 }
+
+void
+_efm_file_eo_base_destructor(Eo *obj, Efm_File_Data *pd)
+{
+    eina_stringshare_del(pd->path);
+    eo_do_super(obj, EFM_FILE_CLASS, eo_destructor());
+}
+
 
 void
 efm_file_init(void)
