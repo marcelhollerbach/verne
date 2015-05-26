@@ -35,6 +35,7 @@ class Elm_File_Icon (Elm.Layout)
      Evas.Object_Smart.del;
      Evas.Object_Smart.add;
      Evas.Object_Smart.resize;
+     Eo.Base.destructor;
    }
    events {
      name,changed;

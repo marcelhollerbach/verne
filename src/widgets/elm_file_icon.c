@@ -249,4 +249,11 @@ _elm_file_icon_fill_sample(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, const ch
    *file = efreet_mime_type_icon_get(mimetype, theme, 8);
 }
 
+static void
+_elm_file_icon_eo_base_destructor(Eo *obj, Elm_File_Icon_Data *pd)
+{
+   eo_do(pd->file, eo_wref_del(&pd->file));
+   eo_do_super(obj, ELM_FILE_ICON_CLASS, eo_destructor());
+}
+
 #include "elm_file_icon.eo.x"
