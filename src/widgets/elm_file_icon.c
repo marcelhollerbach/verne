@@ -122,7 +122,7 @@ mime_type_resize(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, int w, int h)
    file = efreet_mime_type_icon_get(mime_type, theme, (w > h) ? h : w);
 
    if (!file)
-     ERR("Failed to fetch icon for mime type %s\n", mime_type);
+     INF("Failed to fetch icon for mime type %s\n", mime_type);
    else
     elm_image_file_set(pd->icon, file, NULL);
 
