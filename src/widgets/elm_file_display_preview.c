@@ -153,6 +153,15 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
    elm_object_text_set(w, v); \
    evas_object_show(w);
 
+static void
+_del(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
+{
+   Filepreview *f = evas_object_data_get(obj, "__ctx");
+
+   free(f);
+}
+
+
 Evas_Object*
 filepreview_add(Evas_Object *w)
 {
@@ -162,6 +171,7 @@ filepreview_add(Evas_Object *w)
    f = calloc(1, sizeof(Filepreview));
 
    resu = elm_layout_add(w);
+   evas_object_event_callback_add(resu, EVAS_CALLBACK_DEL, _del, NULL);
 
    bx = elm_box_add(resu);
 
