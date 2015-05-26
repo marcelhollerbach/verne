@@ -112,6 +112,12 @@ _mon_del(void *data EINA_UNUSED, int type EINA_UNUSED, void *event EINA_UNUSED)
    return EINA_FALSE;
 }
 
+static void
+_free_monitor(void *data)
+{
+   free(data);
+}
+
 int
 fm_monitor_init()
 {
@@ -121,7 +127,7 @@ fm_monitor_init()
 
    ctx = calloc(1, sizeof(Context));
 
-   ctx->open_monitors = eina_hash_pointer_new(NULL);
+   ctx->open_monitors = eina_hash_pointer_new(_free_monitor);
 
    ctx->fadd = ecore_event_handler_add(EIO_MONITOR_FILE_CREATED, _file_add, ctx);
    EINA_SAFETY_ON_NULL_GOTO(ctx->fadd, err);
@@ -150,6 +156,7 @@ err:
 void
 fm_monitor_shutdown()
 {
+   eina_hash_free(ctx->open_monitors);
 
    ecore_event_handler_del(ctx->fadd);
    ecore_event_handler_del(ctx->fdel);
