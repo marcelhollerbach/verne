@@ -8,6 +8,7 @@
 #define MONITOR_PATH "/proc/self/mounts"
 
 static struct libmnt_table *mnt_table_old;
+static Ecore_Thread *t;
 
 void
 mnt_event(void)
@@ -77,6 +78,8 @@ mnt_event(void)
               break;
           }
      }
+   mnt_free_iter(itr);
+   mnt_free_tabdiff(diff);
    mnt_free_table(mnt_table_old);
    mnt_table_old = current;
 }
@@ -104,7 +107,7 @@ _check_cb(void *data EINA_UNUSED, Ecore_Thread *thread)
 
     FD_ZERO(&rfds);
     FD_SET(mfd, &rfds);
-    tv.tv_sec = 5;
+    tv.tv_sec = 2;
     tv.tv_usec = 0;
 
     while ((rv = select(mfd+1, NULL, NULL, &rfds, &tv)) >= 0) {
@@ -127,8 +130,6 @@ _check_cb(void *data EINA_UNUSED, Ecore_Thread *thread)
 void
 _emous_mm_init(void)
 {
-   Ecore_Thread *t;
-
    //first run just a empty table
    mnt_table_old = mnt_new_table();
 
@@ -139,4 +140,11 @@ _emous_mm_init(void)
    mnt_event();
 
    t = ecore_thread_feedback_run(_check_cb, _change_cb, NULL, NULL, NULL, EINA_TRUE);
+}
+
+void
+_emous_mm_shutdown(void)
+{
+   mnt_free_table(mnt_table_old);
+   ecore_thread_cancel(t);
 }
