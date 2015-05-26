@@ -1,3 +1,7 @@
+#define GAP 9
+externals {
+    external: "name";
+}
 collections{
    images {
       image: "icon_arrow_left.png" COMP;
@@ -6,64 +10,84 @@ collections{
    }
    group { name: "headbar";
       parts {
-         part { name: "base"; type: RECT;
-            description { state: "default" 0.0;
-               color: 0 0 0 0;
+         spacer { "base"
+            desc { "default"
+
             }
          }
-         part { name: "back";
-            description { state: "default" 0.0;
-               aspect: 1 1;
+         spacer { "headbar"
+            desc { "default"
                rel1.to: "base";
                rel2.to: "base";
-               rel2.relative: 0.0 1.0;
-               align: 0.0 0.0;
-               image.normal: "icon_arrow_left.png";
+               rel1.relative: 0.0 0.0;
+               rel2.relative: 1.0 0.0;
+               rel2.offset: 0 30;
                fixed: 1 1;
             }
          }
-          part { name: "forward";
-            description { state: "default" 0.0;
+         rect { "line"
+            desc { "default"
+               color: 40 40 40 255;
+               rel1.to: "headbar";
+               rel1.relative: 0.0 1.0;
+               rel2.to: "headbar";
+               rel2.offset: 0 1;
+            }
+         }
+         spacer { "back"
+            desc { "default"
+               aspect: 1 1;
+               rel1.to: "headbar";
+               rel2.to: "headbar";
+               rel2.relative: 0.0 1.0;
+               align: 0.0 0.0;
+            }
+         }
+         spacer { "forward"
+            desc { "default"
                aspect: 1 1;
                rel1.to: "back";
                rel1.relative: 1.0 0.0;
                rel2.to: "back";
                rel2.relative: 1.0 1.0;
                align: 0.0 0.0;
-               image.normal: "icon_arrow_right.png";
-               fixed: 1 1;
             }
          }
-         part { name: "up";
-            description { state: "default" 0.0;
-               aspect: 1 1;
+         image { "back_img"
+            desc { "default"
+               rel1.to: "back";
+               rel2.to: "back";
+               rel1.offset: GAP GAP;
+               rel2.offset: -GAP -GAP;
+               image.normal: "icon_arrow_left.png";
+            }
+         }
+         image { "forward_img"
+            desc { "default"
                rel1.to: "forward";
-               rel1.relative: 1.0 0.0;
                rel2.to: "forward";
-               rel2.relative: 1.0 1.0;
-               align: 0.0 0.0;
-               image.normal: "icon_arrow_up.png";
+               rel1.offset: GAP GAP;
+               rel2.offset: -GAP -GAP;
+               image.normal: "icon_arrow_right.png";
+            }
+         }
+         swallow { "textbar"
+            desc { "default"
+               rel1.to_y: "headbar";
+               rel1.to_x: "forward";
+               rel1.relative: 1.0 0.5;
+               rel2.to: "headbar";
+               rel2.relative: 1.0 0.5;
                fixed: 1 1;
             }
          }
          part { name: "content"; type: SWALLOW;
             description { state: "default" 0.0;
-            	rel1.to: "up";
-	            rel1.relative: 1.0 0.0;
-               rel2.to: "up";
-	            rel2.relative: 1.0 1.0;
-               align: 0.0 0.0;
-            }
-         }
-         part { name: "spacer"; type: RECT;
-            description { state: "default" 0.0;
-               //color: 0 0 0 0;
-               aspect: 1 1;
-               rel1.to: "content";
-               rel1.relative: 1.0 0.0;
+               rel1.to: "headbar";
+               rel1.relative: 0.0 1.0;
+               rel1.offset: 0 3;
                rel2.to: "base";
                rel2.relative: 1.0 1.0;
-               align: 0.0 0.0;
             }
          }
       }

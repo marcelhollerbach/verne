@@ -5,6 +5,3 @@ add_custom_command(
 )
 
 add_custom_target(theme DEPENDS elm_ext.edc.edj)
-
-INSTALL(FILES elm_ext.edc.edj
-  DESTINATION share/elm_ext/)
