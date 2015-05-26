@@ -97,7 +97,8 @@ _focus_idler(void *data)
 {
    const char *text;
 
-   text = evas_object_data_get(data, "__orig_text");
+
+   text = evas_object_data_del(data, "__orig_text");
 
    planed_changed = EINA_TRUE;
    elm_object_text_set(data, text);
@@ -109,6 +110,28 @@ _focus_idler(void *data)
    return EINA_FALSE;
 }
 
+static Eina_Bool
+_unfocus_idler(void *data)
+{
+    const char *text;
+
+    if (!unfocus_barrier)
+      return EINA_FALSE;
+
+    unfocus_barrier = EINA_FALSE;
+    //get the currect text
+    text = elm_object_text_get(data);
+
+    //save the current state
+    evas_object_data_set(data, "__orig_text", strdup(text));
+
+    planed_changed = EINA_TRUE;
+    elm_object_text_set(data, _path_transform(text));
+    planed_changed = EINA_FALSE;
+
+    return EINA_FALSE;
+}
+
 static void
 _focus_cb(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
 {
@@ -118,22 +141,7 @@ _focus_cb(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
 static void
 _unfocus_cb(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
 {
-    const char *text;
-
-
-    if (!unfocus_barrier)
-      return;
-
-    unfocus_barrier = EINA_FALSE;
-    //get the currect text
-    text = elm_object_text_get(obj);
-
-    //save the current state
-    evas_object_data_set(obj, "__orig_text", strdup(text));
-
-    planed_changed = EINA_TRUE;
-    elm_object_text_set(obj, _path_transform(text));
-    planed_changed = EINA_FALSE;
+   ecore_idler_add(_unfocus_idler, obj);
 }
 
 static Eina_Bool
