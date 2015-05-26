@@ -57,6 +57,10 @@ _path_transform(const char *text)
       }
 
    result = (eina_strbuf_string_steal(buf));
+   eina_strbuf_free(buf);
+   eina_strbuf_free(dir);
+   free(parts);
+
    return result;
 }
 

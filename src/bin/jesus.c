@@ -32,7 +32,7 @@ EAPI_MAIN int
 elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 {
    Evas_Object *win, *layout;
-   const char *path = NULL;
+   char *path = NULL;
 
    //check if someone gave us a path
    if (argc > 2)
@@ -53,7 +53,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    //if everything fails we just take /
    if (!path)
      {
-        path = strdup("/");
+        path = "/";
      }
 
    elm_ext_init();
@@ -71,7 +71,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    evas_object_show(layout);
 
    entry = titlebar_add(layout);
-   elm_entry_entry_append(entry, strdup(path));
+   elm_entry_entry_append(entry, path);
    elm_object_part_content_set(layout, "textbar", entry);
    evas_object_show(entry);
 
@@ -88,6 +88,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    evas_object_resize(win, 200,200);
    evas_object_show(win);
    eo_unref(display);
+
    elm_run();
    return 0;
 }
