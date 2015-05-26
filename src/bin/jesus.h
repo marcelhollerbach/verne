@@ -9,5 +9,4 @@
 #include <Elementary_Ext.h>
 
 Evas_Object *titlebar_add(Evas_Object *parent);
-void change_path(const char *path);
 #endif

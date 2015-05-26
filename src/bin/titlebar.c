@@ -9,6 +9,7 @@ struct tuple {
 
 static Eina_Bool planed_changed;
 static Ecore_Idler *focus_idler;
+
 static Eina_Bool unfocus_barrier;
 
 static const char*
@@ -166,6 +167,7 @@ _changed_cb(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
 
    if (planed_changed)
      return;
+
    if (elm_object_focus_get(obj))
      return;
 
@@ -192,7 +194,9 @@ _anchor_clicked_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *e
    if (focus_idler)
      ecore_idler_del(focus_idler);
 
-   change_path(info->name);
+   elm_object_focus_set(obj, EINA_FALSE);
+   elm_object_text_set(obj, NULL);
+   elm_entry_entry_append(obj, info->name);
 }
 
 Evas_Object*
