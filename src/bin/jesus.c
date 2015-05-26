@@ -71,7 +71,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    evas_object_smart_callback_add(win, "delete,request", on_done, NULL);
 
    layout = elm_layout_add(win);
-   eo_do(layout, efl_file_set("/home/marcel/git/efm/build/data/efm.edc.edj", "headbar"));
+   eo_do(layout, efl_file_set(THEME_PATH"/efm.edc.edj", "headbar"));
    evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
    evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    evas_object_show(layout);

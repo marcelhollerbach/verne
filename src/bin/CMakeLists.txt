@@ -1,3 +1,6 @@
+set(THEME_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/share/jesus/")
+set(THEME_PATH_DEFINITION THEME_PATH="${THEME_INSTALL_PATH}")
+
 add_executable(efm jesus.c titlebar.c)
 
 include_directories(
@@ -23,3 +26,5 @@ target_link_libraries (efm
    ${ELEMENTARY_LIBRARIES}
    widgets
    efm_lib)
+
+set_property(TARGET efm PROPERTY COMPILE_DEFINITIONS ${THEME_PATH_DEFINITION})
