@@ -10,6 +10,9 @@ static Eldbus_Connection *con;
 static Eldbus_Proxy *proxy;
 static Eldbus_Object *obj;
 
+static Eldbus_Signal_Handler *_iadd;
+static Eldbus_Signal_Handler *_idel;
+
 static const char*
 _dbus_helper_search_field(Eldbus_Message_Iter *it, const char *field)
 {
@@ -26,12 +29,17 @@ _dbus_helper_search_field(Eldbus_Message_Iter *it, const char *field)
         if (type[0] == 's')
           {
              if (strcmp(key2, field))
-               continue;
+               goto end;
              if (!eldbus_message_iter_arguments_get(var, type, &val))
-               continue;
+               goto end;
              if (val && val[0])
-               return eina_stringshare_add(val);
+               {
+                  free(type);
+                  return eina_stringshare_add(val);
+               }
           }
+end:
+        free(type);
      }
    return NULL;
 }
@@ -78,7 +86,7 @@ mountpoint_update_cb(void *data EINA_UNUSED, const Eldbus_Message *msg, Eldbus_P
 
    if (!mountpoints)
      return;
-   do 
+   do
      {
         mp = _util_fuckyouglib_convert(mountpoints);
 
@@ -88,12 +96,12 @@ mountpoint_update_cb(void *data EINA_UNUSED, const Eldbus_Message *msg, Eldbus_P
         list = eina_list_append(list, mp);
      }
    while(eldbus_message_iter_next(mountpoints));
-   
+
    if (!d->device)
      {
         d->tmp_list = list;
         return;
-     } 
+     }
    eo_do(d->device, ex_mountpoints = emous_device_mountpoints_get(););
 
    ex_mountpoints = eina_list_clone(ex_mountpoints);
@@ -219,9 +227,7 @@ _device_handle(Eldbus_Message_Iter *dict)
         return;
      }
 
-   eldbus_proxy_properties_changed_callback_add(proxy, _prop_changed_cb, d);
-
-   proxy = NULL;
+   d->changed = eldbus_proxy_properties_changed_callback_add(proxy, _prop_changed_cb, d);
 
    //add device
    _device_add(d);
@@ -251,6 +257,7 @@ _interface_del_cb(void *data EINA_UNUSED, const Eldbus_Message *msg)
      }
 
    _device_del(opath);
+
 }
 
 static void
@@ -304,9 +311,9 @@ _name_start_cb(void *data EINA_UNUSED, const Eldbus_Message *msg,
    proxy = eldbus_proxy_get(obj, ELDBUS_FDO_INTERFACE_OBJECT_MANAGER);
 
    //subscribe to new arriving devices
-   eldbus_proxy_signal_handler_add(proxy, "InterfacesAdded",
+   _iadd = eldbus_proxy_signal_handler_add(proxy, "InterfacesAdded",
                                   _interface_add_cb, NULL);
-   eldbus_proxy_signal_handler_add(proxy, "InterfacesRemoved",
+   _idel = eldbus_proxy_signal_handler_add(proxy, "InterfacesRemoved",
                                   _interface_del_cb, NULL);
 }
 
@@ -404,10 +411,13 @@ udisk_dbus_init()
 void
 udisk_dbus_shutdown()
 {
+   eldbus_signal_handler_del(_iadd);
+   eldbus_signal_handler_del(_idel);
 
-   eldbus_connection_unref(con);
-   eldbus_proxy_unref(proxy);
    eldbus_object_unref(obj);
+   //proxy gets freed when we free the object
+   //eldbus_proxy_unref(proxy);
+   eldbus_connection_unref(con);
 
    eldbus_shutdown();
 }

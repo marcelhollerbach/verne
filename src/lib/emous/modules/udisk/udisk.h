@@ -21,6 +21,7 @@ typedef struct {
   const char *opath;
   Eina_Bool mounted;
   Eldbus_Proxy *proxy;
+  Eldbus_Signal_Handler *changed;
   Eo *device;
   Eina_List *tmp_list;
 } Device;

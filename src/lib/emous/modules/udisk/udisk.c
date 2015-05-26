@@ -83,6 +83,18 @@ _device_add(Device *d)
 }
 
 void
+device_del(void *data)
+{
+   Device *d = data;
+
+   eldbus_signal_handler_unref(d->changed);
+   eldbus_proxy_unref(d->proxy);
+   eo_del(d->device);
+   eina_stringshare_del(d->opath);
+   free(d);
+}
+
+void
 _device_del(const char *opath)
 {
    Device *d;
@@ -91,19 +103,12 @@ _device_del(const char *opath)
    path = eina_stringshare_add(opath);
 
    d = eina_hash_find(device_name, path);
-
    eina_stringshare_del(path);
-
    if (!d)
      return;
 
    eina_hash_del(devices, &d->device, d);
    eina_hash_del(device_name, opath, d);
-
-   eo_del(d->device);
-
-   eina_stringshare_del(d->opath);
-   free(d);
 }
 
 static Eina_Bool
@@ -135,7 +140,7 @@ _module_init(void)
             eo_event_callback_add(EMOUS_DEVICE_TYPE_EVENT_MOUNTPOINT_CHECK_DEL, _del_cb, NULL);
          );
 
-   devices = eina_hash_pointer_new(NULL/*FIXME*/);
+   devices = eina_hash_pointer_new(device_del);
    device_name = eina_hash_stringshared_new(NULL);
    EINA_SAFETY_ON_NULL_RETURN_VAL(devices, EINA_FALSE);
 
@@ -150,7 +155,6 @@ _module_shutdown(void)
    eo_del(c);
 
    udisk_dbus_shutdown();
-   emous_shutdown();
    eina_shutdown();
 }
 
