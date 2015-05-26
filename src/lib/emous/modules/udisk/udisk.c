@@ -1,7 +1,7 @@
 #include "udisk.h"
 
 //log domain
-int _log_domain;
+int __log_domain;
 
 //emous objects
 static Emous_Device_Type *c;
@@ -121,10 +121,9 @@ static Eina_Bool
 _module_init(void)
 {
    eina_init();
-   emous_init();
 
-   _log_domain = eina_log_domain_register("emous_udisk", NULL);
-   if (!_log_domain)
+   __log_domain = eina_log_domain_register("emous_udisk", NULL);
+   if (!__log_domain)
      return 0;
 
    udisk_dbus_init();

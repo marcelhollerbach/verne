@@ -2,7 +2,7 @@
 #include <Efreet.h>
 static int counter = 0;
 
-int _log_domain;
+int _efm_domain;
 
 int
 efm_init()
@@ -14,8 +14,8 @@ efm_init()
    if (counter > 0)
      goto inc;
 
-   _log_domain = eina_log_domain_register("efm", NULL);
-   if (!_log_domain)
+   _efm_domain = eina_log_domain_register("efm", NULL);
+   if (!_efm_domain)
      return 0;
 
    eina_log_domain_level_set("efm",EINA_LOG_LEVEL_DBG);
@@ -42,8 +42,7 @@ efm_shutdown()
 
    fm_monitor_shutdown();
 
-   eina_log_domain_unregister(_log_domain);
-
+   eina_log_domain_unregister(_efm_domain);
    eio_shutdown();
    efreet_shutdown();
    ecore_shutdown();

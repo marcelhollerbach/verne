@@ -1,7 +1,7 @@
 #include "emous_priv.h"
 
 int ref = 0;
-int _log_domain;
+int _emous_domain;
 
 static Eina_Array *modules = NULL;
 
@@ -28,8 +28,8 @@ emous_init(void)
      }
 
 
-   _log_domain = eina_log_domain_register("emous", NULL);
-   if (!_log_domain)
+   _emous_domain = eina_log_domain_register("emous", NULL);
+   if (!_emous_domain)
      return 0;
 
    if (!ecore_init())
@@ -78,12 +78,13 @@ emous_shutdown(void)
    ref --;
    if (ref  != 0)
      return;
+   _emous_mm_shutdown();
    eina_module_list_unload(modules);
    _emous_mount_point_shutdown();
    mount_shutdown();
    eio_shutdown();
    ecore_shutdown();
-   eina_log_domain_unregister(_log_domain);
+   eina_log_domain_unregister(_emous_domain);
    eina_shutdown();
 }
 
@@ -103,8 +104,8 @@ emous_test_init(void)
      }
 
 
-   _log_domain = eina_log_domain_register("emous", NULL);
-   if (!_log_domain)
+   _emous_domain = eina_log_domain_register("emous", NULL);
+   if (!_emous_domain)
      return 0;
 
    if (!ecore_init())

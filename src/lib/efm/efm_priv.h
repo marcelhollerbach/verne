@@ -20,13 +20,13 @@ typedef enum {
 
 typedef void (*Fm_File_Action)(void *data, Efm_Monitor *mon, const char *file, Fm_Action add);
 
-extern int _log_domain;
+extern int _efm_domain;
 
-#define CRIT(...)     EINA_LOG_DOM_CRIT(_log_domain, __VA_ARGS__)
-#define ERR(...)      EINA_LOG_DOM_ERR(_log_domain, __VA_ARGS__)
-#define WRN(...)      EINA_LOG_DOM_WARN(_log_domain, __VA_ARGS__)
-#define INF(...)      EINA_LOG_DOM_INFO(_log_domain, __VA_ARGS__)
-#define DBG(...)      EINA_LOG_DOM_DBG(_log_domain, __VA_ARGS__)
+#define CRIT(...)     EINA_LOG_DOM_CRIT(_efm_domain, __VA_ARGS__)
+#define ERR(...)      EINA_LOG_DOM_ERR(_efm_domain, __VA_ARGS__)
+#define WRN(...)      EINA_LOG_DOM_WARN(_efm_domain, __VA_ARGS__)
+#define INF(...)      EINA_LOG_DOM_INFO(_efm_domain, __VA_ARGS__)
+#define DBG(...)      EINA_LOG_DOM_DBG(_efm_domain, __VA_ARGS__)
 
 int fm_monitor_init();
 void fm_monitor_add(Efm_Monitor *mon, Eio_Monitor *monitor, Fm_File_Action action);
