@@ -32,6 +32,8 @@ void
 change_path(const char *path)
 {
    eo_do(display, efl_file_set(path, NULL));
+   elm_object_text_set(entry, NULL);
+   elm_entry_entry_append(entry, path);
 }
 
 EAPI_MAIN int
