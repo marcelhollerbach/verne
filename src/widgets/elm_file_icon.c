@@ -138,7 +138,7 @@ _elm_file_icon_util_icon_theme_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
    if (!theme)
      theme = "hicolor";
 
-   return strdup(theme);
+   return theme;
 }
 
 

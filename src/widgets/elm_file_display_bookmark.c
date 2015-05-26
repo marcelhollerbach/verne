@@ -591,18 +591,18 @@ bookmark_add(Evas_Object *w)
    pd->dnd_ic->func.text_get = _dnd_item_label_get;
 
    pd->place_item = elm_genlist_item_class_new();
-   pd->place_item->item_style = strdup("default");
+   pd->place_item->item_style = "default";
    pd->place_item->func.text_get = _item_label_get;
    pd->place_item->func.content_get = _item_content_get;
    pd->place_item->func.del = _item_del;
 
    pd->group_item = elm_genlist_item_class_new();
-   pd->group_item->item_style = strdup("group_index");
+   pd->group_item->item_style = "group_index";
    pd->group_item->func.text_get = _group_label_get;
    pd->group_item->func.del = _group_del;
 
    pd->device_item = elm_genlist_item_class_new();
-   pd->device_item->item_style = strdup("default");
+   pd->device_item->item_style = "default";
    pd->device_item->func.content_get = _device_item_content_get;
    pd->device_item->func.text_get = _device_item_text_get;
    pd->device_item->func.del = _device_item_del;
