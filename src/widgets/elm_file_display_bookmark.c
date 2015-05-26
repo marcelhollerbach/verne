@@ -188,7 +188,8 @@ _device_item_content_get(void *data, Evas_Object *obj, const char *part EINA_UNU
 
    if (!!strcmp(part, "elm.swallow.icon")) return NULL;
 
-   d->indicator = indicator = elm_layout_add(obj);
+   indicator = elm_layout_add(obj);
+   eo_do(indicator, eo_wref_add(&d->indicator));
 
    if (!elm_layout_theme_set(indicator, "file_display", "mount_indicator", "default"))
      ERR("Failed to set indicator file");
@@ -377,7 +378,8 @@ _device_update(Bookmark_Item *item)
           signal = "mountrequest";
         break;
      }
-   elm_layout_signal_emit(item->pd.dev.indicator, signal, "elm");
+   if (item->pd.dev.indicator)
+     elm_layout_signal_emit(item->pd.dev.indicator, signal, "elm");
 
 }
 
