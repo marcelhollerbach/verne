@@ -80,7 +80,7 @@ _setup_list(Evas_Object *o)
    PRIV_DATA(o);
    elm_genlist_clear(o);
 
-   it = elm_genlist_item_append(o, pd->group_item, eina_stringshare_add("Places"), NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
+   it = elm_genlist_item_append(o, pd->group_item, eina_stringshare_add("Places"), NULL, 0, NULL, NULL);
 
    bookmark_entry_internal_add(o, "/", "Root", "start-here", EINA_FALSE, it);
 
@@ -93,7 +93,7 @@ _setup_list(Evas_Object *o)
    if ((tmp = efreet_desktop_dir_get()))
      bookmark_entry_internal_add(o, tmp, "Desktop", "user-desktop", EINA_FALSE, it);
 
-   pd->bookmark_group_it = elm_genlist_item_append(o, pd->group_item, eina_stringshare_add("Bookmarks"), NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
+   pd->bookmark_group_it = elm_genlist_item_append(o, pd->group_item, eina_stringshare_add("Bookmarks"), NULL, 0, NULL, NULL);
 
    if (!config) return;
 
@@ -114,7 +114,7 @@ _setup_list(Evas_Object *o)
      }
 device:
 
-   it = elm_genlist_item_append(o, pd->group_item, eina_stringshare_add("Devices"), NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
+   pd->device_group_it = it = elm_genlist_item_append(o, pd->group_item, eina_stringshare_add("Devices"), NULL, 0, NULL, NULL);
 
    {
       Eina_List *list, *node;
