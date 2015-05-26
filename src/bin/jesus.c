@@ -28,6 +28,12 @@ _dir_changed(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Descrip
    return EINA_FALSE;
 }
 
+void
+display_file_set(const char *path)
+{
+   eo_do(display, efl_file_set(path, NULL));
+}
+
 EAPI_MAIN int
 elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 {

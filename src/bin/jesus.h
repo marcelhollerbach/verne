@@ -9,4 +9,5 @@
 #include <Elementary_Ext.h>
 
 Evas_Object *titlebar_add(Evas_Object *parent);
+void display_file_set(const char *path);
 #endif

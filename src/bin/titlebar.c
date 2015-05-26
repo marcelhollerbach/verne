@@ -201,6 +201,7 @@ _anchor_clicked_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *e
    elm_object_focus_set(obj, EINA_FALSE);
    elm_object_text_set(obj, NULL);
    elm_entry_entry_append(obj, info->name);
+   display_file_set(info->name);
 }
 
 Evas_Object*
