@@ -411,10 +411,14 @@ udisk_dbus_init()
 void
 udisk_dbus_shutdown()
 {
-   eldbus_signal_handler_del(_iadd);
-   eldbus_signal_handler_del(_idel);
+   if (_iadd)
+     eldbus_signal_handler_del(_iadd);
 
-   eldbus_object_unref(obj);
+   if (_idel)
+     eldbus_signal_handler_del(_idel);
+
+   if (obj)
+     eldbus_object_unref(obj);
    //proxy gets freed when we free the object
    //eldbus_proxy_unref(proxy);
    eldbus_connection_unref(con);
