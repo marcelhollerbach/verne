@@ -11,6 +11,8 @@ static Eina_Bool planed_changed;
 static Ecore_Idler *focus_idler;
 
 static Eina_Bool unfocus_barrier;
+static Evas_Object *entry;
+
 
 static const char*
 _path_transform(const char *text)
@@ -201,17 +203,15 @@ _anchor_clicked_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *e
    elm_object_focus_set(obj, EINA_FALSE);
    elm_object_text_set(obj, NULL);
    elm_entry_entry_append(obj, info->name);
-   display_file_set(info->name);
+   eo_do(preview, efl_file_set(info->name, NULL));
 }
 
-Evas_Object*
-titlebar_add(Evas_Object *parent)
+void
+titlebar_init(void)
 {
-   Evas_Object *entry;
-
    planed_changed = EINA_FALSE;
 
-   entry = elm_entry_add(parent);
+   entry = elm_entry_add(layout);
    elm_entry_single_line_set(entry, EINA_TRUE);
    elm_entry_markup_filter_append(entry, _markup_filter, NULL);
    evas_object_smart_callback_add(entry, "focused", _focus_cb, NULL);
@@ -220,7 +220,14 @@ titlebar_add(Evas_Object *parent)
    evas_object_smart_callback_add(entry, "anchor,clicked", _anchor_clicked_cb, NULL);
    evas_object_show(entry);
 
-   unfocus_barrier = EINA_FALSE;
+   elm_object_part_content_set(layout, "textbar", entry);
 
-   return entry;
+   unfocus_barrier = EINA_FALSE;
+}
+
+void
+titlebar_path_set(const char *path)
+{
+   elm_entry_entry_set(entry, NULL);
+   elm_entry_entry_append(entry, path);
 }

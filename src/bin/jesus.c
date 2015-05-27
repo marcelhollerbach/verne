@@ -1,8 +1,8 @@
-
 #include "jesus.h"
 
-static Evas_Object *entry;
-static Evas_Object *display;
+Evas_Object *win;
+Evas_Object *preview;
+Evas_Object *layout;
 
 static void
 on_done(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
@@ -20,24 +20,42 @@ printHelp()
 static Eina_Bool
 _dir_changed(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
 {
-   const char *dir = event;
-
-   elm_object_text_set(entry, NULL);
-   elm_entry_entry_append(entry, dir);
+   titlebar_path_set(event);
 
    return EINA_FALSE;
 }
 
-void
-display_file_set(const char *path)
+static void
+ui_init()
 {
-   eo_do(display, efl_file_set(path, NULL));
+   win = elm_win_util_standard_add("efm", "efm - Jesus");
+   evas_object_smart_callback_add(win, "delete,request", on_done, NULL);
+
+   layout = elm_layout_add(win);
+   eo_do(layout, efl_file_set(THEME_PATH"/efm.edc.edj", "headbar"));
+   evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+   evas_object_show(layout);
+
+   preview = eo_add(ELM_FILE_DISPLAY_CLASS, win);
+   evas_object_size_hint_align_set(preview, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_size_hint_weight_set(preview, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+   elm_object_part_content_set(layout, "content", preview);
+   eo_do(preview, eo_event_callback_add(ELM_FILE_DISPLAY_EVENT_PATH_CHANGED,
+                                 _dir_changed, NULL););
+   evas_object_show(preview);
+
+   titlebar_init();
+
+   elm_win_resize_object_add(win, layout);
+   evas_object_resize(win, 200,200);
+   evas_object_show(win);
+   eo_unref(preview);
 }
 
 EAPI_MAIN int
 elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 {
-   Evas_Object *win, *layout;
    char *path = NULL;
 
    //check if someone gave us a path
@@ -62,38 +80,27 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
         path = "/";
      }
 
+   //set app informations
+   elm_app_name_set("Jesus");
+   elm_app_compile_bin_dir_set(PACKAGE_BIN_DIR);
+   elm_app_compile_lib_dir_set(PACKAGE_LIB_DIR);
+   elm_app_compile_data_dir_set(PACKAGE_DATA_DIR);
+   elm_app_desktop_entry_set(""); //FIXME we dont have a desktopfile yet
+   elm_app_info_set(elm_main, "jesus", "");
+
+   //init external elementary stuff
    elm_ext_init();
 
+   //we need ethumb and efreet
    elm_need_ethumb();
    elm_need_efreet();
 
-   win = elm_win_util_standard_add("efm", "efm - Jesus");
-   evas_object_smart_callback_add(win, "delete,request", on_done, NULL);
+   //init ui and stuff
+   ui_init();
 
-   layout = elm_layout_add(win);
-   eo_do(layout, efl_file_set(THEME_PATH"/efm.edc.edj", "headbar"));
-   evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
-   evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-   evas_object_show(layout);
-
-   entry = titlebar_add(layout);
-   elm_entry_entry_append(entry, path);
-   elm_object_part_content_set(layout, "textbar", entry);
-   evas_object_show(entry);
-
-   display = eo_add(ELM_FILE_DISPLAY_CLASS, win);
-   evas_object_size_hint_align_set(display, EVAS_HINT_FILL, EVAS_HINT_FILL);
-   evas_object_size_hint_weight_set(display, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-   elm_object_part_content_set(layout, "content", display);
-   eo_do(display, efl_file_set(path, NULL);
-                  eo_event_callback_add(ELM_FILE_DISPLAY_EVENT_PATH_CHANGED,
-                                 _dir_changed, NULL););
-   evas_object_show(display);
-
-   elm_win_resize_object_add(win, layout);
-   evas_object_resize(win, 200,200);
-   evas_object_show(win);
-   eo_unref(display);
+   //set the correct path
+   eo_do(preview, efl_file_set(path, NULL));
+   titlebar_path_set(path);
 
    elm_run();
    return 0;

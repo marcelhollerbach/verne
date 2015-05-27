@@ -7,7 +7,30 @@
 #include <Efm.h>
 #include <Elementary.h>
 #include <Elementary_Ext.h>
+#include "ui.h"
 
-Evas_Object *titlebar_add(Evas_Object *parent);
-void display_file_set(const char *path);
+
+typedef struct {
+    Eina_Hash *mime_type_open;
+
+} Jesus_Config;
+
+extern Jesus_Config *config;
+
+//the general window
+extern Evas_Object *win;
+
+//the filepreview widget
+extern Evas_Object *preview;
+
+//the main layout of the window
+extern Evas_Object *layout;
+
+void config_init(void);
+void config_flush(void);
+void config_shutdown(void);
+
+void titlebar_init(void);
+void titlebar_path_set(const char *path);
+
 #endif
