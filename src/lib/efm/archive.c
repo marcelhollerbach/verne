@@ -1,7 +1,6 @@
-#include "efm_priv.h"
-
 #include <archive.h>
 #include <archive_entry.h>
+#include "efm_priv.h"
 
 const char* FILEENDINGS[] = {"tar", "zip", "tar.gz", NULL};
 

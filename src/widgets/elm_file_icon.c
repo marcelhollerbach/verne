@@ -7,7 +7,7 @@
 #include <Elementary.h>
 #include <Efm.h>
 
-#include "Elementary_Ext.h"
+#include "elementary_ext_priv.h"
 #include "elm_file_icon.eo.h"
 
 typedef struct

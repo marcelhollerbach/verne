@@ -18,7 +18,7 @@
 #include <Ecore.h>
 #include <Evas.h>
 #include <Eio.h>
-#include "Elementary_Ext.h"
+#include "elementary_ext_priv.h"
 #include "elm_file_display.h"
 #include "elm_file_icon.eo.h"
 #include "elm_file_display.eo.h"

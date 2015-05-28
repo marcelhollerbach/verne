@@ -1,9 +1,6 @@
 #define EFL_BETA_API_SUPPORT
 #define EFL_EO_API_SUPPORT
-
-#include <Elementary.h>
-#include <Eo.h>
-#include "elm_tab_pane.eo.h"
+#include "elementary_ext_priv.h"
 
 
 typedef struct
@@ -22,9 +19,6 @@ typedef struct
    Evas_Object *add;
    Item *focused;
 } Elm_Tab_Pane_Data;
-
-#define CRI(...) printf(__VA_ARGS__)
-#define ERR(...) printf(__VA_ARGS__)
 
 EOLIAN static Eo*
 _elm_tab_pane_eo_base_constructor(Eo *obj, Elm_Tab_Pane_Data *pd EINA_UNUSED)
