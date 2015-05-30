@@ -15,6 +15,8 @@ typedef struct {
 
 } Jesus_Config;
 
+typedef void (*Cmd_Choosen)(Efm_File *file, const char *cmd);
+
 extern Jesus_Config *config;
 
 //the general window
@@ -35,5 +37,6 @@ void titlebar_path_set(const char *path);
 
 void hooks_init(void);
 
+void exec_ui_open_with(Efm_File *file, Cmd_Choosen choosen);
 void exec_run(const char *cmd, Efm_File *f);
 #endif

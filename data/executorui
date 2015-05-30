@@ -1,0 +1,137 @@
+{
+  "JSON_Version":"1",
+  "Settings":
+  {
+    "project":"ExecutorUi"
+  },
+  "Widgets":
+  {
+    "open_with":
+    {
+      "Desc":
+      {
+        "parent":null,
+        "class":"Elm.Win",
+        "public":true
+      },
+      "Properties":
+      {
+        "Evas.Object.size_hint_weight":[1, 1],
+        "Efl.Gfx.Base.visible":[true],
+        "Elm.Win.type":["ELM_WIN_BASIC"],
+        "Efl.Gfx.Base.size":[478, 484],
+        "Elm.Win.autodel":[true],
+        "Elm.Win.title":["Open with ..."]
+      },
+      "Contains":["elm_bg1", "elm_box3"]
+    },
+    "elm_box3":
+    {
+      "Desc":
+      {
+        "parent":"open_with",
+        "class":"Elm.Box"
+      },
+      "Properties":
+      {
+        "Evas.Object.size_hint_weight":[1, 1],
+        "Efl.Gfx.Base.visible":[true],
+        "Evas.Object.size_hint_align":[-1, -1],
+        "Efl.Gfx.Base.position":[162, 121]
+      },
+      "Contains":["elm_label2", "elm_genlist1", "elm__box1"]
+    },
+    "elm_label2":
+    {
+      "Desc":
+      {
+        "parent":"elm_box3",
+        "class":"Elm.Label"
+      },
+      "Properties":
+      {
+        "Efl.Gfx.Base.visible":[true],
+        "Efl.Gfx.Base.size":[60, 30],
+        "Elm.Widget.part_text":[null, "Select the programm to open the file:"],
+        "Evas.Object.size_hint_weight":[1, 0]
+      }
+    },
+    "elm_genlist1":
+    {
+      "Desc":
+      {
+        "parent":"elm_box3",
+        "class":"Elm.Genlist",
+        "public":true
+      },
+      "Properties":
+      {
+        "Efl.Gfx.Base.visible":[true],
+        "Efl.Gfx.Base.size":[70, 60],
+        "Evas.Object.size_hint_weight":[1, 1],
+        "Evas.Object.size_hint_align":[-1, -1]
+      }
+    },
+    "open":
+    {
+      "Desc":
+      {
+        "parent":"elm__box1",
+        "class":"Elm.Button",
+        "public":true
+      },
+      "Properties":
+      {
+        "Efl.Gfx.Base.visible":[true],
+        "Efl.Gfx.Base.size":[73, 30],
+        "Evas.Object.size_hint_weight":[1, 0],
+        "Elm.Widget.part_text":[null, "Open"]
+      }
+    },
+    "elm_bg1":
+    {
+      "Desc":
+      {
+        "parent":"open_with",
+        "class":"Elm.Bg"
+      },
+      "Properties":
+      {
+        "Evas.Object.size_hint_weight":[1, 1],
+        "Efl.Gfx.Base.visible":[true]
+      }
+    },
+    "elm__box1":
+    {
+      "Desc":
+      {
+        "parent":"elm_box3",
+        "class":"Elm.Box"
+      },
+      "Properties":
+      {
+        "Efl.Gfx.Base.visible":[true],
+        "Evas.Object.size_hint_align":[-1, -1],
+        "Elm.Box.horizontal":[true],
+        "Evas.Object.size_hint_weight":[1, 0]
+      },
+      "Contains":["set_as_default", "open"]
+    },
+    "set_as_default":
+    {
+      "Desc":
+      {
+        "parent":"elm__box1",
+        "class":"Elm.Button",
+        "public":true
+      },
+      "Properties":
+      {
+        "Evas.Object.size_hint_weight":[1, 1],
+        "Efl.Gfx.Base.visible":[true],
+        "Efl.Gfx.Base.size":[73, 30],
+        "Elm.Widget.part_text":[null, "Set as default"]
+      }
+    }
+  }
+ }

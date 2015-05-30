@@ -7,7 +7,36 @@ collections{
       image: "icon_arrow_left.png" COMP;
       image: "icon_arrow_right.png" COMP;
       image: "icon_arrow_up.png" COMP;
+      image: "icon_favorites.png" COMP;
+      image: "icon_notfavorites.png" COMP;
+      image: "icon_apps.png" COMP;
    }
+
+   group { name: "default_indicator";
+      parts {
+         image { "favorite"
+            desc { "default"
+               image.normal: "icon_favorites.png";
+            }
+            desc { "nofavorite"
+               image.normal: "icon_notfavorites.png";
+            }
+         }
+      }
+      program {
+         signal: "default";
+         source: "jesus";
+         action: STATE_SET "default";
+         target: "favorite";
+      }
+      program {
+         signal: "notdefault";
+         source: "jesus";
+         action: STATE_SET "nofavorite";
+         target: "favorite";
+      }
+   }
+
    group { name: "headbar";
       parts {
          spacer { "base"
