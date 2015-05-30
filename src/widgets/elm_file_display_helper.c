@@ -235,7 +235,7 @@ util_item_selected(Evas_Object *w, Efm_File *f)
     * event should be called
     */
    eo_do(w,
-         eo_event_callback_call(&_ELM_FILE_DISPLAY_EVENT_ITEM_CHOOSEN, (void*)path);
+         eo_event_callback_call(&_ELM_FILE_DISPLAY_EVENT_ITEM_CHOOSEN, f);
    );
 
 end:
