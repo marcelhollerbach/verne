@@ -3,7 +3,7 @@ set(PACKAGE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/share/jesus/")
 set(PACKAGE_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib/")
 set(PACKAGE_BIN_DIR "${CMAKE_INSTALL_PREFIX}/bin/")
 
-add_executable(efm jesus.c titlebar.c)
+add_executable(efm jesus.c titlebar.c config.c exec.c hooks.c)
 
 include_directories(
   ${EINA_INCLUDE_DIRS}

@@ -91,6 +91,9 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    //init external elementary stuff
    elm_ext_init();
 
+   //init config
+   config_init();
+
    //we need ethumb and efreet
    elm_need_ethumb();
    elm_need_efreet();
@@ -98,11 +101,17 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    //init ui and stuff
    ui_init();
 
+   //init the hooks
+   hooks_init();
+
    //set the correct path
    eo_do(preview, efl_file_set(path, NULL));
    titlebar_path_set(path);
 
    elm_run();
+
+   config_shutdown();
+
    return 0;
 }
 ELM_MAIN()

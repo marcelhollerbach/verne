@@ -33,4 +33,7 @@ void config_shutdown(void);
 void titlebar_init(void);
 void titlebar_path_set(const char *path);
 
+void hooks_init(void);
+
+void exec_run(const char *cmd, Efm_File *f);
 #endif
