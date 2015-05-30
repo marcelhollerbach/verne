@@ -161,6 +161,7 @@ _file_del(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA
 
    it = eina_hash_find(ctx->files, &icon);
    elm_object_item_del(it);
+   eina_hash_del(ctx->files, &icon, it);
 
    return EINA_TRUE;
 }
