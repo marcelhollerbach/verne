@@ -21,10 +21,12 @@ LIST(APPEND WIDGET_LIBRARY
    elm_file_display.eo.h
    elm_file_display.eo.legacy.h
    #views
-   elm_file_display_debug.c
-   elm_file_display_grid.c
-   elm_file_display_tree.c
-   elm_file_display_list.c
+   elm_file_display_view.c
+   elm_file_display_view.eo.h
+   elm_file_display_view.eo.x
+   elm_file_display_view_debug.c
+   elm_file_display_view_debug.eo.x
+   elm_file_display_view_debug.eo.h
    elm_tab_pane.c
    elm_tab_pane.eo
    elm_tab_pane.eo.x
@@ -40,19 +42,19 @@ file(GLOB files "*.eo")
 foreach(filename ${files})
 add_custom_command(
    OUTPUT ${filename}.x
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} --gc --eo -o ${filename}.x ${filename}
+   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/widgets --gc --eo -o ${filename}.x ${filename}
    DEPENDS ${filename}
 )
 
 add_custom_command(
    OUTPUT ${filename}.h
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} --gh --eo -o ${filename}.h ${filename}
+   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/widgets --gh --eo -o ${filename}.h ${filename}
    DEPENDS ${filename}
 )
 
 add_custom_command(
    OUTPUT ${filename}.legacy.h
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} --gh --legacy -o ${filename}.legacy.h ${filename}
+   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/widgets --gh --legacy -o ${filename}.legacy.h ${filename}
    DEPENDS ${filename}
 )
 

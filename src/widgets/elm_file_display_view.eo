@@ -1,0 +1,66 @@
+/*
+This is a communicationframework between the display and the displaying(view) object
+
+The implementing class should answer the method calles, and can give feedback to the displayer via events.
+
+*/
+interface Elm.File.Display.View {
+   methods {
+      name_get @class {
+         /*@
+
+         */
+         return : const(char)*;
+      }
+      item_get {
+         /*@
+            Return the Pointer to a single object below the given coords.
+         */
+         params {
+            x : int;
+            y : int;
+         }
+         return : Efm.File*;
+      }
+      items_select {
+         /*@
+            Called when a rect selection about this region has happend
+            Should result in selecting this region
+         */
+         params {
+            x : int;
+            y : int;
+            w : int;
+            h : int;
+         }
+      }
+      selection_get {
+         /*@
+            Called to get the current selection of the view
+          */
+         return : list<Efm.File>*;
+      }
+      path_set {
+         /*@
+            Sets a new path to the view
+         */
+         params {
+            dir : const(char)*;
+         }
+      }
+      size_get {
+         /*@
+            Called to get the acutal size of the view
+
+            This size is taken for the rect selection
+            You can spare out the bars of a scrollpanel for example
+         */
+         params {
+            @out x : int;
+            @out y : int;
+            @out w : int;
+            @out h : int;
+         }
+      }
+   }
+}

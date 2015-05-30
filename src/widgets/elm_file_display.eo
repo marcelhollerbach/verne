@@ -24,14 +24,6 @@ class Elm_File_Display (Elm.Layout, Efl.File)
             filepreview : bool;
          }
       }
-      @property views {
-         get {
-
-         }
-         values {
-            views : list<Eina_Stringshare*>*;
-         }
-      }
       @property view {
          /*@ impl me */
          set {
@@ -41,7 +33,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 
          }
          values {
-            t : const(char)*;
+            klass: const(Eo.Class)*;
          }
       }
       @property show_icon_size {

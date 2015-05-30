@@ -154,7 +154,6 @@ _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
    Evas_Object *menu;
    Elm_Object_Item *it, *it2;
    Elm_File_Display_Menu_Hook_Event ev;
-   W_DATA(obj)
 
    menu = elm_menu_add(elm_object_top_widget_get(obj));
    evas_object_data_set(menu, "__w", obj);
@@ -171,23 +170,11 @@ _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
     * Views
     */
    it = elm_menu_item_add(menu, NULL, NULL, "Views", NULL, NULL);
+   const char *name;
+
    {
-      Eina_List *node;
-      Elm_File_Display_View *v;
-      Evas_Object *rad;
-      //Iterate thruw the registered views
-
-      EINA_LIST_FOREACH(pd->views, node, v)
-        {
-           rad = elm_check_add(menu);
-           elm_object_text_set(rad, v->name);
-
-           if (pd->view == v)
-             elm_check_state_set(rad, EINA_TRUE);
-
-           it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_view_sel, v->name);
-           elm_object_item_content_set(it2, rad);
-        }
+      eo_do(ELM_FILE_DISPLAY_VIEW_DEBUG_CLASS, name = elm_file_display_view_name_get());
+      it2 = elm_menu_item_add(menu, it, NULL, name, _ctx_view_sel, ELM_FILE_DISPLAY_VIEW_DEBUG_CLASS);
    }
 
    /*
@@ -566,12 +553,17 @@ _event_rect_mouse_up(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UNUS
    else
      {
         int x, y, w, h;
+
         /* get geometry */
         evas_object_geometry_get(pd->event.selection, &x, &y, &w, &h);
+
         /* call for selection*/
-        view_call_items_select(pd, x, y, w, h);
+        eo_do(pd->cached_view, elm_file_display_view_items_select(x, y, w, h));
+
         _selections_del(pd->selections);
-        pd->selections = view_call_selectes_get(pd);
+
+        eo_do(pd->cached_view, pd->selections = elm_file_display_view_selection_get());
+
         /* check if those really exists */
         evas_object_del(pd->event.selection);
         pd->event.selection = NULL;
@@ -590,7 +582,7 @@ _event_rect_mouse_down(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UN
   Efm_File *file;
 
   //check if there is a item under it and save it if it is
-  file = view_call_item_get(pd, ev->output.x, ev->output.y);
+  eo_do(pd->cached_view, file = elm_file_display_view_item_get(ev->output.x, ev->output.y));
   if (ev->button == 1)
     {
        if (file)
@@ -626,7 +618,7 @@ _event_rect_mouse_move(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UN
 
         /* updated selections*/
         _selections_del(pd->selections);
-        pd->selections = view_call_selectes_get(pd);
+        eo_do(pd->cached_view, pd->selections = elm_file_display_view_selection_get());
 
         if (!pd->selections)
           return;
@@ -696,20 +688,22 @@ _event_rect_mouse_move(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UN
    }
 }
 
-static void
-_view_resize_cb(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
+static Eina_Bool
+_view_resize_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desk EINA_UNUSED, void *event EINA_UNUSED)
 {
   Elm_File_Display_Data *pd;
   int x, y, w, h;
 
   pd = data;
-  view_call_size_get(pd, &x, &y, &w, &h);
+  eo_do(pd->cached_view, elm_file_display_view_size_get(&x, &y, &w, &h));
 
   evas_object_resize(pd->event.rect, w, h);
   evas_object_move(pd->event.rect, x, y);
 
   evas_object_show(pd->event.rect);
   evas_object_layer_set(pd->event.rect, EVAS_LAYER_MAX);
+
+  return EINA_TRUE;
 }
 
 /*
@@ -718,61 +712,26 @@ _view_resize_cb(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UNUSED, v
  *======================================
  */
 EOLIAN static void
-_elm_file_display_view_set(Eo *obj, Elm_File_Display_Data *pd,  const char *t)
+_elm_file_display_view_set(Eo *obj, Elm_File_Display_Data *pd, const Eo_Class *klass)
 {
-   Eina_List *node;
-   Elm_File_Display_View *w;
-   Evas_Object *view;
-
-   const char *tmp = eina_stringshare_add(t);
-
-   EINA_LIST_FOREACH(pd->views, node, w)
-     {
-        if (tmp != w->name) continue;
-
-        pd->view = w;
-        break;
-     }
-
-   if (!w)
-     {
-        ERR("View not found \n");
-        return;
-     }
-
    if (pd->cached_view)
-     evas_object_del(pd->cached_view);
+     eo_del(pd->cached_view);
 
-   pd->cached_view = view = w->cb.obj_get(obj);
+   pd->view_klass = klass;
+   pd->cached_view = eo_add(klass, obj);
 
-   elm_object_part_content_set(obj, "content", view);
-   evas_object_show(view);
-   //elm_object_part_content_set(obj, "right", view);
-   evas_object_event_callback_add(view, EVAS_CALLBACK_RESIZE,
-                                  _view_resize_cb, pd);
+   _view_resize_cb(pd, NULL, NULL, NULL);
 
-   view_call_dir_changed(pd, pd->current_path);
+   elm_object_part_content_set(obj, "content", pd->cached_view);
+   evas_object_show(pd->cached_view);
+   eo_do(pd->cached_view, eo_event_callback_add(EVAS_OBJECT_EVENT_RESIZE, _view_resize_cb, pd));
+   eo_do(pd->cached_view, elm_file_display_view_path_set(pd->current_path));
 }
 
-EOLIAN static  const char *
+EOLIAN static const Eo_Class*
 _elm_file_display_view_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd)
 {
-   return (pd->view) ? pd->view->name : NULL;
-}
-
-static inline void
-view_register(Elm_File_Display_Data *pd, const char *name, Elm_File_Display_View_Callbacks cb)
-{
-   Elm_File_Display_View *view;
-
-   view = calloc(1, sizeof(Elm_File_Display_View));
-   if (!view)
-     return;
-
-   view->cb = cb;
-   view->name = eina_stringshare_add(name);
-
-   pd->views = eina_list_append(pd->views, view);
+   return pd->view_klass;
 }
 
 EOLIAN Eo*
@@ -783,17 +742,14 @@ _elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd)
   config_init();
   pd->show_filepreview = EINA_TRUE;
   pd->current_path = eina_stringshare_add("/");
-  view_register(pd, "Debug", debug);
-  view_register(pd, "Grid", grid);
   pd->obj = obj;
   eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, return eo_constructor());
 }
 
-
 EOLIAN void
 _elm_file_display_eo_base_destructor(Eo *obj, Elm_File_Display_Data *pd EINA_UNUSED)
 {
-   evas_object_del(pd->cached_view);
+   eo_del(pd->cached_view);
    efm_shutdown();
    emous_shutdown();
    config_shutdown();
@@ -819,7 +775,7 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
    pd->preview = o = filepreview_add(obj);
    elm_object_part_content_set(obj, "filepreview", o);
 
-   eo_do(obj, elm_obj_file_display_view_set(config->viewname));
+   eo_do(obj, elm_obj_file_display_view_set(ELM_FILE_DISPLAY_VIEW_DEBUG_CLASS));
 
    pd->event.rect = evas_object_rectangle_add(obj);
    evas_object_repeat_events_set(pd->event.rect, EINA_TRUE);
@@ -954,8 +910,9 @@ _elm_file_display_efl_file_file_set(Eo *obj EINA_UNUSED, Elm_File_Display_Data *
      return EINA_FALSE;
    if (pd->current_path)
      eina_stringshare_del(pd->current_path);
+
    pd->current_path = eina_stringshare_add(file);
-   view_call_dir_changed(pd, pd->current_path);
+   eo_do(pd->cached_view, elm_file_display_view_path_set(pd->current_path));
    return EINA_TRUE;
 }
 
@@ -978,21 +935,6 @@ _elm_file_display_evas_object_smart_hide(Eo *obj, Elm_File_Display_Data *pd)
 {
   eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, evas_obj_smart_hide());
   evas_object_hide(pd->event.rect);
-}
-
-EOLIAN static Eina_List *
-_elm_file_display_views_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd)
-{
-   Elm_File_Display_View *v;
-   Eina_List *node, *result = NULL;
-
-   EINA_LIST_FOREACH(pd->views, node, v)
-     {
-        eina_stringshare_ref(v->name);
-        result = eina_list_append(result, v->name);
-     }
-
-   return result;
 }
 
 #include "elm_file_display.eo.x"

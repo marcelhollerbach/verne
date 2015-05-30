@@ -38,47 +38,6 @@ icon_create(Evas_Object *par, Efm_File *file)
    return ic;
 }
 
-void
-view_call_dir_changed(Elm_File_Display_Data *pd, const char *path)
-{
-   if (!pd->view->cb.dir_changed) return;
-   pd->view->cb.dir_changed(pd->cached_view, path);
-}
-
-Evas_Object*
-view_call_obj_get(Elm_File_Display_Data *pd, Evas_Object *par)
-{
-   if (!pd->view->cb.obj_get) return NULL;
-   return pd->view->cb.obj_get(par);
-}
-
-void
-view_call_items_select(Elm_File_Display_Data *pd, int x1, int y1, int x2, int y2)
-{
-   if (!pd->view->cb.items_select) return;
-   pd->view->cb.items_select(pd->cached_view,x1, y1, x2, y2);
-}
-
-Efm_File*
-view_call_item_get(Elm_File_Display_Data *pd, int x, int y)
-{
-   if (!pd->view->cb.item_get) return NULL;
-   return pd->view->cb.item_get(pd->cached_view,x, y);
-}
-
-Eina_List*
-view_call_selectes_get(Elm_File_Display_Data *pd)
-{
-   if (!pd->view->cb.selections_get) return NULL;
-   return pd->view->cb.selections_get(pd->cached_view);
-}
-
-void
-view_call_size_get(Elm_File_Display_Data *pd, int *x, int *y, int *w, int *h)
-{
-   if (!pd->view->cb.size_get) return;
-   pd->view->cb.size_get(pd->cached_view, x, y, w, h);
-}
 static int
 sort_name_func(const void *data1, const void *data2)
 {

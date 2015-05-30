@@ -38,42 +38,14 @@ typedef struct
 
 typedef struct
 {
-   /* should return a pointer or NULL if or if not a item is below this coord */
-   Efm_File* (*item_get)(Evas_Object *wid, int x, int y);
-   /* should select the items within this region */
-   void (*items_select)(Evas_Object *wid, int x1, int y1, int w, int h);
-   /* should return a list of item which currently are selected*/
-   Eina_List* (*selections_get)(Evas_Object *wid);
-   /* returns the view which gets displayed also the first call to the view*/
-   Evas_Object* (*obj_get)(Evas_Object *par);
-   /* this is called when the standart dir has changed */
-   void (*dir_changed)(Evas_Object *wid, const char *dir);
-   /* called to get the actual size where selection and dnd is done */
-   void (*size_get)(Evas_Object *wid, int *x, int *y, int *w, int *h);
-} Elm_File_Display_View_Callbacks;
-
-typedef struct
-{
-   const char *name;
-   Elm_File_Display_View_Callbacks cb;
-} Elm_File_Display_View;
-
-typedef struct
-{
-   const char *name;
-   //Elm_File_Display_View_Callbacks cb;
-} Elm_File_Display_View_Type;
-
-typedef struct
-{
    Eo *obj;
-   Eina_List *views; //< a list of the View Types
-   Elm_File_Display_View *view; //< current type which is displayed
+
+   const Eo_Class *view_klass;
+   Evas_Object *cached_view;
 
    const char* current_path;
 
    Evas_Object *bookmarks;
-   Evas_Object *cached_view;
 
    struct event {
      Evas_Object *rect, *selection;
@@ -87,6 +59,7 @@ typedef struct
    Eina_Bool show_filepreview;
    Evas_Object *preview;
    Evas_Object *bookmark;
+
 } Elm_File_Display_Data;
 
 typedef struct
@@ -105,26 +78,9 @@ typedef struct
 
 extern Config *config;
 
-
-extern Elm_File_Display_View_Callbacks debug;
-extern Elm_File_Display_View_Callbacks grid;
-extern Elm_File_Display_View_Callbacks list;
-extern Elm_File_Display_View_Callbacks tree;
-
 //== calls which are just calling the cb of the view, but secure
 
 Evas_Object* icon_create(Evas_Object *par, Efm_File *file);
-
-/*
- * helper functions to interact with the view
- */
-void view_call_dir_changed(Elm_File_Display_Data *pd, const char *path);
-Evas_Object* view_call_obj_get(Elm_File_Display_Data *pd, Evas_Object *par);
-void view_call_items_select(Elm_File_Display_Data *pd, int x1, int y1, int x2, int y2);
-Efm_File* view_call_item_get(Elm_File_Display_Data *pd, int x, int y);
-Eina_List* view_call_selectes_get(Elm_File_Display_Data *pd);
-Eina_Bool view_call_selected_get(Elm_File_Display_Data *pd, int x, int y);
-void view_call_size_get(Elm_File_Display_Data *pd, int *x, int *y, int *w, int *h);
 
 /*
  * Utilfunction to call when a item is selected by a view
