@@ -72,19 +72,9 @@ extern Config *config;
 
 Evas_Object* icon_create(Evas_Object *par, Efm_File *file);
 
-/*
- * Utilfunction to call when a item is selected by a view
- * If f is a dir the dir will be set,
- *
- * The events CHOOSEN and PATH_CHANGE will be called
- */
-void util_item_selected(Evas_Object *w, Efm_File *f);
-
-/*
- *
- */
-void util_item_select(Evas_Object *w, Efm_File *f);
-
+//event helper for selection
+Eina_Bool _util_item_select_simple(void *data, Eo *obj, const Eo_Event_Description *desc, void *event);
+Eina_Bool _util_item_select_choosen(void *data, Eo *obj, const Eo_Event_Description *desc, void *event);
 /*
  * Helper function to add the bookmarklist
  */

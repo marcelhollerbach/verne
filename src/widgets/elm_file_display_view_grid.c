@@ -77,7 +77,7 @@ _elm_file_display_view_grid_elm_file_display_view_selection_get(Eo *obj EINA_UNU
 static void
 _sel(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
-   util_item_select(elm_object_parent_widget_get(obj), data);
+   eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_SIMPLE, data));
 }
 
 static Eina_Bool
@@ -168,7 +168,7 @@ _double_click(void *data EINA_UNUSED, Evas_Object *obj, void *event_info)
    Elm_Object_Item *it = event_info;
    Efm_File *fmm_file = elm_object_item_data_get(it);
 
-   util_item_selected(elm_object_parent_widget_get(obj), fmm_file);
+   eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHOOSEN, fmm_file));
 }
 
 EOLIAN static Eo *

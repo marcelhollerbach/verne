@@ -136,17 +136,20 @@ sort_func(const void *data1, const void *data2)
      }
 }
 
-void
-util_item_select(Evas_Object *w, Efm_File *f)
+Eina_Bool
+_util_item_select_simple(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
 {
-   Elm_File_Display_Data *pd = eo_data_scope_get(w, ELM_FILE_DISPLAY_CLASS);
+   Efm_File *f = event;
+   Elm_File_Display_Data *pd = eo_data_scope_get(data, ELM_FILE_DISPLAY_CLASS);
 
    filepreview_file_set(pd->preview, f);
+   return EINA_TRUE;
 }
 
-void
-util_item_selected(Evas_Object *w, Efm_File *f)
+Eina_Bool
+_util_item_select_choosen(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
 {
+   Efm_File *f = event;
    char buf[PATH_MAX];
    const char *path, *fileending, *filename;
 
@@ -163,7 +166,7 @@ util_item_selected(Evas_Object *w, Efm_File *f)
    if (efm_file_is_type(f, EFM_FILE_TYPE_DIRECTORY))
      {
         /*call path changed */
-        eo_do(w,
+        eo_do(data,
           efl_file_set(path, NULL);
           eo_event_callback_call(&_ELM_FILE_DISPLAY_EVENT_PATH_CHANGED, (void*)path);
         );
@@ -182,7 +185,7 @@ util_item_selected(Evas_Object *w, Efm_File *f)
           /* extract the file */
           efm_archive_file_extract(path, buf);
         /* set path to the archive */
-        eo_do(w,
+        eo_do(data,
           efl_file_set(buf, NULL);
           eo_event_callback_call(&_ELM_FILE_DISPLAY_EVENT_PATH_CHANGED, (void*)buf);
         );
@@ -193,10 +196,11 @@ util_item_selected(Evas_Object *w, Efm_File *f)
     * if it is nothing of all choose
     * event should be called
     */
-   eo_do(w,
+   eo_do(data,
          eo_event_callback_call(&_ELM_FILE_DISPLAY_EVENT_ITEM_CHOOSEN, f);
    );
 
 end:
    eina_stringshare_del(path);
+   return EINA_TRUE;
 }

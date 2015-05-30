@@ -72,4 +72,8 @@ interface Elm.File.Display.View {
          }
       }
    }
+   events {
+      item,select,simple ; /*@ A item got selected "simple" like one click*/
+      item,select,choosen; /*@ A item got _really_ selected like double clicked */
+   }
 }

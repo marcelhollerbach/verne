@@ -735,8 +735,13 @@ _elm_file_display_view_set(Eo *obj, Elm_File_Display_Data *pd, const Eo_Class *k
 
    elm_object_part_content_set(obj, "content", pd->cached_view);
    evas_object_show(pd->cached_view);
-   eo_do(pd->cached_view, eo_event_callback_add(EVAS_OBJECT_EVENT_RESIZE, _view_resize_cb, pd));
-   eo_do(pd->cached_view, elm_file_display_view_path_set(pd->current_path));
+   eo_do(pd->cached_view, eo_event_callback_add(EVAS_OBJECT_EVENT_RESIZE, _view_resize_cb, pd);
+                          eo_event_callback_add(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_SIMPLE, _util_item_select_simple, obj);
+                          eo_event_callback_add(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHOOSEN, _util_item_select_choosen, obj);
+                          elm_file_display_view_path_set(pd->current_path);
+                          );
+
+
 }
 
 EOLIAN static const Eo_Class*
