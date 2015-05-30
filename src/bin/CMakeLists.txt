@@ -10,6 +10,7 @@ include_directories(
   ${EVAS_INCLUDE_DIRS}
   ${EFL_INCLUDE_DIRS}
   ${EIO_INCLUDE_DIRS}
+  ${EET_INCLUDE_DIRS}
   ${EFREET_INCLUDE_DIRS}
   ${ECORE_INCLUDE_DIRS}
   ${ELEMENTARY_INCLUDE_DIRS}
@@ -25,6 +26,7 @@ target_link_libraries (efm
    ${EO_LIBRARIES}
    ${EFREET_LIBRARIES}
    ${ECORE_LIBRARIES}
+   ${EET_LIBRARIES}
    ${ELEMENTARY_LIBRARIES}
    widgets
    efm_lib)
