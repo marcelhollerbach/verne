@@ -383,12 +383,17 @@ _list_to_char(Eina_List *items)
 {
    const char *drag_data = NULL;
    Eina_List *l;
-   File_Display_View_DND *it;
+   Elm_File_Display_View_File *it;
    unsigned int len = 0;
 
    EINA_LIST_FOREACH(items, l, it)
      {
-        len += strlen(it->path);
+        const char *filename;
+        Efm_File *file;
+
+        eo_do(it->file_icon, file = elm_obj_file_icon_fm_monitor_file_get());
+        eo_do(file, filename = efm_file_obj_filename_get());
+        len += strlen(filename);
      }
 
   drag_data = malloc(len + eina_list_count(items) * (FILESEP_LEN + 1) + 1);
@@ -397,8 +402,14 @@ _list_to_char(Eina_List *items)
   /* drag data in form: file://URI1\nfile://URI2\n */
   EINA_LIST_FOREACH(items, l, it)
     {
+       const char *filename;
+       Efm_File *file;
+
+       eo_do(it->file_icon, file = elm_obj_file_icon_fm_monitor_file_get());
+       eo_do(file, filename = efm_file_obj_filename_get());
+
        strcat((char *) drag_data, FILESEP);
-       strcat((char *) drag_data, it->path);
+       strcat((char *) drag_data, filename);
        strcat((char *) drag_data, "\n");
     }
   return drag_data;
@@ -463,7 +474,7 @@ static Anim_Struct*
 _drag_anim_start(Eina_List *icons, Evas_Object *object, const char* ptr)
 {
   Eina_List *display_icons = NULL, *node;
-  File_Display_View_DND *vd;
+  Elm_File_Display_View_File *vd;
   Evas_Object *icon;
   Anim_Icon *ai;
   Anim_Struct *ans;
@@ -478,8 +489,8 @@ _drag_anim_start(Eina_List *icons, Evas_Object *object, const char* ptr)
     {
        const char *sample_icon_file;
        const char *sample_icon_group;
-       sample_icon_group = vd->thumb_group;
-       sample_icon_file = vd->thumb_path;
+
+       eo_do(vd->file_icon, elm_obj_file_icon_fill_sample(&sample_icon_group, &sample_icon_file));
 
        /* init end icons */
        if (c < 3)
@@ -527,7 +538,7 @@ _drag_anim_start(Eina_List *icons, Evas_Object *object, const char* ptr)
 static void
 _selections_del(Eina_List *list)
 {
-   File_Display_View_DND *vd;
+   Elm_File_Display_View_File *vd;
 
    EINA_LIST_FREE(list, vd)
      {

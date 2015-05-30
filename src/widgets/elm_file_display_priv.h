@@ -26,16 +26,6 @@
 #define FILESEP "file://"
 #define FILESEP_LEN sizeof(FILESEP) - 1
 
-//== view stuff ==
-
-typedef struct
-{
-   int x,y,w,h;
-   const char *path;
-   const char *thumb_path;
-   const char *thumb_group;
-} File_Display_View_DND;
-
 typedef struct
 {
    Eo *obj;
