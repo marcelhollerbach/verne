@@ -175,6 +175,9 @@ _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
    {
       eo_do(ELM_FILE_DISPLAY_VIEW_DEBUG_CLASS, name = elm_file_display_view_name_get());
       it2 = elm_menu_item_add(menu, it, NULL, name, _ctx_view_sel, ELM_FILE_DISPLAY_VIEW_DEBUG_CLASS);
+
+            eo_do(ELM_FILE_DISPLAY_VIEW_GRID_CLASS, name = elm_file_display_view_name_get());
+      it2 = elm_menu_item_add(menu, it, NULL, name, _ctx_view_sel, ELM_FILE_DISPLAY_VIEW_GRID_CLASS);
    }
 
    /*
