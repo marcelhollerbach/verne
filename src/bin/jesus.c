@@ -50,7 +50,6 @@ ui_init()
    elm_win_resize_object_add(win, layout);
    evas_object_resize(win, 200,200);
    evas_object_show(win);
-   eo_unref(preview);
 }
 
 EAPI_MAIN int

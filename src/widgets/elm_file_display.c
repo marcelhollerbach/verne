@@ -748,13 +748,15 @@ _elm_file_display_view_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd)
 EOLIAN Eo*
 _elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd)
 {
+  Eo *eo;
+
   efm_init();
   emous_init();
   config_init();
   pd->show_filepreview = EINA_TRUE;
   pd->current_path = eina_stringshare_add("/");
   pd->obj = obj;
-  eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, return eo_constructor());
+  return eo_do_super_ret(obj, ELM_FILE_DISPLAY_CLASS, eo, eo_constructor());
 }
 
 EOLIAN void
