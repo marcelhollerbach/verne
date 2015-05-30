@@ -6,6 +6,7 @@
 #include <Efm.h>
 #include "elm_file_display_view.eo.h"
 #include "elm_file_display_view_debug.eo.h"
+#include "elm_file_display_view_grid.eo.h"
 
 typedef enum{
    SORT_TYPE_SIZE = 0,

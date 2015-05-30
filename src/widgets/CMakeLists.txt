@@ -27,6 +27,9 @@ LIST(APPEND WIDGET_LIBRARY
    elm_file_display_view_debug.c
    elm_file_display_view_debug.eo.x
    elm_file_display_view_debug.eo.h
+   elm_file_display_view_grid.c
+   elm_file_display_view_grid.eo.x
+   elm_file_display_view_grid.eo.h
    elm_tab_pane.c
    elm_tab_pane.eo
    elm_tab_pane.eo.x
