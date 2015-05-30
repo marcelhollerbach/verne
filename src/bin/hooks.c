@@ -35,6 +35,12 @@ open:
 }
 
 static void
+_open_cb2(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event)
+{
+   _open_cb(NULL, NULL, NULL, event);
+}
+
+static void
 _open_with_choosen(Efm_File *f, const char *cmd)
 {
     exec_run(cmd, f);
@@ -56,8 +62,10 @@ _menu_selector_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event
     //open with entry
     if (!eo_do_ret(file, dir, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)))
       {
+         elm_menu_item_add(ev->menu, NULL, NULL, "Open", _open_cb2, ev->file);
          elm_menu_item_add(ev->menu, NULL, NULL, "Open with", _open_with_cb, ev->file);
       }
+
     return EINA_TRUE;
 }
 
