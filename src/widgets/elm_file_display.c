@@ -311,6 +311,12 @@ _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
  *======================================
  * ANIMATION STUFF
  *======================================
+ * Once the user pressed the left button and continues
+ * moving the mouse, the items returned by the selection_get
+ * will be used to create the samples.
+ * After that the drag_animation will be started.
+ * if this is finished, "real" dnd with elm will be started
+ * if the mousebutton is left before that everything will be freed.
  */
 
 /* Hide the icons of a animation*/
