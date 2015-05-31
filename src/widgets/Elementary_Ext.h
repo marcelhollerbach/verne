@@ -4,6 +4,7 @@
 #include <Evas.h>
 #include <Efm.h>
 
+#include "elm_file_mimetype_cache.eo.h"
 #include "elm_file_icon.h"
 #include "elm_file_display.h"
 

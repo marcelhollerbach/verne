@@ -5,6 +5,10 @@ set(THEME_PATH_DEFINITION THEME_PATH="${THEME_INSTALL_PATH}")
 LIST(APPEND WIDGET_LIBRARY
    Elementary_Ext.h
    elementary_ext.c
+   elm_file_mimetype_cache.c
+   elm_file_mimetype_cache.eo
+   elm_file_mimetype_cache.eo.x
+   elm_file_mimetype_cache.eo.h
    elm_file_icon.eo
    elm_file_icon.eo.x
    elm_file_icon.eo.h
