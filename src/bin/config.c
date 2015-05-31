@@ -21,6 +21,7 @@ _config_standart_new()
 void
 _config_free(Jesus_Config *config)
 {
+    eina_hash_free(config->mime_type_open);
     free(config);
 }
 
