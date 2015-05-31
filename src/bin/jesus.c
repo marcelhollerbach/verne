@@ -41,7 +41,7 @@ ui_init()
    evas_object_size_hint_align_set(preview, EVAS_HINT_FILL, EVAS_HINT_FILL);
    evas_object_size_hint_weight_set(preview, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    elm_object_part_content_set(layout, "content", preview);
-   eo_do(preview, eo_event_callback_add(ELM_FILE_DISPLAY_EVENT_PATH_CHANGED,
+   eo_do(preview, eo_event_callback_add(ELM_FILE_DISPLAY_EVENT_PATH_CHANGED_USER,
                                  _dir_changed, NULL););
    evas_object_show(preview);
 
@@ -102,6 +102,9 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 
    //init the hooks
    hooks_init();
+
+   //init history
+   history_init();
 
    //set the correct path
    eo_do(preview, efl_file_set(path, NULL));

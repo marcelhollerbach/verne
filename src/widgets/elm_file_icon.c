@@ -153,7 +153,7 @@ mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
 }
 
 EOLIAN static void
-_elm_file_icon_evas_object_smart_resize(Eo *obj, Elm_File_Icon_Data *pd, Evas_Coord w, Evas_Coord h)
+_elm_file_icon_evas_object_smart_resize(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED, Evas_Coord w, Evas_Coord h)
 {
    eo_do_super(obj, ELM_FILE_ICON_CLASS, evas_obj_smart_resize(w,h));
 }

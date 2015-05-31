@@ -783,6 +783,7 @@ _item_select_changed(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description
 
    pd->selection = event;
 
+   eo_do(wid, eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_ITEM_SELECTION_CHANGED, pd->selection));
    return EINA_TRUE;
 }
 /*
@@ -1035,6 +1036,12 @@ _elm_file_display_evas_object_smart_hide(Eo *obj, Elm_File_Display_Data *pd)
 {
   eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, evas_obj_smart_hide());
   evas_object_hide(pd->event.rect);
+}
+
+EOLIAN Eina_List*
+_elm_file_display_selection_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd)
+{
+   return pd->selection;
 }
 
 #include "elm_file_display.eo.x"

@@ -122,6 +122,14 @@ class Elm_File_Display (Elm.Layout, Efl.File)
             b : bool;
          }
       }
+      @property selection {
+         get {
+
+         }
+         values {
+            list : list<Efm.File>*;
+         }
+      }
    }
 
    implements {
@@ -136,6 +144,7 @@ class Elm_File_Display (Elm.Layout, Efl.File)
    events {
       path,changed; /*@ path has changed */
       path,changed,user; /*@ same as path changed, _and_ when file_set is called */
+      item,selection,changed; /*@ The selection has changed */
       item,selected; /*@ a item was clicked , once */
       item,choosen; /*@ a item was double clicked */
       dnd,item,hover; /*@ a item was hovered above another item */

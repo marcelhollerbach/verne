@@ -120,5 +120,15 @@ collections{
             }
          }
       }
+      program {
+         signal: "mouse,clicked,*";
+         source: "forward_img";
+         action: SIGNAL_EMIT "forward" "theme";
+      }
+      program {
+         signal: "mouse,clicked,*";
+         source: "back_img";
+         action: SIGNAL_EMIT "back" "theme";
+      }
    }
 }
