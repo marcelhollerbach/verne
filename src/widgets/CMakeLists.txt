@@ -30,11 +30,6 @@ LIST(APPEND WIDGET_LIBRARY
    elm_file_display_view_grid.c
    elm_file_display_view_grid.eo.x
    elm_file_display_view_grid.eo.h
-   elm_tab_pane.c
-   elm_tab_pane.eo
-   elm_tab_pane.eo.x
-   elm_tab_pane.eo.h
-   elm_tab_pane.eo.legacy.h
    )
 
 string(REPLACE "\n" "" EOLIAN_EO_DIR_WITHOUT_NEWLINE

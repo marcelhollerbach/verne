@@ -56,16 +56,6 @@ target_link_libraries (test_archive
    efm_lib
 )
 
-add_executable(test_tab test_pane.c)
-
-target_link_libraries (test_tab
-   ${EVAS_LIBRARIES}
-   ${EO_LIBRARIES}
-   ${ECORE_LIBRARIES}
-   ${ELEMENTARY_LIBRARIES}
-   widgets
-)
-
 add_executable(test_resolver test_mount.c)
 
 target_link_libraries (test_resolver

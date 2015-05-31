@@ -6,7 +6,6 @@
 
 #include "elm_file_icon.h"
 #include "elm_file_display.h"
-#include "elm_tab_pane.eo.h"
 
 EAPI void elm_ext_init();
 
