@@ -816,6 +816,14 @@ _elm_file_display_view_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd)
    return pd->view_klass;
 }
 
+static Eina_Bool
+_path_changed_cb(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description *desc EINA_UNUSED, void *event)
+{
+  eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_PATH_CHANGED_USER, event));
+
+  return EINA_TRUE;
+}
+
 EOLIAN Eo*
 _elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd)
 {
@@ -832,7 +840,7 @@ _elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd)
   pd->obj = obj;
 
   eo_do(ELM_FILE_MIMETYPE_CACHE_CLASS, cache = elm_file_mimetype_cache_generate(config->icon_size));
-
+  eo_do(obj, eo_event_callback_add(ELM_FILE_DISPLAY_EVENT_PATH_CHANGED, _path_changed_cb, NULL));
   return eo_do_super_ret(obj, ELM_FILE_DISPLAY_CLASS, eo, eo_constructor());
 }
 
@@ -1004,7 +1012,7 @@ _elm_file_display_reverse_sort_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *p
 }
 
 EOLIAN static Eina_Bool
-_elm_file_display_efl_file_file_set(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd, const char *file, const char *key EINA_UNUSED)
+_elm_file_display_efl_file_file_set(Eo *obj, Elm_File_Display_Data *pd, const char *file, const char *key EINA_UNUSED)
 {
    if (!ecore_file_exists(file))
      return EINA_FALSE;
@@ -1013,6 +1021,7 @@ _elm_file_display_efl_file_file_set(Eo *obj EINA_UNUSED, Elm_File_Display_Data *
 
    pd->current_path = eina_stringshare_add(file);
    eo_do(pd->cached_view, elm_file_display_view_path_set(pd->current_path));
+   eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_PATH_CHANGED_USER, (void*)pd->current_path));
    return EINA_TRUE;
 }
 

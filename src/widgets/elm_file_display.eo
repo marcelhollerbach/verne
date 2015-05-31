@@ -135,16 +135,17 @@ class Elm_File_Display (Elm.Layout, Efl.File)
    }
    events {
       path,changed; /*@ path has changed */
+      path,changed,user; /*@ same as path changed, _and_ when file_set is called */
       item,selected; /*@ a item was clicked , once */
       item,choosen; /*@ a item was double clicked */
       dnd,item,hover; /*@ a item was hovered above another item */
       dnd,item,droped; /*@ item was droped above another item */
       dnd,droped; /*@ Item droped in the file display */
-      hook,menu,selector,start;
-      hook,menu,selector,end;
-      hook,menu,bookmarks,start;
-      hook,menu,bookmarks,end;
-      hook,menu,device,start;
-      hook,menu,device,end;
+      hook,menu,selector,start; /*@ Menu_Hook will be passed */
+      hook,menu,selector,end; /*@ Menu_Hook will be passed */
+      hook,menu,bookmarks,start; /*@ A menu will be passed */
+      hook,menu,bookmarks,end;/*@ A menu will be passed */
+      hook,menu,device,start;/*@ A menu will be passed */
+      hook,menu,device,end;/*@ A menu will be passed */
    }
 }
