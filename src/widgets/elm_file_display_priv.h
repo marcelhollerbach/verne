@@ -26,6 +26,8 @@
 #define FILESEP "file://"
 #define FILESEP_LEN sizeof(FILESEP) - 1
 
+extern Elm_File_MimeType_Cache *cache;
+
 typedef struct
 {
    Eo *obj;

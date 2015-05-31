@@ -18,6 +18,7 @@ typedef struct
 
    Eina_Bool picmode;
    Ecore_Timer *t;
+   Elm_File_MimeType_Cache *cache;
 } Elm_File_Icon_Data;
 
 #define PRIV_DATA  Elm_File_Icon_Data *pd = eo_data_scope_get(obj, ELM_FILE_ICON_CLASS);
@@ -46,6 +47,13 @@ _long_cb(void *data)
 
    return EINA_FALSE;
 }
+
+EOLIAN static void
+_elm_file_icon_mimetype_cache_set(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, Elm_File_MimeType_Cache *cache)
+{
+   pd->cache = cache;
+}
+
 
 EOLIAN static void
 _elm_file_icon_evas_object_smart_del(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED)
@@ -101,34 +109,6 @@ _elm_file_icon_evas_object_smart_add(Eo *obj, Elm_File_Icon_Data *pd)
    elm_object_part_content_set(obj, "text", pd->label);
 }
 
-static void
-mime_type_resize(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, int w, int h)
-{
-   const char *theme, *file, *mime_type;;
-
-   if (!pd->file)
-     return;
-
-   eo_do(pd->file, mime_type = efm_file_obj_mimetype_get());
-
-   if (!mime_type)
-     return;
-
-   if (pd->picmode)
-    return;
-
-   eo_do(ELM_FILE_ICON_CLASS, theme = elm_obj_file_icon_util_icon_theme_get());
-
-   file = efreet_mime_type_icon_get(mime_type, theme, (w > h) ? h : w);
-
-   if (!file)
-     INF("Failed to fetch icon for mime type %s\n", mime_type);
-   else
-    elm_image_file_set(pd->icon, file, NULL);
-
-   evas_object_show(pd->icon);
-}
-
 EOLIAN static const char *
 _elm_file_icon_util_icon_theme_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 {
@@ -141,22 +121,41 @@ _elm_file_icon_util_icon_theme_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
    return theme;
 }
 
-
 static void
-mime_ready(Eo *obj, Elm_File_Icon_Data *pd)
+mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
 {
-  int w, h, x, y;
+   const char *file, *mime_type;;
 
-  evas_object_geometry_get(obj, &x, &y, &w, &h);
+   if (!pd->file)
+     return;
 
-  mime_type_resize(obj, pd, w, h);
+   eo_do(pd->file, mime_type = efm_file_obj_mimetype_get());
+
+   if (!mime_type)
+     return;
+
+   if (pd->picmode)
+    return;
+
+   if (!pd->cache)
+     {
+        ERR("A cache needs to be set at first");
+        return;
+     }
+   eo_do(pd->cache, file = elm_file_mimetype_cache_mimetype_get(mime_type));
+
+   if (!file)
+     INF("Failed to fetch icon for mime type %s\n", mime_type);
+   else
+    elm_image_file_set(pd->icon, file, NULL);
+
+   evas_object_show(pd->icon);
 }
 
 EOLIAN static void
 _elm_file_icon_evas_object_smart_resize(Eo *obj, Elm_File_Icon_Data *pd, Evas_Coord w, Evas_Coord h)
 {
    eo_do_super(obj, ELM_FILE_ICON_CLASS, evas_obj_smart_resize(w,h));
-   mime_type_resize(obj, pd, w, h);
 }
 
 static Eina_Bool

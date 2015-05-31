@@ -1,5 +1,6 @@
 #include "elm_file_display_priv.h"
 
+Elm_File_MimeType_Cache *cache;
 
 static Eina_Bool
 _drop_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
@@ -26,12 +27,17 @@ icon_create(Evas_Object *par, Efm_File *file)
 
    #if 1
       ic = eo_add(ELM_FILE_ICON_CLASS, par);
-      eo_do(ic, elm_obj_file_icon_fm_monitor_file_set(file);
-                eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_DROP, _drop_cb, widget);
-                eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_HOVER, _hover_cb, widget));
+      eo_do(ic,
+        elm_obj_file_icon_mimetype_cache_set(cache);
+        elm_obj_file_icon_fm_monitor_file_set(file);
+        eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_DROP, _drop_cb, widget);
+        eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_HOVER, _hover_cb, widget)
+      );
    #else
+      const char *name;
+      name = efm_file_path_get(file);
       ic = elm_label_add(par);
-      elm_object_text_set(ic, file);
+      elm_object_text_set(ic, name);
    #endif
    evas_object_show(ic);
 

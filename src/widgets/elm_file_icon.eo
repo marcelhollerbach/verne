@@ -1,7 +1,6 @@
 class Elm_File_Icon (Elm.Layout)
 {
    eo_prefix: elm_obj_file_icon;
-   data: Elm_File_Icon_Data;
    methods {
       @property fm_monitor_file {
         /**@
@@ -16,6 +15,11 @@ class Elm_File_Icon (Elm.Layout)
         }
         values {
            file : Efm.File*;
+        }
+      }
+      mimetype_cache_set {
+        params {
+          cache : Elm.File.MimeType.Cache*;
         }
       }
       fill_sample {

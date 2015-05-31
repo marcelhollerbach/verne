@@ -830,6 +830,9 @@ _elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd)
   pd->show_filepreview = EINA_TRUE;
   pd->current_path = eina_stringshare_add("/");
   pd->obj = obj;
+
+  eo_do(ELM_FILE_MIMETYPE_CACHE_CLASS, cache = elm_file_mimetype_cache_generate(config->icon_size));
+
   return eo_do_super_ret(obj, ELM_FILE_DISPLAY_CLASS, eo, eo_constructor());
 }
 
@@ -888,6 +891,8 @@ _elm_file_display_show_icon_size_set(Eo *obj, Elm_File_Display_Data *pd, int siz
      config_save();
      //refresh the url so the view is doing everything new
      eo_do(obj, efl_file_set(pd->current_path, NULL));
+     eo_del(cache);
+     eo_do(ELM_FILE_MIMETYPE_CACHE_CLASS, cache = elm_file_mimetype_cache_generate(size));
 }
 
 EOLIAN static int
