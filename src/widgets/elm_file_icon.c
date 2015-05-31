@@ -194,9 +194,9 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *fi
    else
      {
         //check if this file can be loaded
-        if (evas_object_image_extension_can_load_fast_get(path))
-          pd->picmode = EINA_TRUE;
-        else
+        //if (evas_object_image_extension_can_load_fast_get(path))
+        //  pd->picmode = EINA_TRUE;
+        //else
           pd->picmode = EINA_FALSE;
       }
 
