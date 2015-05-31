@@ -1,4 +1,4 @@
-struct Elm.File.Display.View.File{
+struct Elm.File.Display.View.DndFile{
    x : int;
    y : int;
    w : int;
@@ -45,9 +45,10 @@ interface Elm.File.Display.View {
       }
       selection_get {
          /*@
-            Called to get the current selection of the view
+            Called to get the current selection of the view but in dnd mode, this means with the coords of each item
+            This call is only called when dnd is started.
           */
-         return : list<Elm.File.Display.View.File>*;
+         return : list<Elm.File.Display.View.DndFile>*;
       }
       path_set {
          /*@

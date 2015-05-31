@@ -386,7 +386,7 @@ _list_to_char(Eina_List *items)
 {
    const char *drag_data = NULL;
    Eina_List *l;
-   Elm_File_Display_View_File *it;
+   Elm_File_Display_View_DndFile *it;
    unsigned int len = 0;
 
    EINA_LIST_FOREACH(items, l, it)
@@ -477,7 +477,7 @@ static Anim_Struct*
 _drag_anim_start(Eina_List *icons, Evas_Object *object, const char* ptr)
 {
   Eina_List *display_icons = NULL, *node;
-  Elm_File_Display_View_File *vd;
+  Elm_File_Display_View_DndFile *vd;
   Evas_Object *icon;
   Anim_Icon *ai;
   Anim_Struct *ans;
@@ -541,7 +541,7 @@ _drag_anim_start(Eina_List *icons, Evas_Object *object, const char* ptr)
 static void
 _selections_del(Eina_List *list)
 {
-   Elm_File_Display_View_File *vd;
+   Elm_File_Display_View_DndFile *vd;
 
    EINA_LIST_FREE(list, vd)
      {
