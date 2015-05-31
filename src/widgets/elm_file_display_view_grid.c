@@ -35,9 +35,9 @@ _elm_file_display_view_grid_elm_file_display_view_items_select(Eo *obj EINA_UNUS
    int x1 = 0, y1 = 0;
    Elm_Object_Item *it;
 
-   for (x1 = x; x < x+w; x += config->icon_size)
+   for (x1 = x; x1 < x+w; x1 += config->icon_size)
      {
-        for (y1 = y; y < y+h; y += config->icon_size)
+        for (y1 = y; y1 < y+h; y1 += config->icon_size)
           {
              it = elm_gengrid_at_xy_item_get(obj, x1, y1, NULL, NULL);
              elm_gengrid_item_selected_set(it, EINA_TRUE);
