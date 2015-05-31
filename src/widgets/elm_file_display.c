@@ -61,8 +61,51 @@ typedef struct
 #define ICON_SIZE_INF 80
 #define ICON_SIZE_SUP 80+6*30
 
+static Eina_Hash *views = NULL;
 static void _event_rect_mouse_move(void *data, Evas *e, Evas_Object *obj, void *event);
 static void _event_rect_mouse_up(void *data, Evas *e, Evas_Object *obj, void *event);
+
+/*
+ *======================================
+ * View pool stuff
+ *======================================
+ */
+
+static void
+_views_standart_init()
+{
+   views = eina_hash_string_small_new(NULL);
+   eo_do(ELM_FILE_DISPLAY_CLASS,
+      elm_obj_file_display_view_pool_add(ELM_FILE_DISPLAY_VIEW_GRID_CLASS);
+      elm_obj_file_display_view_pool_add(ELM_FILE_DISPLAY_VIEW_DEBUG_CLASS);
+    );
+}
+
+static void
+_elm_file_display_view_pool_add(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const Eo_Class *view)
+{
+   const char *name;
+
+   if (!views)
+     _views_standart_init();
+
+   eo_do(view, name = elm_file_display_view_name_get());
+
+   eina_hash_direct_add(views, name, view);
+}
+
+static void
+_elm_file_display_view_pool_del(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const Eo_Class *view)
+{
+   const char *name;
+
+   if (!view)
+     return;
+
+   eo_do(view, name = elm_file_display_view_name_get());
+   eina_hash_del(views, name, NULL);
+}
+
 
 /*
  *======================================
@@ -172,13 +215,19 @@ _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
    it = elm_menu_item_add(menu, NULL, NULL, "Views", NULL, NULL);
    const char *name;
 
-   {
-      eo_do(ELM_FILE_DISPLAY_VIEW_DEBUG_CLASS, name = elm_file_display_view_name_get());
-      it2 = elm_menu_item_add(menu, it, NULL, name, _ctx_view_sel, ELM_FILE_DISPLAY_VIEW_DEBUG_CLASS);
+   if (views)
+     {
+        Eina_Iterator *iter;
+        const Eo_Class *klass;
 
-            eo_do(ELM_FILE_DISPLAY_VIEW_GRID_CLASS, name = elm_file_display_view_name_get());
-      it2 = elm_menu_item_add(menu, it, NULL, name, _ctx_view_sel, ELM_FILE_DISPLAY_VIEW_GRID_CLASS);
-   }
+        iter = eina_hash_iterator_data_new(views);
+
+        EINA_ITERATOR_FOREACH(iter, klass);
+          {
+             eo_do(klass, name = elm_file_display_view_name_get());
+             it2 = elm_menu_item_add(menu, it, NULL, name, _ctx_view_sel, klass);
+          }
+     }
 
    /*
     * File preview
@@ -775,6 +824,9 @@ _elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd)
   efm_init();
   emous_init();
   config_init();
+  if (!views)
+    _views_standart_init();
+
   pd->show_filepreview = EINA_TRUE;
   pd->current_path = eina_stringshare_add("/");
   pd->obj = obj;
@@ -796,6 +848,7 @@ EOLIAN static void
 _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
 {
    Evas_Object *o;
+   const Eo_Class *view;
 
    eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, evas_obj_smart_add());
 
@@ -810,7 +863,14 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
    pd->preview = o = filepreview_add(obj);
    elm_object_part_content_set(obj, "filepreview", o);
 
-   eo_do(obj, elm_obj_file_display_view_set(ELM_FILE_DISPLAY_VIEW_DEBUG_CLASS));
+   view = eina_hash_find(views, config->viewname);
+   if (!view)
+     {
+        ERR("The saved view cannot be found, falling back to grid");
+        view = ELM_FILE_DISPLAY_VIEW_GRID_CLASS;
+     }
+
+   eo_do(obj, elm_obj_file_display_view_set(view));
 
    pd->event.rect = evas_object_rectangle_add(obj);
    evas_object_repeat_events_set(pd->event.rect, EINA_TRUE);

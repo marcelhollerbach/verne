@@ -2,6 +2,18 @@ class Elm_File_Display (Elm.Layout, Efl.File)
 {
    eo_prefix: elm_obj_file_display;
    methods {
+      view_pool_add @class {
+         /*@ adds a view from the internal pool */
+         params {
+            view : const(Eo.Class)*; /*@ should implement Elm.File.Display.View */
+         }
+      }
+      view_pool_del @class {
+         /*@ removed a view from the internal pool */
+         params {
+            view : const(Eo.Class)*; /*@ should implement Elm.File.Display.View */
+         }
+      }
       @property bookmark_show {
          get {
 
