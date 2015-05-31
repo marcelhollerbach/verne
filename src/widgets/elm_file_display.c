@@ -196,7 +196,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
 {
    Evas_Object *menu;
    Elm_Object_Item *it, *it2;
-   Elm_File_Display_Menu_Hook_Event ev;
+   Elm_File_Display_Menu_Hook ev;
 
    menu = elm_menu_add(elm_object_top_widget_get(obj));
    evas_object_data_set(menu, "__w", obj);

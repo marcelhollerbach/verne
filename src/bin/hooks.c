@@ -55,7 +55,7 @@ _open_with_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 static Eina_Bool
 _menu_selector_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
 {
-    Elm_File_Display_Menu_Hook_Event *ev = event;
+    Elm_File_Display_Menu_Hook *ev = event;
     Efm_File *file = ev->file;
     Eina_Bool dir;
 

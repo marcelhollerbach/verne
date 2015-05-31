@@ -9,6 +9,11 @@ enum Elm.File.Display.Folder_Placement {
   FIRST, LAST, TRIVIAL
 }
 
+struct Elm.File.Display.Menu_Hook {
+   menu : Evas.Object*;
+   file : Efm.File*;
+}
+
 class Elm_File_Display (Elm.Layout, Efl.File)
 {
    eo_prefix: elm_obj_file_display;
