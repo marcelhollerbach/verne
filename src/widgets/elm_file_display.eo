@@ -1,3 +1,10 @@
+enum Elm.File.Display.Sort_Type {
+   SIZE = 0,
+   DATE = 1,
+   NAME = 2,
+   EXTENSION = 3
+}
+
 class Elm_File_Display (Elm.Layout, Efl.File)
 {
    eo_prefix: elm_obj_file_display;

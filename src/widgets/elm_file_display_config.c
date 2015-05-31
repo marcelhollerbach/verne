@@ -25,7 +25,7 @@ _standart_setup(Config *c)
   c->viewname = eina_stringshare_add("Grid");
   c->icon_size = 110;
 
-  c->sort.type = SORT_TYPE_NAME;
+  c->sort.type = ELM_FILE_DISPLAY_SORT_TYPE_NAME;
   c->sort.folder_placement = FOLDER_FIRST;
   //TODO add good standart values
 }

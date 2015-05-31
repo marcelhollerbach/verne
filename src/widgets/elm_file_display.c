@@ -280,14 +280,14 @@ _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
       Evas_Object *gr, *rad, *ck;
 
       //SORT_TYPE_SIZE
-      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)SORT_TYPE_SIZE);
+      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_DISPLAY_SORT_TYPE_SIZE);
       gr = rad = elm_radio_add(menu);
       elm_object_text_set(rad, "Size");
       elm_radio_state_value_set(rad, 0);
       elm_object_item_content_set(it2, rad);
 
       //SORT_TYPE_DATE
-      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)SORT_TYPE_DATE);
+      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_DISPLAY_SORT_TYPE_DATE);
       rad = elm_radio_add(menu);
       elm_radio_group_add(rad, gr);
       elm_object_text_set(rad, "Date");
@@ -295,7 +295,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
       elm_object_item_content_set(it2, rad);
 
       //SORT_TYPE_NAME
-      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)SORT_TYPE_NAME);
+      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_DISPLAY_SORT_TYPE_NAME);
       rad = elm_radio_add(menu);
       elm_radio_group_add(rad, gr);
       elm_object_text_set(rad, "Name");
@@ -303,7 +303,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
       elm_object_item_content_set(it2, rad);
 
       //SORT_TYPE_EXTENSION
-      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)SORT_TYPE_EXTENSION);
+      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_DISPLAY_SORT_TYPE_EXTENSION);
       rad = elm_radio_add(menu);
       elm_radio_group_add(rad, gr);
       elm_object_text_set(rad, "Extension");

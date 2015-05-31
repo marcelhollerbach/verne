@@ -48,7 +48,7 @@ static int
 sort_name_func(const void *data1, const void *data2)
 {
    Efm_File *f1 = ((Efm_File*)data1), *f2 = ((Efm_File*)data2);
-   if (config->sort.type == SORT_TYPE_NAME)
+   if (config->sort.type == ELM_FILE_DISPLAY_SORT_TYPE_NAME)
      {
         const char *n1 = efm_file_filename_get(f1);
         const char *n2 = efm_file_filename_get(f2);
@@ -69,7 +69,7 @@ sort_name_func(const void *data1, const void *data2)
           }
         return 0;
      }
-   else if (config->sort.type == SORT_TYPE_SIZE)
+   else if (config->sort.type == ELM_FILE_DISPLAY_SORT_TYPE_SIZE)
      {
        Efm_File_Stat *st1, *st2;
 
@@ -81,7 +81,7 @@ sort_name_func(const void *data1, const void *data2)
         else
           return -1;
      }
-   else if (config->sort.type == SORT_TYPE_DATE)
+   else if (config->sort.type == ELM_FILE_DISPLAY_SORT_TYPE_DATE)
      {
         Efm_File_Stat *st1, *st2;
 
