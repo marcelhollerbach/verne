@@ -120,18 +120,18 @@ sort_func(const void *data1, const void *data2)
      }
    else if (efm_file_is_type(f1, EFM_FILE_TYPE_DIRECTORY) && !efm_file_is_type(f2, EFM_FILE_TYPE_DIRECTORY))
      {
-        if (config->sort.folder_placement == FOLDER_FIRST)
+        if (config->sort.folder_placement == ELM_FILE_DISPLAY_FOLDER_PLACEMENT_FIRST)
           return -1;
-        else if (config->sort.folder_placement == FOLDER_LAST)
+        else if (config->sort.folder_placement == ELM_FILE_DISPLAY_FOLDER_PLACEMENT_LAST)
           return 1;
         else
           return sort_name_func(f1, f2) * mul;
      }
    else if (!efm_file_is_type(f1, EFM_FILE_TYPE_DIRECTORY) && efm_file_is_type(f2, EFM_FILE_TYPE_DIRECTORY))
      {
-        if (config->sort.folder_placement == FOLDER_FIRST)
+        if (config->sort.folder_placement == ELM_FILE_DISPLAY_FOLDER_PLACEMENT_FIRST)
           return 1;
-        else if (config->sort.folder_placement == FOLDER_LAST)
+        else if (config->sort.folder_placement == ELM_FILE_DISPLAY_FOLDER_PLACEMENT_LAST)
           return -1;
         else
           return sort_name_func(f1, f2)* mul;

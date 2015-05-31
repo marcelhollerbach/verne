@@ -5,6 +5,10 @@ enum Elm.File.Display.Sort_Type {
    EXTENSION = 3
 }
 
+enum Elm.File.Display.Folder_Placement {
+  FIRST, LAST, TRIVIAL
+}
+
 class Elm_File_Display (Elm.Layout, Efl.File)
 {
    eo_prefix: elm_obj_file_display;

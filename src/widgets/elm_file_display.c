@@ -163,7 +163,7 @@ _ctx_folder_placement(void *data, Evas_Object *obj, void *event EINA_UNUSED)
    Elm_File_Display_Folder_Placement p = ((Elm_File_Display_Folder_Placement)data);
 
    if (p == (Elm_File_Display_Folder_Placement)config->sort.folder_placement)
-     p = NOTHING;
+     p = ELM_FILE_DISPLAY_FOLDER_PLACEMENT_TRIVIAL;
 
    eo_do(w, elm_obj_file_display_folder_placement_set(p));
 }
@@ -314,16 +314,16 @@ _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
       elm_menu_item_separator_add(menu, it);
 
       //FOLDER_FIRST
-      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_folder_placement, (void *)(uintptr_t)FOLDER_FIRST);
+      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_folder_placement, (void *)(uintptr_t)ELM_FILE_DISPLAY_FOLDER_PLACEMENT_FIRST);
       ck = elm_check_add(menu);
-      if (config->sort.folder_placement == FOLDER_FIRST)
+      if (config->sort.folder_placement == ELM_FILE_DISPLAY_FOLDER_PLACEMENT_FIRST)
         elm_check_state_set(ck, EINA_TRUE);
       elm_object_text_set(ck, "Folder first");
       elm_object_item_content_set(it2, ck);
 
-      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_folder_placement, (void *)(uintptr_t)FOLDER_LAST);
+      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_folder_placement, (void *)(uintptr_t)ELM_FILE_DISPLAY_FOLDER_PLACEMENT_LAST);
       ck = elm_check_add(menu);
-      if (config->sort.folder_placement == FOLDER_LAST)
+      if (config->sort.folder_placement == ELM_FILE_DISPLAY_FOLDER_PLACEMENT_LAST)
         elm_check_state_set(ck, EINA_TRUE);
       elm_object_text_set(ck, "Folder last");
       elm_object_item_content_set(it2, ck);

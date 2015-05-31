@@ -8,10 +8,6 @@
 #include "elm_file_display_view_debug.eo.h"
 #include "elm_file_display_view_grid.eo.h"
 
-typedef enum{
-  FOLDER_FIRST, FOLDER_LAST, NOTHING
-} Elm_File_Display_Folder_Placement;
-
 typedef struct{
    Evas_Object *menu;
    Efm_File *file;

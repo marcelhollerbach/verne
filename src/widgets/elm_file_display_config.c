@@ -26,7 +26,7 @@ _standart_setup(Config *c)
   c->icon_size = 110;
 
   c->sort.type = ELM_FILE_DISPLAY_SORT_TYPE_NAME;
-  c->sort.folder_placement = FOLDER_FIRST;
+  c->sort.folder_placement = ELM_FILE_DISPLAY_FOLDER_PLACEMENT_FIRST;
   //TODO add good standart values
 }
 
