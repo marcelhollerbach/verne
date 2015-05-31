@@ -43,7 +43,7 @@ typedef struct
      Eina_Bool on_item;
    }event;
 
-   Eina_List *selections;
+   Eina_List *selection;
    void *drag_data;
    Eina_Bool show_bookmark;
    Eina_Bool show_filepreview;

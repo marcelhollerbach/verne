@@ -574,10 +574,6 @@ _event_rect_mouse_up(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UNUS
         /* call for selection*/
         eo_do(pd->cached_view, elm_file_display_view_items_select(x, y, w, h));
 
-        _selections_del(pd->selections);
-
-        eo_do(pd->cached_view, pd->selections = elm_file_display_view_selection_get());
-
         /* check if those really exists */
         evas_object_del(pd->event.selection);
         pd->event.selection = NULL;
@@ -627,19 +623,20 @@ _event_rect_mouse_move(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UN
      {
         /* start possible dragging */
         const char *ptr;
+        Eina_List *dnd_selection;
 
         if (pd->drag_data) return;
 
         /* updated selections*/
-        _selections_del(pd->selections);
-        eo_do(pd->cached_view, pd->selections = elm_file_display_view_selection_get());
+        eo_do(pd->cached_view, dnd_selection = elm_file_display_view_selection_get());
 
-        if (!pd->selections)
+        if (!dnd_selection)
           return;
 
-        ptr= _list_to_char(pd->selections);
+        ptr= _list_to_char(dnd_selection);
 
-        pd->drag_data = _drag_anim_start(pd->selections, elm_object_parent_widget_get(pd->cached_view), ptr);
+        pd->drag_data = _drag_anim_start(dnd_selection, elm_object_parent_widget_get(pd->cached_view), ptr);
+        _selections_del(dnd_selection);
         return;
      }
    else
@@ -701,7 +698,11 @@ _event_rect_mouse_move(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UN
        return;
    }
 }
-
+/*
+ *======================================
+ * VIEW EVENTS
+ *======================================
+ */
 static Eina_Bool
 _view_resize_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desk EINA_UNUSED, void *event EINA_UNUSED)
 {
@@ -720,6 +721,21 @@ _view_resize_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *des
   return EINA_TRUE;
 }
 
+Eina_Bool
+_item_select_changed(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desk EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Eo *wid = data;
+   Elm_File_Display_Data *pd;
+
+   if (!event)
+     return EINA_TRUE;
+
+   pd = eo_data_scope_get(wid, ELM_FILE_DISPLAY_CLASS);
+
+   pd->selection = event;
+
+   return EINA_TRUE;
+}
 /*
  *======================================
  * WIDGET STUFF
@@ -741,10 +757,9 @@ _elm_file_display_view_set(Eo *obj, Elm_File_Display_Data *pd, const Eo_Class *k
    eo_do(pd->cached_view, eo_event_callback_add(EVAS_OBJECT_EVENT_RESIZE, _view_resize_cb, pd);
                           eo_event_callback_add(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_SIMPLE, _util_item_select_simple, obj);
                           eo_event_callback_add(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHOOSEN, _util_item_select_choosen, obj);
+                          eo_event_callback_add(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, _item_select_changed, obj);
                           elm_file_display_view_path_set(pd->current_path);
                           );
-
-
 }
 
 EOLIAN static const Eo_Class*

@@ -76,5 +76,8 @@ interface Elm.File.Display.View {
    events {
       item,select,simple ; /*@ A item got selected "simple" like one click*/
       item,select,choosen; /*@ A item got _really_ selected like double clicked */
+      item,select,changed; /*@ called when the selection has changed. event type: list<Efm.Files>*
+      Used to keep a internal list of all selected files.
+      The pointer given to the event will just be updated each time the list is _never_ touched by the displayer. the view has to take care of freeing the list*/
    }
 }

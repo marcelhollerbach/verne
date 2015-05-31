@@ -6,6 +6,7 @@ typedef struct {
    Elm_Gengrid_Item_Class *gic;
    Efm_Monitor *fm;
    Eina_Hash *files;
+   Eina_List *sel_files;
 } Elm_File_Display_View_Grid_Data;
 
 EOLIAN static const char *
@@ -56,13 +57,13 @@ _elm_file_display_view_grid_elm_file_display_view_selection_get(Eo *obj EINA_UNU
    EINA_LIST_FOREACH(sel_list, node, it)
      {
         int x = 0, y = 0, w = 20, h = 20;
-        Elm_File_Display_View_File *dnd;
+        Elm_File_Display_View_DndFile *dnd;
         Evas_Object *content;
 
         content = elm_object_item_part_content_get(it, "elm.swallow.icon");
         evas_object_geometry_get(content, &x, &y, &w, &h);
 
-        dnd = calloc(1, sizeof(Elm_File_Display_View_File));
+        dnd = calloc(1, sizeof(Elm_File_Display_View_DndFile));
         dnd->x = x;
         dnd->y = y;
         dnd->w = w;
@@ -171,6 +172,30 @@ _double_click(void *data EINA_UNUSED, Evas_Object *obj, void *event_info)
    eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHOOSEN, fmm_file));
 }
 
+static void
+_selection_add(void *data EINA_UNUSED, Evas_Object *obj, void *event_info)
+{
+   Elm_File_Display_View_Grid_Data *pd = eo_data_scope_get(obj, ELM_FILE_DISPLAY_VIEW_GRID_CLASS);
+   Efm_File *file;
+
+   file = elm_object_item_data_get(event_info);
+
+   pd->sel_files = eina_list_append(pd->sel_files, file);
+   eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, pd->sel_files));
+}
+
+static void
+_selection_del(void *data EINA_UNUSED, Evas_Object *obj, void *event_info)
+{
+   Elm_File_Display_View_Grid_Data *pd = eo_data_scope_get(obj, ELM_FILE_DISPLAY_VIEW_GRID_CLASS);
+   Efm_File *file;
+
+   file = elm_object_item_data_get(event_info);
+
+   pd->sel_files = eina_list_remove(pd->sel_files, file);
+   eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, pd->sel_files));
+}
+
 EOLIAN static Eo *
 _elm_file_display_view_grid_eo_base_constructor(Eo *obj, Elm_File_Display_View_Grid_Data *pd)
 {
@@ -186,6 +211,8 @@ _elm_file_display_view_grid_eo_base_constructor(Eo *obj, Elm_File_Display_View_G
    elm_gengrid_item_size_set(eo, config->icon_size, config->icon_size);
    elm_gengrid_multi_select_mode_set(eo, ELM_OBJECT_MULTI_SELECT_MODE_WITH_CONTROL );
    elm_gengrid_multi_select_set(eo, EINA_TRUE);
+   evas_object_smart_callback_add(obj, "selected", _selection_add, NULL);
+   evas_object_smart_callback_add(obj, "unselected", _selection_del, NULL);
 
    evas_object_smart_callback_add(eo, "clicked,double", _double_click, NULL);
    return eo;
