@@ -25,13 +25,15 @@ typedef struct
     Efm_File_Stat stat;
 } Efm_File_Data;
 
+static void _mime_thread_fireup(void);
+
 static void
 _fs_cb(void *dat EINA_UNUSED, Ecore_Thread *thread)
 {
     Eina_List *copy;
     Thread_Job *data;
 
-    while(query_stuff)
+    while(!ecore_thread_check(thread) && query_stuff)
       {
         //take a local copy of the list
         eina_lock_take(&readlock);
@@ -53,8 +55,6 @@ _fs_cb(void *dat EINA_UNUSED, Ecore_Thread *thread)
              data->mimetype = mime_type;
              ecore_thread_feedback(thread, data);
           }
-        if (!query_stuff)
-          usleep(50);
       }
 }
 
@@ -85,16 +85,28 @@ _notify_cb(void *data EINA_UNUSED, Ecore_Thread *et EINA_UNUSED, void *pass)
     free(job);
 }
 
+
 static void
 _end_cb(void *data EINA_UNUSED, Ecore_Thread *et EINA_UNUSED)
 {
     fs_query = NULL;
+    /* FIXME There are cases that the mimethread dies but there is still work*/
+    if (query_stuff)
+      _mime_thread_fireup();
 }
 
 static void
 _cancel_cb(void *data EINA_UNUSED, Ecore_Thread *th  EINA_UNUSED)
 {
+    fs_query = NULL;
+}
 
+static void
+_mime_thread_fireup(void)
+{
+   fs_query = ecore_thread_feedback_run(_fs_cb, _notify_cb,
+                                        _end_cb, _cancel_cb,
+                                        NULL, EINA_FALSE);
 }
 
 static void
@@ -112,10 +124,7 @@ _scheudle(Eo *obj, Efm_File_Data *pd)
     eina_lock_release(&readlock);
     //if there is a running thread the list will be took
     if (!fs_query)
-      fs_query = ecore_thread_feedback_run(_fs_cb, _notify_cb,
-                                           _end_cb, _cancel_cb,
-                                           NULL, EINA_FALSE);
-
+      _mime_thread_fireup();
 }
 
 EOLIAN static const char *
