@@ -125,6 +125,7 @@ static void
 mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
 {
    const char *file, *mime_type;;
+   Eina_Bool dir;
 
    if (!pd->file)
      return;
@@ -142,7 +143,10 @@ mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
         ERR("A cache needs to be set at first");
         return;
      }
-   eo_do(pd->cache, file = elm_file_mimetype_cache_mimetype_get(mime_type));
+   if (eo_do_ret(pd->file, dir, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)))
+     eo_do(pd->cache, file = elm_file_mimetype_cache_mimetype_get("folder"));
+   else
+     eo_do(pd->cache, file = elm_file_mimetype_cache_mimetype_get(mime_type));
 
    if (!file)
      INF("Failed to fetch icon for mime type %s\n", mime_type);
