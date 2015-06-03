@@ -144,14 +144,15 @@ mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
         return;
      }
    if (eo_do_ret(pd->file, dir, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)))
-     eo_do(pd->cache, file = elm_file_mimetype_cache_mimetype_get("folder"));
+     elm_icon_standard_set(pd->icon, "folder");
    else
-     eo_do(pd->cache, file = elm_file_mimetype_cache_mimetype_get(mime_type));
-
-   if (!file)
-     INF("Failed to fetch icon for mime type %s\n", mime_type);
-   else
-    elm_image_file_set(pd->icon, file, NULL);
+     {
+        eo_do(pd->cache, file = elm_file_mimetype_cache_mimetype_get(mime_type));
+        if (!file)
+          INF("Failed to fetch icon for mime type %s\n", mime_type);
+        else
+          elm_image_file_set(pd->icon, file, NULL);
+     }
 
    evas_object_show(pd->icon);
 }
