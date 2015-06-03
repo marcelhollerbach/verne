@@ -13,7 +13,6 @@ static Ecore_Idler *focus_idler;
 static Eina_Bool unfocus_barrier;
 static Evas_Object *entry;
 
-
 static const char*
 _path_transform(const char *text)
 {

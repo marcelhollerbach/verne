@@ -35,9 +35,9 @@ open:
 }
 
 static void
-_open_cb2(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event)
+_open_cb2(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
-   _open_cb(NULL, NULL, NULL, event);
+   _open_cb(NULL, NULL, NULL, obj);
 }
 
 static void
@@ -52,12 +52,62 @@ _open_with_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
    exec_ui_open_with(data, _open_with_choosen);
 }
 
+static void
+_copy_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Eina_List *selection;
+
+   eo_do(preview, selection = elm_obj_file_display_selection_get());
+   clipboard_set(COPY, selection);
+}
+
+static void
+_move_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Eina_List *selection;
+
+   eo_do(preview, selection = elm_obj_file_display_selection_get());
+   clipboard_set(MOVE, selection);
+}
+
+static void
+_remove_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Eina_List *selection;
+   Eina_List *pass = NULL, *node;
+   Efm_File *file;
+
+   eo_do(preview, selection = elm_obj_file_display_selection_get());
+
+   EINA_LIST_FOREACH(selection, node, file)
+     {
+        const char *path;
+
+        eo_do(file, path = efm_file_obj_path_get());
+
+        pass = eina_list_append(pass, path);
+     }
+
+   fs_operations_delete(pass);
+}
+
+static void
+_paste_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
+{
+   const char *goal;
+
+   eo_do(preview, efl_file_get(&goal, NULL));
+
+   clipboard_paste(goal);
+}
+
 static Eina_Bool
 _menu_selector_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
 {
     Elm_File_Display_Menu_Hook *ev = event;
     Efm_File *file = ev->file;
     Eina_Bool dir;
+    Elm_Object_Item *item;
 
     //open with entry
     if (!eo_do_ret(file, dir, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)))
@@ -65,6 +115,15 @@ _menu_selector_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event
          elm_menu_item_add(ev->menu, NULL, NULL, "Open", _open_cb2, ev->file);
          elm_menu_item_add(ev->menu, NULL, NULL, "Open with", _open_with_cb, ev->file);
       }
+
+    elm_menu_item_separator_add(ev->menu, NULL);
+    elm_menu_item_add(ev->menu, NULL, NULL, "Copy", _copy_cb, ev->file);
+    elm_menu_item_add(ev->menu, NULL, NULL, "Move", _move_cb, ev->file);
+    elm_menu_item_add(ev->menu, NULL, NULL, "Remove", _remove_cb, ev->file);
+
+    item = elm_menu_item_add(ev->menu, NULL, NULL, "Paste", _paste_cb, ev->file);
+    if (clipboard_something_in())
+      elm_object_item_disabled_set(item, EINA_TRUE);
 
     return EINA_TRUE;
 }

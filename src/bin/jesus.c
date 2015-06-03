@@ -93,6 +93,9 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    //init config
    config_init();
 
+   //init clipboard
+   clipboard_init();
+
    //we need ethumb and efreet
    elm_need_ethumb();
    elm_need_efreet();
@@ -112,6 +115,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 
    elm_run();
 
+   clipboard_shutdown();
    config_shutdown();
 
    return 0;

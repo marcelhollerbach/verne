@@ -5,14 +5,18 @@
 #define EFL_EO_API_SUPPORT
 
 #include <Efm.h>
+#include <Eio.h>
 #include <Elementary.h>
 #include <Elementary_Ext.h>
 #include "ui.h"
 
+typedef enum
+{
+    MOVE, COPY
+} Clipboard_Mode;
 
 typedef struct {
     Eina_Hash *mime_type_open;
-
 } Jesus_Config;
 
 typedef void (*Cmd_Choosen)(Efm_File *file, const char *cmd);
@@ -40,4 +44,15 @@ void history_init(void);
 
 void exec_ui_open_with(Efm_File *file, Cmd_Choosen choosen);
 void exec_run(const char *cmd, Efm_File *f);
+
+void clipboard_set(Clipboard_Mode m, Eina_List *list);
+void clipboard_init(void);
+Eina_Bool clipboard_something_in(void);
+void clipboard_shutdown(void);
+void clipboard_paste(const char *paste);
+
+void fs_operations_move(Eina_List *files, const char *goal);
+void fs_operations_copy(Eina_List *files, const char *goal);
+void fs_operations_delete(Eina_List *files);
+
 #endif
