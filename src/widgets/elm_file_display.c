@@ -1020,8 +1020,10 @@ _elm_file_display_efl_file_file_set(Eo *obj, Elm_File_Display_Data *pd, const ch
 EOLIAN static void
 _elm_file_display_efl_file_file_get(Eo *obj EINA_UNUSED , Elm_File_Display_Data *pd, const char **file, const char **key)
 {
-   *file = pd->current_path;
-   *key = NULL;
+   if (file)
+     *file = pd->current_path;
+   if (key)
+     *key = NULL;
 }
 
 EOLIAN void
