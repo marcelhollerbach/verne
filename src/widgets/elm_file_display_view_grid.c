@@ -128,6 +128,10 @@ _elm_file_display_view_grid_elm_file_display_view_path_set(Eo *obj, Elm_File_Dis
    if (pd->files)
      eina_hash_free(pd->files);
 
+   eina_list_free(pd->sel_files);
+   pd->sel_files = NULL;
+   eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, pd->sel_files));
+
    pd->files = eina_hash_pointer_new(NULL);
 
    elm_gengrid_clear(obj);
