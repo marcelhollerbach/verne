@@ -215,7 +215,10 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *fi
         eo_do(pd->icon, efl_file_set(path, NULL));
      }
    else
-     pd->icon = elm_icon_add(obj);
+     {
+        pd->icon = elm_icon_add(obj);
+        elm_icon_order_lookup_set(pd->icon, ELM_ICON_LOOKUP_FDO);
+     }
 
    //set the new conecnt
    _content_set(obj, pd->icon);
