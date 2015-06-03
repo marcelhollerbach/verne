@@ -219,7 +219,7 @@ titlebar_init(void)
    evas_object_smart_callback_add(entry, "anchor,clicked", _anchor_clicked_cb, NULL);
    evas_object_show(entry);
 
-   elm_object_part_content_set(layout, "textbar", entry);
+   elm_object_part_content_set(layout, "jesus.textbar", entry);
 
    unfocus_barrier = EINA_FALSE;
 }

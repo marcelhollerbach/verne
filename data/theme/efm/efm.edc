@@ -1,7 +1,4 @@
 #define GAP 9
-externals {
-    external: "name";
-}
 collections{
    images {
       image: "icon_arrow_left.png" COMP;
@@ -24,13 +21,13 @@ collections{
          }
       }
       program {
-         signal: "default";
+         signal: "jesus.default";
          source: "jesus";
          action: STATE_SET "default";
          target: "favorite";
       }
       program {
-         signal: "notdefault";
+         signal: "jesus.notdefault";
          source: "jesus";
          action: STATE_SET "nofavorite";
          target: "favorite";
@@ -100,7 +97,7 @@ collections{
                image.normal: "icon_arrow_right.png";
             }
          }
-         swallow { "textbar"
+         swallow { "jesus.textbar"
             desc { "default"
                rel1.to_y: "headbar";
                rel1.to_x: "forward";
@@ -110,7 +107,7 @@ collections{
                fixed: 1 1;
             }
          }
-         part { name: "content"; type: SWALLOW;
+         part { name: "jesus.content"; type: SWALLOW;
             description { state: "default" 0.0;
                rel1.to: "headbar";
                rel1.relative: 0.0 1.0;
@@ -123,12 +120,12 @@ collections{
       program {
          signal: "mouse,clicked,*";
          source: "forward_img";
-         action: SIGNAL_EMIT "forward" "theme";
+         action: SIGNAL_EMIT "jesus.history.forward" "theme";
       }
       program {
          signal: "mouse,clicked,*";
          source: "back_img";
-         action: SIGNAL_EMIT "back" "theme";
+         action: SIGNAL_EMIT "jesus.history.back" "theme";
       }
    }
 }

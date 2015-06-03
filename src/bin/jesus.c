@@ -40,7 +40,7 @@ ui_init()
    preview = eo_add(ELM_FILE_DISPLAY_CLASS, win);
    evas_object_size_hint_align_set(preview, EVAS_HINT_FILL, EVAS_HINT_FILL);
    evas_object_size_hint_weight_set(preview, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-   elm_object_part_content_set(layout, "content", preview);
+   elm_object_part_content_set(layout, "jesus.content", preview);
    eo_do(preview, eo_event_callback_add(ELM_FILE_DISPLAY_EVENT_PATH_CHANGED_USER,
                                  _dir_changed, NULL););
    evas_object_show(preview);

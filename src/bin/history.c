@@ -76,7 +76,7 @@ _path_changed_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Des
 void
 history_init(void)
 {
-   elm_layout_signal_callback_add(layout, "back", "theme", _back_cb, NULL);
-   elm_layout_signal_callback_add(layout, "forward", "theme", _forward_cb, NULL);
+   elm_layout_signal_callback_add(layout, "jesus.history.back", "theme", _back_cb, NULL);
+   elm_layout_signal_callback_add(layout, "jesus.history.forward", "theme", _forward_cb, NULL);
    eo_do(preview, eo_event_callback_add(ELM_FILE_DISPLAY_EVENT_PATH_CHANGED_USER, _path_changed_cb, NULL));
 }
