@@ -23,7 +23,7 @@ typedef struct {
   Eo *monitor;
 } Efm_Monitor_Eio_Job;
 
-#define MARK_POPULATED eo_key_data_set("__populated", NULL, NULL);
+#define MARK_POPULATED eo_key_data_set("__populated", NULL);
 #define UNMARK_POPULATED eo_key_data_del("__populated");
 
 static void
