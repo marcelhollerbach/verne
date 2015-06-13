@@ -32,3 +32,6 @@ add_subdirectory(src/lib/efm)
 add_subdirectory(src/widgets)
 add_subdirectory(src/test)
 add_subdirectory(src/bin)
+
+INSTALL(FILES ${CMAKE_SOURCE_DIR}/data/efm.desktop
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications/)
