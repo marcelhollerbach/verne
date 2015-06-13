@@ -92,6 +92,8 @@ _file_del(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA
    elm_object_item_del(it);
    eina_hash_del(pd->files, &icon, it);
 
+   pd->sel_files =  eina_list_remove(pd->sel_files, icon);
+
    return EINA_TRUE;
 }
 
