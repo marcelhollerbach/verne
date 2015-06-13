@@ -56,9 +56,9 @@ target_link_libraries (test_archive
    efm_lib
 )
 
-add_executable(test_resolver test_mount.c)
+add_executable(test_emous test_mount.c)
 
-target_link_libraries (test_resolver
+target_link_libraries (test_emous
    ${ECORE_LIBRARIES}
    ${EO_LIBRARIES}
    emous
@@ -67,5 +67,5 @@ target_link_libraries (test_resolver
    rt
 )
 
-add_test(test1 test_resolver)
+add_test(emous_test test_emous)
 add_test(efm_test test_fm_monitor)
