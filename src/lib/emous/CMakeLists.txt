@@ -52,8 +52,8 @@ target_link_libraries(emous
   ${ECORE_LIBRARIES}
   ${ECORE_FILE_LIBRARIES}
   ${EFREET_MIME_LIBRARIES}
-  -lmount
-  pthread
+  ${CMAKE_THREAD_LIBS_INIT}
+  ${Mount_LIBRARIES}
 )
 
 INSTALL(TARGETS emous

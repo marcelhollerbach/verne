@@ -20,7 +20,11 @@ find_package(Evas REQUIRED)
 find_package(Edje REQUIRED)
 find_package(Ecore COMPONENTS file)
 find_package(Elementary 1.13.0 REQUIRED)
+find_package(LibArchive REQUIRED)
+find_package(Threads REQUIRED)
 
+pkg_check_modules(Mount REQUIRED mount)
+pkg_check_modules(Check REQUIRED check)
 
 add_subdirectory(data/theme/elm_ext)
 add_subdirectory(src/lib/emous)

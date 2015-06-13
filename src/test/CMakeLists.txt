@@ -43,9 +43,9 @@ target_link_libraries (test_fm_monitor
    ${EINA_LIBRARIES}
    ${ECORE_LIBRARIES}
    ${EO_LIBRARIES}
+   ${CMAKE_THREAD_LIBS_INIT}
+   ${Check_LIBRARIES}
    efm_lib
-   check
-   pthread
    m
    rt
 )
@@ -61,8 +61,8 @@ add_executable(test_emous test_mount.c)
 target_link_libraries (test_emous
    ${ECORE_LIBRARIES}
    ${EO_LIBRARIES}
+   ${Check_LIBRARIES}
    emous
-   check
    m
    rt
 )

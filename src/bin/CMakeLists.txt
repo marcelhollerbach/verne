@@ -5,7 +5,7 @@ set(PACKAGE_BIN_DIR "${CMAKE_INSTALL_PREFIX}/bin/")
 
 add_custom_command(
      OUTPUT efm.edc.edj
-     COMMAND edje_cc -id ${CMAKE_SOURCE_DIR}/data/img ${CMAKE_SOURCE_DIR}/data/theme/efm/efm.edc ${CMAKE_BINARY_DIR}/data/theme/efm/efm.edc.edj
+     COMMAND edje_cc -id ${CMAKE_SOURCE_DIR}/data/img ${CMAKE_SOURCE_DIR}/data/theme/efm/efm.edc ${CMAKE_BINARY_DIR}/data/theme/efm.edc.edj
      DEPENDS ${CMAKE_SOURCE_DIR}/data/theme/efm/efm.edc
 )
 
@@ -44,5 +44,5 @@ PACKAGE_LIB_DIR="${PACKAGE_LIB_DIR}"
 PACKAGE_BIN_DIR="${PACKAGE_BIN_DIR}"
 )
 
-INSTALL(FILES ${CMAKE_BINARY_DIR}/data/theme/efm/efm.edc.edj
+INSTALL(FILES ${CMAKE_BINARY_DIR}/data/theme/efm.edc.edj
   DESTINATION share/jesus/)

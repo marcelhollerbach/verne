@@ -59,7 +59,7 @@ target_link_libraries(efm_lib
   ${EEZE_LIBRARIES}
   ${ECORE_FILE_LIBRARIES}
   ${EFREET_MIME_LIBRARIES}
-  archive
+  ${LibArchive_LIBRARIES}
 )
 
 set_property(TARGET efm_lib
