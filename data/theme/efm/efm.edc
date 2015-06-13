@@ -1,4 +1,7 @@
 #define GAP 9
+externals {
+   external: "elm";
+}
 collections{
    images {
       image: "icon_arrow_left.png" COMP;
@@ -7,6 +10,259 @@ collections{
       image: "icon_favorites.png" COMP;
       image: "icon_notfavorites.png" COMP;
       image: "icon_apps.png" COMP;
+   }
+   group { name: "jesus.fs_op.copy";
+      parts {
+         swallow { "jesus.progress"
+            desc {
+               rel1.offset: 0 5;
+               rel2.to_x: "jesus.from";
+               rel2.relative: 1.0 0.0;
+               align: 0.0 0.0;
+            }
+         }
+         external { "indicator"
+            source: "elm/icon";
+            desc { "default"
+               rel1.relative: 0.0 1.0;
+               rel1.to_y: "jesus.progress";
+               rel2.relative: 0.0 1.0;
+               rel2.to_y: "jesus.to";
+               aspect: 1 1;
+               align: 0.0 0.0;
+               params {
+                  string: "icon" "edit-copy";
+               }
+            }
+         }
+         text { "descriptor_from"
+            desc {
+               rel1.relative: 1.0 1.0;
+               rel1.to_y: "jesus.progress";
+               rel1.to_x: "indicator";
+               rel2.relative: 0.0 0.0;
+               rel2.to_y: "jesus.progress";
+               align: 0.0 0.0;
+               text {
+                  size: 10;
+                  text: "From:";
+                  min: 1 1;
+                  ellipsis: -1.0;
+               }
+            }
+         }
+         text { "jesus.from"
+            desc {
+               rel1.relative: 1.0 0.0;
+               rel1.to: "descriptor_from";
+               rel2.relative: 1.0 1.0;
+               rel2.to_y: "descriptor_from";
+               align: 0.0 0.0;
+               text {
+                  size: 10;
+                  text: "<from>";
+                  min: 1 1;
+                  ellipsis: -1.0;
+               }
+            }
+         }
+         text { "descriptor_to"
+            desc {
+               rel1.relative: 0.0 1.0;
+               rel1.to: "descriptor_from";
+               rel2.relative: 1.0 1.0;
+               rel2.to: "descriptor_from";
+               align: 0.0 0.0;
+               text {
+                  size: 10;
+                  text: "To:";
+                  min: 1 1;
+                  ellipsis: -1.0;
+               }
+            }
+         }
+         text { "jesus.to"
+            desc {
+               rel1.relative: 0.0 1.0;
+               rel1.to: "jesus.from";
+               rel2.relative: 1.0 1.0;
+               rel2.to_y: "jesus.from";
+               align: 0.0 0.0;
+               text {
+                  size: 10;
+                  text: "<to>";
+                  min: 1 1;
+                  ellipsis: -1.0;
+               }
+            }
+         }
+         rect { "border"
+            desc {
+               rel1.relative: 0.0 1.0;
+               rel1.to: "indicator";
+               rel2.relative: 1.0 1.0;
+               rel2.to: "jesus.to";
+               rel2.offset: 0 1;
+               color: 64 64 64 255;
+            }
+         }
+      }
+   }
+
+   group { name: "jesus.fs_op.move";
+      parts {
+         swallow { "jesus.progress"
+            desc {
+               rel1.offset: 0 5;
+               rel2.to_x: "jesus.from";
+               rel2.relative: 1.0 0.0;
+               align: 0.0 0.0;
+            }
+         }
+         external { "indicator"
+            source: "elm/icon";
+            desc { "default"
+               rel1.relative: 0.0 1.0;
+               rel1.to_y: "jesus.progress";
+               rel2.relative: 0.0 1.0;
+               rel2.to_y: "jesus.to";
+               aspect: 1 1;
+               align: 0.0 0.0;
+               params {
+                  string: icon "edit-cut";
+               }
+            }
+         }
+         text { "descriptor_from"
+            desc {
+               rel1.relative: 1.0 1.0;
+               rel1.to_y: "jesus.progress";
+               rel1.to_x: "indicator";
+               rel2.relative: 0.0 0.0;
+               rel2.to_y: "jesus.progress";
+               align: 0.0 0.0;
+               text {
+                  size: 10;
+                  text: "From:";
+                  min: 1 1;
+                  ellipsis: -1.0;
+               }
+            }
+         }
+         text { "jesus.from"
+            desc {
+               rel1.relative: 1.0 0.0;
+               rel1.to: "descriptor_from";
+               rel2.relative: 1.0 1.0;
+               rel2.to_y: "descriptor_from";
+               align: 0.0 0.0;
+               text {
+                  size: 10;
+                  text: "<from>";
+                  min: 1 1;
+                  ellipsis: -1.0;
+               }
+            }
+         }
+         text { "descriptor_to"
+            desc {
+               rel1.relative: 0.0 1.0;
+               rel1.to: "descriptor_from";
+               rel2.relative: 1.0 1.0;
+               rel2.to: "descriptor_from";
+               align: 0.0 0.0;
+               text {
+                  size: 10;
+                  text: "To:";
+                  min: 1 1;
+                  ellipsis: -1.0;
+               }
+            }
+         }
+         text { "jesus.to"
+            desc {
+               rel1.relative: 0.0 1.0;
+               rel1.to: "jesus.from";
+               rel2.relative: 1.0 1.0;
+               rel2.to_y: "jesus.from";
+               align: 0.0 0.0;
+               text {
+                  size: 10;
+                  text: "<to>";
+                  min: 1 1;
+                  ellipsis: -1.0;
+               }
+            }
+         }
+         rect { "border"
+            desc {
+               rel1.relative: 0.0 1.0;
+               rel1.to: "indicator";
+               rel2.relative: 1.0 1.0;
+               rel2.to: "jesus.to";
+               rel2.offset: 0 1;
+               color: 64 64 64 255;
+            }
+         }
+      }
+   }
+
+   group { name: "jesus.fs_op.remove";
+      parts {
+         external { "indicator"
+            source: "elm/icon";
+            desc {
+               rel1.relative: 0.0 0.0;
+               rel2.relative: 0.0 1.0;
+               rel2.to_y: "description_del";
+               aspect: 1 1;
+               align: 0.0 0.0;
+               params {
+                  string: icon "edit-delete";
+               }
+            }
+         }
+         text { "description_del";
+            desc { "default"
+               rel1.to_x: "indicator";
+               rel1.relative: 1.0 0.0;
+               rel2.to_x: "indicator";
+               rel2.relative: 1.0 0.0;
+               align: 0.0 0.0;
+               text {
+                  size: 10;
+                  text: "Removed:";
+                  min: 1 1;
+                  ellipsis: -1.0;
+               }
+            }
+         }
+         text { "jesus.from";
+            desc { "default"
+               rel1.relative: 1.0 0.0;
+               rel1.to: "description_del";
+               rel2.to_y: "description_del";
+               rel2.relative: 1.0 1.0;
+               align: 0.0 0.0;
+               text {
+                  size: 10;
+                  text: "<file>";
+                  min: 1 1;
+                  ellipsis: -1.0;
+               }
+            }
+         }
+         rect { "border"
+            desc {
+               rel1.relative: 0.0 1.0;
+               rel1.to: "indicator";
+               rel2.relative: 1.0 1.0;
+               rel2.to: "jesus.from";
+               rel2.offset: 0 1;
+               color: 64 64 64 255;
+            }
+         }
+      }
    }
 
    group { name: "default_indicator";
@@ -107,6 +363,22 @@ collections{
                fixed: 1 1;
             }
          }
+         external { "fsaction"
+            source: "elm/icon";
+            desc { "default"
+               rel1.to_y: "headbar";
+               rel1.offset: 5 5;
+               rel1.relative: 1.0 0.0;
+               rel2.to: "headbar";
+               rel2.relative: 1.0 1.0;
+               rel2.offset: -5 -5;
+               aspect: 1 1;
+               align: 1.0 0.0;
+               params {
+                  string: icon edit-paste;
+               }
+            }
+         }
          part { name: "jesus.content"; type: SWALLOW;
             description { state: "default" 0.0;
                rel1.to: "headbar";
@@ -126,6 +398,11 @@ collections{
          signal: "mouse,clicked,*";
          source: "back_img";
          action: SIGNAL_EMIT "jesus.history.back" "theme";
+      }
+      program {
+         signal: "mouse,clicked,*";
+         source: "fsaction";
+         action: SIGNAL_EMIT "jesus.fsaction.popup" "theme";
       }
    }
 }
