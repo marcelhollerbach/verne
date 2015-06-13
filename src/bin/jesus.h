@@ -51,6 +51,7 @@ Eina_Bool clipboard_something_in(void);
 void clipboard_shutdown(void);
 void clipboard_paste(const char *paste);
 
+void fs_operations_init(void);
 void fs_operations_move(Eina_List *files, const char *goal);
 void fs_operations_copy(Eina_List *files, const char *goal);
 void fs_operations_delete(Eina_List *files);

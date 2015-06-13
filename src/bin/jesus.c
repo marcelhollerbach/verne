@@ -109,6 +109,8 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    //init history
    history_init();
 
+   fs_operations_init();
+
    //set the correct path
    eo_do(preview, efl_file_set(path, NULL));
    titlebar_path_set(path);
