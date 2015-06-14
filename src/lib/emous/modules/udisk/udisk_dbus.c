@@ -145,7 +145,9 @@ _device_parse(const char *opath, Eldbus_Message_Iter *partition, Eldbus_Message_
    d->displayname = _dbus_helper_search_field(block, "IdLabel");
    if (d->displayname)
      return d;
-
+   d->displayname = _dbus_helper_search_field(block, "HintName");
+   if (d->displayname)
+     return d;
    d->displayname = _dbus_helper_search_field(partition, "Name");
 
    return d;
