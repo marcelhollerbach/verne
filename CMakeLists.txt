@@ -11,7 +11,7 @@ add_definitions ("-Wall -Wextra -fvisibility=hidden")
 
 find_package(Eina REQUIRED)
 find_package(Eo 1.14.99 REQUIRED)
-find_package(Eolian REQUIRED)
+find_package(Eolian 1.14.99 REQUIRED)
 find_package(Eet REQUIRED)
 find_package(Efl REQUIRED)
 find_package(Efreet COMPONENTS mime trash)
