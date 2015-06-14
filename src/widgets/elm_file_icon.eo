@@ -1,12 +1,8 @@
-class Elm_File_Icon (Elm.Layout)
-{
+class Elm_File_Icon (Elm.Layout) {
    eo_prefix: elm_obj_file_icon;
    methods {
       @property fm_monitor_file {
-        /**@
-          Sets a Efm_File to be displayed. It does not matter in which state the EFM_FIle is, if no mime_type is found it will listen for one.
-          Once the mime_type appears the icon will be displayed
-        */
+        [[Sets a Efm.File to display]]
         set {
 
         }
@@ -18,20 +14,20 @@ class Elm_File_Icon (Elm.Layout)
         }
       }
       mimetype_cache_set {
+        [[Sets the mimetype cache which should be used to take the mimetypes]]
         params {
           cache : Elm.File.MimeType.Cache*;
         }
       }
       fill_sample {
+        [[Fills group and file with the correct values to display a sample of the currently display Efm.File]]
         params {
           @in group : const(char)**;
           @in file : const(char)**;
         }
       }
       util_icon_theme_get @class{
-         /*@ Will return the name of the icon theme
-             The returned string must be freeed
-          */
+         [[Will return the name of the icon theme]]
          return : const(char)*;
       }
    }
@@ -42,10 +38,9 @@ class Elm_File_Icon (Elm.Layout)
      Eo.Base.destructor;
    }
    events {
-     name,changed;
-     edit,start;
-     edit,done;
-     item,drop;
-     item,hover;
+     edit,start; [[PLACEHOLDER]]
+     edit,done; [[PLACEHOLDER]]
+     item,drop : Elm.Selection.Data; [[Called when something else is droped above this]]
+     item,hover; [[Called when something is hover over above this item for a long time]]
    }
 }

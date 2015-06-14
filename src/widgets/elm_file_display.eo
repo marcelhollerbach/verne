@@ -1,133 +1,97 @@
+
 enum Elm.File.Display.Sort_Type {
-   SIZE = 0,
-   DATE = 1,
-   NAME = 2,
-   EXTENSION = 3
+   [[ The different sort types]]
+   SIZE = 0, [[Sort from size]]
+   DATE = 1, [[Sort from date]]
+   NAME = 2, [[Sort from name]]
+   EXTENSION = 3 [[Sort from extension]]
 }
 
 enum Elm.File.Display.Folder_Placement {
-  FIRST, LAST, TRIVIAL
+  [[Where to place the folders in the view if files and dirs are splited, each sector will be sorted for itself]]
+  FIRST,  [[ Place folders at first]]
+  LAST, [[Place folders at last]]
+  TRIVIAL [[Do not put the folders anywhere, and sort files and dirs at once]]
 }
 
 struct Elm.File.Display.Menu_Hook {
+   [[Used to pass the file and object at once to the event]]
    menu : Evas.Object*;
    file : Efm.File*;
 }
 
-class Elm_File_Display (Elm.Layout, Efl.File)
-{
+class Elm_File_Display (Elm.Layout, Efl.File) {
+   [[ The file display widget class used to display the files and dirs of a specific path]]
    eo_prefix: elm_obj_file_display;
    methods {
       view_pool_add @class {
-         /*@ adds a view from the internal pool */
+         [[Adds the given Display view to the pool.
+           The pool will be used to display different view options in the ui]]
          params {
-            view : const(Eo.Class)*; /*@ should implement Elm.File.Display.View */
+            view : const(Eo.Class)*; [[Should be a Elm.File.Display.View]]
          }
       }
       view_pool_del @class {
-         /*@ removed a view from the internal pool */
+         [[Remove the given View from the pool]]
          params {
-            view : const(Eo.Class)*; /*@ should implement Elm.File.Display.View */
+            view : const(Eo.Class)*;
          }
       }
       @property bookmark_show {
-         get {
-
-         }
-         set {
-
-         }
+         [[Enable the bookmars view if this is false the user is unable to move it it]]
          values {
-            bookmark : bool;
+            bookmark : bool; [[ true if you want to display the bookmarks, false if not]]
          }
       }
       @property filepreview_show {
-         get {
-
-         }
-         set {
-
-         }
+         [[Enable the filepreview display or not]]
          values {
-            filepreview : bool;
+            filepreview : bool; [[ true if you want to display the filepreview, false if not]]
          }
       }
       @property view {
-         /*@ impl me */
-         set {
-
-         }
-         get {
-
-         }
+         [[Sets the view which should be used to display the "to display" path]]
          values {
-            klass: const(Eo.Class)*;
+            klass: const(Eo.Class)*; [[klass should implement elm.File.Display.View]]
          }
       }
       @property show_icon_size {
-         /*@ impl me */
-         set {
-
-         }
-         get {
-
-         }
+         [[Set the size of the icons to display, its up to the view how they are interprating the icon size]]
          values {
             size : int;
          }
       }
       @property show_hidden_file {
-         /*@ impl me */
-         set {
-
-         }
-         get {
-
-         }
+         [[enable or display the view of a hidden files (Files which are starting with a .)]]
          values {
-            hidden : bool;
+            hidden : bool; [[true to show them false to hide them]]
          }
       }
       @property sort_type {
-         /*@ impl me */
-         set {
-
-         }
-         get {
-
-         }
+         [[ Set the sort type a view should use to sort the files]]
          values {
             t : Elm_File_Display_Sort_Type;
          }
       }
       @property folder_placement {
-         set {
-
-         }
-         get {
-
-         }
+         [[ Set the Folderplacement a view should use to place files and folders]]
          values {
             t : Elm_File_Display_Folder_Placement;
          }
       }
       @property reverse_sort {
-         set {
-
-         }
-         get {
-
-         }
+         [[True to reverse the sort, if false a-z if true z-a]]
          values {
-            b : bool;
+            b : bool; [[true to reverse the sort ]]
          }
       }
       @property selection {
+         [[Selection of the displaying view]]
          get {
-
+            [[Get the selection of the displaying view]]
          }
          values {
-            list : list<Efm.File>*;
+            list : list<Efm.File*>*;
          }
       }
    }
@@ -141,20 +105,20 @@ class Elm_File_Display (Elm.Layout, Efl.File)
       Efl.File.file.set;
       Efl.File.file.get;
    }
+
    events {
-      path,changed; /*@ path has changed */
-      path,changed,user; /*@ same as path changed, _and_ when file_set is called */
-      item,selection,changed; /*@ The selection has changed */
-      item,selected; /*@ a item was clicked , once */
-      item,choosen; /*@ a item was double clicked */
-      dnd,item,hover; /*@ a item was hovered above another item */
-      dnd,item,droped; /*@ item was droped above another item */
-      dnd,droped; /*@ Item droped in the file display */
-      hook,menu,selector,start; /*@ Menu_Hook will be passed */
-      hook,menu,selector,end; /*@ Menu_Hook will be passed */
-      hook,menu,bookmarks,start; /*@ A menu will be passed */
-      hook,menu,bookmarks,end;/*@ A menu will be passed */
-      hook,menu,device,start;/*@ A menu will be passed */
-      hook,menu,device,end;/*@ A menu will be passed */
+      path,changed : const(char)*; [[Called if the path has changed because of a user interaction]]
+      path,changed,user : const(char)*; [[Called if the path was changed by user or by api]]
+      item,selection,changed : list<Efm.File*>*; [[The selection of the view has changed]]
+      item,choosen : Efm.File*; [[A item is selected, this means its _not_ a directry and the view decived to *click* this file]]
+      dnd,item,hover; [[A item was hovered above another item ]]
+      dnd,item,droped; [[Item was droped above another item]]
+      dnd,droped; [[Item droped in the file display]]
+      hook,menu,selector,start : Elm.File.Display.Menu_Hook*; [[*@ Menu_Hook will be passed ]]
+      hook,menu,selector,end : Elm.File.Display.Menu_Hook*; [[Menu_Hook will be passed]]
+      hook,menu,bookmarks,start : Evas.Object*; [[A menu will be passed]]
+      hook,menu,bookmarks,end : Evas.Object*; [[A menu will be passed]]
+      hook,menu,device,start : Evas.Object*; [[@ A menu will be passed]]
+      hook,menu,device,end : Evas.Object*; [[A menu will be passed]]
    }
 }

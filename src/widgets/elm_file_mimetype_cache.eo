@@ -1,23 +1,20 @@
 class Elm.File.MimeType.Cache(Eo.Base){
-    /*@
-       A class to cache the mimetypes for a special size
+    [[ A class to cache the mimetypes for a special size
 
        Why having this class instead of using efreet ? Here we are simply having a hash table with all entrys. in Efreet we are having a hash with the known mime_types which has a list, this list carrys all the icons with the name across all themes and sizes, so we are iterating throuw a big list, which costs time.
 
        Simple said: this is faster
-    */
+    ]]
     methods {
         cache_generate @class  {
-            /*@ generates a new cache */
+            [[generates a new cache]]
             params {
                 size : int;
             }
             return : Elm.File.MimeType.Cache*;
         }
         mimetype_get {
-            /*@
-               This will return the icon of the given mime_type
-             */
+            [[This will return the icon of the given mime_type]]
             params {
                 name : const(char)*;
             }

@@ -41,22 +41,24 @@ string(REPLACE "\n" "" EOLIAN_EO_DIR_WITHOUT_NEWLINE
 
 file(GLOB files "*.eo")
 
+message(${EOLIAN_EO_DIR})
+
 foreach(filename ${files})
 add_custom_command(
    OUTPUT ${filename}.x
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/widgets --gc --eo -o ${filename}.x ${filename}
+   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/widgets -I ../lib/efm/ -I ../lib/efm/ --gc --eo -o ${filename}.x ${filename}
    DEPENDS ${filename}
 )
 
 add_custom_command(
    OUTPUT ${filename}.h
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/widgets --gh --eo -o ${filename}.h ${filename}
+   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/ -I ../lib/efm/ --gh --eo -o ${filename}.h ${filename}
    DEPENDS ${filename}
 )
 
 add_custom_command(
    OUTPUT ${filename}.legacy.h
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/widgets --gh --legacy -o ${filename}.legacy.h ${filename}
+   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/widgets -I ../lib/efm/ --gh --legacy -o ${filename}.legacy.h ${filename}
    DEPENDS ${filename}
 )
 
