@@ -16,9 +16,9 @@ collections{
          swallow { "jesus.progress"
             desc {
                rel1.offset: 0 5;
-               rel2.to_x: "jesus.from";
                rel2.relative: 1.0 0.0;
                align: 0.0 0.0;
+               fixed: 1 1;
             }
          }
          external { "indicator"
@@ -30,6 +30,7 @@ collections{
                rel2.to_y: "jesus.to";
                aspect: 1 1;
                align: 0.0 0.0;
+               fixed: 1 1;
                params {
                   string: "icon" "edit-copy";
                }
@@ -40,9 +41,10 @@ collections{
                rel1.relative: 1.0 1.0;
                rel1.to_y: "jesus.progress";
                rel1.to_x: "indicator";
-               rel2.relative: 0.0 0.0;
-               rel2.to_y: "jesus.progress";
-               align: 0.0 0.0;
+               rel2.relative: 1.0 0.0;
+               rel2.to_y: "descriptor_to";
+               rel2.to_x: "indicator";
+               align: 0.0 0.5;
                text {
                   size: 10;
                   text: "From:";
@@ -55,9 +57,9 @@ collections{
             desc {
                rel1.relative: 1.0 0.0;
                rel1.to: "descriptor_from";
-               rel2.relative: 1.0 1.0;
-               rel2.to_y: "descriptor_from";
-               align: 0.0 0.0;
+               rel2.to_y: "jesus.to";
+               rel2.relative: 1.0 0.0;
+               align: 1.0 0.5;
                text {
                   size: 10;
                   text: "<from>";
@@ -68,11 +70,11 @@ collections{
          }
          text { "descriptor_to"
             desc {
-               rel1.relative: 0.0 1.0;
-               rel1.to: "descriptor_from";
+               rel1.relative: 1.0 1.0;
+               rel1.to_x: "indicator";
                rel2.relative: 1.0 1.0;
-               rel2.to: "descriptor_from";
-               align: 0.0 0.0;
+               rel2.to_x: "indicator";
+               align: 0.0 1.0;
                text {
                   size: 10;
                   text: "To:";
@@ -83,11 +85,10 @@ collections{
          }
          text { "jesus.to"
             desc {
+               rel1.to_x: "jesus.from";
                rel1.relative: 0.0 1.0;
-               rel1.to: "jesus.from";
                rel2.relative: 1.0 1.0;
-               rel2.to_y: "jesus.from";
-               align: 0.0 0.0;
+               align: 1.0 1.0;
                text {
                   size: 10;
                   text: "<to>";
