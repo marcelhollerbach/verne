@@ -110,15 +110,8 @@ collections{
    }
 
    group { name: "jesus.fs_op.move";
+      inherit: "jesus.fs_op.copy";
       parts {
-         swallow { "jesus.progress"
-            desc {
-               rel1.offset: 0 5;
-               rel2.to_x: "jesus.from";
-               rel2.relative: 1.0 0.0;
-               align: 0.0 0.0;
-            }
-         }
          external { "indicator"
             source: "elm/icon";
             desc { "default"
@@ -131,77 +124,6 @@ collections{
                params {
                   string: icon "edit-cut";
                }
-            }
-         }
-         text { "descriptor_from"
-            desc {
-               rel1.relative: 1.0 1.0;
-               rel1.to_y: "jesus.progress";
-               rel1.to_x: "indicator";
-               rel2.relative: 0.0 0.0;
-               rel2.to_y: "jesus.progress";
-               align: 0.0 0.0;
-               text {
-                  size: 10;
-                  text: "From:";
-                  min: 1 1;
-                  ellipsis: -1.0;
-               }
-            }
-         }
-         text { "jesus.from"
-            desc {
-               rel1.relative: 1.0 0.0;
-               rel1.to: "descriptor_from";
-               rel2.relative: 1.0 1.0;
-               rel2.to_y: "descriptor_from";
-               align: 0.0 0.0;
-               text {
-                  size: 10;
-                  text: "<from>";
-                  min: 1 1;
-                  ellipsis: -1.0;
-               }
-            }
-         }
-         text { "descriptor_to"
-            desc {
-               rel1.relative: 0.0 1.0;
-               rel1.to: "descriptor_from";
-               rel2.relative: 1.0 1.0;
-               rel2.to: "descriptor_from";
-               align: 0.0 0.0;
-               text {
-                  size: 10;
-                  text: "To:";
-                  min: 1 1;
-                  ellipsis: -1.0;
-               }
-            }
-         }
-         text { "jesus.to"
-            desc {
-               rel1.relative: 0.0 1.0;
-               rel1.to: "jesus.from";
-               rel2.relative: 1.0 1.0;
-               rel2.to_y: "jesus.from";
-               align: 0.0 0.0;
-               text {
-                  size: 10;
-                  text: "<to>";
-                  min: 1 1;
-                  ellipsis: -1.0;
-               }
-            }
-         }
-         rect { "border"
-            desc {
-               rel1.relative: 0.0 1.0;
-               rel1.to: "indicator";
-               rel2.relative: 1.0 1.0;
-               rel2.to: "jesus.to";
-               rel2.offset: 0 1;
-               color: 64 64 64 255;
             }
          }
       }
