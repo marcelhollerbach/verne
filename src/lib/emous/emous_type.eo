@@ -1,0 +1,49 @@
+interface Emous.Type ( ) {
+    [[This abstracts a set of Devices]]
+    methods {
+        @property devices @class{
+            [[Get a list of devices which are owned by this type]]
+            get {
+
+            }
+            values {
+                devices : list<Emous.Device*>*;
+            }
+        }
+        create @class {
+            [[Create a device "on the fly"
+
+              The caller of this function need to check if this type supports creating by checking creatable
+
+              If the implementor of this class supports "on the fly" creation a new device will be
+              created with the given parameters and mountpoint.
+
+              If everything works well this will return true if not false.
+
+              If the result is true a device,added event will be called
+            ]]
+            params {
+                params : char*;
+                mountpoint : char*;
+            }
+
+            return : bool;
+        }
+        creatable @class {
+            [[Returns if this set of Devices can create devices on the fly]]
+            return : bool;
+        }
+        name_get @class {
+            [[Returns the name of this type]]
+            return : const(char)*;
+        }
+        object_get @class {
+            [[Will return _one_ unique instance of this class where the events will e called on]]
+            return : Emous.Type*;
+        }
+    }
+    events {
+        device,added; [[Called if a device appeared]]
+        device,deleted; [[Called if a device dissapeared]]
+    }
+}

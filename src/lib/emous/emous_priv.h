@@ -43,9 +43,6 @@ extern int _emous_domain;
 
 void _emous_mm_init(void);
 void _emous_mm_shutdown(void);
-//helperfunctions for dealing with mountpoints
-void _emous_mount_point_init(void);
-void _emous_mount_point_shutdown(void);
 
 /*
  * Will add a mountpoint and emit the signal.
@@ -58,6 +55,3 @@ void _emous_mount_add(const char *type, const char *mount_point, const char *sou
  * After event is done the Mount Point is freeed etc.
  */
 void _emous_mount_del(const char *mount_point);
-
-int mount_init(void);
-void mount_shutdown();

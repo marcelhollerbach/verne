@@ -56,16 +56,6 @@ target_link_libraries (test_archive
    efm_lib
 )
 
-add_executable(test_emous test_mount.c)
-
-target_link_libraries (test_emous
-   ${ECORE_LIBRARIES}
-   ${EO_LIBRARIES}
-   ${Check_LIBRARIES}
-   emous
-   m
-   rt
-)
-
-add_test(emous_test test_emous)
 add_test(efm_test test_fm_monitor)
+
+add_subdirectory(./emous_test)

@@ -32,19 +32,26 @@ endforeach()
 LIST(APPEND EMOUS_FILES
    Emous.h
    emous_priv.h
-   mount.c
    emous_mm_linux.c
    emous_mp.c
-   main.c
+   emous.c
+   emous.eo.x
+   emous.eo.h
+   emous_manager.c
    emous_manager.eo.x
    emous_manager.eo.h
+   emous_device.c
    emous_device.eo.x
    emous_device.eo.h
-   emous_device_type.eo.x
-   emous_device_type.eo.h
+   emous_type.c
+   emous_type.eo.x
+   emous_type.eo.h
    )
 
 add_library(emous SHARED ${EMOUS_FILES})
+
+set_property(TARGET emous
+             PROPERTY COMPILE_DEFINITIONS EMOUS_MODULE_PATH="${EMOUS_MODULE_PATH}")
 
 target_link_libraries(emous
   ${EINA_LIRBRARIES}
@@ -60,20 +67,6 @@ INSTALL(TARGETS emous
   LIBRARY DESTINATION lib
 )
 
-INSTALL(FILES Emous.h emous_device.eo.h emous_device_type.eo.h emous_manager.eo.h
+INSTALL(FILES Emous.h emous_device.eo.h emous_type.eo.h emous_manager.eo.h emous.eo.h
   DESTINATION "include/emous-1/"
-)
-
-set_property(TARGET emous
-             PROPERTY COMPILE_DEFINITIONS EMOUS_MODULE_PATH="${EMOUS_MODULE_PATH}")
-
-LIST(APPEND EMOUS_UDISK_FILES
-   ./modules/udisk/udisk.c
-   ./modules/udisk/udisk_dbus.c
-   )
-
-add_library(emous_udisk MODULE ${EMOUS_UDISK_FILES})
-
-INSTALL(TARGETS emous_udisk
-  DESTINATION ${EMOUS_MODULE_PATH}
 )

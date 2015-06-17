@@ -360,21 +360,21 @@ _dnd_droped(void *data EINA_UNUSED, Evas_Object *obj, Elm_Selection_Data *ev)
 static void
 _device_update(Bookmark_Item *item)
 {
-   Device_State state;
+   Emous_Device_State state;
    const char *signal;
 
    eo_do(item->pd.dev.d, state = emous_device_state_get());
 
    switch(state)
      {
-        case DEVICE_STATE_MOUNTED:
+        case EMOUS_DEVICE_STATE_MOUNTED:
           signal = "mounted";
         break;
-        case DEVICE_STATE_UMOUNTED:
+        case EMOUS_DEVICE_STATE_UMOUNTED:
           signal = "unmounted";
         break;
-        case DEVICE_STATE_MOUNTREQ:
-        case DEVICE_STATE_UMOUNTREQ:
+        case EMOUS_DEVICE_STATE_MOUNT_REQ:
+        case EMOUS_DEVICE_STATE_UNMOUNT_REQ:
           signal = "mountrequest";
         break;
      }

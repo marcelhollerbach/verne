@@ -1,95 +1,57 @@
-enum Device_State{
+enum Emous.Device.State {
    mounted,
    umounted,
-   mountreq,
-   umountreq
+   mount_req,
+   unmount_req
 }
 
-class Emous.Device (Eo.Base)
-{
+interface Emous.Device ( ) {
+   [[Interface of a device]]
    methods {
       @property state {
+         [[The current state of this devise]]
          values {
-            mounted : Device_State;
-         }
-         set {
-            /*@
-            Set the state of this device.
-            Setting a state here will not call or effect anything expecting calling the changed event.
-
-            If you want to mount or umount the device you have to call the mount/umount functions.
-            */
+            mounted : Emous.Device.State;
          }
          get {
-            /*@
-            True if this device is mounted, false if not.
-            */
+            [[Returns the state of this device]]
          }
       }
       @property displayname {
+         [[Returns a the name of the displayname can be NULL if there is no usefull name]]
          values {
             name : const(char)*;
          }
-         get{
-
+         get {
+            [[A name to display or NULL]]
          }
       }
       @property mountpoints {
+         [[A List of mountpoints where this device is mounted]]
          values {
             mountpoints : list<Eina_Stringshare*>*;
          }
          get {
-            /*@
-            Get all a  list where this is device is mounted.
-            */
+            [[Get the list of mountpoints]]
          }
       }
-      mountpoint_add {
-         params {
-            mnt_point : const(char)*;
+      @property size {
+         [[The size of the filesystem behind this device]]
+         values {
+            size : long;
          }
-      }
-      moutpoint_del {
-         params {
-            mnt_point : const(char)*;
+         get {
+            [[Returns the size in bytes.]]
          }
       }
       mount {
-         /*@
-         send a mount request, the backend which requested this device should handle that.
-         */
+         [[Requests this device to be mounted]]
       }
       umount {
-         /*@
-         Send a umount request, the backend which requested this device should handle this
-         */
+         [[Requests this device to be unmounted]]
       }
-      populate {
-         /*@
-         This call will notify the ecosystem about the new device
-         */
-      }
-      construct {
-         params {
-            displayname : const(char)*;
-         }
-      }
-   }
-   constructors {
-      .construct;
    }
    events {
-      state,changed; /* the device state has changed */
-      mount,request; /*@
-called if someone called mount, do not listen to this unless you are the backend which requested this device
-*/
-      umount,request; /*@
-someone requested a umount!
-@see the mount,request event
-*/
-
-   }
-   implements {
-      Eo.Base.destructor;
+      state,changed; [[The device state has changed]]
    }
 }
