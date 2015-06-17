@@ -1,0 +1,12 @@
+class Emous.Device.Debug (Eo.Base, Emous.Device) {
+    methods {
+    }
+    implements {
+        Emous.Device.mount;
+        Emous.Device.umount;
+        Emous.Device.state.get;
+        Emous.Device.displayname.get;
+        Emous.Device.mountpoints.get;
+        Emous.Device.size.get;
+    }
+}

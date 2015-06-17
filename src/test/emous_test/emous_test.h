@@ -1,0 +1,1 @@
+Eina_Bool emous_debug_device_start(void);
