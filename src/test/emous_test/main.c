@@ -7,16 +7,16 @@ typedef struct {
 } Emous_Device_Debug_Data;
 
 
-EOLIAN static void
+EOLIAN static Eina_Bool
 _emous_device_debug_emous_device_mount(Eo *obj EINA_UNUSED, Emous_Device_Debug_Data *pd EINA_UNUSED)
 {
-
+   return EINA_FALSE;
 }
 
-EOLIAN static void
+EOLIAN static Eina_Bool
 _emous_device_debug_emous_device_umount(Eo *obj EINA_UNUSED, Emous_Device_Debug_Data *pd EINA_UNUSED)
 {
-
+   return EINA_FALSE;
 }
 
 EOLIAN static Emous_Device_State

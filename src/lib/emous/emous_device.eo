@@ -46,9 +46,11 @@ interface Emous.Device ( ) {
       }
       mount {
          [[Requests this device to be mounted]]
+         return : bool;
       }
       umount {
          [[Requests this device to be unmounted]]
+         return : bool;
       }
    }
    events {
