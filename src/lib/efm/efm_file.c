@@ -23,9 +23,12 @@ typedef struct
 
     struct stat st;
     Efm_File_Stat stat;
+    Eio_Monitor *file_mon;
 } Efm_File_Data;
 
 static void _mime_thread_fireup(void);
+static Eina_Hash *watch_files;
+static Ecore_Event_Handler *handler;
 
 static void
 _fs_cb(void *dat EINA_UNUSED, Ecore_Thread *thread)
@@ -176,6 +179,19 @@ _efm_file_is_type(Eo *obj EINA_UNUSED, Efm_File_Data *pd, Efm_File_Type type)
    return EINA_FALSE;
 }
 
+static void
+_attributes_update(Eo *obj EINA_UNUSED, Efm_File_Data *pd)
+{
+    //parse stat to the eo struct
+    pd->stat.uid = pd->st.st_uid;
+    pd->stat.gid = pd->st.st_gid;
+    pd->stat.size = pd->st.st_size;
+
+    pd->stat.atime = pd->st.st_atim.tv_sec;
+    pd->stat.ctime = pd->st.st_ctim.tv_sec;
+    pd->stat.mtime = pd->st.st_mtim.tv_sec;
+}
+
 EOLIAN static Eina_Bool
 _efm_file_generate(Eo *obj, Efm_File_Data *pd, const char *filename)
 {
@@ -187,14 +203,7 @@ _efm_file_generate(Eo *obj, Efm_File_Data *pd, const char *filename)
          return EINA_FALSE;
       }
 
-    //parse stat to the eo struct
-    pd->stat.uid = pd->st.st_uid;
-    pd->stat.gid = pd->st.st_gid;
-    pd->stat.size = pd->st.st_size;
-
-    pd->stat.atime = pd->st.st_atim.tv_sec;
-    pd->stat.ctime = pd->st.st_ctim.tv_sec;
-    pd->stat.mtime = pd->st.st_mtim.tv_sec;
+    _attributes_update(obj, pd);
 
     //safe this name
     pd->path = eina_stringshare_add(filename);
@@ -214,21 +223,59 @@ _efm_file_generate(Eo *obj, Efm_File_Data *pd, const char *filename)
     } while(end > 0);
 
     _scheudle(obj, pd);
+
+    pd->file_mon = eio_monitor_add(pd->path);
+    eina_hash_add(watch_files, &pd->file_mon, obj);
     return EINA_TRUE;
 }
-
 void
 _efm_file_eo_base_destructor(Eo *obj, Efm_File_Data *pd)
 {
     eina_stringshare_del(pd->path);
+    eio_monitor_del(pd->file_mon);
+    eina_hash_del(watch_files, &pd->file_mon, obj);
     eo_do_super(obj, EFM_FILE_CLASS, eo_destructor());
 }
 
+static Eina_Bool
+_mod_cb(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
+{
+    Eio_Monitor_Event *ev = event;
+    Efm_File *f;
+    Efm_File_Data *pd;
+
+    f = eina_hash_find(watch_files, &ev->monitor);
+
+    if (!f) return EINA_FALSE;
+
+    pd = eo_data_scope_get(f, EFM_FILE_CLASS);
+
+    if (stat(pd->path, &pd->st) < 0)
+      {
+         return EINA_FALSE;
+      }
+
+    _attributes_update(f, pd);
+
+    eo_do(f, eo_event_callback_call(EFM_FILE_EVENT_CHANGED, NULL));
+
+    return EINA_TRUE;
+}
 
 void
 efm_file_init(void)
 {
     eina_lock_new(&readlock);
+    watch_files = eina_hash_pointer_new(NULL);
+    handler = ecore_event_handler_add(EIO_MONITOR_FILE_MODIFIED, _mod_cb, NULL);
+}
+
+void
+efm_file_shutdown(void)
+{
+    ecore_event_handler_del(handler);
+    eina_lock_free(&readlock);
+    eina_hash_free(watch_files);
 }
 
 #include "efm_file.eo.x"

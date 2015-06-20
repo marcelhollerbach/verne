@@ -53,4 +53,8 @@ int fm_monitor_init();
 void fm_monitor_add(Efm_Monitor *mon, Eio_Monitor *monitor, Fm_File_Action action);
 void fm_monitor_del(Efm_Monitor *mon, Eio_Monitor *monitor);
 void fm_monitor_shutdown();
+
+void efm_file_init(void);
+void efm_file_shutdown(void);
+
 #endif

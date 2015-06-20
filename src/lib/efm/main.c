@@ -26,7 +26,7 @@ efm_init()
         counter --;
         return 0;
      }
-
+   efm_file_init();
 inc:
     counter ++;
     return counter;
@@ -41,6 +41,8 @@ efm_shutdown()
      return;
 
    fm_monitor_shutdown();
+
+   efm_file_shutdown();
 
    eina_log_domain_unregister(_efm_domain);
    eio_shutdown();

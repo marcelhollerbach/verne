@@ -84,5 +84,6 @@ class Efm.File(Eo.Base) {
     }
     events {
         fsquery,done; [[Query the fs operations is done.]]
+        changed; [[The File has changed]]
     }
 }
