@@ -296,7 +296,7 @@ _mount_cb(void *data, const Eldbus_Message *msg, Eldbus_Pending *pen EINA_UNUSED
         return;
      }
 
-   _device_mp_add(dev, point);
+   _device_mounts_get(dev);
    DBG("Mount call was successfully at %s", point);
 }
 
