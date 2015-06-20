@@ -43,7 +43,7 @@ interface Emous.Type ( ) {
         }
     }
     events {
-        device,added; [[Called if a device appeared]]
-        device,deleted; [[Called if a device dissapeared]]
+        device,added : Emous.Device*; [[Called if a device appeared]]
+        device,deleted : Emous.Device*; [[Called if a device dissapeared]]
     }
 }
