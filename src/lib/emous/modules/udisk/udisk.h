@@ -5,8 +5,16 @@
 #define EFL_BETA_API_SUPPORT
 
 #include <Eina.h>
-#include <Emous.h>
 #include <Eldbus.h>
+
+#include "Emous.h"
+#include "emous_device_udisks.eo.h"
+#include "emous_type_udisks.eo.h"
+
+#define UDISKS2_BUS "org.freedesktop.UDisks2"
+#define UDISKS2_PATH "/org/freedesktop/UDisks2"
+#define UDISKS2_INTERFACE "org.freedesktop.UDisks2"
+#define UDISKS2_INTERFACE_FILESYSTEM "org.freedesktop.UDisks2.Filesystem"
 
 #define CRIT(...)     EINA_LOG_DOM_CRIT(__log_domain, __VA_ARGS__)
 #define ERR(...)      EINA_LOG_DOM_ERR(__log_domain, __VA_ARGS__)
@@ -15,25 +23,12 @@
 #define DBG(...)      EINA_LOG_DOM_DBG(__log_domain, __VA_ARGS__)
 
 extern int __log_domain;
+extern Eldbus_Connection *con;
+extern Eina_Hash *devices;
+extern Eina_List *devices_list;
+extern Emous_Type *type;
 
-typedef struct {
-  const char *displayname;
-  const char *opath;
-  Eina_Bool mounted;
-  Eldbus_Proxy *proxy;
-  Eldbus_Signal_Handler *changed;
-  Eo *device;
-  Eina_List *tmp_list;
-} Device;
-
-void _device_add(Device *d);
-void _device_del(const char *opath);
-
-Eina_Bool udisk_mount(Device *d);
-Eina_Bool udisk_umount(Device *d);
-Eina_Bool udisk_dbus_init();
-void udisk_dbus_shutdown();
-
+Emous_Device* _emous_device_new(Eldbus_Message_Iter *dict, const char **opath);
 
 
 #endif

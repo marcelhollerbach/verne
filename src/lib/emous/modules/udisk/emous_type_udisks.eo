@@ -1,0 +1,11 @@
+class Emous.Type.Udisks (Eo.Base, Emous.Type) {
+    methods {
+    }
+    implements {
+       Emous.Type.devices.get;
+       Emous.Type.create;
+       Emous.Type.creatable;
+       Emous.Type.name_get;
+       Emous.Type.object_get;
+   }
+}
