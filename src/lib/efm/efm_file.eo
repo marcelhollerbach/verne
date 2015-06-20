@@ -11,59 +11,64 @@ enum Efm.File.Type {
     REGULAR_FILE , DIRECTORY, CHARACTER_DEVICE, BLOCK_DEVICE, FIFO, SYM_LINK, SOCKET
 }
 
-class Efm.File(Eo.Base)
-{
+class Efm.File(Eo.Base) {
+    [[A class to work with files]]
     eo_prefix: efm_file_obj;
     methods {
         @property filename {
+            [[Get the filename of this object, xxx/xxx/xxx/{name.extension} the part between { and } will be returned. ]]
             get {
-
+                [[get the filename of this object]]
             }
             values {
                 filename : const(char)*;
             }
         }
         @property path {
+            [[Get the complete path of this object]]
             get {
-
+                [[Return the path of this object]]
             }
             values {
                 path : const(char)*;
             }
         }
         @property fileending {
+            [[The fileending of the file behind this object, xxx/xxxx/xyz.{ext} the part between { and } will be returned]]
             get {
-
+                [[returns the Fileending]]
             }
             values {
                 path : const(char)*;
             }
         }
         @property mimetype {
+            [[The mimetype of the given file, this attribute is fetched async]]
             get {
-
+                [[Returns the mimetype or NULL if it cannot be fetched or is not _yet_ fetched.]]
             }
             values {
                 mimetype : const(char)*;
             }
         }
         @property stat {
+            [[Get the stat of this file]]
             get {
-
+                [[returns the pointer to a struct which carrys the stat]]
             }
             values {
                 stat : Efm.File.Stat*;
             }
         }
         is_type {
+            [[Helperfunktion to check which type this file is]]
             params {
-                type: Efm.File.Type;
+                type: Efm.File.Type; [[The type to check for]]
             }
-            return : bool;
+            return : bool; [[True if the file is of this type or false if not.]]
         }
         generate {
-            /*@ A constructor of the Efm_File
-                Once its called the file will be scheudled to get stat and mimetype of the file */
+            [[Creates a file and fills all not async attributes with the correct value]]
             params {
                 @in filename : const(char)*;
             }
@@ -78,6 +83,6 @@ class Efm.File(Eo.Base)
         .generate;
     }
     events {
-        fsquery,done;
+        fsquery,done; [[Query the fs operations is done.]]
     }
 }

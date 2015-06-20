@@ -1,16 +1,18 @@
-class Efm.Monitor(Eo.Base)
-{
+class Efm.Monitor(Eo.Base) {
     eo_prefix: efm_monitor_obj;
     methods {
         start @class {
+            [[Starts a monitor at the given directory.
+              The Monitor will give notifications if a {file or dir} gets added in this directory]]
             params {
-                @in directory : const(char)*;
-                @in hidden_files : bool;
-                @in only_folder : bool;
+                @in directory : const(char)*; [[The directory to monitor, has to exist]]
+                @in hidden_files : bool; [[True to show hidden files, false if not]]
+                @in only_folder : bool; [[True to only show folders]]
             }
             return : Efm.Monitor*;
         }
-        @property path{
+        @property path {
+            [[The Path which gets monitored]]
             get {
 
             }
@@ -20,12 +22,26 @@ class Efm.Monitor(Eo.Base)
         }
 
         @property config_hidden_files {
+            [[Configuration for handling of files which starts with a . .]]
+            get {
+                [[Get the configuration]]
+            }
+            set {
+                [[Set the configuration]]
+            }
             values {
                 hidden : bool;
             }
         }
 
         @property config_only_folder {
+            [[Configuration for handling of folder / files handling]]
+            get {
+                [[Get the configuration]]
+            }
+            set {
+                [[Set the configuration]]
+            }
             values {
                 path : bool;
             }
@@ -35,8 +51,8 @@ class Efm.Monitor(Eo.Base)
         Eo.Base.destructor;
     }
     events {
-        file,del;
-        file,add;
-        error;
+        file,del : Efm.File; [[Called when a file was deleted]]
+        file,add : Efm.File; [[Called when a file was added]]
+        error; [[called when the monitor got an error. The bahavoir after this event is unknown. The monitor should be deleted and never be used again!]]
     }
 }
