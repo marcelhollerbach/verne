@@ -1,8 +1,8 @@
 enum Emous.Device.State {
-   mounted,
-   umounted,
-   mount_req,
-   unmount_req
+   umounted = 0,
+   mounted = 1,
+   mount_req = 2,
+   unmount_req = 3
 }
 
 struct Emous.Device.State.Changed {
