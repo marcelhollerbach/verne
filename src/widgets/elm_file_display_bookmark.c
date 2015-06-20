@@ -377,6 +377,9 @@ _device_update(Bookmark_Item *item)
         case EMOUS_DEVICE_STATE_UNMOUNT_REQ:
           signal = "mountrequest";
         break;
+        default:
+          ERR("Device state not known");
+          break;
      }
    if (item->pd.dev.indicator)
      elm_layout_signal_emit(item->pd.dev.indicator, signal, "elm");

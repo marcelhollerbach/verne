@@ -823,7 +823,7 @@ _elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd)
   Eo *eo;
 
   efm_init();
-  emous_init();
+  eo_do(EMOUS_CLASS, emous_init());
   config_init();
   if (!views)
     _views_standart_init();
