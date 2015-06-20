@@ -5,6 +5,10 @@ enum Emous.Device.State {
    unmount_req
 }
 
+struct Emous.Device.State.Changed {
+   current : Emous.Device.State;
+   old : Emous.Device.State;
+}
 interface Emous.Device ( ) {
    [[Interface of a device]]
    methods {
@@ -54,6 +58,6 @@ interface Emous.Device ( ) {
       }
    }
    events {
-      state,changed; [[The device state has changed]]
+      state,changed : Emous.Device.State.Changed; [[The device state has changed]]
    }
 }
