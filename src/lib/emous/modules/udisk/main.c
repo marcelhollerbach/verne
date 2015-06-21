@@ -47,7 +47,6 @@ _interface_del_cb(void *data EINA_UNUSED, const Eldbus_Message *msg)
 
    if (!obj) return;
 
-   eo_del(obj);
    eina_hash_del(devices, opath, obj);
    devices_list = eina_list_remove(devices_list, obj);
    eo_do(type, eo_event_callback_call(EMOUS_TYPE_EVENT_DEVICE_DELETED, obj));
