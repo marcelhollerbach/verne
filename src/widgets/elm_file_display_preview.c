@@ -88,7 +88,7 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
     }
   else
     {
-       char *theme;
+       const char *theme;
        const char *ic;
        const char *mime_type;
 
@@ -96,9 +96,7 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
        o = elm_icon_add(w);
        mime_type = efm_file_mimetype_get(file);
 
-       theme = getenv("E_ICON_THEME");
-       if (!theme)
-         theme = "hicolor";
+       eo_do(ELM_FILE_ICON_CLASS, theme = elm_obj_file_icon_util_icon_theme_get());
 
        ic = efreet_mime_type_icon_get(mime_type, theme, 256);
        eo_do(o, efl_file_set(ic, NULL));
