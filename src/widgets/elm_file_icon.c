@@ -181,7 +181,10 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *fi
    const char *path, *mime_type, *filename;
 
    if (pd->file)
-     eo_do(pd->file, eo_wref_del(&pd->file));
+     {
+        eo_do(pd->file, eo_wref_del(&pd->file);
+                        eo_event_callback_del(EFM_FILE_EVENT_FSQUERY_DONE, _mime_ready, obj));
+     }
    eo_do(file, eo_wref_add(&pd->file));
 
    elm_drop_target_del(obj, ELM_SEL_FORMAT_TARGETS, _enter_cb, obj,_leave_cb, NULL, NULL, NULL, _drop_cb, NULL);
