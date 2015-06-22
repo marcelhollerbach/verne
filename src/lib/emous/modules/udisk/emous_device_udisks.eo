@@ -6,5 +6,6 @@ class Emous.Device.UDisks (Eo.Base, Emous.Device) {
         Emous.Device.displayname.get;
         Emous.Device.mountpoints.get;
         Emous.Device.size.get;
+        Emous.Device.type.get;
     }
 }

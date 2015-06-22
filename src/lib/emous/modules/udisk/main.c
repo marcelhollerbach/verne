@@ -6,6 +6,7 @@ static Eldbus_Signal_Handler *_iadd;
 static Eldbus_Signal_Handler *_idel;
 Eina_Hash *devices;
 Eina_List *devices_list;
+Eina_Hash *drives;
 
 int __log_domain;
 
@@ -81,7 +82,12 @@ _managed_obj_cb(void *data EINA_UNUSED, const Eldbus_Message *msg, Eldbus_Pendin
         eina_hash_add(devices, opath, obj);
         devices_list = eina_list_append(devices_list, obj);
         DBG("Added device %s %p", opath, obj);
-        eo_do(type, eo_event_callback_call(EMOUS_TYPE_EVENT_DEVICE_ADDED, obj));
+     }
+   Eina_List *node;
+   Emous_Device *dev;
+   EINA_LIST_FOREACH(devices_list, node, dev)
+     {
+        eo_do(type, eo_event_callback_call(EMOUS_TYPE_EVENT_DEVICE_ADDED, dev));
      }
 }
 
@@ -128,6 +134,12 @@ _free_cb(void *data)
     eo_del(data);
 }
 
+static void
+_free2_cb(void *data)
+{
+    free(data);
+}
+
 static Eina_Bool
 _module_init(void)
 {
@@ -139,6 +151,7 @@ _module_init(void)
      return 0;
 
    devices = eina_hash_string_small_new(_free_cb);
+   drives = eina_hash_string_small_new(_free2_cb);
 
    type = eo_add(EMOUS_TYPE_UDISKS_CLASS, NULL);
    eo_do(EMOUS_MANAGER_CLASS, emous_manager_device_type_add(EMOUS_TYPE_UDISKS_CLASS));
@@ -159,6 +172,8 @@ static void
 _module_shutdown(void)
 {
    eina_log_domain_unregister(__log_domain);
+   eina_hash_free(devices);
+   eina_hash_free(drives);
    eina_shutdown();
 }
 

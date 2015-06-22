@@ -25,6 +25,7 @@
 extern int __log_domain;
 extern Eldbus_Connection *con;
 extern Eina_Hash *devices;
+extern Eina_Hash *drives;
 extern Eina_List *devices_list;
 extern Emous_Type *type;
 

@@ -1,15 +1,20 @@
 #include "udisk.h"
 
 typedef struct {
-    Emous_Device_State state; //the current state of this device
+   Emous_Device_State state; //the current state of this device
+   const char *device; //the object path of the device
    const char *displayname; //the displayname of this object
-   long size; //the size of this object
+   uint64_t size; //the size of this object
    const char *opath; //the object path where to find this object
    Eldbus_Object *obj; //the object of this device
    Eldbus_Proxy *proxy; //the proxy to use to communicate with the dbus object
    Eldbus_Signal_Handler *changed; // the signalhandler for a changed signal handler
    Eina_List *mountpoints; // the list of mountpoints where this device is mounted
 } Emous_Device_UDisks_Data;
+
+typedef struct {
+  Emous_Device_Type t;
+} Device_Entry;
 
 static void
 _device_state_change(Emous_Device *dev, Emous_Device_State state)
@@ -67,35 +72,72 @@ end:
      state = EMOUS_DEVICE_STATE_UMOUNTED;
 }
 
-static const char*
-_dbus_helper_search_field(Eldbus_Message_Iter *it, const char *field)
+static Eina_Bool
+_dbus_helper_search_field(Eldbus_Message_Iter *it, const char *field, const char **char_return, Eina_List **tmp_list, uint64_t *tmp_numb, Eina_Bool *tmp_bool)
 {
    Eldbus_Message_Iter *dict3;
    while (eldbus_message_iter_get_and_next(it, 'e', &dict3))
      {
         Eldbus_Message_Iter *var;
-        char *key2, *val, *type;
+        char *key2, *type;
 
         if (!eldbus_message_iter_arguments_get(dict3, "sv", &key2, &var))
           continue;
 
+        if (!!strcmp(key2, field))
+          continue;
         type = eldbus_message_iter_signature_get(var);
-        if (type[0] == 's')
+        if (!strcmp(type, "s") || !strcmp(type, "o"))
           {
-             if (strcmp(key2, field))
-               goto end;
+             char *val;
              if (!eldbus_message_iter_arguments_get(var, type, &val))
-               goto end;
+               {
+                  free(type);
+                  return EINA_FALSE;
+               }
              if (val && val[0])
                {
                   free(type);
-                  return eina_stringshare_add(val);
+                  *char_return = eina_stringshare_add(val);
+                  return EINA_TRUE;
                }
+          }
+        else if (!strcmp(type, "as"))
+          {
+             Eldbus_Message_Iter *inner_array;
+             const char *tmp;
+             if (!eldbus_message_iter_arguments_get(var, type, &inner_array))
+               goto end;
+             while(eldbus_message_iter_get_and_next(inner_array, 's', &tmp))
+               *tmp_list = eina_list_append(*tmp_list, eina_stringshare_add(tmp));
+             return EINA_TRUE;
+          }
+        else if (!strcmp(type, "t"))
+          {
+             if (!eldbus_message_iter_arguments_get(var, type, tmp_numb))
+               {
+                  free(type);
+                  return EINA_FALSE;
+               }
+
+             free(type);
+             return EINA_TRUE;
+          }
+        else if (!strcmp(type, "b"))
+          {
+             if (!eldbus_message_iter_arguments_get(var, type, tmp_bool))
+               {
+                  free(type);
+                  return EINA_FALSE;
+               }
+
+             free(type);
+             return EINA_TRUE;
           }
 end:
         free(type);
      }
-   return NULL;
+   return EINA_FALSE;
 }
 
 static Eina_Stringshare *
@@ -192,17 +234,46 @@ _device_parse(Emous_Device *dev, Emous_Device_UDisks_Data *pd, Eldbus_Message_It
 
    _device_mounts_get(dev);
 
-   pd->displayname = _dbus_helper_search_field(block, "IdLabel");
+   _dbus_helper_search_field(block, "Drive", &pd->device, NULL, NULL, NULL);
+
+   _dbus_helper_search_field(partition, "Size", NULL, NULL, &pd->size, NULL);
+
+   _dbus_helper_search_field(block, "IdLabel", &pd->displayname, NULL, NULL, NULL);
    if (pd->displayname)
      return;
-   pd->displayname = _dbus_helper_search_field(block, "HintName");
+   _dbus_helper_search_field(block, "HintName", &pd->displayname, NULL, NULL, NULL);
    if (pd->displayname)
      return;
-   pd->displayname = _dbus_helper_search_field(partition, "Name");
+   _dbus_helper_search_field(partition, "Name", &pd->displayname, NULL, NULL, NULL);
 
    return;
 }
 
+static inline void
+_drive_parse(Eldbus_Message_Iter *iter, const char *opath)
+{
+   Eina_List *media = NULL;
+
+   Device_Entry *entry = calloc(1, sizeof(entry));
+
+   Eina_Bool removable = EINA_TRUE;
+
+   if (!_dbus_helper_search_field(iter, "Removable", NULL, NULL, NULL, &removable))
+     ERR("Failed to fetch Removable");
+
+   if (removable)
+     {
+        //lets say this is a usb device
+       entry->t = EMOUS_DEVICE_TYPE_REMOVABLE;
+     }
+   else
+     {
+        //lets say its a hdd
+        entry->t = EMOUS_DEVICE_TYPE_DISK;
+     }
+
+   eina_hash_add(drives, opath, entry);
+}
 
 Emous_Device*
 _emous_device_new(Eldbus_Message_Iter *dict, const char **opath)
@@ -213,7 +284,8 @@ _emous_device_new(Eldbus_Message_Iter *dict, const char **opath)
    Eldbus_Message_Iter *interfaces, *interface;
    Eldbus_Message_Iter *partition = NULL,
                        *block = NULL,
-                       *fs = NULL;
+                       *fs = NULL,
+                       *drive = NULL;
 
    //create a object to work with
    dev = eo_add(EMOUS_DEVICE_UDISKS_CLASS, type);
@@ -249,32 +321,43 @@ _emous_device_new(Eldbus_Message_Iter *dict, const char **opath)
           block = values;
         else if (!strcmp (interface_name, "Filesystem"))
           fs = values;
+        else if (!strcmp (interface_name, "Drive"))
+          drive = values;
      }
+
+
 
    //check if all interfaces are found
-   if (!(partition && block && fs))
+   if (partition && block && fs)
      {
-        DBG("Dropping device %s, needed interfaces not found!", pd->opath);
-        return NULL;
+        DBG("We found a usefull device %s", pd->opath);
+        pd->obj = eldbus_object_get(con, UDISKS2_BUS, pd->opath);
+        pd->proxy = eldbus_proxy_get(pd->obj, UDISKS2_INTERFACE_FILESYSTEM);
+
+        if (!pd->proxy)
+          {
+             ERR("Failed to create proxy, this device will not work as expected!");
+             eldbus_object_unref(pd->obj);
+             eldbus_proxy_unref(pd->proxy);
+             goto fail_dev;
+          }
+        //parse device
+        _device_parse(dev, pd, partition, block, fs);
+
+        pd->changed = eldbus_proxy_properties_changed_callback_add(pd->proxy, _prop_changed_cb, dev);
+        return dev;
+     }
+   else if (drive)
+     {
+         //this will change something usefull for us
+         _drive_parse(drive, pd->opath);
      }
 
-   DBG("Adding device %s", pd->opath);
+fail_dev:
 
-   pd->obj = eldbus_object_get(con, UDISKS2_BUS, pd->opath);
-   pd->proxy = eldbus_proxy_get(pd->obj, UDISKS2_INTERFACE_FILESYSTEM);
+   eo_del(dev);
 
-   if (!pd->proxy)
-     {
-        ERR("Failed to create proxy, this device will not work as expected!");
-        return NULL;
-     }
-
-   //parse device
-   _device_parse(dev, pd, partition, block, fs);
-
-   pd->changed = eldbus_proxy_properties_changed_callback_add(pd->proxy, _prop_changed_cb, dev);
-
-   return dev;
+   return NULL;
 }
 
 static void
@@ -383,5 +466,18 @@ _emous_device_udisks_emous_device_size_get(Eo *obj EINA_UNUSED, Emous_Device_UDi
 {
     return pd->size;
 }
+
+EOLIAN static Emous_Device_Type
+_emous_device_udisks_emous_device_type_get(Eo *obj EINA_UNUSED, Emous_Device_UDisks_Data *pd)
+{
+   Device_Entry *entry;
+
+   entry = eina_hash_find(drives, pd->device);
+
+   if (!entry) return EMOUS_DEVICE_TYPE_UNKOWN;
+
+   return entry->t;
+}
+
 
 #include "emous_device_udisks.eo.x"
