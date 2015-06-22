@@ -111,9 +111,13 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
 
   st = efm_file_stat_get(file);
 
-  snprintf(buf, sizeof(buf), "%zu B", st->size);
-  elm_object_text_set(f->size, buf);
+  {
+    char *nicestr;
 
+    eo_do(EMOUS_CLASS, nicestr = emous_util_size_convert(EINA_TRUE, st->size));
+    elm_object_text_set(f->size, nicestr);
+    free(nicestr);
+  }
   snprintf(buf, sizeof(buf), "%s", ctime(&st->mtime));
   elm_object_text_set(f->mtime, buf);
 

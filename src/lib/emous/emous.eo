@@ -18,5 +18,26 @@ class Emous {
         shutdown_lib @class {
             [[This will shutdown all needed libs]]
         }
+        util_size_convert @class {
+            [[Will convert bytes into a nice looking string
+
+              2048 will be converted to 20 MB
+
+              or if exact is set to 20.2 MB
+            ]]
+            params {
+                exact : Eina_Bool; [[Set to true if you want to get the exact size with maximum 3 numbers after . .]]
+                bytes : long; [[The Number of bytes to convert]]
+            }
+
+            return : char*; [[The nice looking string, needs to be freed!]]
+        }
+        util_device_name_get @class {
+            [[Get the displayname of the device or a string which tells the size and the a generic name]]
+            params {
+                dev : Emous.Device*; [[The Device to call this funktions on]]
+            }
+            return : char*; [[The name needs to be freed]]
+        }
     }
 }

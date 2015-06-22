@@ -170,13 +170,9 @@ _device_item_text_get(void *data, Evas_Object *obj EINA_UNUSED, const char *part
 {
    Bookmark_Item *it = data;
    Emous_Device *d = it->pd.dev.d;
-   const char *displayname;
+   char *displayname;
 
-   eo_do(d, displayname = emous_device_displayname_get());
-   if (!displayname)
-     displayname = "<No Name>";
-
-   return strdup(displayname);
+   return eo_do_ret(EMOUS_CLASS, displayname, emous_util_device_name_get(d));
 }
 
 static Evas_Object *
