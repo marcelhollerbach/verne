@@ -184,16 +184,47 @@ _device_item_content_get(void *data, Evas_Object *obj, const char *part EINA_UNU
 {
    Bookmark_Item *it = data;
    Device *d = &it->pd.dev;
-   Evas_Object *indicator;
+   Evas_Object *indicator, *icon;
+   Emous_Device_Type type;
+   const char *iconname;
 
    if (!!strcmp(part, "elm.swallow.icon")) return NULL;
+
+   eo_do(d->d, type = emous_device_type_get());
+
+   switch(type)
+     {
+        case EMOUS_DEVICE_TYPE_DISK:
+           iconname = "drive-harddisk";
+        break;
+        case EMOUS_DEVICE_TYPE_NETWORK:
+           iconname = "network-wireless"; //XXX: here is no way to get just a simple "network"
+        break;
+        case EMOUS_DEVICE_TYPE_FLOPPY:
+           iconname = "drive-floppy";
+        break;
+        case EMOUS_DEVICE_TYPE_REMOVABLE:
+           iconname = "media-flash";
+        break;
+        case EMOUS_DEVICE_TYPE_CD:
+           iconname = "drive-optical";
+        default:
+          iconname = "computer"; //Better show some thing shitty than nothing ...
+        break;
+     }
 
    indicator = elm_layout_add(obj);
    eo_do(indicator, eo_wref_add(&d->indicator));
 
+   icon = elm_icon_add(indicator);
+   ERR("%s",iconname);
+   elm_icon_standard_set(icon, iconname);
+   evas_object_show(icon);
+
    if (!elm_layout_theme_set(indicator, "file_display", "mount_indicator", "default"))
      ERR("Failed to set indicator file");
 
+   elm_object_part_content_set(indicator, "icon", icon);
    _device_update(it);
 
    return indicator;

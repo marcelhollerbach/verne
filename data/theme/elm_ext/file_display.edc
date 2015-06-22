@@ -10,14 +10,10 @@
    }
    group { name: "elm/file_display/mount_indicator/default";
       parts {
-         part { name: "logo";
-            type: IMAGE;
+         part { name: "icon";
+            type: SWALLOW;
             description { state: "default" 0.0;
-               rel1.relative: 0.0 0.0;
-               rel2.relative: 1.0 1.0;
-               image.normal: "icon_efm_hdd.png";
-               aspect: 1 1;
-               aspect_preference: BOTH;
+
             }
          }
          part { name: "indicator";
