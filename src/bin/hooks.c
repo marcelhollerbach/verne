@@ -35,9 +35,9 @@ open:
 }
 
 static void
-_open_cb2(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
+_open_cb2(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
-   _open_cb(NULL, NULL, NULL, obj);
+   _open_cb(NULL, NULL, NULL, data);
 }
 
 static void
