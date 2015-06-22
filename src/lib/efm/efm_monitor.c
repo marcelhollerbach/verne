@@ -23,18 +23,34 @@ typedef struct {
   Eo *monitor;
 } Efm_Monitor_Eio_Job;
 
-#define MARK_POPULATED eo_key_data_set("__populated", NULL);
+#define MARK_POPULATED eo_key_data_set("__populated", ((void*)1));
 #define UNMARK_POPULATED eo_key_data_del("__populated");
+#define CHECK_POPULATED (eo_key_data_get("__populated") != NULL)
+
+static inline Eina_Bool
+_take_filter(Efm_Monitor *mon EINA_UNUSED, Efm_Monitor_Data *pd, Efm_File *file)
+{
+   Eina_Bool dir;
+   const char *filename;
+
+   if (pd->config.only_folder &&
+       !eo_do_ret(file, dir, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)))
+     return EINA_FALSE;
+
+   if (!pd->config.hidden_files &&
+       eo_do_ret(file, filename, efm_file_obj_filename_get())[0] == '.')
+     return EINA_FALSE;
+
+   return EINA_TRUE;
+}
 
 static void
 _add(Efm_Monitor *mon, const char *file)
 {
    const char *path;
-   const char *filename;
    Efm_File *ef;
    Efm_Monitor_Data *pd;
    Eina_Bool result;
-   Eina_Bool dir;
    path = eina_stringshare_add(file);
 
    ef = eo_add(EFM_FILE_CLASS, mon, result = efm_file_obj_generate(path));
@@ -51,15 +67,13 @@ _add(Efm_Monitor *mon, const char *file)
 
    pd = eo_data_scope_get(mon, EFM_MONITOR_CLASS);
 
-   if (pd->config.only_folder && eo_do_ret(ef, dir, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)))
-     return;
-
-   if (!pd->config.hidden_files && eo_do_ret(ef, filename, efm_file_obj_filename_get())[0] == '.')
-     return;
-
    eina_hash_add(pd->file_icons, path, ef);
-   eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_ADD, ef);
-               MARK_POPULATED);
+
+   if (!_take_filter(mon, pd, ef))
+     return;
+
+   eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_ADD, ef));
+   eo_do(ef, MARK_POPULATED);
  }
 
 static void
@@ -74,6 +88,7 @@ _del(Efm_Monitor *mon, const char *file)
    f = eina_hash_find(pd->file_icons, files);
 
    eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_DEL, f));
+   eo_do(f, UNMARK_POPULATED);
    eina_hash_del(pd->file_icons, files, NULL);
 }
 
@@ -89,41 +104,39 @@ _efm_monitor_path_get(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
    return pd->directory;
 }
 
-EOLIAN static void
-_efm_monitor_config_hidden_files_set(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd, Eina_Bool hidden)
+static void
+_refresh_files(Efm_Monitor *mon, Efm_Monitor_Data *pd)
 {
-  Eina_Iterator *it;
-  Efm_File *ef;
-  const char *filename;
+   Eina_Iterator *it;
+   Efm_File *ef;
 
-  if (pd->config.hidden_files == hidden)
-    return;
+   it = eina_hash_iterator_data_new(pd->file_icons);
 
-  it = eina_hash_iterator_data_new(pd->file_icons);
+   EINA_ITERATOR_FOREACH(it, ef)
+     {
+        Eina_Bool populated;
+        eo_do(ef, populated = CHECK_POPULATED ? EINA_TRUE : EINA_FALSE);
+        //this is a hidden file
+        if (_take_filter(mon, pd, ef) && !populated)
+          {
+             eo_do(ef, MARK_POPULATED);
+             eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_ADD, ef));
+          }
+        else if (!_take_filter(mon, pd, ef) && populated)
+          {
+             eo_do(ef, UNMARK_POPULATED);
+             eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_DEL, ef));
+          }
+     }
+}
 
-  EINA_ITERATOR_FOREACH(it, ef)
-    {
-       if (eo_do_ret(ef, filename, efm_file_obj_filename_get())[0] == '.')
-         {
-            //this is a hidden file
-            if (!hidden)
-              {
-                 //let them dissapear
-                 eo_do(ef, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_DEL, ef);
-                           UNMARK_POPULATED
-                           );
-              }
-            else
-              {
-                 //let them appear
-                 eo_do(ef, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_ADD, ef);
-                           MARK_POPULATED
-                           );
-              }
-         }
-    }
-
-  pd->config.hidden_files = hidden;
+EOLIAN static void
+_efm_monitor_config_hidden_files_set(Eo *obj, Efm_Monitor_Data *pd, Eina_Bool hidden)
+{
+   if (pd->config.hidden_files == hidden)
+     return;
+   pd->config.hidden_files = hidden;
+   _refresh_files(obj, pd);
 }
 
 EOLIAN static Eina_Bool
@@ -133,40 +146,14 @@ _efm_monitor_config_hidden_files_get(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
 }
 
 EOLIAN static void
-_efm_monitor_config_only_folder_set(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd, Eina_Bool folder)
+_efm_monitor_config_only_folder_set(Eo *obj, Efm_Monitor_Data *pd, Eina_Bool folder)
 {
-   Eina_Iterator *it;
-   Efm_File *ef;
-   Eina_Bool dir;
-
    if (pd->config.only_folder == folder)
      return;
 
-   it = eina_hash_iterator_data_new(pd->file_icons);
-
-   EINA_ITERATOR_FOREACH(it, ef)
-     {
-         if (pd->config.only_folder && eo_do_ret(ef, dir, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)))
-          {
-             //this is a folder
-             if (!folder)
-               {
-                  //let them dissapear
-                  eo_do(ef, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_DEL, ef);
-                            UNMARK_POPULATED
-                            );
-               }
-             else
-               {
-                  //let them appear
-                  eo_do(ef, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_ADD, ef);
-                            MARK_POPULATED
-                            );
-               }
-          }
-     }
-
    pd->config.only_folder = folder;
+
+   _refresh_files(obj, pd);
 }
 
 EOLIAN static Eina_Bool
