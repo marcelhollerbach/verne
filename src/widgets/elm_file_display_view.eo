@@ -54,6 +54,14 @@ interface Elm.File.Display.View {
             @out h : int;
          }
       }
+      config_set {
+         [[Gives the view the current config]]
+         params {
+            iconsize : int;
+            only_folder : bool;
+            hidden_files : bool;
+         }
+      }
    }
    events {
       item,select,simple : Efm.File*; [[ A item got selected "simple" like one click ]]

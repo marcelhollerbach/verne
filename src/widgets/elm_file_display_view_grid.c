@@ -7,6 +7,11 @@ typedef struct {
    Efm_Monitor *fm;
    Eina_Hash *files;
    Eina_List *sel_files;
+   struct {
+      Eina_Bool only_folder;
+      Eina_Bool show_hidden;
+      int icon_size;
+   } config;
 } Elm_File_Display_View_Grid_Data;
 
 EOLIAN static const char *
@@ -35,9 +40,9 @@ _elm_file_display_view_grid_elm_file_display_view_items_select(Eo *obj EINA_UNUS
    int x1 = 0, y1 = 0;
    Elm_Object_Item *it;
 
-   for (x1 = x; x1 < x+w; x1 += config->icon_size)
+   for (x1 = x; x1 < x+w; x1 += pd->config.icon_size)
      {
-        for (y1 = y; y1 < y+h; y1 += config->icon_size)
+        for (y1 = y; y1 < y+h; y1 += pd->config.icon_size)
           {
              it = elm_gengrid_at_xy_item_get(obj, x1, y1, NULL, NULL);
              elm_gengrid_item_selected_set(it, EINA_TRUE);
@@ -137,14 +142,28 @@ _elm_file_display_view_grid_elm_file_display_view_path_set(Eo *obj, Elm_File_Dis
    pd->files = eina_hash_pointer_new(NULL);
 
    elm_gengrid_clear(obj);
-   elm_gengrid_item_size_set(obj, config->icon_size, config->icon_size);
-   eo_do(EFM_MONITOR_CLASS, pd->fm = efm_monitor_obj_start(dir, config->hidden_files,
-                              EINA_FALSE));
+
+   eo_do(EFM_MONITOR_CLASS, pd->fm = efm_monitor_obj_start(dir,pd->config.show_hidden,
+                              pd->config.only_folder));
 
    eo_do(pd->fm, eo_event_callback_add(EFM_MONITOR_EVENT_FILE_ADD, _file_add, obj);
                   eo_event_callback_add(EFM_MONITOR_EVENT_FILE_DEL, _file_del, obj);
                   eo_event_callback_add(EFM_MONITOR_EVENT_ERROR, _error, obj);
         );
+}
+
+EOLIAN static void
+_elm_file_display_view_grid_elm_file_display_view_config_set(Eo *obj, Elm_File_Display_View_Grid_Data *pd, int iconsize, Eina_Bool only_folder, Eina_Bool hidden_files)
+{
+    pd->config.icon_size = iconsize;
+    pd->config.only_folder = only_folder;
+    pd->config.show_hidden = hidden_files;
+    elm_gengrid_item_size_set(obj, pd->config.icon_size, pd->config.icon_size);
+
+    if (pd->fm)
+      eo_do(pd->fm, efm_monitor_obj_config_hidden_files_set(pd->config.show_hidden);
+                    efm_monitor_obj_config_only_folder_set(pd->config.only_folder);
+            );
 }
 
 EOLIAN static void

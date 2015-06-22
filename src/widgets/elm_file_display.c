@@ -859,6 +859,7 @@ _elm_file_display_view_set(Eo *obj, Elm_File_Display_Data *pd, const Eo_Class *k
                           eo_event_callback_add(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_SIMPLE, _util_item_select_simple, obj);
                           eo_event_callback_add(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHOOSEN, _util_item_select_choosen, obj);
                           eo_event_callback_add(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, _item_select_changed, obj);
+                          elm_file_display_view_config_set(config->icon_size, config->only_folder, config->hidden_files);
                           elm_file_display_view_path_set(pd->current_path);
                           );
    _view_resize_cb(pd, NULL, NULL, NULL);
@@ -943,9 +944,9 @@ _elm_file_display_show_icon_size_set(Eo *obj, Elm_File_Display_Data *pd, int siz
      config->icon_size = size;
      config_save();
      //refresh the url so the view is doing everything new
-     eo_do(obj, efl_file_set(pd->current_path, NULL));
      eo_del(cache);
      eo_do(ELM_FILE_MIMETYPE_CACHE_CLASS, cache = elm_file_mimetype_cache_generate(size));
+     eo_do(pd->cached_view, elm_file_display_view_config_set(config->icon_size, config->only_folder, config->hidden_files));
 }
 
 EOLIAN static int
@@ -1008,7 +1009,7 @@ _elm_file_display_show_hidden_file_set(Eo *obj, Elm_File_Display_Data *pd, Eina_
    config->hidden_files = hidden;
    config_save();
    //refresh the url so the view is doing everything new
-   eo_do(obj, efl_file_set(pd->current_path, NULL));
+    eo_do(pd->cached_view, elm_file_display_view_config_set(config->icon_size, config->only_folder, config->hidden_files));
 }
 
 EOLIAN static Eina_Bool
@@ -1023,7 +1024,7 @@ _elm_file_display_only_folder_set(Eo *obj, Elm_File_Display_Data *pd, Eina_Bool 
     config->only_folder = only_folder;
     config_save();
     //refresh the view
-    eo_do(obj, efl_file_set(pd->current_path, NULL));
+    eo_do(pd->cached_view, elm_file_display_view_config_set(config->icon_size, config->only_folder, config->hidden_files));
 }
 
 EOLIAN static Eina_Bool
