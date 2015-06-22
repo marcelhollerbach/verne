@@ -1,3 +1,13 @@
+enum Emous.Device.Type {
+   [[The types devices can be of]]
+   unkown  = 0,
+   disk,
+   removable,
+   cd,
+   floppy,
+   network
+}
+
 enum Emous.Device.State {
    umounted = 0,
    mounted = 1,
@@ -46,6 +56,15 @@ interface Emous.Device ( ) {
          }
          get {
             [[Returns the size in bytes.]]
+         }
+      }
+      @property type {
+         [[Which kind of device this is]]
+         values {
+            type: Emous.Device.Type;
+         }
+         get {
+            [[Returns the type of this device]]
          }
       }
       mount {
