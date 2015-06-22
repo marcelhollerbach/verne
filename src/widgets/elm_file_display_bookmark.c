@@ -217,7 +217,7 @@ _device_item_content_get(void *data, Evas_Object *obj, const char *part EINA_UNU
    eo_do(indicator, eo_wref_add(&d->indicator));
 
    icon = elm_icon_add(indicator);
-   ERR("%s",iconname);
+   elm_icon_order_lookup_set(icon, ELM_ICON_LOOKUP_FDO_THEME);
    elm_icon_standard_set(icon, iconname);
    evas_object_show(icon);
 
@@ -261,6 +261,7 @@ _item_content_get(void *data, Evas_Object *obj, const char *part)
    if (!!strcmp(part, "elm.swallow.icon")) return NULL;
 
    ic = elm_icon_add(obj);
+   elm_icon_order_lookup_set(ic, ELM_ICON_LOOKUP_FDO_THEME);
    elm_icon_standard_set(ic, b->icon);
    evas_object_show(ic);
    return ic;
