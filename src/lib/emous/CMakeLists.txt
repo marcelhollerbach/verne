@@ -3,7 +3,7 @@ include_directories(
   ${EIO_INCLUDE_DIRS}
   ${EFREET_MIME_INCLUDE_DIRS}
   ${ECORE_FILE_INCLUDE_DIRS}
-  /usr/include/libmount/
+  ${Mount_INCLUDE_DIRS}
   ./
 )
 
