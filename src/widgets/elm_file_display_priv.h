@@ -61,6 +61,7 @@ typedef struct
    const char *viewname;
    int icon_size;
    char hidden_files;
+   char only_folder;
    struct{
       int folder_placement;
       int type;

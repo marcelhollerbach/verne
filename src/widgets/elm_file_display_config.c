@@ -4,7 +4,7 @@
 #define GTK_FILESEP_LEN sizeof(FILESEP) - 1
 
 #define CONFIG_NAME "config"
-#define CONFIG_VERSION "0.42"
+#define CONFIG_VERSION "0.1"
 #define CONFIG_KEY CONFIG_NAME"-"CONFIG_VERSION
 
 typedef struct $
@@ -174,6 +174,7 @@ config_init(void)
    ADD_BASIC("display_gtk", display_gtk, EET_T_CHAR);
    ADD_BASIC("viewname", viewname, EET_T_STRING);
    ADD_BASIC("icon_size", icon_size, EET_T_INT);
+   ADD_BASIC("only_folder", only_folder, EET_T_CHAR);
    ADD_BASIC("hidden_files", hidden_files, EET_T_CHAR);
    ADD_BASIC("sort_type", sort.type, EET_T_INT);
    ADD_BASIC("folder_placement", sort.folder_placement, EET_T_INT);

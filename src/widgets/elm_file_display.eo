@@ -62,7 +62,13 @@ class Elm_File_Display (Elm.Layout, Efl.File) {
          }
       }
       @property show_hidden_file {
-         [[enable or display the view of a hidden files (Files which are starting with a .)]]
+         [[Show hidden files (Files which are starting with a .)]]
+         values {
+            hidden : bool; [[true to show them false to hide them]]
+         }
+      }
+      @property only_folder {
+         [[Only display folders]]
          values {
             hidden : bool; [[true to show them false to hide them]]
          }

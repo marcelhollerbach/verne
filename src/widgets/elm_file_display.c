@@ -192,6 +192,28 @@ _ctx_disable_preview(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_
 }
 
 static void
+_ctx_hidden_files(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
+{
+   Evas_Object *w = evas_object_data_get(obj, "__w");
+   Eina_Bool b;
+
+   eo_do(w, b = elm_obj_file_display_show_hidden_file_get();
+            elm_obj_file_display_show_hidden_file_set(!b);
+          );
+}
+
+static void
+_ctx_only_folder(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
+{
+   Evas_Object *w = evas_object_data_get(obj, "__w");
+   Eina_Bool b;
+
+   eo_do(w, b = elm_obj_file_display_only_folder_get();
+            elm_obj_file_display_only_folder_set(!b);
+          );
+}
+
+static void
 _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
 {
    Evas_Object *menu;
@@ -337,6 +359,37 @@ _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
       elm_object_text_set(ck, "Reverse");
       elm_object_item_content_set(it2, ck);
    }
+   elm_menu_item_separator_add(menu, NULL);
+   /*
+     Hidden files
+    */
+   it = elm_menu_item_add(menu, NULL, NULL, "", _ctx_hidden_files, NULL);
+   {
+      Evas_Object *ck;
+      ck = elm_check_add(menu);
+      if (config->hidden_files != 0)
+        elm_check_state_set(ck, EINA_TRUE);
+      else
+        elm_check_state_set(ck, EINA_FALSE);
+      elm_object_text_set(ck, "Hidden files");
+      elm_object_item_content_set(it, ck);
+   }
+
+   /*
+     Only folder
+    */
+   it = elm_menu_item_add(menu, NULL, NULL, "", _ctx_only_folder, NULL);
+   {
+      Evas_Object *ck;
+      ck = elm_check_add(menu);
+      if (config->only_folder != 0)
+        elm_check_state_set(ck, EINA_TRUE);
+      else
+        elm_check_state_set(ck, EINA_FALSE);
+      elm_object_text_set(ck, "Only folder");
+      elm_object_item_content_set(it, ck);
+   }
+
    elm_menu_item_separator_add(menu, NULL);
    eo_do(obj,
          eo_event_callback_call(&_ELM_FILE_DISPLAY_EVENT_HOOK_MENU_SELECTOR_END,
@@ -952,16 +1005,31 @@ _elm_file_display_filepreview_show_get(Eo *obj EINA_UNUSED, Elm_File_Display_Dat
 EOLIAN static void
 _elm_file_display_show_hidden_file_set(Eo *obj, Elm_File_Display_Data *pd, Eina_Bool hidden)
 {
-     config->hidden_files = hidden;
-     config_save();
-     //refresh the url so the view is doing everything new
-     eo_do(obj, efl_file_set(pd->current_path, NULL));
+   config->hidden_files = hidden;
+   config_save();
+   //refresh the url so the view is doing everything new
+   eo_do(obj, efl_file_set(pd->current_path, NULL));
 }
 
 EOLIAN static Eina_Bool
 _elm_file_display_show_hidden_file_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd EINA_UNUSED)
 {
-     return config->hidden_files;
+   return config->hidden_files;
+}
+
+EOLIAN static void
+_elm_file_display_only_folder_set(Eo *obj, Elm_File_Display_Data *pd, Eina_Bool only_folder)
+{
+    config->only_folder = only_folder;
+    config_save();
+    //refresh the view
+    eo_do(obj, efl_file_set(pd->current_path, NULL));
+}
+
+EOLIAN static Eina_Bool
+_elm_file_display_only_folder_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd EINA_UNUSED)
+{
+  return config->only_folder;
 }
 
 EOLIAN static void
