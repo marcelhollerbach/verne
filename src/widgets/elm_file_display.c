@@ -929,7 +929,7 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
 }
 
 EOLIAN static void
-_elm_file_display_show_icon_size_set(Eo *obj, Elm_File_Display_Data *pd, int size)
+_elm_file_display_show_icon_size_set(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd, int size)
 {
      config->icon_size = size;
      config_save();
@@ -994,7 +994,7 @@ _elm_file_display_filepreview_show_get(Eo *obj EINA_UNUSED, Elm_File_Display_Dat
 }
 
 EOLIAN static void
-_elm_file_display_show_hidden_file_set(Eo *obj, Elm_File_Display_Data *pd, Eina_Bool hidden)
+_elm_file_display_show_hidden_file_set(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd, Eina_Bool hidden)
 {
    config->hidden_files = hidden;
    config_save();
@@ -1009,7 +1009,7 @@ _elm_file_display_show_hidden_file_get(Eo *obj EINA_UNUSED, Elm_File_Display_Dat
 }
 
 EOLIAN static void
-_elm_file_display_only_folder_set(Eo *obj, Elm_File_Display_Data *pd, Eina_Bool only_folder)
+_elm_file_display_only_folder_set(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd, Eina_Bool only_folder)
 {
     config->only_folder = only_folder;
     config_save();
