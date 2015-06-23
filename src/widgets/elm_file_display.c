@@ -507,14 +507,14 @@ _list_to_char(Eina_List *items)
   /* drag data in form: file://URI1\nfile://URI2\n */
   EINA_LIST_FOREACH(items, l, it)
     {
-       const char *filename;
+       const char *path;
        Efm_File *file;
 
        eo_do(it->file_icon, file = elm_obj_file_icon_fm_monitor_file_get());
-       eo_do(file, filename = efm_file_obj_filename_get());
+       eo_do(file, path = efm_file_obj_path_get());
 
        strcat((char *) drag_data, FILESEP);
-       strcat((char *) drag_data, filename);
+       strcat((char *) drag_data, path);
        strcat((char *) drag_data, "\n");
     }
   return drag_data;
