@@ -486,37 +486,27 @@ _drag_icon_create(void *data, Evas_Object *win, Evas_Coord *xoff, Evas_Coord *yo
 static const char *
 _list_to_char(Eina_List *items)
 {
-   const char *drag_data = NULL;
+   Eina_Strbuf *buf = eina_strbuf_new();
+   const char *drag_data;
    Eina_List *l;
    Elm_File_Display_View_DndFile *it;
-   unsigned int len = 0;
 
    EINA_LIST_FOREACH(items, l, it)
      {
-        const char *filename;
+        const char *path;
         Efm_File *file;
 
+        if (!it->file_icon) continue; //bugger
+
         eo_do(it->file_icon, file = elm_obj_file_icon_fm_monitor_file_get());
-        eo_do(file, filename = efm_file_obj_filename_get());
-        len += strlen(filename);
+        eo_do(file, path = efm_file_obj_path_get());
+        eina_strbuf_append(buf, FILESEP);
+        eina_strbuf_append(buf, path);
+        eina_strbuf_append(buf, "\n");
      }
 
-  drag_data = malloc(len + eina_list_count(items) * (FILESEP_LEN + 1) + 1);
-  strcpy((char *) drag_data, "");
-
-  /* drag data in form: file://URI1\nfile://URI2\n */
-  EINA_LIST_FOREACH(items, l, it)
-    {
-       const char *path;
-       Efm_File *file;
-
-       eo_do(it->file_icon, file = elm_obj_file_icon_fm_monitor_file_get());
-       eo_do(file, path = efm_file_obj_path_get());
-
-       strcat((char *) drag_data, FILESEP);
-       strcat((char *) drag_data, path);
-       strcat((char *) drag_data, "\n");
-    }
+  drag_data = eina_strbuf_string_steal(buf);
+  eina_strbuf_free(buf);
   return drag_data;
 }
 
@@ -537,7 +527,7 @@ _drag_start(Eina_List *icons, Evas_Object *object, const char* ptr)
 
    m->icons = icons;
 
-   elm_drag_start(object, ELM_SEL_FORMAT_TARGETS, ptr, ELM_XDND_ACTION_COPY,
+   elm_drag_start(object, ELM_SEL_FORMAT_IMAGE | ELM_SEL_FORMAT_TEXT, ptr, ELM_XDND_ACTION_COPY,
                        _drag_icon_create, m, NULL, NULL, NULL, NULL, NULL, NULL);
 }
 
