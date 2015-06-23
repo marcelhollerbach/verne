@@ -343,39 +343,19 @@ _dnd_leave(void *data EINA_UNUSED, Evas_Object *obj)
 Eina_Bool
 _dnd_droped(void *data EINA_UNUSED, Evas_Object *obj, Elm_Selection_Data *ev)
 {
-   const char *rawdata = ev->data;
-   Eina_List *list = NULL, *node;
-   char buf[PATH_MAX];
-   int c = 0;
-   int lm = 0;
+   char **splits;
 
-   while(rawdata[c] != '\0')
+   splits = eina_str_split(ev->data, "\n", 0);
+
+   for (int i = 0; splits[i]; i++)
      {
-        if (rawdata[c] == '\n')
-          {
-             const char *newbookmark;
-
-             buf[c - lm] = '\0';
-             newbookmark = eina_stringshare_add(buf+FILESEP_LEN);
-             list = eina_list_append(list, newbookmark);
-             lm = c+1;
-          }
-        else
-          {
-             buf[c - lm] = rawdata[c];
-          }
-        c++;
+        //parse out the name
+      if (ecore_file_is_dir(splits[i]))
+        {
+           bookmark_entry_add(obj, splits[i], ecore_file_file_get(splits[i]), NULL);
+        }
      }
 
-   EINA_LIST_FOREACH(list, node, rawdata)
-     {
-        if (ecore_file_is_dir(rawdata))
-          bookmark_entry_add(obj, rawdata,
-                             ecore_file_file_get(rawdata), NULL);
-
-
-        eina_stringshare_del(rawdata);
-     }
    _dnd_leave(NULL, obj);
    _setup_list(obj);
    return EINA_FALSE;
