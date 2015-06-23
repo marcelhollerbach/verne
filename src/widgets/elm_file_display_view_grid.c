@@ -244,6 +244,34 @@ _elm_file_display_view_grid_eo_base_constructor(Eo *obj, Elm_File_Display_View_G
 }
 
 EOLIAN static void
+_elm_file_display_view_grid_elm_file_display_view_search(Eo *obj, Elm_File_Display_View_Grid_Data *pd, const char *needle)
+{
+   Eina_Iterator *itr;
+   Elm_Widget_Item *it;
+   Efm_File *file;
+   const char *filename;
+
+   if (!needle)
+     return;
+
+   printf("====> searching for %s\n", needle);
+
+   itr = eina_hash_iterator_data_new(pd->files);
+
+   EINA_ITERATOR_FOREACH(itr, it)
+     {
+        file = elm_object_item_data_get(it);
+        eo_do(file, filename = efm_file_obj_filename_get());
+        if (strstr(filename, needle))
+          {
+             elm_gengrid_item_selected_set(it, EINA_TRUE);
+             return;
+          }
+     }
+
+}
+
+EOLIAN static void
 _elm_file_display_view_grid_eo_base_destructor(Eo *obj, Elm_File_Display_View_Grid_Data *pd)
 {
    elm_gengrid_clear(obj);

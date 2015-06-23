@@ -51,6 +51,7 @@ typedef struct
    Eina_Bool show_filepreview;
    Evas_Object *preview;
    Evas_Object *bookmark;
+   const char *search;
 
 } Elm_File_Display_Data;
 

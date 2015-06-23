@@ -62,6 +62,15 @@ interface Elm.File.Display.View {
             hidden_files : bool;
          }
       }
+      search {
+         [[Set the currently searched string to the view
+
+           The passed reference is valid until this function is called another time;
+         ]]
+         params {
+            needle : const(char)*;
+         }
+      }
    }
    events {
       item,select,simple : Efm.File*; [[ A item got selected "simple" like one click ]]

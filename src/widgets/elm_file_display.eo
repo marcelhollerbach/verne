@@ -37,6 +37,12 @@ class Elm_File_Display (Elm.Layout, Efl.File) {
             view : const(Eo.Class)*;
          }
       }
+      search {
+         [[Tells the widget to search for the given needle in the file ]]
+         params {
+            value : const(char)*;
+         }
+      }
       @property bookmark_show {
          [[Enable the bookmars view if this is false the user is unable to move it it]]
          values {

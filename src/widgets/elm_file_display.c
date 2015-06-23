@@ -850,6 +850,7 @@ _elm_file_display_view_set(Eo *obj, Elm_File_Display_Data *pd, const Eo_Class *k
                           eo_event_callback_add(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHOOSEN, _util_item_select_choosen, obj);
                           eo_event_callback_add(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, _item_select_changed, obj);
                           elm_file_display_view_config_set(config->icon_size, config->only_folder, config->hidden_files);
+                          elm_file_display_view_search(pd->search);
                           elm_file_display_view_path_set(pd->current_path);
                           );
    _view_resize_cb(pd, NULL, NULL, NULL);
@@ -1105,4 +1106,11 @@ _elm_file_display_selection_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd)
    return pd->selection;
 }
 
+EOLIAN static void
+_elm_file_display_search(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd, const char *value)
+{
+   eina_stringshare_replace(&pd->search, value);
+
+   eo_do(pd->cached_view, elm_file_display_view_search(pd->search));
+}
 #include "elm_file_display.eo.x"
