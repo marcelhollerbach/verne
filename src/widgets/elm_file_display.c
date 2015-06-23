@@ -1195,8 +1195,8 @@ _elm_file_display_selection_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd)
 EOLIAN static void
 _elm_file_display_search(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd, const char *value)
 {
-   eina_stringshare_replace(&pd->search, value);
+   eina_stringshare_replace(&pd->search.pass, value);
 
-   eo_do(pd->cached_view, elm_file_display_view_search(pd->search));
+   eo_do(pd->cached_view, elm_file_display_view_search(pd->search.pass));
 }
 #include "elm_file_display.eo.x"
