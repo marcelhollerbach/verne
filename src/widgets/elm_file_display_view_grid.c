@@ -348,6 +348,8 @@ _elm_file_display_view_grid_elm_file_display_view_search(Eo *obj, Elm_File_Displ
 {
    Eina_Iterator *itr;
    Elm_Widget_Item *it;
+   Elm_Widget_Item *searched = NULL;
+   const Eina_List *selected;
    Efm_File *file;
    const char *filename;
 
@@ -358,17 +360,20 @@ _elm_file_display_view_grid_elm_file_display_view_search(Eo *obj, Elm_File_Displ
 
    itr = eina_hash_iterator_data_new(pd->files);
 
+   selected = elm_gengrid_selected_items_get(obj);
+
    EINA_ITERATOR_FOREACH(itr, it)
      {
         file = elm_object_item_data_get(it);
         eo_do(file, filename = efm_file_obj_filename_get());
         if (strstr(filename, needle))
           {
-             elm_gengrid_item_selected_set(it, EINA_TRUE);
-             return;
+             searched = it;
+             break;
           }
      }
 
+   _item_select_swap(selected, searched);
 }
 
 EOLIAN static void
