@@ -379,11 +379,10 @@ _elm_file_display_view_grid_elm_file_display_view_search(Eo *obj, Elm_File_Displ
    const Eina_List *selected;
    Efm_File *file;
    const char *filename;
+   int min;
 
    if (!needle)
      return;
-
-   printf("====> searching for %s\n", needle);
 
    itr = eina_hash_iterator_data_new(pd->files);
 
@@ -391,12 +390,16 @@ _elm_file_display_view_grid_elm_file_display_view_search(Eo *obj, Elm_File_Displ
 
    EINA_ITERATOR_FOREACH(itr, it)
      {
+        char *f;
         file = elm_object_item_data_get(it);
         eo_do(file, filename = efm_file_obj_filename_get());
-        if (strstr(filename, needle))
+        if ((f = strstr(filename, needle)))
           {
+             int tmin = f - filename;
+             if (tmin > min)
+               continue;
+             min = tmin;
              searched = it;
-             break;
           }
      }
 
