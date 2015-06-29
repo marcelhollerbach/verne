@@ -88,18 +88,21 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
     }
   else
     {
-       const char *theme;
        const char *ic;
        const char *mime_type;
 
        //display the mime_type icon
        o = elm_icon_add(w);
-       mime_type = efm_file_mimetype_get(file);
+       elm_icon_order_lookup_set(o, ELM_ICON_LOOKUP_FDO);
+       if (efm_file_is_type(file, EFM_FILE_TYPE_DIRECTORY))
+         ic = "folder";
+       else
+         {
+            mime_type = efm_file_mimetype_get(file);
+            eo_do(cache, ic = elm_file_mimetype_cache_mimetype_get(mime_type));
+         }
 
-       eo_do(ELM_FILE_ICON_CLASS, theme = elm_obj_file_icon_util_icon_theme_get());
-
-       ic = efreet_mime_type_icon_get(mime_type, theme, 256);
-       eo_do(o, efl_file_set(ic, NULL));
+       eo_do(o, elm_obj_icon_standard_set(ic));
     }
 
   evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
