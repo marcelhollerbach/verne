@@ -4,13 +4,8 @@
 #include <Eina.h>
 #include <Eo.h>
 
-#ifdef EFL_BETA_API_SUPPORT
-# include "efm_file.eo.h"
-# include "efm_monitor.eo.h"
-#else
-# include "efm_file.eo.legacy.h"
-# include "efm_monitor.eo.legacy.h"
-#endif
+#include "efm_file.eo.h"
+#include "efm_monitor.eo.h"
 
 /*
  * Inits the fm_monitor

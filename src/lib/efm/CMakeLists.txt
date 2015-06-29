@@ -26,12 +26,6 @@ add_custom_command(
    DEPENDS ${filename}
 )
 
-add_custom_command(
-   OUTPUT ${filename}.legacy.h
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} --gh --legacy -o ${filename}.legacy.h ${filename}
-   DEPENDS ${filename}
-)
-
 endforeach()
 
 LIST(APPEND FM_MONITOR
@@ -39,11 +33,9 @@ LIST(APPEND FM_MONITOR
    efm_monitor.c
    efm_monitor.eo.x
    efm_monitor.eo.h
-   efm_monitor.eo.legacy.h
    efm_file.c
    efm_file.eo.x
    efm_file.eo.h
-   efm_file.eo.legacy.h
    archive.c
    main.c
    Efm.h

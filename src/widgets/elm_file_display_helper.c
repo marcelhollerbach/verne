@@ -50,8 +50,11 @@ sort_name_func(const void *data1, const void *data2)
    Efm_File *f1 = ((Efm_File*)data1), *f2 = ((Efm_File*)data2);
    if (config->sort.type == ELM_FILE_DISPLAY_SORT_TYPE_NAME)
      {
-        const char *n1 = efm_file_filename_get(f1);
-        const char *n2 = efm_file_filename_get(f2);
+        const char *n1;
+        const char *n2;
+        eo_do(f1, n1 = efm_file_obj_filename_get());
+        eo_do(f2, n2 = efm_file_obj_filename_get());
+
         int c = 0;
 #if 0
         if (n1[0] == '.')
@@ -73,8 +76,8 @@ sort_name_func(const void *data1, const void *data2)
      {
        Efm_File_Stat *st1, *st2;
 
-        st1 = efm_file_stat_get(f1);
-        st2 = efm_file_stat_get(f2);
+        eo_do(f1, st1 = efm_file_obj_stat_get());
+        eo_do(f2, st2 = efm_file_obj_stat_get());
 
         if (st1->size > st2->size)
           return 1;
@@ -85,8 +88,8 @@ sort_name_func(const void *data1, const void *data2)
      {
         Efm_File_Stat *st1, *st2;
 
-        st1 = efm_file_stat_get(f1);
-        st2 = efm_file_stat_get(f2);
+        eo_do(f1, st1 = efm_file_obj_stat_get());
+        eo_do(f2, st2 = efm_file_obj_stat_get());
 
         if (st1->size > st2->size)
           return 1;
@@ -103,6 +106,7 @@ sort_name_func(const void *data1, const void *data2)
 int
 sort_func(const void *data1, const void *data2)
 {
+   Eina_Bool is;
    Efm_File *f1, *f2;
    int mul;
 
@@ -114,11 +118,13 @@ sort_func(const void *data1, const void *data2)
    else
      mul = 1;
 
-   if (efm_file_is_type(f1, EFM_FILE_TYPE_DIRECTORY) && efm_file_is_type(f2, EFM_FILE_TYPE_DIRECTORY))
+   if (eo_do_ret(f1, is, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)) &&
+       eo_do_ret(f2, is, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)))
      {
        return sort_name_func(f1, f2) * mul;
      }
-   else if (efm_file_is_type(f1, EFM_FILE_TYPE_DIRECTORY) && !efm_file_is_type(f2, EFM_FILE_TYPE_DIRECTORY))
+   else if (eo_do_ret(f1, is, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)) &&
+            !eo_do_ret(f2, is, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)))
      {
         if (config->sort.folder_placement == ELM_FILE_DISPLAY_FOLDER_PLACEMENT_FIRST)
           return -1;
@@ -127,7 +133,8 @@ sort_func(const void *data1, const void *data2)
         else
           return sort_name_func(f1, f2) * mul;
      }
-   else if (!efm_file_is_type(f1, EFM_FILE_TYPE_DIRECTORY) && efm_file_is_type(f2, EFM_FILE_TYPE_DIRECTORY))
+   else if (!eo_do_ret(f1, is, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)) &&
+            eo_do_ret(f2, is, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)))
      {
         if (config->sort.folder_placement == ELM_FILE_DISPLAY_FOLDER_PLACEMENT_FIRST)
           return 1;
@@ -156,12 +163,14 @@ Eina_Bool
 _util_item_select_choosen(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
 {
    Efm_File *f = event;
+   Eina_Bool is;
    char buf[PATH_MAX];
    const char *path, *fileending, *filename;
 
-   path = efm_file_path_get(f);
-   fileending = efm_file_fileending_get(f);
-   filename = efm_file_filename_get(f);
+   eo_do(f, path = efm_file_obj_path_get();
+            filename = efm_file_obj_filename_get();
+            fileending = efm_file_obj_fileending_get()
+         );
 
    eina_stringshare_ref(path);
 
@@ -169,7 +178,7 @@ _util_item_select_choosen(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Descri
     * if it is a standart directory
     * open it
     */
-   if (efm_file_is_type(f, EFM_FILE_TYPE_DIRECTORY))
+   if (eo_do_ret(f, is, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)))
      {
         /*call path changed */
         eo_do(data,

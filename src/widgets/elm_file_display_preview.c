@@ -43,8 +43,8 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
 
   //char[] bytes = {"B", "KB", "MB", "GB", "TB", "PM", "EM", NULL}
   f = evas_object_data_get(w, "__ctx");
-  path = efm_file_path_get(file);
-  mime_type = efm_file_mimetype_get(file);
+  eo_do(file, path = efm_file_obj_path_get());
+  eo_do(file, mime_type = efm_file_obj_mimetype_get());
 
   if (!f) return;
 
@@ -89,16 +89,15 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
   else
     {
        const char *ic;
-       const char *mime_type;
+       Eina_Bool is;
 
        //display the mime_type icon
        o = elm_icon_add(w);
        elm_icon_order_lookup_set(o, ELM_ICON_LOOKUP_FDO);
-       if (efm_file_is_type(file, EFM_FILE_TYPE_DIRECTORY))
+       if (eo_do_ret(file, is, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)))
          ic = "folder";
        else
          {
-            mime_type = efm_file_mimetype_get(file);
             eo_do(cache, ic = elm_file_mimetype_cache_mimetype_get(mime_type));
          }
 
@@ -112,7 +111,7 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
   elm_object_part_content_set(w, "thumb", o);
   evas_object_show(o);
 
-  st = efm_file_stat_get(file);
+  eo_do(file, st = efm_file_obj_stat_get());
 
   {
     char *nicestr;
