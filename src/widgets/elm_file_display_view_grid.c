@@ -143,7 +143,7 @@ _elm_file_display_view_grid_elm_file_display_view_path_set(Eo *obj, Elm_File_Dis
 
    elm_gengrid_clear(obj);
 
-   eo_do(EFM_MONITOR_CLASS, pd->fm = efm_monitor_obj_start(dir,pd->config.show_hidden,
+   eo_do(EFM_MONITOR_CLASS, pd->fm = efm_monitor_start(dir,pd->config.show_hidden,
                               pd->config.only_folder));
 
    eo_do(pd->fm, eo_event_callback_add(EFM_MONITOR_EVENT_FILE_ADD, _file_add, obj);
@@ -161,8 +161,8 @@ _elm_file_display_view_grid_elm_file_display_view_config_set(Eo *obj, Elm_File_D
     elm_gengrid_item_size_set(obj, pd->config.icon_size, pd->config.icon_size);
 
     if (pd->fm)
-      eo_do(pd->fm, efm_monitor_obj_config_hidden_files_set(pd->config.show_hidden);
-                    efm_monitor_obj_config_only_folder_set(pd->config.only_folder);
+      eo_do(pd->fm, efm_monitor_config_hidden_files_set(pd->config.show_hidden);
+                    efm_monitor_config_only_folder_set(pd->config.only_folder);
             );
 }
 
@@ -392,7 +392,7 @@ _elm_file_display_view_grid_elm_file_display_view_search(Eo *obj, Elm_File_Displ
      {
         char *f;
         file = elm_object_item_data_get(it);
-        eo_do(file, filename = efm_file_obj_filename_get());
+        eo_do(file, filename = efm_file_filename_get());
         if ((f = strstr(filename, needle)))
           {
              int tmin = f - filename;

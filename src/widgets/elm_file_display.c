@@ -499,7 +499,7 @@ _list_to_char(Eina_List *items)
         if (!it->file_icon) continue; //bugger
 
         eo_do(it->file_icon, file = elm_obj_file_icon_fm_monitor_file_get());
-        eo_do(file, path = efm_file_obj_path_get());
+        eo_do(file, path = efm_file_path_get());
         eina_strbuf_append(buf, FILESEP);
         eina_strbuf_append(buf, path);
         eina_strbuf_append(buf, "\n");

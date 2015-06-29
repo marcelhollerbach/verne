@@ -21,7 +21,7 @@ START_TEST(efm_file_invalid_name)
 
    efm_init();
 
-   file = eo_add(EFM_FILE_CLASS, NULL, res = efm_file_obj_generate(filename));
+   file = eo_add(EFM_FILE_CLASS, NULL, res = efm_file_generate(filename));
 
    ck_assert_int_eq(res, 0);
 
@@ -55,7 +55,7 @@ START_TEST(efm_valid_file)
 
    done = EINA_FALSE;
 
-   file = eo_add(EFM_FILE_CLASS, NULL, res = efm_file_obj_generate(filename));
+   file = eo_add(EFM_FILE_CLASS, NULL, res = efm_file_generate(filename));
 
    ck_assert_int_eq(res, 1);
 
@@ -105,7 +105,7 @@ START_TEST(efm_stresstest)
    done = EINA_FALSE;
    for (i = 0; i < TEST_FILE_ITER_MAX; i++)
      {
-        file = eo_add(EFM_FILE_CLASS, NULL, res = efm_file_obj_generate(filename));
+        file = eo_add(EFM_FILE_CLASS, NULL, res = efm_file_generate(filename));
 
         ck_assert_int_eq(res, 1);
 
@@ -168,7 +168,7 @@ START_TEST(efm_monitor_test)
 
    efm_init();
 
-   eo_do(EFM_MONITOR_CLASS, mon = efm_monitor_obj_start(TEST_DIRECTORY, EINA_TRUE, EINA_FALSE));
+   eo_do(EFM_MONITOR_CLASS, mon = efm_monitor_start(TEST_DIRECTORY, EINA_TRUE, EINA_FALSE));
    eo_do (mon,
 //      eo_event_callback_add(EFM_MONITOR_EVENT_FILE_DEL, _del, NULL);
       eo_event_callback_add(EFM_MONITOR_EVENT_FILE_ADD, _add, NULL);

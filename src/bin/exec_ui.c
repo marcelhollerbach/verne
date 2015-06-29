@@ -93,7 +93,7 @@ _genlist_fill(Open_With_Ui *ui, const char *cmd)
   const char *cat;
   const char *mime_type;
 
-  eo_do(ui->file, mime_type = efm_file_obj_mimetype_get());
+  eo_do(ui->file, mime_type = efm_file_mimetype_get());
 
   klass = elm_genlist_item_class_new();
   klass->item_style = "default";
@@ -179,7 +179,7 @@ _as_default_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED
    it = elm_genlist_selected_item_get(req->wid->elm_genlist1);
    desk = elm_object_item_data_get(it);
 
-   eo_do(req->file, mime_type = efm_file_obj_mimetype_get());
+   eo_do(req->file, mime_type = efm_file_mimetype_get());
 
    eina_hash_del(config->mime_type_open, mime_type, NULL);
    eina_hash_add(config->mime_type_open, mime_type, desk->exec);
@@ -202,7 +202,7 @@ exec_ui_open_with(Efm_File *file, Cmd_Choosen choosen)
     if (!config)
       return;
 
-    eo_do(file, mime_type = efm_file_obj_mimetype_get());
+    eo_do(file, mime_type = efm_file_mimetype_get());
     if (!mime_type)
       return;
 

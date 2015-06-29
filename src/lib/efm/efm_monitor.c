@@ -34,11 +34,11 @@ _take_filter(Efm_Monitor *mon EINA_UNUSED, Efm_Monitor_Data *pd, Efm_File *file)
    const char *filename;
 
    if (pd->config.only_folder &&
-       !eo_do_ret(file, dir, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)))
+       !eo_do_ret(file, dir, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
      return EINA_FALSE;
 
    if (!pd->config.hidden_files &&
-       eo_do_ret(file, filename, efm_file_obj_filename_get())[0] == '.')
+       eo_do_ret(file, filename, efm_file_filename_get())[0] == '.')
      return EINA_FALSE;
 
    return EINA_TRUE;
@@ -53,7 +53,7 @@ _add(Efm_Monitor *mon, const char *file)
    Eina_Bool result;
    path = eina_stringshare_add(file);
 
-   ef = eo_add(EFM_FILE_CLASS, mon, result = efm_file_obj_generate(path));
+   ef = eo_add(EFM_FILE_CLASS, mon, result = efm_file_generate(path));
 
    if (!ef)
      return;

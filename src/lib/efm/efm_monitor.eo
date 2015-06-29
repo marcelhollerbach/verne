@@ -1,5 +1,4 @@
 class Efm.Monitor(Eo.Base) {
-    eo_prefix: efm_monitor_obj;
     methods {
         start @class {
             [[Starts a monitor at the given directory.

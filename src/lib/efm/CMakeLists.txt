@@ -16,7 +16,7 @@ file(GLOB files "*.eo")
 foreach(filename ${files})
 add_custom_command(
    OUTPUT ${filename}.x
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} --gc --eo --legacy -o ${filename}.x ${filename}
+   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} --gc --eo -o ${filename}.x ${filename}
    DEPENDS ${filename}
 )
 

@@ -13,7 +13,6 @@ enum Efm.File.Type {
 
 class Efm.File(Eo.Base) {
     [[A class to work with files]]
-    eo_prefix: efm_file_obj;
     methods {
         @property filename {
             [[Get the filename of this object, xxx/xxx/xxx/{name.extension} the part between { and } will be returned. ]]

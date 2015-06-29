@@ -134,7 +134,7 @@ mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
    if (!pd->file)
      return;
 
-   eo_do(pd->file, mime_type = efm_file_obj_mimetype_get());
+   eo_do(pd->file, mime_type = efm_file_mimetype_get());
 
    if (!mime_type)
      return;
@@ -147,7 +147,7 @@ mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
         ERR("A cache needs to be set at first");
         return;
      }
-   if (eo_do_ret(pd->file, dir, efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY)))
+   if (eo_do_ret(pd->file, dir, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
      elm_icon_standard_set(pd->icon, "folder");
    else
      {
@@ -192,10 +192,10 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *fi
    eo_do(file, eo_wref_add(&pd->file));
 
    elm_drop_target_del(obj, ELM_SEL_FORMAT_TARGETS, _enter_cb, obj,_leave_cb, NULL, NULL, NULL, _drop_cb, NULL);
-   eo_do(pd->file, path = efm_file_obj_path_get();
-                   dir = efm_file_obj_is_type(EFM_FILE_TYPE_DIRECTORY);
-                   mime_type = efm_file_obj_mimetype_get();
-                   filename = efm_file_obj_filename_get());
+   eo_do(pd->file, path = efm_file_path_get();
+                   dir = efm_file_is_type(EFM_FILE_TYPE_DIRECTORY);
+                   mime_type = efm_file_mimetype_get();
+                   filename = efm_file_filename_get());
 
    if (dir)
      {
@@ -257,7 +257,7 @@ _elm_file_icon_fill_sample(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, const ch
      return;
 
    eo_do(ELM_FILE_ICON_CLASS, theme = elm_obj_file_icon_util_icon_theme_get());
-   eo_do(pd->file, mimetype = efm_file_obj_mimetype_get());
+   eo_do(pd->file, mimetype = efm_file_mimetype_get());
 
    *group = NULL;
    *file = efreet_mime_type_icon_get(mimetype, theme, 8);

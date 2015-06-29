@@ -13,7 +13,7 @@ filename(Eina_List *files)
 
    f = eina_list_data_get(files);
 
-   return strdup(eo_do_ret(f, filename, efm_file_obj_path_get()));
+   return strdup(eo_do_ret(f, filename, efm_file_path_get()));
 }
 
 static char*
@@ -29,7 +29,7 @@ filelist(Eina_List *files)
     {
        const char *filename;
 
-       eo_do(f, filename = efm_file_obj_path_get());
+       eo_do(f, filename = efm_file_path_get());
 
        eina_strbuf_append(result, filename);
        eina_strbuf_append(result, " ");
@@ -52,7 +52,7 @@ pathname(Eina_List *files)
    Efm_File *f;
 
    f = eina_list_data_get(files);
-   eo_do(f, filename = efm_file_obj_path_get());
+   eo_do(f, filename = efm_file_path_get());
 
    snprintf(result, sizeof(result), "file:///%s", filename);
 
@@ -73,7 +73,7 @@ pathlist(Eina_List *files)
        const char *filename;
        char path[PATH_MAX];
 
-       eo_do(f, filename = efm_file_obj_path_get());
+       eo_do(f, filename = efm_file_path_get());
        snprintf(path, sizeof(path), "file:///%s ", filename);
 
        eina_strbuf_append(result, path);
