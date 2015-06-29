@@ -7,7 +7,6 @@ struct tuple {
   Evas_Object *obj;
 };
 
-static Eina_Bool planed_changed;
 static Ecore_Idler *focus_idler;
 
 static Eina_Bool unfocus_barrier;
@@ -106,9 +105,7 @@ _focus_idler(void *data)
 
    text = evas_object_data_del(data, "__orig_text");
 
-   planed_changed = EINA_TRUE;
    elm_object_text_set(data, text);
-   planed_changed = EINA_FALSE;
 
    free((char*)text);
    unfocus_barrier = EINA_TRUE;
@@ -131,9 +128,7 @@ _unfocus_idler(void *data)
     //save the current state
     evas_object_data_set(data, "__orig_text", strdup(text));
 
-    planed_changed = EINA_TRUE;
     elm_object_text_set(data, _path_transform(text));
-    planed_changed = EINA_FALSE;
 
     return EINA_FALSE;
 }
@@ -155,9 +150,7 @@ _change_idle(void *data)
 {
    struct tuple *h = data;
 
-   planed_changed = EINA_TRUE;
    elm_object_text_set(h->obj, h->now);
-   planed_changed = EINA_FALSE;
 
    free(h);
 
@@ -165,13 +158,11 @@ _change_idle(void *data)
 }
 
 static void
-_changed_cb(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
+_entry_transform(Evas_Object *obj)
 {
    const char *text;
    const char *transform;
 
-   if (planed_changed)
-     return;
 
    if (elm_object_focus_get(obj))
      return;
@@ -192,6 +183,12 @@ _changed_cb(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
 }
 
 static void
+_changed_cb(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
+{
+   _entry_transform(obj);
+}
+
+static void
 _anchor_clicked_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event)
 {
    Elm_Entry_Anchor_Info *info = event;
@@ -208,14 +205,12 @@ _anchor_clicked_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *e
 void
 titlebar_init(void)
 {
-   planed_changed = EINA_FALSE;
-
    entry = elm_entry_add(layout);
    elm_entry_single_line_set(entry, EINA_TRUE);
    elm_entry_markup_filter_append(entry, _markup_filter, NULL);
    evas_object_smart_callback_add(entry, "focused", _focus_cb, NULL);
    evas_object_smart_callback_add(entry, "unfocused", _unfocus_cb, NULL);
-   evas_object_smart_callback_add(entry, "changed", _changed_cb, NULL);
+   evas_object_smart_callback_add(entry, "changed,user", _changed_cb, NULL);
    evas_object_smart_callback_add(entry, "anchor,clicked", _anchor_clicked_cb, NULL);
    evas_object_show(entry);
 
@@ -229,4 +224,5 @@ titlebar_path_set(const char *path)
 {
    elm_entry_entry_set(entry, NULL);
    elm_entry_entry_append(entry, path);
+   _entry_transform(entry);
 }
