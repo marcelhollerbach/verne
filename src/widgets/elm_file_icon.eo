@@ -19,13 +19,6 @@ class Elm_File_Icon (Elm.Layout) {
           cache : Elm.File.MimeType.Cache*;
         }
       }
-      fill_sample {
-        [[Fills group and file with the correct values to display a sample of the currently display Efm.File]]
-        params {
-          @in group : const(char)**;
-          @in file : const(char)**;
-        }
-      }
       util_icon_theme_get @class{
          [[Will return the name of the icon theme]]
          return : const(char)*;

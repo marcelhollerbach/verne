@@ -247,22 +247,6 @@ _elm_file_icon_fm_monitor_file_get(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
    return pd->file;
 }
 
-EOLIAN static void
-_elm_file_icon_fill_sample(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, const char **group, const char **file)
-{
-   const char *theme;
-   const char *mimetype;
-
-   if (!pd->file)
-     return;
-
-   eo_do(ELM_FILE_ICON_CLASS, theme = elm_obj_file_icon_util_icon_theme_get());
-   eo_do(pd->file, mimetype = efm_file_mimetype_get());
-
-   *group = NULL;
-   *file = efreet_mime_type_icon_get(mimetype, theme, 8);
-}
-
 static void
 _elm_file_icon_eo_base_destructor(Eo *obj, Elm_File_Icon_Data *pd)
 {
