@@ -28,7 +28,15 @@ _dir_changed(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Descrip
 static void
 ui_init()
 {
+   Evas_Object *icon;
+
    win = elm_win_util_standard_add("efm", "efm - Jesus");
+
+   icon = elm_icon_add(win);
+   elm_icon_standard_set(icon, "system-file-manager");
+   evas_object_show(icon);
+   elm_win_icon_object_set(win, icon);
+
    evas_object_smart_callback_add(win, "delete,request", on_done, NULL);
 
    layout = elm_layout_add(win);
@@ -84,7 +92,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    elm_app_compile_bin_dir_set(PACKAGE_BIN_DIR);
    elm_app_compile_lib_dir_set(PACKAGE_LIB_DIR);
    elm_app_compile_data_dir_set(PACKAGE_DATA_DIR);
-   elm_app_desktop_entry_set(""); //FIXME we dont have a desktopfile yet
+   elm_app_desktop_entry_set("efm.desktop");
    elm_app_info_set(elm_main, "jesus", "");
 
    //init external elementary stuff
