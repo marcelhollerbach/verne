@@ -22,12 +22,6 @@
 
 #define W_DATA(w) Elm_File_Display_Data *pd = eo_data_scope_get(w, ELM_FILE_DISPLAY_CLASS);
 
-typedef struct
-{
-  const char *group;
-  const char *file;
-} Drag_Icon;
-
 /* struct to pass the last mouse coords to the drag cb */
 typedef struct
 {
@@ -446,7 +440,7 @@ _drag_icon_create(void *data, Evas_Object *win, Evas_Coord *xoff, Evas_Coord *yo
    Evas_Object *icon, *res, *rai;
    Eina_List *node;
    Drag_Pass *p = data;
-   Drag_Icon *ic;
+   const char *ic;
    char buf[PATH_MAX];
    int i = 0;
 
@@ -461,10 +455,10 @@ _drag_icon_create(void *data, Evas_Object *win, Evas_Coord *xoff, Evas_Coord *yo
      {
         i++;
 
-        icon = elm_image_add(win);
+        icon = elm_icon_add(win);
+        elm_icon_order_lookup_set(icon, ELM_ICON_LOOKUP_FDO);
+        elm_icon_standard_set(icon, ic);
         evas_object_show(icon);
-
-        elm_image_file_set(icon,ic->file, ic->group);
 
         if (i == 1)
           rai = icon;
@@ -573,7 +567,6 @@ _drag_anim_start(Eina_List *icons, Evas_Object *object, const char* ptr)
   Evas_Object *icon;
   Anim_Icon *ai;
   Anim_Struct *ans;
-  Drag_Icon *drag_icon;
   int c = 0;
 
   ans = calloc(1, sizeof(Anim_Struct));
@@ -582,22 +575,21 @@ _drag_anim_start(Eina_List *icons, Evas_Object *object, const char* ptr)
 
   EINA_LIST_FOREACH(icons, node, vd)
     {
-       const char *sample_icon_file;
-       const char *sample_icon_group;
+       Efm_File *f;
+       const char *ic;
+       const char *mime_type;
 
-       eo_do(vd->file_icon, elm_obj_file_icon_fill_sample(&sample_icon_group, &sample_icon_file));
+       eo_do(vd->file_icon, f = elm_obj_file_icon_fm_monitor_file_get());
+       eo_do(f, mime_type = efm_file_mimetype_get());
+       eo_do(cache, ic = elm_file_mimetype_cache_mimetype_get(mime_type));
 
        /* init end icons */
        if (c < 3)
          {
-            drag_icon = calloc(1, sizeof (Drag_Icon));
-
-            drag_icon->group = sample_icon_group;
-            drag_icon->file = sample_icon_file;
-
-            ans->icons = eina_list_append(ans->icons, drag_icon);
+            ans->icons = eina_list_append(ans->icons, ic);
             c++;
          }
+
        ai = calloc(1, sizeof(Anim_Icon));
 
        ai->sx = vd->x;
@@ -608,7 +600,8 @@ _drag_anim_start(Eina_List *icons, Evas_Object *object, const char* ptr)
        ai->fw = 60;
 
        icon = elm_icon_add(object);
-       elm_image_file_set(icon, sample_icon_file, sample_icon_group);
+       elm_icon_order_lookup_set(icon, ELM_ICON_LOOKUP_FDO);
+       elm_icon_standard_set(icon, ic);
        evas_object_move(icon, vd->x , vd->y);
        evas_object_resize(icon, vd->w, vd->h);
        evas_object_show(icon);
