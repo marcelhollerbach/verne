@@ -7,15 +7,21 @@ Like the header says. A filemanager, written in C using the EFL and elementary
 Right now there are just install targets for the libraries. The application itself will not be installed!!
 
 To build do:
+```
+cd <here is the clonedplace> 
 
-cd <here is the clonedplace>
-mkdir build
-cd build
-cmake ..
-make all
-./src/bin/efm
+mkdir build 
 
-->have fun
+cd build 
+
+cmake .. 
+
+make all 
+
+./src/bin/efm 
+
+->have fun 
+```
 
 ## Bugs ##
 
