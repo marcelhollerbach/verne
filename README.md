@@ -41,7 +41,7 @@ Widgets which are built as separated library.
 
 A abstraction for filesystem monitoring and listing.
 
-Once a file appeared all big things are done async, things like fetching stat´s, mimetypes and such things.
+Once a file appears, big operations such as finding the mimetype and the like are done asynchronously. 
 
 ### Emous ###
 
