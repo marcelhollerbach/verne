@@ -20,6 +20,7 @@ LIST(APPEND JESUS_FILES
   history.c
   clipboard.c
   fs_operation.c
+  shortcuts.c
   ${CMAKE_BINARY_DIR}/data/theme/efm.edc.edj
 )
 

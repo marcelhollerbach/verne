@@ -60,4 +60,7 @@ void preview_copy(void);
 void preview_move(void);
 void preview_remove(void);
 void preview_paste(void);
+
+void shortcuts_init(void);
+
 #endif

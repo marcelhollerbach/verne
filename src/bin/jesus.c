@@ -55,6 +55,8 @@ ui_init()
 
    titlebar_init();
 
+   shortcuts_init();
+
    elm_win_resize_object_add(win, layout);
    evas_object_resize(win, 800,600);
    evas_object_show(win);
