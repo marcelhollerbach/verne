@@ -53,6 +53,8 @@ ui_init()
                                  _dir_changed, NULL););
    evas_object_show(preview);
 
+   elm_object_focus_set(preview, EINA_TRUE);
+
    titlebar_init();
 
    shortcuts_init();
