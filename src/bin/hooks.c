@@ -55,50 +55,25 @@ _open_with_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 static void
 _copy_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
-   Eina_List *selection;
-
-   eo_do(preview, selection = elm_obj_file_display_selection_get());
-   clipboard_set(COPY, selection);
+   preview_copy();
 }
 
 static void
 _move_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
-   Eina_List *selection;
-
-   eo_do(preview, selection = elm_obj_file_display_selection_get());
-   clipboard_set(MOVE, selection);
+   preview_move();
 }
 
 static void
 _remove_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
-   Eina_List *selection;
-   Eina_List *pass = NULL, *node;
-   Efm_File *file;
-
-   eo_do(preview, selection = elm_obj_file_display_selection_get());
-
-   EINA_LIST_FOREACH(selection, node, file)
-     {
-        const char *path;
-
-        eo_do(file, path = efm_file_path_get());
-
-        pass = eina_list_append(pass, path);
-     }
-
-   fs_operations_delete(pass);
+   preview_remove();
 }
 
 static void
 _paste_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
-   const char *goal;
-
-   eo_do(preview, efl_file_get(&goal, NULL));
-
-   clipboard_paste(goal);
+   preview_paste();
 }
 
 static Eina_Bool

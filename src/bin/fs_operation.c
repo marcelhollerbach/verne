@@ -318,3 +318,54 @@ fs_operations_init(void)
       }
     #endif
 }
+
+//helperfunctions
+
+void
+preview_copy(void)
+{
+   Eina_List *selection;
+
+   eo_do(preview, selection = elm_obj_file_display_selection_get());
+   clipboard_set(COPY, selection);
+}
+
+void
+preview_move(void)
+{
+   Eina_List *selection;
+
+   eo_do(preview, selection = elm_obj_file_display_selection_get());
+   clipboard_set(MOVE, selection);
+}
+
+void
+preview_remove(void)
+{
+   Eina_List *selection;
+   Eina_List *pass = NULL, *node;
+   Efm_File *file;
+
+   eo_do(preview, selection = elm_obj_file_display_selection_get());
+
+   EINA_LIST_FOREACH(selection, node, file)
+     {
+        const char *path;
+
+        eo_do(file, path = efm_file_path_get());
+
+        pass = eina_list_append(pass, path);
+     }
+
+   fs_operations_delete(pass);
+}
+
+void
+preview_paste(void)
+{
+   const char *goal;
+
+   eo_do(preview, efl_file_get(&goal, NULL));
+
+   clipboard_paste(goal);
+}

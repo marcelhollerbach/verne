@@ -56,4 +56,8 @@ void fs_operations_move(Eina_List *files, const char *goal);
 void fs_operations_copy(Eina_List *files, const char *goal);
 void fs_operations_delete(Eina_List *files);
 
+void preview_copy(void);
+void preview_move(void);
+void preview_remove(void);
+void preview_paste(void);
 #endif
