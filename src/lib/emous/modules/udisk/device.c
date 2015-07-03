@@ -252,7 +252,7 @@ _device_parse(Emous_Device *dev, Emous_Device_UDisks_Data *pd, Eldbus_Message_It
 static inline void
 _drive_parse(Eldbus_Message_Iter *iter, const char *opath)
 {
-   Device_Entry *entry = calloc(1, sizeof(entry));
+   Device_Entry *entry = calloc(1, sizeof(Device_Entry));
 
    Eina_Bool removable = EINA_TRUE;
 
