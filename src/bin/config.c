@@ -32,28 +32,26 @@ _config_read()
    char path[PATH_MAX];
 
    if (config)
-     _config_free(config);
+     {
+        _config_free(config);
+        config = NULL;
+     }
 
    snprintf(path, sizeof(path), "%s/%s", efreet_config_home_get(), "jesus.eet");
 
    cf = eet_open(path, EET_FILE_MODE_READ);
 
-   if (!cf)
+   if (cf)
      {
-        config = _config_standart_new();
-        config_flush();
+        config = eet_data_read(cf, edd, CONFIG_KEY);
+        eet_close(cf);
      }
-
-   config = eet_data_read(cf, edd, CONFIG_KEY);
-
-   eet_close(cf);
 
    if (!config)
      {
         config = _config_standart_new();
         config_flush();
      }
-
 }
 
 void
