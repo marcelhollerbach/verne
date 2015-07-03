@@ -52,6 +52,8 @@ util_bookmarks_load_gtk(void)
         result = eina_list_append(result, eina_stringshare_add(file));
      }
 
+   fclose(fd);
+
    return result;
 }
 
