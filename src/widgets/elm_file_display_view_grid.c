@@ -379,7 +379,7 @@ _elm_file_display_view_grid_elm_file_display_view_search(Eo *obj, Elm_File_Displ
    const Eina_List *selected;
    Efm_File *file;
    const char *filename;
-   int min;
+   int min = -1;
 
    if (!needle)
      return;
@@ -396,6 +396,9 @@ _elm_file_display_view_grid_elm_file_display_view_search(Eo *obj, Elm_File_Displ
         if ((f = strstr(filename, needle)))
           {
              int tmin = f - filename;
+             if (min == -1)
+               min = tmin;
+
              if (tmin > min)
                continue;
              min = tmin;
