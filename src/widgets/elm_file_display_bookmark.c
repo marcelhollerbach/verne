@@ -204,6 +204,7 @@ _device_item_content_get(void *data, Evas_Object *obj, const char *part EINA_UNU
         break;
         case EMOUS_DEVICE_TYPE_CD:
            iconname = "drive-optical";
+        break;
         default:
           iconname = "computer"; //Better show some thing shitty than nothing ...
         break;
