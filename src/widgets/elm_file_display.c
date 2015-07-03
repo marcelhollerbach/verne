@@ -238,7 +238,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
 
         iter = eina_hash_iterator_data_new(views);
 
-        EINA_ITERATOR_FOREACH(iter, klass);
+        EINA_ITERATOR_FOREACH(iter, klass)
           {
              eo_do(klass, name = elm_file_display_view_name_get());
              it2 = elm_menu_item_add(menu, it, NULL, name, _ctx_view_sel, klass);
