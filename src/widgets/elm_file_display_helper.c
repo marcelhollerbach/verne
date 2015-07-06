@@ -45,32 +45,44 @@ icon_create(Evas_Object *par, Efm_File *file)
 }
 
 static int
+_alphabetic_sort(const char *n1, const char *n2)
+{
+   int c = 0;
+
+
+   while(n1[c] != '\0' && n2[c] != '\0')
+     {
+        if (tolower(n1[c]) < tolower(n2[c]))
+          return -1;
+        else if (tolower(n1[c]) > tolower(n2[c]))
+          return 1;
+        c ++;
+     }
+  return 0;
+}
+
+static int
+_file_name_sort(Efm_File *f1, Efm_File *f2)
+{
+   const char *n1;
+   const char *n2;
+   eo_do(f1, n1 = efm_file_filename_get());
+   eo_do(f2, n2 = efm_file_filename_get());
+
+   if (n1[0] == '.')
+     n1 ++;
+   if (n2[0] == '.')
+     n2 ++;
+   return _alphabetic_sort(n1, n2);
+}
+
+static int
 sort_name_func(const void *data1, const void *data2)
 {
    Efm_File *f1 = ((Efm_File*)data1), *f2 = ((Efm_File*)data2);
    if (config->sort.type == ELM_FILE_DISPLAY_SORT_TYPE_NAME)
      {
-        const char *n1;
-        const char *n2;
-        eo_do(f1, n1 = efm_file_filename_get());
-        eo_do(f2, n2 = efm_file_filename_get());
-
-        int c = 0;
-
-        if (n1[0] == '.')
-          n1 ++;
-        if (n2[0] == '.')
-          n2 ++;
-
-        while(n1[c] != '\0' && n2[c] != '\0')
-          {
-             if (tolower(n1[c]) < tolower(n2[c]))
-               return -1;
-             else if (tolower(n1[c]) > tolower(n2[c]))
-               return 1;
-             c ++;
-          }
-        return 0;
+        return _file_name_sort(f1, f2);
      }
    else if (config->sort.type == ELM_FILE_DISPLAY_SORT_TYPE_SIZE)
      {
