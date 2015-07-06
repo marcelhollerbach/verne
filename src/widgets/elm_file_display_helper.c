@@ -110,8 +110,23 @@ sort_name_func(const void *data1, const void *data2)
      }
    else //if (config->sort.type == SORT_TYPE_EXTENSION)
      {
-        return 1;
-        //FIXME BLUARB
+        const char *ext1;
+        const char *ext2;
+
+        eo_do(f1, ext1 = efm_file_fileending_get());
+        eo_do(f2, ext2 = efm_file_fileending_get());
+        if (!ext1 && !ext2)
+          return _file_name_sort(f1, f2);
+        else if (!ext1 && ext2)
+          return -1;
+        else if (ext1 && !ext2)
+          return 1;
+
+        int sort = _alphabetic_sort(ext1, ext2);
+        if (sort == 0)
+          return _file_name_sort(f1, f2);
+        else
+          return sort;
      }
 }
 
