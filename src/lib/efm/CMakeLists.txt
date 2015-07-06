@@ -60,5 +60,4 @@ set_property(TARGET efm_lib
 INSTALL(TARGETS efm_lib
   LIBRARY DESTINATION lib
 )
-INSTALL(FILES Efm.h efm_file.eo.h efm_file.eo.legacy.h efm_monitor.eo.h efm_monitor.eo.legacy.h
-  DESTINATION include/efm-1/)
+INSTALL(FILES Efm.h efm_file.eo.h efm_monitor.eo.h DESTINATION include/efm-1/)
