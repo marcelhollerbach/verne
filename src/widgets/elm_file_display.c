@@ -866,7 +866,7 @@ _search_event_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object 
          pd->search.clear_timer = NULL;
      }
     //check if someone wants to append or delete something
-    if (isalpha(*ev->string))
+    if (isalnum(*ev->string))
       {
          if (!pd->search.searchpart)
            pd->search.searchpart = eina_strbuf_new();
