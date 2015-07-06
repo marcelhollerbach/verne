@@ -64,9 +64,9 @@ sort_name_func(const void *data1, const void *data2)
 #endif
         while(n1[c] != '\0' && n2[c] != '\0')
           {
-             if (n1[c] < n2[c])
+             if (tolower(n1[c]) < tolower(n2[c]))
                return -1;
-             else if (n1[c] > n2[c])
+             else if (tolower(n1[c]) > tolower(n2[c]))
                return 1;
              c ++;
           }
