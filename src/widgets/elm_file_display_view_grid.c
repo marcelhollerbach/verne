@@ -359,6 +359,7 @@ _elm_file_display_view_grid_eo_base_constructor(Eo *obj, Elm_File_Display_View_G
 
    eo_do_super_ret(obj, ELM_FILE_DISPLAY_VIEW_GRID_CLASS, eo, eo_constructor());
 
+   elm_gengrid_align_set(obj, 0.5, 0.0);
    eo_do(obj, eo_event_callback_add(EVAS_OBJECT_EVENT_KEY_DOWN, _key_down, NULL));
    elm_gengrid_item_size_set(eo, config->icon_size, config->icon_size);
    elm_gengrid_multi_select_mode_set(eo, ELM_OBJECT_MULTI_SELECT_MODE_WITH_CONTROL );
