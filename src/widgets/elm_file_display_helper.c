@@ -56,12 +56,12 @@ sort_name_func(const void *data1, const void *data2)
         eo_do(f2, n2 = efm_file_filename_get());
 
         int c = 0;
-#if 0
+
         if (n1[0] == '.')
           n1 ++;
         if (n2[0] == '.')
           n2 ++;
-#endif
+
         while(n1[c] != '\0' && n2[c] != '\0')
           {
              if (tolower(n1[c]) < tolower(n2[c]))
