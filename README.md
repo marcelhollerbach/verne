@@ -22,7 +22,11 @@ make all
 
 ->have fun 
 ```
+## Install ##
 
+```
+sudo make install
+```
 ## Bugs ##
 
 Bugs can be reported via github (marcelhollerbach) or phab.enlightenment.org(bu5hm4n).
