@@ -252,49 +252,62 @@ _item_select_swap(Evas_Object *obj, const Eina_List *selected, Elm_Object_Item *
 }
 
 static Eina_Bool
-_key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event)
+_key_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event)
 {
    Evas_Event_Key_Down *ev = event;
-
-   const Eina_List *selected;
+   const Eina_List *selected, *node;
+   Eo *grid = data;
    Elm_Object_Item *mover;
    Elm_Object_Item *next;
+   Elm_Object_Item *sel;
    Evas_Object *track;
    int x,y,w,h;
 
+   selected = elm_gengrid_selected_items_get(grid);
+   EINA_LIST_FOREACH(selected, node, sel)
+     {
+        Evas_Object *icon;
+        Eina_Bool rename;
+
+        icon = elm_object_item_part_content_get(sel, "elm.swallow.icon");
+        eo_do(icon, rename = elm_obj_file_icon_rename_get());
+        if (rename)
+          return EO_CALLBACK_CONTINUE;
+     }
+
    if (!strcmp(ev->key, "Right"))
      {
-        if (!empty_check(obj))
+        if (!empty_check(grid))
           return EO_CALLBACK_STOP;
 
-        selected = elm_gengrid_selected_items_get(obj);
+        selected = elm_gengrid_selected_items_get(grid);
         mover =  eina_list_data_get(eina_list_last(selected));
 
         next = elm_gengrid_item_next_get(mover);
 
-        _item_select_swap(obj, selected, next);
+        _item_select_swap(grid, selected, next);
         return EO_CALLBACK_STOP;
      }
    else if (!strcmp(ev->key, "Left"))
      {
-        if (!empty_check(obj))
+        if (!empty_check(grid))
           return EO_CALLBACK_STOP;
 
-        selected = elm_gengrid_selected_items_get(obj);
+        selected = elm_gengrid_selected_items_get(grid);
         mover =  eina_list_data_get(eina_list_last(selected));
 
         next = elm_gengrid_item_prev_get(mover);
 
-        _item_select_swap(obj, selected, next);
+        _item_select_swap(grid, selected, next);
 
         return EO_CALLBACK_STOP;
      }
    else if (!strcmp(ev->key, "Up"))
      {
-        if (!empty_check(obj))
+        if (!empty_check(grid))
           return EO_CALLBACK_STOP;
 
-        selected = elm_gengrid_selected_items_get(obj);
+        selected = elm_gengrid_selected_items_get(grid);
         mover =  eina_list_data_get((selected));
         track = elm_object_item_track(mover);
 
@@ -303,18 +316,18 @@ _key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *desc EIN
         y -= w/2;
         x += w/2;
 
-        next = elm_gengrid_at_xy_item_get(obj, x, y, NULL, NULL);
+        next = elm_gengrid_at_xy_item_get(grid, x, y, NULL, NULL);
 
-        _item_select_swap(obj, eina_list_clone(selected), next);
+        _item_select_swap(grid, eina_list_clone(selected), next);
 
         return EO_CALLBACK_STOP;
      }
    else if (!strcmp(ev->key, "Down"))
      {
-        if (!empty_check(obj))
+        if (!empty_check(grid))
           return EO_CALLBACK_STOP;
 
-        selected = elm_gengrid_selected_items_get(obj);
+        selected = elm_gengrid_selected_items_get(grid);
         mover =  eina_list_data_get(eina_list_last(selected));
         track = elm_object_item_track(mover);
 
@@ -323,16 +336,16 @@ _key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *desc EIN
         y += w+w/2;
         x += w/2;
 
-        next = elm_gengrid_at_xy_item_get(obj, x, y, NULL, NULL);
+        next = elm_gengrid_at_xy_item_get(grid, x, y, NULL, NULL);
 
-        _item_select_swap(obj, eina_list_clone(selected), next);
+        _item_select_swap(grid, eina_list_clone(selected), next);
 
         return EO_CALLBACK_STOP;
      }
    else if (!strcmp(ev->key, "Return"))
      {
         Efm_File *fmm_file;
-        selected = elm_gengrid_selected_items_get(obj);
+        selected = elm_gengrid_selected_items_get(grid);
 
         if (eina_list_count(selected) > 1)
           return EO_CALLBACK_STOP;
@@ -340,7 +353,7 @@ _key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *desc EIN
         mover =  eina_list_data_get(eina_list_last(selected));
 
         fmm_file = elm_object_item_data_get(mover);
-        eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHOOSEN, fmm_file));
+        eo_do(grid, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHOOSEN, fmm_file));
 
 
         return EO_CALLBACK_STOP;
@@ -352,6 +365,7 @@ EOLIAN static Eo *
 _elm_file_display_view_grid_eo_base_constructor(Eo *obj, Elm_File_Display_View_Grid_Data *pd)
 {
    Eo *eo;
+   Eo *parent;
 
    pd->gic = elm_gengrid_item_class_new();
    pd->gic->item_style = "default";
@@ -360,7 +374,9 @@ _elm_file_display_view_grid_eo_base_constructor(Eo *obj, Elm_File_Display_View_G
    eo_do_super_ret(obj, ELM_FILE_DISPLAY_VIEW_GRID_CLASS, eo, eo_constructor());
 
    elm_gengrid_align_set(obj, 0.5, 0.0);
-   eo_do(obj, eo_event_callback_add(EVAS_OBJECT_EVENT_KEY_DOWN, _key_down, NULL));
+   eo_do(obj, parent = eo_parent_get());
+
+   eo_do(parent, eo_event_callback_add(EVAS_OBJECT_EVENT_KEY_DOWN, _key_down, obj));
    elm_gengrid_item_size_set(eo, config->icon_size, config->icon_size);
    elm_gengrid_multi_select_mode_set(eo, ELM_OBJECT_MULTI_SELECT_MODE_WITH_CONTROL );
    elm_gengrid_multi_select_set(eo, EINA_TRUE);
