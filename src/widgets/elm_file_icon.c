@@ -239,6 +239,7 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *fi
       mime_ready(obj, pd);
    //set the text of the filename
    elm_object_text_set(pd->label, filename);
+   elm_object_tooltip_text_set(pd->label, filename);
 }
 
 EOLIAN static Efm_File *
