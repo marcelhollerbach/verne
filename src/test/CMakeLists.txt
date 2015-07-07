@@ -50,12 +50,6 @@ target_link_libraries (test_fm_monitor
    rt
 )
 
-add_executable(test_archive test_archive.c)
-
-target_link_libraries (test_archive
-   efm_lib
-)
-
 add_test(efm_test test_fm_monitor)
 
 add_subdirectory(./emous_test)

@@ -22,7 +22,6 @@ LIST(APPEND FM_MONITOR
    efm_filter.eo
    efm_filter.eo.x
    efm_filter.eo.h
-   archive.c
    main.c
    Efm.h
    efm_priv.h
