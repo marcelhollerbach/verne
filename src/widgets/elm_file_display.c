@@ -913,6 +913,12 @@ _event_key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *de
     pd = eo_data_scope_get(obj, ELM_FILE_DISPLAY_CLASS);
     ev = event;
     //look if its a single character, so it could be a searchpart
+    if (evas_key_modifier_is_set(ev->modifiers, "Control") && (!strcmp(ev->key, "H") || !strcmp(ev->key, "h")))
+      {
+         Eina_Bool b;
+         eo_do(obj, b = elm_obj_file_display_show_hidden_file_get();
+                    elm_obj_file_display_show_hidden_file_set(!b));
+      }
     if (ev->key[1] == '\0' && isalnum(*ev->string))
       {
          const char *searchme;
