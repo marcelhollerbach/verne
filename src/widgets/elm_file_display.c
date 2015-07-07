@@ -844,45 +844,50 @@ _timer_cb(void *data)
 }
 
 static void
-_search_event_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, void *event_info)
+_reset_clear_timer(Elm_File_Display_Data *pd)
 {
-    Evas_Event_Key_Down *ev;
-    const char *searchme;
-    Elm_File_Display_Data *pd;
-
-    pd = eo_data_scope_get(obj, ELM_FILE_DISPLAY_CLASS);
-    ev = event_info;
-
-    if (!ev->string)
-      return;
-
-    if (!((ev->string) && *(ev->string)))
-      return;
-
-    //reset timer
-    if (pd->search.clear_timer)
+   if (pd->search.clear_timer)
      {
         ecore_timer_del( pd->search.clear_timer);
          pd->search.clear_timer = NULL;
      }
-    //check if someone wants to append or delete something
-    if (isalnum(*ev->string))
+}
+
+static void
+_event_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, void *event_info)
+{
+    Evas_Event_Key_Down *ev;
+    Elm_File_Display_Data *pd;
+
+    pd = eo_data_scope_get(obj, ELM_FILE_DISPLAY_CLASS);
+    ev = event_info;
+    //look if its a single character, so it could be a searchpart
+    if (ev->key[1] == '\0' && isalnum(*ev->string))
       {
+         const char *searchme;
+         //update search string
+         _reset_clear_timer(pd);
          if (!pd->search.searchpart)
-           pd->search.searchpart = eina_strbuf_new();
+          pd->search.searchpart = eina_strbuf_new();
 
          eina_strbuf_append(pd->search.searchpart, ev->string);
          searchme = eina_strbuf_string_get(pd->search.searchpart);
          //SET string in ui
          eo_do(obj, elm_obj_file_display_search(searchme));
+
+         pd->search.clear_timer = ecore_timer_add(0.9, _timer_cb, obj);
       }
     else if (!strcmp(ev->key, "BackSpace"))
       {
          char *oldstr;
          int oldlength;
 
+         const char *searchme;
+         //shrink search string
+         _reset_clear_timer(pd);
+
          if (!pd->search.searchpart)
-           return;
+          return;
 
          oldlength = eina_strbuf_length_get(pd->search.searchpart);
          oldstr = eina_strbuf_string_steal(pd->search.searchpart);
@@ -902,7 +907,6 @@ _search_event_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object 
          eo_do(obj, elm_obj_file_display_search(searchme));
       }
 
-    pd->search.clear_timer = ecore_timer_add(0.9, _timer_cb, obj);
 }
 
 /*
@@ -1002,7 +1006,7 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
    evas_object_event_callback_add(pd->event.rect, EVAS_CALLBACK_MOUSE_DOWN, _event_rect_mouse_down, obj);
 
    //listen for key downs for the searchbar
-   evas_object_event_callback_add(obj, EVAS_CALLBACK_KEY_DOWN, _search_event_key_down, NULL);
+   evas_object_event_callback_add(obj, EVAS_CALLBACK_KEY_DOWN, _event_key_down, NULL);
 
    pd->event.mouse_down.x = -1;
    pd->event.mouse_down.y = -1;
