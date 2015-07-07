@@ -110,17 +110,14 @@ _elm_file_icon_evas_object_smart_add(Eo *obj, Elm_File_Icon_Data *pd)
    evas_object_show(pd->label);
    elm_object_part_content_set(obj, "text", pd->label);
 }
-static void
-_unfocused(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
-{
-   eo_do(data, elm_obj_file_icon_rename_set(EINA_FALSE));
-}
 
 EOLIAN static void
-_elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode)
+_elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode, Eina_Bool take)
 {
    if (mode == pd->rename_mode)
      return;
+
+   pd->rename_mode = mode;
 
    if (mode)
      {
@@ -129,14 +126,12 @@ _elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode)
         eo_do(pd->file, filename = efm_file_filename_get());
 
         pd->entry = elm_entry_add(obj);
-        evas_object_smart_callback_add(pd->entry, "unfocused", _unfocused, obj);
         elm_entry_scrollable_set(pd->entry, EINA_TRUE);
         elm_scroller_policy_set(pd->entry, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
         elm_entry_single_line_set(pd->entry, EINA_TRUE);
         elm_entry_editable_set(pd->entry, EINA_TRUE);
         elm_entry_entry_set(pd->entry, filename);
         eo_do(obj, eo_event_callback_call(ELM_FILE_ICON_EVENT_RENAME_START, NULL));
-
         elm_object_part_content_unset(obj, "text");
         elm_object_part_content_set(obj, "text", pd->entry);
         evas_object_hide(pd->label);
@@ -146,7 +141,8 @@ _elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode)
         const char *nname;
 
         nname = elm_entry_entry_get(pd->entry);
-        eo_do(obj, eo_event_callback_call(ELM_FILE_ICON_EVENT_RENAME_DONE, (char*)nname));
+        if (take)
+          eo_do(obj, eo_event_callback_call(ELM_FILE_ICON_EVENT_RENAME_DONE, (char*)nname));
         evas_object_del(pd->entry);
         pd->entry = NULL;
 
@@ -154,7 +150,6 @@ _elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode)
         elm_object_part_content_set(obj, "text", pd->label);
         evas_object_show(pd->label);
      }
-   pd->rename_mode = mode;
 }
 
 EOLIAN static Eina_Bool

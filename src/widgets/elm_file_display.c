@@ -239,7 +239,7 @@ static void
 _ctx_rename(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
    eo_do(data, eo_event_callback_add(ELM_FILE_ICON_EVENT_RENAME_DONE, _icon_rename_cb, NULL);
-               elm_obj_file_icon_rename_set(EINA_TRUE);
+               elm_obj_file_icon_rename_set(EINA_TRUE, EINA_FALSE);
                );
 }
 

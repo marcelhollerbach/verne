@@ -32,6 +32,10 @@ class Elm_File_Icon (Elm.Layout) {
 
         set {
           [[If true the icon will be in rename mode, if false the icon will switch back to normal mode]]
+          values {
+            mode : bool; [[the mode to set]]
+            take : bool; [[if you do from rename mode to no rename mode tak = true will result in a reset to the original name]]
+          }
         }
         get {
           [[Get the current mode]]
