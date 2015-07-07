@@ -355,9 +355,39 @@ _key_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EIN
         fmm_file = elm_object_item_data_get(mover);
         eo_do(grid, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHOOSEN, fmm_file));
 
-
         return EO_CALLBACK_STOP;
      }
+   else if (!strcmp(ev->key, "Home"))
+     {
+        //first item
+        eo_do(grid, elm_interface_scrollable_page_bring_in(0, 0));
+        return EO_CALLBACK_STOP;
+     }
+   else if (!strcmp(ev->key, "End"))
+     {
+        //last item
+        int h,v;
+        eo_do(grid, elm_interface_scrollable_last_page_get(&h, &v);
+                    elm_interface_scrollable_page_bring_in(h, v));
+        return EO_CALLBACK_STOP;
+     }
+   else if (!strcmp(ev->key, "Next"))
+     {
+        //next page
+        int h,v;
+        eo_do(grid, elm_interface_scrollable_current_page_get(&h, &v);
+                    elm_interface_scrollable_page_bring_in(h, v+1));
+        return EO_CALLBACK_STOP;
+     }
+   else if (!strcmp(ev->key, "Prior"))
+     {
+        //prior page
+        int h,v;
+        eo_do(grid, elm_interface_scrollable_current_page_get(&h, &v);
+                    elm_interface_scrollable_page_bring_in(h, v-1));
+        return EO_CALLBACK_STOP;
+     }
+
    return EO_CALLBACK_CONTINUE;
 }
 
@@ -373,6 +403,7 @@ _elm_file_display_view_grid_eo_base_constructor(Eo *obj, Elm_File_Display_View_G
 
    eo_do_super_ret(obj, ELM_FILE_DISPLAY_VIEW_GRID_CLASS, eo, eo_constructor());
 
+   eo_do(obj, elm_interface_scrollable_page_relative_set(1.0, 0.9));
    elm_gengrid_align_set(obj, 0.5, 0.0);
    eo_do(obj, parent = eo_parent_get());
 
