@@ -24,14 +24,14 @@ EOLIAN static Efm_File *
 _elm_file_display_view_grid_elm_file_display_view_item_get(Eo *obj EINA_UNUSED, Elm_File_Display_View_Grid_Data *pd EINA_UNUSED, int x EINA_UNUSED, int y EINA_UNUSED)
 {
    Elm_Object_Item *it;
-   Efm_File *fm_file;
+   Evas_Object *content;
 
    it = elm_gengrid_at_xy_item_get(obj, x, y, NULL, NULL);
    if (!it)
      return NULL;
-   fm_file = elm_object_item_data_get(it);
 
-   return fm_file;
+   content = elm_object_item_part_content_get(it, "elm.swallow.icon");
+   return content;
 }
 
 EOLIAN static void

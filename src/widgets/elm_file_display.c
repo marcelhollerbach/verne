@@ -674,10 +674,18 @@ _event_rect_mouse_down(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UN
 {
   W_DATA(data)
   Evas_Event_Mouse_Down *ev = event;
-  Efm_File *file;
+  Elm_File_Icon *file_icon;
+  Efm_File *file = NULL;
+  Eina_Bool renamemode = EINA_FALSE;
 
   //check if there is a item under it and save it if it is
-  eo_do(pd->cached_view, file = elm_file_display_view_item_get(ev->output.x, ev->output.y));
+  eo_do(pd->cached_view, file_icon = elm_file_display_view_item_get(ev->output.x, ev->output.y));
+  if (file_icon)
+    eo_do(file_icon, file = elm_obj_file_icon_fm_monitor_file_get());
+
+  //dont do anything if this icon is renamed
+  if (renamemode) return;
+
   if (ev->button == 1)
     {
        if (file)

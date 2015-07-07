@@ -23,7 +23,7 @@ interface Elm.File.Display.View {
             x : int;
             y : int;
          }
-         return : Efm.File*;
+         return : Elm.File.Icon*;
       }
       items_select {
          [[Select all appearing files under this rect]]
