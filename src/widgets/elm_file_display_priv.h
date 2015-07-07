@@ -72,6 +72,7 @@ typedef struct
       int folder_placement;
       int type;
       char reverse;
+      char casesensetive;
    }sort;
 } Config ;
 

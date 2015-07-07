@@ -97,6 +97,12 @@ class Elm_File_Display (Elm.Layout, Efl.File) {
             b : bool; [[true to reverse the sort ]]
          }
       }
+      @property case_sensetive_sort {
+         [[True to have casesensetive sort, False to have A/a right next to each other]]
+         values {
+            b : bool; [[The casesensetivity]]
+         }
+      }
       @property selection {
          [[Selection of the displaying view]]
          get {

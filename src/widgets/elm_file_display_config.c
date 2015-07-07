@@ -4,7 +4,7 @@
 #define GTK_FILESEP_LEN sizeof(FILESEP) - 1
 
 #define CONFIG_NAME "config"
-#define CONFIG_VERSION "0.1"
+#define CONFIG_VERSION "0.2"
 #define CONFIG_KEY CONFIG_NAME"-"CONFIG_VERSION
 
 typedef struct $
@@ -180,6 +180,8 @@ config_init(void)
    ADD_BASIC("hidden_files", hidden_files, EET_T_CHAR);
    ADD_BASIC("sort_type", sort.type, EET_T_INT);
    ADD_BASIC("folder_placement", sort.folder_placement, EET_T_INT);
+   ADD_BASIC("reverse", sort.reverse, EET_T_CHAR);
+   ADD_BASIC("casesensetive", sort.casesensetive, EET_T_CHAR);
 
    snprintf(buf, sizeof(buf),"%s/efm_config.eet", efreet_config_home_get());
    //TODO monitor of the file, if it changes reload!

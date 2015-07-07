@@ -52,9 +52,19 @@ _alphabetic_sort(const char *n1, const char *n2)
 
    while(n1[c] != '\0' && n2[c] != '\0')
      {
-        if (tolower(n1[c]) < tolower(n2[c]))
+        char c1, c2;
+
+        c1 = n1[c];
+        c2 = n2[c];
+        if (!config->sort.casesensetive)
+          {
+             c1 = tolower(c1);
+             c2 = tolower(c2);
+          }
+
+        if (c1 < c2)
           return -1;
-        else if (tolower(n1[c]) > tolower(n2[c]))
+        else if (c1 > c2)
           return 1;
         c ++;
      }

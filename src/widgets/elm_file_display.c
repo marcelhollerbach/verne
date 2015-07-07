@@ -176,6 +176,19 @@ _ctx_reverse(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
 }
 
 static void
+_ctx_casesensetive(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
+{
+   Evas_Object *w = evas_object_data_get(obj, "__w");
+   Eina_Bool p;
+
+   if (config->sort.casesensetive != 0)
+     p = EINA_FALSE;
+   else
+     p = EINA_TRUE;
+   eo_do(w, elm_obj_file_display_case_sensetive_sort_set(p));
+}
+
+static void
 _ctx_disable_preview(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
 {
    Evas_Object *w = evas_object_data_get(obj, "__w");
@@ -393,6 +406,13 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
       if (config->sort.reverse != 0)
         elm_check_state_set(ck, EINA_TRUE);
       elm_object_text_set(ck, "Reverse");
+      elm_object_item_content_set(it2, ck);
+
+      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_casesensetive, NULL);
+      ck = elm_check_add(menu);
+      if (config->sort.casesensetive != 0)
+        elm_check_state_set(ck, EINA_TRUE);
+      elm_object_text_set(ck, "Case Sensetive");
       elm_object_item_content_set(it2, ck);
    }
    elm_menu_item_separator_add(menu, NULL);
@@ -1257,6 +1277,21 @@ EOLIAN Eina_Bool
 _elm_file_display_reverse_sort_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd EINA_UNUSED)
 {
    return config->sort.reverse;
+}
+
+EOLIAN static void
+_elm_file_display_case_sensetive_sort_set(Eo *obj, Elm_File_Display_Data *pd, Eina_Bool b)
+{
+   config->sort.casesensetive = b;
+   config_save();
+   //refresh the url so the view is doing everything new
+   eo_do(obj, efl_file_set(pd->current_path, NULL));
+}
+
+EOLIAN static Eina_Bool
+_elm_file_display_case_sensetive_sort_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd EINA_UNUSED)
+{
+   return config->sort.casesensetive;
 }
 
 EOLIAN static Eina_Bool
