@@ -19,11 +19,14 @@ typedef struct {
     if (v && !evas_key_modifier_is_set(ev->modifiers, k)) \
       return EINA_FALSE;
 
+static void window_close(void);
+
 //the list of shortcuts
 static Shortcut shortcuts[] = {
     {"c", ONLY_CTRL, preview_copy},
     {"v", ONLY_CTRL, preview_paste},
     {"x", ONLY_CTRL, preview_move},
+    {"q", ONLY_CTRL, window_close},
     {NULL, ONLY_CTRL, NULL}
 };
 
@@ -69,4 +72,10 @@ void
 shortcuts_init()
 {
    evas_object_event_callback_add(preview, EVAS_CALLBACK_KEY_DOWN, _search_key_down, NULL);
+}
+
+static void
+window_close(void)
+{
+  elm_exit();
 }
