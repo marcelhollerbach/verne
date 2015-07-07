@@ -15,10 +15,13 @@ typedef struct
    Efm_File *file;
    Evas_Object *icon;
    Evas_Object *label;
+   Evas_Object *entry;
 
    Eina_Bool picmode;
    Ecore_Timer *t;
    Elm_File_MimeType_Cache *cache;
+
+   Eina_Bool rename_mode;
 } Elm_File_Icon_Data;
 
 #define PRIV_DATA  Elm_File_Icon_Data *pd = eo_data_scope_get(obj, ELM_FILE_ICON_CLASS);
@@ -105,8 +108,53 @@ _elm_file_icon_evas_object_smart_add(Eo *obj, Elm_File_Icon_Data *pd)
    pd->label = elm_label_add(obj);
    elm_object_text_set(pd->label, "...");
    evas_object_show(pd->label);
-
    elm_object_part_content_set(obj, "text", pd->label);
+}
+
+EOLIAN static void
+_elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode)
+{
+   if (mode == pd->rename_mode)
+     return;
+
+   if (mode)
+     {
+        const char *filename;
+
+        eo_do(pd->file, filename = efm_file_filename_get());
+
+        pd->entry = elm_entry_add(obj);
+        elm_entry_scrollable_set(pd->entry, EINA_TRUE);
+        elm_scroller_policy_set(pd->entry, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
+        elm_entry_single_line_set(pd->entry, EINA_TRUE);
+        elm_entry_editable_set(pd->entry, EINA_TRUE);
+        elm_entry_entry_set(pd->entry, filename);
+        eo_do(obj, eo_event_callback_call(ELM_FILE_ICON_EVENT_RENAME_START, NULL));
+
+        elm_object_part_content_unset(obj, "text");
+        elm_object_part_content_set(obj, "text", pd->entry);
+        evas_object_hide(pd->label);
+     }
+   else
+     {
+        const char *nname;
+
+        nname = elm_entry_entry_get(pd->entry);
+        eo_do(obj, eo_event_callback_call(ELM_FILE_ICON_EVENT_RENAME_DONE, (char*)nname));
+        evas_object_del(pd->entry);
+        pd->entry = NULL;
+
+        elm_object_part_content_unset(obj, "text");
+        elm_object_part_content_set(obj, "text", pd->label);
+        evas_object_show(pd->label);
+     }
+   pd->rename_mode = mode;
+}
+
+EOLIAN static Eina_Bool
+_elm_file_icon_rename_get(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
+{
+  return pd->rename_mode;
 }
 
 EOLIAN static const char *
