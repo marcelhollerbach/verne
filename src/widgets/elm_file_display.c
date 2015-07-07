@@ -904,14 +904,14 @@ _reset_clear_timer(Elm_File_Display_Data *pd)
      }
 }
 
-static void
-_event_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, void *event_info)
+static Eina_Bool
+_event_key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event)
 {
     Evas_Event_Key_Down *ev;
     Elm_File_Display_Data *pd;
 
     pd = eo_data_scope_get(obj, ELM_FILE_DISPLAY_CLASS);
-    ev = event_info;
+    ev = event;
     //look if its a single character, so it could be a searchpart
     if (ev->key[1] == '\0' && isalnum(*ev->string))
       {
@@ -927,6 +927,7 @@ _event_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, v
          eo_do(obj, elm_obj_file_display_search(searchme));
 
          pd->search.clear_timer = ecore_timer_add(0.9, _timer_cb, obj);
+         return EO_CALLBACK_STOP;
       }
     else if (!strcmp(ev->key, "BackSpace"))
       {
@@ -938,13 +939,13 @@ _event_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, v
          _reset_clear_timer(pd);
 
          if (!pd->search.searchpart)
-          return;
+           return EO_CALLBACK_STOP;
 
          oldlength = eina_strbuf_length_get(pd->search.searchpart);
          oldstr = eina_strbuf_string_steal(pd->search.searchpart);
 
          if (oldlength == 0)
-           return;
+           return EO_CALLBACK_STOP;
 
          //reset the string
          eina_strbuf_reset(pd->search.searchpart);
@@ -958,6 +959,7 @@ _event_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, v
          eo_do(obj, elm_obj_file_display_search(searchme));
 
          pd->search.clear_timer = ecore_timer_add(0.9, _timer_cb, obj);
+         return EO_CALLBACK_STOP;
       }
     else if (!strcmp(ev->key, "F2"))
       {
@@ -969,10 +971,11 @@ _event_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, v
           {
              eo_do(file->file_icon,
                eo_event_callback_add(ELM_FILE_ICON_EVENT_RENAME_DONE, _icon_rename_cb, NULL);
-               elm_obj_file_icon_rename_set(EINA_TRUE);
+               elm_obj_file_icon_rename_set(EINA_TRUE, EINA_FALSE);
              );
           }
         _selections_del(selection);
+        return EO_CALLBACK_STOP;
       }
     else if (!strcmp(ev->key, "Escape"))
       {
@@ -982,11 +985,33 @@ _event_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, v
         eo_do(pd->cached_view, selection = elm_file_display_view_selection_get());
         EINA_LIST_FOREACH(selection, node, file)
           {
-             eo_do(file->file_icon, elm_obj_file_icon_rename_set(EINA_FALSE));
+             eo_do(file->file_icon, elm_obj_file_icon_rename_set(EINA_FALSE, EINA_FALSE));
           }
         _selections_del(selection);
+        return EO_CALLBACK_STOP;
       }
-
+    else if (!strcmp(ev->key, "Return"))
+      {
+        //stop rename mode
+        Eina_Bool react = EINA_FALSE;
+        Eina_List *node, *selection;
+        Elm_File_Display_View_DndFile *file;
+        eo_do(pd->cached_view, selection = elm_file_display_view_selection_get());
+        EINA_LIST_FOREACH(selection, node, file)
+          {
+             Eina_Bool rename;
+             eo_do(file->file_icon, rename = elm_obj_file_icon_rename_get();
+                                    elm_obj_file_icon_rename_set(EINA_FALSE, EINA_TRUE););
+             if (rename)
+               react = EINA_TRUE;
+          }
+        _selections_del(selection);
+        if (react)
+          return EO_CALLBACK_STOP;
+        else
+          return EO_CALLBACK_CONTINUE;
+      }
+   return EO_CALLBACK_CONTINUE;
 }
 
 /*
@@ -1088,7 +1113,7 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
    evas_object_event_callback_add(pd->event.rect, EVAS_CALLBACK_MOUSE_DOWN, _event_rect_mouse_down, obj);
 
    //listen for key downs for the searchbar
-   evas_object_event_callback_add(obj, EVAS_CALLBACK_KEY_DOWN, _event_key_down, NULL);
+   eo_do(obj, eo_event_callback_add(EVAS_OBJECT_EVENT_KEY_DOWN, _event_key_down, NULL));
 
    pd->event.mouse_down.x = -1;
    pd->event.mouse_down.y = -1;
