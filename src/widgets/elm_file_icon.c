@@ -110,6 +110,11 @@ _elm_file_icon_evas_object_smart_add(Eo *obj, Elm_File_Icon_Data *pd)
    evas_object_show(pd->label);
    elm_object_part_content_set(obj, "text", pd->label);
 }
+static void
+_unfocused(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
+{
+   eo_do(data, elm_obj_file_icon_rename_set(EINA_FALSE));
+}
 
 EOLIAN static void
 _elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode)
@@ -124,6 +129,7 @@ _elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode)
         eo_do(pd->file, filename = efm_file_filename_get());
 
         pd->entry = elm_entry_add(obj);
+        evas_object_smart_callback_add(pd->entry, "unfocused", _unfocused, obj);
         elm_entry_scrollable_set(pd->entry, EINA_TRUE);
         elm_scroller_policy_set(pd->entry, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
         elm_entry_single_line_set(pd->entry, EINA_TRUE);

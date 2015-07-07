@@ -207,8 +207,44 @@ _ctx_only_folder(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUS
           );
 }
 
+static Eina_Bool
+_icon_rename_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event)
+{
+   const char *name = event;
+   const char *filename;
+   Efm_File *file;
+
+   eo_do(obj, file = elm_obj_file_icon_fm_monitor_file_get());
+
+   if (!file) return EINA_FALSE;
+
+   eo_do(file, filename = efm_file_filename_get());
+
+   if (!!strcmp(name, filename))
+     {
+        const char *path;
+        const char *dir;
+        char buf[PATH_MAX];
+
+        eo_do(file, path = efm_file_path_get());
+        dir = ecore_file_dir_get(path);
+        snprintf(buf, sizeof(buf), "%s/%s", dir, name);
+        if (!ecore_file_mv(path, buf))
+          ERR("Rename failed!");
+     }
+   return EINA_TRUE;
+}
+
 static void
-_ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
+_ctx_rename(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
+{
+   eo_do(data, eo_event_callback_add(ELM_FILE_ICON_EVENT_RENAME_DONE, _icon_rename_cb, NULL);
+               elm_obj_file_icon_rename_set(EINA_TRUE);
+               );
+}
+
+static void
+_ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
 {
    Evas_Object *menu;
    Elm_Object_Item *it, *it2;
@@ -224,7 +260,13 @@ _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
          eo_event_callback_call(&_ELM_FILE_DISPLAY_EVENT_HOOK_MENU_SELECTOR_START,
                                 &ev));
    elm_menu_item_separator_add(menu, NULL);
-
+   /*
+    * Rename
+    */
+   if (file) {
+      it = elm_menu_item_add(menu, NULL, NULL, "Rename", _ctx_rename, icon);
+   }
+   elm_menu_item_separator_add(menu, NULL);
    /*
     * Views
     */
@@ -681,7 +723,8 @@ _event_rect_mouse_down(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UN
   //check if there is a item under it and save it if it is
   eo_do(pd->cached_view, file_icon = elm_file_display_view_item_get(ev->output.x, ev->output.y));
   if (file_icon)
-    eo_do(file_icon, file = elm_obj_file_icon_fm_monitor_file_get());
+    eo_do(file_icon, file = elm_obj_file_icon_fm_monitor_file_get();
+                     renamemode = elm_obj_file_icon_rename_get());
 
   //dont do anything if this icon is renamed
   if (renamemode) return;
@@ -702,7 +745,7 @@ _event_rect_mouse_down(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UN
     }
    else if (ev->button == 3)
     {
-       _ctx_menu_open(pd->obj, ev->output.x, ev->output.y, file);
+       _ctx_menu_open(pd->obj, ev->output.x, ev->output.y, file_icon,file);
     }
 }
 
@@ -913,6 +956,35 @@ _event_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, v
          searchme = eina_strbuf_string_get(pd->search.searchpart);
          //SET string in ui
          eo_do(obj, elm_obj_file_display_search(searchme));
+
+         pd->search.clear_timer = ecore_timer_add(0.9, _timer_cb, obj);
+      }
+    else if (!strcmp(ev->key, "F2"))
+      {
+        //start rename mode
+        Eina_List *node, *selection;
+        Elm_File_Display_View_DndFile *file;
+        eo_do(pd->cached_view, selection = elm_file_display_view_selection_get());
+        EINA_LIST_FOREACH(selection, node, file)
+          {
+             eo_do(file->file_icon,
+               eo_event_callback_add(ELM_FILE_ICON_EVENT_RENAME_DONE, _icon_rename_cb, NULL);
+               elm_obj_file_icon_rename_set(EINA_TRUE);
+             );
+          }
+        _selections_del(selection);
+      }
+    else if (!strcmp(ev->key, "Escape"))
+      {
+        //stop rename mode
+        Eina_List *node, *selection;
+        Elm_File_Display_View_DndFile *file;
+        eo_do(pd->cached_view, selection = elm_file_display_view_selection_get());
+        EINA_LIST_FOREACH(selection, node, file)
+          {
+             eo_do(file->file_icon, elm_obj_file_icon_rename_set(EINA_FALSE));
+          }
+        _selections_del(selection);
       }
 
 }
@@ -956,6 +1028,7 @@ _elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd)
   Eo *eo;
 
   efm_init();
+  ecore_file_init();
   eo_do(EMOUS_CLASS, emous_init());
   config_init();
   if (!views)
@@ -976,6 +1049,7 @@ _elm_file_display_eo_base_destructor(Eo *obj, Elm_File_Display_Data *pd EINA_UNU
    efm_shutdown();
    emous_shutdown();
    config_shutdown();
+   ecore_shutdown();
    eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, eo_destructor());
 }
 
