@@ -100,7 +100,7 @@ _elm_file_icon_evas_object_smart_add(Eo *obj, Elm_File_Icon_Data *pd)
 {
    eo_do_super(obj, ELM_FILE_ICON_CLASS, evas_obj_smart_add());
 
-   if (!elm_layout_theme_set(obj, "file_icon", "base", "default"))
+   if (!elm_layout_theme_set(obj, "file_icon", "base", elm_object_style_get(obj)))
      {
         CRI("Failed to set theme file\n");
      }
