@@ -1,6 +1,6 @@
 #define EFM_EO_NEED
 
-#include "elm_file_display_priv.h"
+#include "../elm_file_display_priv.h"
 
 typedef struct {
    Elm_Gengrid_Item_Class *gic;
@@ -184,7 +184,6 @@ _grid_content_get(void *data, Evas_Object *obj, const char *part)
    file = data;
 
    ic = icon_create(obj, file);
-
    return ic;
 }
 
