@@ -1,4 +1,4 @@
-#include "elm_file_display_priv.h"
+#include "../elm_file_display_priv.h"
 
 typedef struct {
 

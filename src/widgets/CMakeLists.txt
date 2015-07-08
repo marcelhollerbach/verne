@@ -28,18 +28,18 @@ LIST(APPEND WIDGET_LIBRARY
    elm_file_display_view.c
    elm_file_display_view.eo.h
    elm_file_display_view.eo.x
-   elm_file_display_view_debug.c
-   elm_file_display_view_debug.eo.x
-   elm_file_display_view_debug.eo.h
-   elm_file_display_view_grid.c
-   elm_file_display_view_grid.eo.x
-   elm_file_display_view_grid.eo.h
+   views/elm_file_display_view_debug.c
+   views/elm_file_display_view_debug.eo.x
+   views/elm_file_display_view_debug.eo.h
+   views/elm_file_display_view_grid.c
+   views/elm_file_display_view_grid.eo.x
+   views/elm_file_display_view_grid.eo.h
    )
 
 string(REPLACE "\n" "" EOLIAN_EO_DIR_WITHOUT_NEWLINE
 "${EOLIAN_EO_DIR}")
 
-file(GLOB files "*.eo")
+file(GLOB_RECURSE files "*.eo")
 
 message(${EOLIAN_EO_DIR})
 
