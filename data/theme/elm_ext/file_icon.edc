@@ -32,17 +32,58 @@
                fixed: 1 1;
             }
          }
-         part { name: "edit_indicator"; type: RECT;
-            nomouse;
+         part { name: "drop_indicator";
             description { state: "default" 0.0;
-                rel1.to: "text";
-                rel2.to: "text";
-                color: 200 200 200 50;
-                visible: 0;
+               rel1.to: "base";
+               rel2.to: "base";
+               image {
+                  normal: "outline_glow.png";
+                  border: 2 2 2 2;
+               }
+               visible: 0;
             }
-            description { state: "visible" 0.0;
-               inherit: "default" 0.0;
+            description { state: "drop" 0.0;
+               inherit: "default";
                visible: 1;
+            }
+         }
+      }
+      programs {
+            program { signal: "file_icon,mode,drop";
+               source: "elm";
+               action: STATE_SET "drop" 0.0;
+               target: "drop_indicator";
+            }
+        }
+   }
+   group { name: "elm/file_icon/base/line";
+      parts {
+         part { name: "base";
+            type: RECT;
+            description { state: "default" 0.0;
+               color: 0 0 0 0;
+               align: 0.5 0.5;
+               //aspect: 1 1;
+            }
+         }
+         part { name: "content"; type: SWALLOW;
+            description { state: "default" 0.0;
+               rel1.to: "base";
+               rel1.relative: 0.0 0.0;
+               rel2.to: "base";
+               rel2.relative: 0.0 1.0;
+               aspect: 1 1;
+               align: 1.0 0.5;
+            }
+         }
+          part { name: "text"; type: SWALLOW;
+            description { state: "default" 0.0;
+               color: 0 0 0 0;
+               rel1.to: "content";
+               rel1.relative: 0.0 0.0;
+               rel2.to: "base";
+               rel2.relative: 1.0 1.0;
+               fixed: 1 1;
             }
          }
          part { name: "drop_indicator";
@@ -60,23 +101,12 @@
                visible: 1;
             }
          }
-         programs {
-            program { signal: "file_icon,mode,edit";
-               source: "elm";
-               action: STATE_SET "visible" 0.0;
-               target: "edit_indicator";
-            }
-            program { signal: "file_icon,mode,display";
-               source: "elm";
-               action: STATE_SET "default" 0.0;
-               target: "edit_indicator";
-               target: "drop_indicator";
-            }
+      }
+      programs {
             program { signal: "file_icon,mode,drop";
                source: "elm";
                action: STATE_SET "drop" 0.0;
                target: "drop_indicator";
             }
         }
-   }
    }
