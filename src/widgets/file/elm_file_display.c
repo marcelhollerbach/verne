@@ -258,6 +258,21 @@ _ctx_rename(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 }
 
 static void
+_ctx_new_folder(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
+{
+  const char *dir;
+  char path[PATH_MAX];
+  int c;
+
+  eo_do(data, efl_file_get(&dir, NULL));
+  snprintf(path, sizeof(path), "%s/new_directory", dir);
+  for(c = 0; ecore_file_exists(path); c++)
+    snprintf(path, sizeof(path), "%s/new_directory_%d", dir, c);
+
+  ecore_file_mkdir(path);
+}
+
+static void
 _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
 {
    Evas_Object *menu;
@@ -280,6 +295,11 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
    if (file) {
       it = elm_menu_item_add(menu, NULL, NULL, "Rename", _ctx_rename, icon);
    }
+   /*
+    * Rename
+    */
+   it = elm_menu_item_add(menu, NULL, NULL, "New Folder", _ctx_new_folder, obj);
+
    elm_menu_item_separator_add(menu, NULL);
    /*
     * Views
