@@ -945,6 +945,23 @@ _reset_clear_timer(Elm_File_Display_Data *pd)
 }
 
 static Eina_Bool
+_is_rename_active(Elm_File_Display_Data *pd)
+{
+  Eina_Bool rename_active;
+  Eina_List *node, *selection;
+  Elm_File_Display_View_DndFile *file;
+  eo_do(pd->cached_view, selection = elm_file_display_view_selection_get());
+  EINA_LIST_FOREACH(selection, node, file)
+    {
+       eo_do(file->file_icon, rename_active = elm_obj_file_icon_rename_get());
+       if (rename_active)
+         goto end;
+    }
+end:
+  _selections_del(selection);
+  return rename_active;
+}
+static Eina_Bool
 _event_key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event)
 {
     Evas_Event_Key_Down *ev;
@@ -962,6 +979,9 @@ _event_key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *de
     if (ev->key[1] == '\0' && isalnum(*ev->string))
       {
          const char *searchme;
+
+         if (_is_rename_active(pd))
+            return EO_CALLBACK_CONTINUE;
          //update search string
          _reset_clear_timer(pd);
          if (!pd->search.searchpart)
@@ -979,6 +999,9 @@ _event_key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *de
       {
          char *oldstr;
          int oldlength;
+
+         if (_is_rename_active(pd))
+            return EO_CALLBACK_CONTINUE;
 
          const char *searchme;
          //shrink search string
@@ -1031,15 +1054,19 @@ _event_key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *de
         eo_do(pd->cached_view, selection = elm_file_display_view_selection_get());
         EINA_LIST_FOREACH(selection, node, file)
           {
-             eo_do(file->file_icon, elm_obj_file_icon_rename_set(EINA_FALSE, EINA_FALSE));
+             eo_do(file->file_icon,
+                     elm_obj_file_icon_rename_set(EINA_FALSE, EINA_FALSE);
+                     eo_event_callback_del(ELM_FILE_ICON_EVENT_RENAME_DONE, _icon_rename_cb, NULL);
+                  );
           }
         _selections_del(selection);
         return EO_CALLBACK_STOP;
       }
     else if (!strcmp(ev->key, "Return"))
       {
+        if (!_is_rename_active(pd))
+          return EO_CALLBACK_CONTINUE;
         //stop rename mode
-        Eina_Bool react = EINA_FALSE;
         Eina_List *node, *selection;
         Elm_File_Display_View_DndFile *file;
         eo_do(pd->cached_view, selection = elm_file_display_view_selection_get());
@@ -1048,14 +1075,9 @@ _event_key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *de
              Eina_Bool rename;
              eo_do(file->file_icon, rename = elm_obj_file_icon_rename_get();
                                     elm_obj_file_icon_rename_set(EINA_FALSE, EINA_TRUE););
-             if (rename)
-               react = EINA_TRUE;
           }
         _selections_del(selection);
-        if (react)
-          return EO_CALLBACK_STOP;
-        else
-          return EO_CALLBACK_CONTINUE;
+        return EO_CALLBACK_STOP;
       }
    return EO_CALLBACK_CONTINUE;
 }
