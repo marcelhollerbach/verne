@@ -74,8 +74,8 @@ _file_add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA
    Elm_File_Display_View_List_Data *pd = eo_data_scope_get(data, ELM_FILE_DISPLAY_VIEW_LIST_CLASS);
    Elm_Object_Item *it;
 
-   it = elm_genlist_item_append(data, pd->gic, icon, NULL, NULL, NULL, NULL);
-   it = elm_genlist_item_sorted_insert(data, pd->gic, icon, NULL, NULL, sort_func, NULL, icon);
+   it = elm_genlist_item_append(data, pd->gic, icon, NULL, 0, NULL, NULL);
+   it = elm_genlist_item_sorted_insert(data, pd->gic, icon, NULL, 0, sort_func, NULL, icon);
    eina_hash_add(pd->files, &icon, it);
    return EINA_TRUE;
 }
@@ -83,7 +83,6 @@ _file_add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA
 static Eina_Bool
 _error(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
 {
-
    return EINA_TRUE;
 }
 
@@ -108,7 +107,6 @@ _elm_file_display_view_list_elm_file_display_view_path_set(Eo *obj, Elm_File_Dis
    eo_do(EFM_MONITOR_CLASS, pd->fm = efm_monitor_start(dir,pd->config.show_hidden,
                               pd->config.only_folder));
 
-   ERR("LISTING FILES FOR %s", dir);
    pd->files = eina_hash_pointer_new(NULL);
    eo_do(pd->fm, eo_event_callback_add(EFM_MONITOR_EVENT_FILE_ADD, _file_add, obj);
                   eo_event_callback_add(EFM_MONITOR_EVENT_FILE_DEL, _file_del, obj);
@@ -334,7 +332,6 @@ _key_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EIN
 EOLIAN static Eo_Base *
 _elm_file_display_view_list_eo_base_constructor(Eo *obj, Elm_File_Display_View_List_Data *pd)
 {
-   ERR("CONSTRUCTING VIEW LIST");
    Eo *eo;
    Eo *parent;
 
