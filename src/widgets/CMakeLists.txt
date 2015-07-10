@@ -5,35 +5,41 @@ set(THEME_PATH_DEFINITION THEME_PATH="${THEME_INSTALL_PATH}")
 LIST(APPEND WIDGET_LIBRARY
    Elementary_Ext.h
    elementary_ext.c
-   elm_file_mimetype_cache.c
-   elm_file_mimetype_cache.eo
-   elm_file_mimetype_cache.eo.x
-   elm_file_mimetype_cache.eo.h
-   elm_file_icon.eo
-   elm_file_icon.eo.x
-   elm_file_icon.eo.h
-   elm_file_icon.eo.legacy.h
-   elm_file_icon.c
-   elm_file_display.c
-   elm_file_display.h
-   elm_file_display_config.c
-   elm_file_display_bookmark.c
-   elm_file_display_preview.c
-   elm_file_display_helper.c
-   elm_file_display.eo
-   elm_file_display.eo.x
-   elm_file_display.eo.h
-   elm_file_display.eo.legacy.h
+   #itemspackage
+
+   #filepackage
+   file/elm_file_mimetype_cache.c
+   file/elm_file_mimetype_cache.eo
+   file/elm_file_mimetype_cache.eo.x
+   file/elm_file_mimetype_cache.eo.h
+   file/elm_file_icon.eo
+   file/elm_file_icon.eo.x
+   file/elm_file_icon.eo.h
+   file/elm_file_icon.eo.legacy.h
+   file/elm_file_icon.c
+   file/elm_file_display.c
+   file/elm_file_display.h
+   file/elm_file_display_config.c
+   file/elm_file_display_bookmark.c
+   file/elm_file_display_preview.c
+   file/elm_file_display_helper.c
+   file/elm_file_display.eo
+   file/elm_file_display.eo.x
+   file/elm_file_display.eo.h
+   file/elm_file_display.eo.legacy.h
    #views
-   elm_file_display_view.c
-   elm_file_display_view.eo.h
-   elm_file_display_view.eo.x
-   views/elm_file_display_view_debug.c
-   views/elm_file_display_view_debug.eo.x
-   views/elm_file_display_view_debug.eo.h
-   views/elm_file_display_view_grid.c
-   views/elm_file_display_view_grid.eo.x
-   views/elm_file_display_view_grid.eo.h
+   file/elm_file_display_view.c
+   file/elm_file_display_view.eo.h
+   file/elm_file_display_view.eo.x
+   file/views/elm_file_display_view_debug.c
+   file/views/elm_file_display_view_debug.eo.x
+   file/views/elm_file_display_view_debug.eo.h
+   file/views/elm_file_display_view_grid.c
+   file/views/elm_file_display_view_grid.eo.x
+   file/views/elm_file_display_view_grid.eo.h
+   file/views/elm_file_display_view_list.c
+   file/views/elm_file_display_view_list.eo.x
+   file/views/elm_file_display_view_list.eo.h
    )
 
 string(REPLACE "\n" "" EOLIAN_EO_DIR_WITHOUT_NEWLINE
