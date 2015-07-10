@@ -1,0 +1,60 @@
+class Elm_File_Icon (Elm.Layout) {
+   eo_prefix: elm_obj_file_icon;
+   methods {
+      @property fm_monitor_file {
+        [[Sets a Efm.File to display]]
+        set {
+
+        }
+        get {
+
+        }
+        values {
+           file : Efm.File*;
+        }
+      }
+      mimetype_cache_set {
+        [[Sets the mimetype cache which should be used to take the mimetypes]]
+        params {
+          cache : Elm.File.MimeType.Cache*;
+        }
+      }
+      util_icon_theme_get @class{
+         [[Will return the name of the icon theme]]
+         return : const(char)*;
+      }
+      @property rename {
+        [[Set the state of this icon, if it is in rename mode or not
+
+          If the rename is cancled and a new name is entered the event rename,done will be called with the new name as event.
+          This does not mean that this widget will rename the file, the caller has to take care about this
+        ]]
+
+        set {
+          [[If true the icon will be in rename mode, if false the icon will switch back to normal mode]]
+          values {
+            mode : bool; [[the mode to set]]
+            take : bool; [[if you do from rename mode to no rename mode tak = true will result in a reset to the original name]]
+          }
+        }
+        get {
+          [[Get the current mode]]
+        }
+        values {
+          mode : bool;
+        }
+      }
+   }
+   implements {
+     Evas.Object_Smart.del;
+     Evas.Object_Smart.add;
+     Evas.Object_Smart.resize;
+     Eo.Base.destructor;
+   }
+   events {
+     rename,start; [[The widget has gone to rename mode]]
+     rename,done : const(char)*; [[The widget went back to normal displaymode new name is passed]]
+     item,drop : Elm.Selection.Data; [[Called when something else is droped above this]]
+     item,hover; [[Called when something is hover over above this item for a long time]]
+   }
+}
