@@ -1,0 +1,47 @@
+enum Elm.Items.Move_Dir {
+    NORTH, WEST, EAST, SOUTH
+}
+
+abstract Elm.Items.Display (Elm.Scroller) {
+    [[]]
+    methods {
+        @property tree {
+            get {
+
+            }
+            values {
+                root : Efl.Tree.Base*;
+            }
+        }
+        @property child_pane {
+            get {
+
+            }
+            values {
+                pane : Evas.Object*;
+            }
+        }
+        sel_move {
+            params {
+                direction : Elm.Items.Move_Dir;
+            }
+        }
+        item_search_xywh {
+            params {
+                x : int;
+                y : int;
+                w : int;
+                h : int;
+            }
+            return : Elm.Items.Item*;
+        }
+
+    }
+    implements {
+        @virtual .child_pane.get;
+        @virtual .sel_move;
+        Evas.Object_Smart.add;
+        Evas.Object_Smart.resize;
+        Elm.Widget.event;
+    }
+}

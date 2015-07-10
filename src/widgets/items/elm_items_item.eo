@@ -1,0 +1,30 @@
+abstract Elm.Items.Item (Elm.Widget, Efl.Tree.Base) {
+    methods {
+        @property content {
+            values {
+                content : Evas.Object*;
+            }
+        }
+        @property selected {
+            values {
+                selected : bool;
+            }
+        }
+        realize {
+
+        }
+        unrealize {
+
+        }
+    }
+    implements {
+        Evas.Object_Smart.add;
+        Elm.Widget.event;
+    }
+    events {
+        realize;
+        unrealize;
+        selected;
+        unselected;
+    }
+}

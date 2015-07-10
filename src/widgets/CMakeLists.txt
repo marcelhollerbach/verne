@@ -6,7 +6,12 @@ LIST(APPEND WIDGET_LIBRARY
    Elementary_Ext.h
    elementary_ext.c
    #itemspackage
-
+   items/elm_items_display.c
+   items/elm_items_display.eo.x
+   items/elm_items_display.eo.h
+   items/elm_items_item.c
+   items/elm_items_item.eo.x
+   items/elm_items_item.eo.h
    #filepackage
    file/elm_file_mimetype_cache.c
    file/elm_file_mimetype_cache.eo
@@ -52,19 +57,13 @@ message(${EOLIAN_EO_DIR})
 foreach(filename ${files})
 add_custom_command(
    OUTPUT ${filename}.x
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/widgets -I ../lib/efm/ -I ../lib/efm/ --gc --eo -o ${filename}.x ${filename}
+   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/widgets -I ${CMAKE_SOURCE_DIR}/src/lib/efm/ -I ${CMAKE_SOURCE_DIR}/src/lib/tree/ --gc --eo -o ${filename}.x ${filename}
    DEPENDS ${filename}
 )
 
 add_custom_command(
    OUTPUT ${filename}.h
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/ -I ../lib/efm/ --gh --eo -o ${filename}.h ${filename}
-   DEPENDS ${filename}
-)
-
-add_custom_command(
-   OUTPUT ${filename}.legacy.h
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/widgets -I ../lib/efm/ --gh --legacy -o ${filename}.legacy.h ${filename}
+   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/widgets -I ${CMAKE_SOURCE_DIR}/src/lib/efm/ -I ${CMAKE_SOURCE_DIR}/src/lib/tree/ --gh --eo -o ${filename}.h ${filename}
    DEPENDS ${filename}
 )
 
@@ -78,6 +77,7 @@ include_directories(
   ${ELEMENTARY_INCLUDE_DIRS}
   ../lib/efm
   ../lib/emous
+  ../lib/tree
 )
 
 target_link_libraries(widgets
@@ -87,6 +87,7 @@ target_link_libraries(widgets
   ${EFREET_TRASH}
   efm_lib
   emous
+  tree_lib
 )
 
 set_property(TARGET widgets
