@@ -1,0 +1,44 @@
+struct Efl.Tree.Update {
+    parent : Efl.Tree.Base*;
+    child : Efl.Tree.Base*;
+}
+
+class Efl.Tree.Base(Eo.Base) {
+    methods {
+        append {
+            params {
+                item : Efl.Tree.Base*;
+                relative: Efl.Tree.Base*;
+            }
+        }
+        prepend {
+            params {
+                item: Efl.Tree.Base*;
+                relative: Efl.Tree.Base*;
+            }
+        }
+        insert_sorted {
+            params {
+                item: Efl.Tree.Base*; [[Need to implement efl.compare]]
+            }
+        }
+        remove {
+            params {
+                item : Efl.Tree.Base*;
+            }
+        }
+        children {
+            params {
+                @in recursive : bool;
+            }
+
+            return : list<Efl.Tree.Base*>*;
+        }
+    }
+    events {
+        children,add,direct : Efl.Tree.Base*; [[A child was added to this tree]]
+        children,add,recursive : Efl.Tree.Update*; [[A child was added to a tree, which is a child of this tree item ]]
+        children,del,direct : Efl.Tree.Base*; [[A child was deleted from this tree]]
+        children,del,recursive : Efl.Tree.Update*; [[A child was deleted from a tree, which is a child of this tree item ]]
+    }
+}

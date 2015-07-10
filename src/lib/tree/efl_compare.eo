@@ -1,0 +1,10 @@
+interface Efl.Compare {
+    methods {
+        compare {
+            params {
+                data : const(void)*;
+            }
+            return : int;
+        }
+    }
+}

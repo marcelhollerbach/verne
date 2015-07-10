@@ -3,6 +3,7 @@ include_directories(
    ../widgets/
    ../lib/emous
    ../lib/efm
+   ../lib/tree
 )
 
 #add_executable(fileicon_test fileicon.c)
@@ -57,5 +58,16 @@ target_link_libraries (test_archive
 )
 
 add_test(efm_test test_fm_monitor)
+
+add_executable(test_tree test_tree.c)
+
+target_link_libraries (test_tree
+   ${EO_LIBRARIES}
+   ${Check_LIBRARIES}
+   tree_lib
+   m
+)
+
+add_test(tree_test test_tree)
 
 add_subdirectory(./emous_test)
