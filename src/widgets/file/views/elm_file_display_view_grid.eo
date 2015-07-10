@@ -1,0 +1,15 @@
+class Elm.File.Display.View.Grid(Elm.Gengrid, Elm.File.Display.View)
+{
+    implements {
+        Elm.File.Display.View.name_get;
+        Elm.File.Display.View.item_get;
+        Elm.File.Display.View.items_select;
+        Elm.File.Display.View.selection_get;
+        Elm.File.Display.View.path_set;
+        Elm.File.Display.View.size_get;
+        Elm.File.Display.View.config_set;
+        Elm.File.Display.View.search;
+        Eo.Base.constructor;
+        Eo.Base.destructor;
+    }
+}
