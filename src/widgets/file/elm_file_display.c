@@ -70,7 +70,6 @@ _views_standart_init()
 {
    views = eina_hash_string_small_new(NULL);
    eo_do(ELM_FILE_DISPLAY_CLASS,
-      elm_obj_file_display_view_pool_add(ELM_FILE_DISPLAY_VIEW_GRID_CLASS);
       elm_obj_file_display_view_pool_add(ELM_FILE_DISPLAY_VIEW_LIST_CLASS);
       elm_obj_file_display_view_pool_add(ELM_FILE_DISPLAY_VIEW_DEBUG_CLASS);
     );
