@@ -1,0 +1,9 @@
+class Elm.Items.List(Elm.Items.Display) {
+    implements {
+        Elm.Items.Display.child_pane.get;
+        Elm.Items.Display.sel_move;
+        Evas.Object_Smart.add;
+        Eo.Base.constructor;
+        Eo.Base.destructor;
+    }
+}
