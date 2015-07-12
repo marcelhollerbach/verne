@@ -81,10 +81,15 @@ _timer_cb(void *data)
 static void
 _mouse_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
+   Evas_Event_Mouse_Down *ev;
    Eina_Bool selected;
    Elm_Items_Item_Data *pd;
    Eo *sobj;
+
    pd = eo_data_scope_get(obj, ELM_ITEMS_ITEM_CLASS);
+   ev = event_info;
+
+   if (ev->button != 1) return;
 
    //get a self reference, if one of the callbacks leads to a deletion of this object, we can detect it and return
    eo_do(obj, eo_wref_add(&sobj));
