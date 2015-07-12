@@ -1,4 +1,4 @@
-abstract Elm.Items.Item (Elm.Widget, Efl.Tree.Base) {
+class Elm.Items.Item (Elm.Widget) {
     methods {
         @property content {
             values {
@@ -16,15 +16,20 @@ abstract Elm.Items.Item (Elm.Widget, Efl.Tree.Base) {
         unrealize {
 
         }
+        item_get {
+            return : Efl.Tree.Base*;
+        }
     }
     implements {
         Evas.Object_Smart.add;
-        Elm.Widget.event;
+        Eo.Base.destructor;
     }
     events {
         realize;
         unrealize;
         selected;
         unselected;
+        clicked;
+        clicked,double;
     }
 }

@@ -1,17 +1,18 @@
 #include "elm_items_priv.h"
 
-
 typedef struct {
-    Evas_Object *rectangle;
+    Evas_Object *edje;
     Evas_Object *content;
     Eina_Bool selected;
+    Efl_Tree_Base *item;
+    Ecore_Timer *double_timer;
 } Elm_Items_Item_Data;
 
 EOLIAN static void
-_elm_items_item_content_set(Eo *obj, Elm_Items_Item_Data *pd, Evas_Object *content)
+_elm_items_item_content_set(Eo *obj EINA_UNUSED, Elm_Items_Item_Data *pd, Evas_Object *content)
 {
    pd->content = content;
-   elm_widget_resize_object_set(obj, content, EINA_TRUE);
+   elm_object_part_content_set(pd->edje, "content", pd->content);
 }
 
 EOLIAN static Evas_Object *
@@ -21,22 +22,15 @@ _elm_items_item_content_get(Eo *obj EINA_UNUSED, Elm_Items_Item_Data *pd)
 }
 
 EOLIAN static void
-_elm_items_item_realize(Eo *obj EINA_UNUSED, Elm_Items_Item_Data *pd)
+_elm_items_item_realize(Eo *obj EINA_UNUSED, Elm_Items_Item_Data *pd EINA_UNUSED)
 {
-   //debug
-   srand((unsigned int) obj);
-   int r = rand() % 255;
-   int g = rand() % 255;
-   int b = rand() % 255;
-   evas_object_color_set(pd->rectangle, r, g, b, 255);
    //call realize event
    eo_do(obj, eo_event_callback_call(ELM_ITEMS_ITEM_EVENT_REALIZE, NULL));
 }
 
 EOLIAN static void
-_elm_items_item_unrealize(Eo *obj EINA_UNUSED, Elm_Items_Item_Data *pd)
+_elm_items_item_unrealize(Eo *obj EINA_UNUSED, Elm_Items_Item_Data *pd EINA_UNUSED)
 {
-   eo_do(pd->rectangle, efl_gfx_color_set(10, 10, 10, 255));
    eo_do(obj, eo_event_callback_call(ELM_ITEMS_ITEM_EVENT_UNREALIZE, NULL));
 }
 
@@ -49,16 +43,12 @@ _elm_items_item_selected_set(Eo *obj, Elm_Items_Item_Data *pd, Eina_Bool selecte
 
    if (selected)
      {
-        eo_do(pd->rectangle, efl_gfx_color_set(255, 0, 0, 255));
+        elm_layout_signal_emit(pd->edje, "elm,state,selected,on", "elm");
         eo_do(obj, eo_event_callback_call(ELM_ITEMS_ITEM_EVENT_SELECTED, NULL));
      }
    else
      {
-        srand((unsigned int) obj);
-        int r = rand() % 255;
-        int g = rand() % 255;
-        int b = rand() % 255;
-        evas_object_color_set(pd->rectangle, r, g, b, 255);
+        elm_layout_signal_emit(pd->edje, "elm,state,selected,off", "elm");
         eo_do(obj, eo_event_callback_call(ELM_ITEMS_ITEM_EVENT_UNSELECTED, NULL));
      }
 }
@@ -69,17 +59,51 @@ _elm_items_item_selected_get(Eo *obj EINA_UNUSED, Elm_Items_Item_Data *pd)
    return pd->selected;
 }
 
-EOLIAN static Eina_Bool
-_elm_items_item_elm_widget_event(Eo *obj, Elm_Items_Item_Data *pd, Evas_Object *source EINA_UNUSED, Evas_Callback_Type type, void *event_info)
+static Eina_Bool
+_timer_cb(void *data)
 {
-   if (type == EVAS_CALLBACK_MOUSE_DOWN)
+   Elm_Items_Item_Data *pd;
+
+   pd = eo_data_scope_get(data, ELM_ITEMS_ITEM_CLASS);
+
+   pd->double_timer = NULL;
+
+   return EINA_TRUE;
+}
+
+static void
+_mouse_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
+{
+   Eina_Bool selected;
+   Elm_Items_Item_Data *pd;
+   Eo *sobj;
+   pd = eo_data_scope_get(obj, ELM_ITEMS_ITEM_CLASS);
+
+   //get a self reference, if one of the callbacks leads to a deletion of this object, we can detect it and return
+   eo_do(obj, eo_wref_add(&sobj));
+
+   eo_do(sobj, selected = elm_items_item_selected_get());
+
+   if (selected && pd->double_timer)
      {
-        //TODO check if those are the correct buttons
-        eo_do(obj, elm_items_item_selected_set(!pd->selected));
-        return EINA_FALSE;
+        //this is a double click! nasty!
+        ecore_timer_del(pd->double_timer);
+        pd->double_timer = NULL;
+        eo_do(sobj, eo_event_callback_call(ELM_ITEMS_ITEM_EVENT_CLICKED_DOUBLE, NULL));
+        return;
      }
 
-   return EINA_FALSE;
+   eo_do(sobj, eo_event_callback_call(ELM_ITEMS_ITEM_EVENT_CLICKED, NULL));
+   if (!sobj)
+     return;
+
+   eo_do(sobj, elm_items_item_selected_set(!selected));
+   if (!sobj)
+     return;
+
+   if (!selected)
+     pd->double_timer = ecore_timer_add(1.0, _timer_cb, obj);
+
 }
 
 EOLIAN static void
@@ -87,12 +111,37 @@ _elm_items_item_evas_object_smart_add(Eo *obj, Elm_Items_Item_Data *pd)
 {
    eo_do_super(obj,ELM_ITEMS_ITEM_CLASS,evas_obj_smart_add());
 
-   pd->rectangle = evas_object_rectangle_add(evas_object_evas_get(obj));
-   evas_object_color_set(pd->rectangle, 10, 10, 10, 255);
-   evas_object_size_hint_min_set(pd->rectangle, 20, 20);
-   evas_object_show(pd->rectangle);
+   evas_object_event_callback_add(obj, EVAS_CALLBACK_MOUSE_DOWN, _mouse_down, NULL);
 
-   elm_widget_resize_object_set(obj, pd->rectangle, EINA_TRUE);
+   pd->edje = elm_layout_add(obj);
+
+   if (!elm_layout_theme_set(pd->edje, "icons", "item", "default"))
+     {
+        ERR("Failed to set theme");
+     }
+
+   elm_widget_resize_object_set(obj, pd->edje, EINA_TRUE);
 }
+
+EOLIAN static Efl_Tree_Base *
+_elm_items_item_item_get(Eo *obj, Elm_Items_Item_Data *pd)
+{
+   if (pd->item)
+     return pd->item;
+
+   pd->item = eo_add(EFL_TREE_BASE_CLASS, obj);
+   eo_do(pd->item, efl_tree_base_carry_set(obj));
+   return pd->item;
+}
+
+EOLIAN static void
+_elm_items_item_eo_base_destructor(Eo *obj, Elm_Items_Item_Data *pd)
+{
+   eo_del(pd->item);
+   ecore_timer_del(pd->double_timer);
+   pd->double_timer = NULL;
+   eo_do_super(obj, ELM_ITEMS_ITEM_CLASS, eo_destructor());
+}
+
 
 #include "elm_items_item.eo.x"
