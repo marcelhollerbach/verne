@@ -1,0 +1,150 @@
+group { "elm/icons/item/default";
+   images {
+      image: "vgrad_med_dark.png" COMP;
+      image: "glow_small.png" COMP;
+      image: "shadow_square_tiny.png" COMP;
+   }
+   parts {
+      image { "shadow"; mouse_events: 0;
+         desc { "default";
+            image.normal: "shadow_square_tiny.png";
+            image.border: 6 6 6 6;
+            fill.smooth: 0;
+            rel1.offset: -3 -2;
+            rel1.to: "sel_base";
+            rel2.offset: 2 3;
+            rel2.to: "sel_base";
+            fill.smooth: 0;
+            visible: 0;
+         }
+         desc { "selected";
+            inherit: "default" 0.0;
+            visible: 1;
+         }
+      }
+      part { name: "sel_glow"; mouse_events: 0;
+         description { state: "default" 0.0;
+            rel1.to: "sel_base";
+            rel2.to: "sel_base";
+            image.normal: "glow_small.png";
+            image.border: 7 7 7 7;
+            fill.smooth: 0;
+            color: 255 255 255 0;
+            visible: 0;
+         }
+         description { state: "visible" 0.0;
+            inherit: "default" 0.0;
+            rel1.offset: -4 -4;
+            rel2.offset: 3 3;
+            color: 255 255 255 128;
+            visible: 1;
+         }
+         description { state: "hilighted" 0.0;
+            inherit: "default" 0.0;
+            rel1.offset: -4 -4;
+            rel2.offset: 3 3;
+            color: 255 255 255 255;
+            visible: 1;
+         }
+      }
+      image { "sel_base"; mouse_events: 0;
+         desc { "default";
+            rel1.offset: 2 2;
+            rel2.offset: -3 -3;
+            image.normal: "vgrad_med_dark.png";
+            fill.smooth: 0;
+            TILED_HORIZ(120)
+            visible: 0;
+         }
+         desc { "selected";
+            inherit: "default";
+            visible: 1;
+         }
+      }
+      image { "sel_bevel"; mouse_events: 0;
+         desc { "default";
+            rel1.to: "sel_base";
+            rel2.to: "sel_base";
+            image.normal: "bevel_out.png";
+            image.border: 1 1 1 1;
+            image.middle: 0;
+            fill.smooth: 0;
+            visible: 0;
+         }
+         desc { "selected";
+            inherit: "default" 0.0;
+            visible: 1;
+         }
+      }
+      swallow { "content";
+         desc { "default"
+
+         }
+      }
+      rect { name: "event";
+         desc { state: "default";
+            color: 0 0 0 0;
+         }
+      }
+   }
+   programs {
+      program {
+         signal: "elm,state,selected,on";
+         source: "elm";
+         action: STATE_SET "selected" 0.0;
+         target: "shadow";
+         target: "sel_base";
+         target: "sel_bevel";
+      }
+      program {
+         signal: "elm,state,selected,off";
+         source: "elm";
+         action: STATE_SET "default" 0.0;
+         target: "shadow";
+         target: "sel_glow";
+         target: "sel_base";
+         target: "sel_bevel";
+      }
+      program {
+         signal: "elm,state,selected,on"; source: "elm";
+         action: STATE_SET "hilighted" 0.0;
+         transition: DECELERATE 0.2;
+         target: "sel_glow";
+         after: "sel2";
+      }
+      program { name: "sel2";
+         action: STATE_SET "visible" 0.0;
+         transition: SINUSOIDAL 0.3;
+         target: "sel_glow";
+      }
+   }
+}
+group { "elm/icons/expand/default"
+   parts {
+      swallow { "item"
+         desc { "default"
+
+         }
+      }
+      swallow { "children"
+         desc { "default"
+            rel1.to: "item";
+            rel1.relative: 0.0 1.0;
+            rel2.to: "item";
+            rel2.relative: 1.0 0.0;
+         }
+         desc { "expanded"
+            rel1.to: "item";
+            rel1.relative: 0.0 1.0;
+         }
+      }
+   }
+   programs {
+      program {
+         signal: "elm,state,expand,on";
+      }
+      program {
+         signal: "elm,state,expand,off";
+      }
+   }
+}
