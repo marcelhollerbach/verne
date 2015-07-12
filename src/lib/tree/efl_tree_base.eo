@@ -28,7 +28,7 @@ class Efl.Tree.Base(Eo.Base) {
         insert_sorted {
             [[Will insert the item into the correct position in the children
 
-              If you use this function. ALL children of a node need to implement efl.compare]]
+              If you use this function. ALL carrys of the children need to implement efl.compare]]
             params {
                 item: Efl.Tree.Base*; [[Need to implement efl.compare]]
             }

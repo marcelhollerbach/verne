@@ -184,7 +184,13 @@ static int
 _compare_func(const void *data1, const void *data2)
 {
    int res;
-   eo_do(data1, res = efl_compare(data2));
+   Eo *c1;
+   Eo *c2;
+
+   eo_do(data1, c1 = efl_tree_base_carry_get());
+   eo_do(data2, c2 = efl_tree_base_carry_get());
+
+   eo_do(c1, res = efl_compare(c2));
 
    return res;
 }
@@ -192,7 +198,22 @@ _compare_func(const void *data1, const void *data2)
 EOLIAN static void
 _efl_tree_base_insert_sorted(Eo *obj EINA_UNUSED, Efl_Tree_Base_Data *pd, Efl_Tree_Base *item)
 {
+   Eina_List *itemlist;
+
+   //subscribe to events
+   _child_subscribe(obj, item);
+
+   //insert
    pd->children = eina_list_sorted_insert(pd->children, _compare_func, item);
+
+   //search where it was inserted
+   itemlist = eina_list_data_find_list(pd->children, item);
+
+   //update the relatives of the neighbours
+   _update_relatives_list(eina_list_prev(itemlist), itemlist, eina_list_next(itemlist));
+
+   //populate the change
+   eo_do(obj, eo_event_callback_call(EFL_TREE_BASE_EVENT_CHILDREN_ADD_DIRECT, item));
 }
 
 EOLIAN static void
