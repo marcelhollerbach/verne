@@ -37,3 +37,11 @@ add_library(tree_lib SHARED ${GRAPH})
 target_link_libraries(tree_lib
   ${EO_LIBRARIES}
 )
+
+INSTALL(TARGETS tree_lib
+  LIBRARY DESTINATION lib
+)
+
+INSTALL(FILES Graph.h efl_compare.eo.h efl_tree_base.eo.h
+  DESTINATION "include/efl-tree-1/"
+)

@@ -49,7 +49,9 @@ _elm_file_display_view_list_elm_file_display_view_items_select(Eo *obj, Elm_File
    EINA_LIST_FOREACH(items, node, item)
      {
         eo_do(item, elm_items_item_selected_set(EINA_TRUE));
+        evas_key_modifier_on(evas_object_evas_get(obj), "Control");
      }
+   evas_key_modifier_off(evas_object_evas_get(obj), "Control");
 }
 
 EOLIAN static Eina_List *
