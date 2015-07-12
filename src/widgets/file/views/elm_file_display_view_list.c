@@ -231,8 +231,11 @@ _elm_file_display_view_list_elm_file_display_view_path_set(Eo *obj, Elm_File_Dis
      eina_hash_free(pd->files);
 
    //free selected things
-   eina_list_free(pd->selected);
-
+   if (pd->selected)
+     {
+        eina_list_free(pd->selected);
+        pd->selected = NULL;
+     }
    //delete existing monitor
    if (pd->fm)
      eo_del(pd->fm);
