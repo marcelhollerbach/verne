@@ -63,10 +63,7 @@ interface Elm.File.Display.View {
          }
       }
       search {
-         [[Set the currently searched string to the view
-
-           The passed reference is valid until this function is called another time;
-         ]]
+         [[Tell the widget to search for that]]
          params {
             needle : const(char)*;
          }

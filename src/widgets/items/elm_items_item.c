@@ -6,6 +6,7 @@ typedef struct {
     Eina_Bool selected;
     Efl_Tree_Base *item;
     Ecore_Timer *double_timer;
+    const char * searchable;
 } Elm_Items_Item_Data;
 
 EOLIAN static void
@@ -153,6 +154,17 @@ _elm_items_item_eo_base_destructor(Eo *obj, Elm_Items_Item_Data *pd)
    ecore_timer_del(pd->double_timer);
    pd->double_timer = NULL;
    eo_do_super(obj, ELM_ITEMS_ITEM_CLASS, eo_destructor());
+}
+EOLIAN static void
+_elm_items_item_search_set(Eo *obj EINA_UNUSED, Elm_Items_Item_Data *pd, const char *string)
+{
+   pd->searchable = string;
+}
+
+EOLIAN static const char *
+_elm_items_item_search_get(Eo *obj EINA_UNUSED, Elm_Items_Item_Data *pd)
+{
+   return pd->searchable;
 }
 
 

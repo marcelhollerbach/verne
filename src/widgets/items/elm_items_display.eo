@@ -35,7 +35,11 @@ abstract Elm.Items.Display (Elm.Scroller) {
             }
             return : list<Elm.Items.Item*>*;
         }
-
+        search {
+            params {
+                search : const(char)*;
+            }
+        }
     }
     implements {
         @virtual .child_pane.get;

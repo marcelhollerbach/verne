@@ -19,6 +19,12 @@ class Elm.Items.Item (Elm.Widget) {
         item_get {
             return : Efl.Tree.Base*;
         }
+        @property search {
+            [[Elm.Items.Display supports seraching, this property is the way how it compares this item to the others]]
+            values {
+                string: const(char)*;
+            }
+        }
     }
     implements {
         Evas.Object_Smart.add;

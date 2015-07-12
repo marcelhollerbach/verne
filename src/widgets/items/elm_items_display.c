@@ -28,7 +28,7 @@ _elm_items_display_elm_widget_event(Eo *obj, Elm_Items_Display_Data *pd, Evas_Ob
           pd->search = eina_strbuf_new();
 
         eina_strbuf_append(pd->search, ev->string);
-        //TODO do something usefull
+        eo_do(obj, elm_items_display_search(eina_strbuf_string_get(pd->search)));
         return EINA_TRUE;
      }
    else if (!strcmp(ev->key, "BackSpace"))
@@ -53,7 +53,7 @@ _elm_items_display_elm_widget_event(Eo *obj, Elm_Items_Display_Data *pd, Evas_Ob
 
         eina_strbuf_append(pd->search, oldstr);
         free(oldstr);
-        //TODO do something usefull
+        eo_do(obj, elm_items_display_search(eina_strbuf_string_get(pd->search)));
         return EINA_TRUE;
      }
    else if (!strcmp(ev->key, "Right"))
@@ -116,6 +116,41 @@ _elm_items_display_elm_widget_event(Eo *obj, Elm_Items_Display_Data *pd, Evas_Ob
         return EINA_TRUE;
      }
    return EO_CALLBACK_CONTINUE;
+}
+
+EOLIAN static void
+_elm_items_display_search(Eo *obj EINA_UNUSED, Elm_Items_Display_Data *pd, const char *search)
+{
+   Eina_List *node, *children;
+   Efl_Tree_Base *tb;
+   int min = -1;
+   Elm_Items_Item *searched = NULL;
+
+   eo_do(pd->root, children = efl_tree_base_children(EINA_TRUE));
+
+   EINA_LIST_FOREACH(children, node, tb)
+     {
+        Elm_Items_Item *item;
+        const char *searchable;
+        char *f;
+        eo_do(tb, item = efl_tree_base_carry_get());
+        eo_do(item, searchable = elm_items_item_search_get());
+
+        if (!searchable) continue;
+
+        if ((f = strstr(searchable, search)))
+          {
+             int tmin = f - searchable;
+             if (min == -1)
+               min = tmin;
+
+             if (tmin > min)
+               continue;
+             min = tmin;
+             searched = item;
+          }
+     }
+   eo_do(searched, elm_items_item_selected_set(EINA_TRUE));
 }
 
 static Eina_Bool
