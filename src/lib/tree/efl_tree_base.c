@@ -2,6 +2,9 @@
 
 typedef struct {
     Eina_List *children;
+    Eo *next;
+    Eo *prev;
+    void* good;
 } Efl_Tree_Base_Data;
 
 #undef EAPI
@@ -110,30 +113,71 @@ _efl_tree_base_children(Eo *obj EINA_UNUSED, Efl_Tree_Base_Data *pd, Eina_Bool r
         return result;
      }
 }
+
+static void
+_update_relatives(Eo *p1, Eo *zero, Eo *p2)
+{
+   Efl_Tree_Base_Data *pd1;
+   Efl_Tree_Base_Data *pdzero;
+   Efl_Tree_Base_Data *pd2;
+
+   if (p1)
+     pd1 = eo_data_scope_get(p1, EFL_TREE_BASE_CLASS);
+   pdzero = eo_data_scope_get(zero, EFL_TREE_BASE_CLASS);
+   if (p2)
+     pd2 = eo_data_scope_get(p2, EFL_TREE_BASE_CLASS);
+
+   if (p1)
+     pd1->next = zero;
+   pdzero->prev = p1;
+   pdzero->next = p2;
+   if (p2)
+     pd2->prev = zero;
+}
+
+static inline void
+_update_relatives_list(Eina_List *p1, Eina_List *zero, Eina_List *p2)
+{
+   _update_relatives(eina_list_data_get(p1), eina_list_data_get(zero), eina_list_data_get(p2));
+}
+
 EOLIAN static void
 _efl_tree_base_remove(Eo *obj, Efl_Tree_Base_Data *pd, Efl_Tree_Base *item)
 {
+   Eina_List *node;
+
    _child_unsubscribe(obj, item);
+   //search this item
+   node = eina_list_data_find_list(pd->children, item);
+   //update the other items
+   _update_relatives_list(eina_list_prev(node), node, eina_list_next(node));
+   //remove it
    pd->children = eina_list_remove(pd->children, item);
+   //call for the change
    eo_do(obj, eo_event_callback_call(EFL_TREE_BASE_EVENT_CHILDREN_DEL_DIRECT, item));
 }
 
 EOLIAN static void
 _efl_tree_base_append(Eo *obj, Efl_Tree_Base_Data *pd, Efl_Tree_Base *item, Efl_Tree_Base *relative)
 {
+   //subscribe to changes
    _child_subscribe(obj, item);
+
    if (relative)
      {
         Eina_List *rel;
 
-        rel = eina_list_data_find(pd->children, relative);
+        //if we have a relative, find it
+        rel = eina_list_data_find_list(pd->children, relative);
         if (!rel)
           return;
         pd->children = eina_list_append_relative_list(pd->children, item, rel);
+        _update_relatives_list(rel, eina_list_next(rel), eina_list_next(eina_list_next(rel)));
      }
    else
      {
         pd->children = eina_list_append(pd->children, item);
+        _update_relatives_list(eina_list_prev(eina_list_last(pd->children)), eina_list_last(pd->children), NULL);
      }
    eo_do(obj, eo_event_callback_call(EFL_TREE_BASE_EVENT_CHILDREN_ADD_DIRECT, item));
 }
@@ -146,13 +190,15 @@ _efl_tree_base_prepend(Eo *obj EINA_UNUSED, Efl_Tree_Base_Data *pd, Efl_Tree_Bas
      {
         Eina_List *rel;
 
-        rel = eina_list_data_find(pd->children, relative);
+        rel = eina_list_data_find_list(pd->children, relative);
         if (!rel)
           return;
         pd->children = eina_list_prepend_relative_list(pd->children, item, rel);
+        _update_relatives_list(eina_list_prev(eina_list_prev(rel)), eina_list_prev(rel), rel);
      }
    else
      {
+        _update_relatives(NULL, item, eina_list_data_get(pd->children));
         pd->children = eina_list_prepend(pd->children, item);
      }
    eo_do(obj, eo_event_callback_call(EFL_TREE_BASE_EVENT_CHILDREN_ADD_DIRECT, item));
@@ -172,5 +218,30 @@ _efl_tree_base_insert_sorted(Eo *obj EINA_UNUSED, Efl_Tree_Base_Data *pd, Efl_Tr
 {
    pd->children = eina_list_sorted_insert(pd->children, _compare_func, item);
 }
+
+EOLIAN static void
+_efl_tree_base_carry_set(Eo *obj EINA_UNUSED, Efl_Tree_Base_Data *pd, void *good)
+{
+   pd->good = good;
+}
+
+EOLIAN static void *
+_efl_tree_base_carry_get(Eo *obj EINA_UNUSED, Efl_Tree_Base_Data *pd)
+{
+   return pd->good;
+}
+
+EOLIAN static Efl_Tree_Base*
+_efl_tree_base_next_get(Eo *obj EINA_UNUSED, Efl_Tree_Base_Data *pd)
+{
+   return pd->next;
+}
+
+EOLIAN static Efl_Tree_Base*
+_efl_tree_base_prev_get(Eo *obj EINA_UNUSED, Efl_Tree_Base_Data *pd)
+{
+   return pd->prev;
+}
+
 
 #include "efl_tree_base.eo.x"

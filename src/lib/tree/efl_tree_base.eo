@@ -6,33 +6,70 @@ struct Efl.Tree.Update {
 class Efl.Tree.Base(Eo.Base) {
     methods {
         append {
+            [[Appends item as child after the relative node
+
+              If relative is not found this call will fail.
+              If relative is NULL, the item will be added at the end]]
             params {
                 item : Efl.Tree.Base*;
                 relative: Efl.Tree.Base*;
             }
         }
         prepend {
+            [[Prepends the item as child before the relative node
+
+              If relative is not found this call will fail.
+              If relative is NULL, the item will be added at the beginning]]
             params {
                 item: Efl.Tree.Base*;
                 relative: Efl.Tree.Base*;
             }
         }
         insert_sorted {
+            [[Will insert the item into the correct position in the children
+
+              If you use this function. ALL children of a node need to implement efl.compare]]
             params {
                 item: Efl.Tree.Base*; [[Need to implement efl.compare]]
             }
         }
         remove {
+            [[Remove the given item from the children]]
             params {
                 item : Efl.Tree.Base*;
             }
         }
         children {
+            [[Get the list of children of this tree item]]
             params {
-                @in recursive : bool;
+                @in recursive : bool; [[if true all children which are somewhere lower in this tree will be returned]]
             }
 
             return : list<Efl.Tree.Base*>*;
+        }
+        @property carry {
+            [[The pointer which is associated with this tree node]]
+            values {
+                good : void*;
+            }
+        }
+        @property next {
+            [[Get the node which is next to this one. NULL if there is none]]
+            get {
+
+            }
+            values {
+                prev : Efl.Tree.Base*;
+            }
+        }
+        @property prev {
+            [[Get the node which is before this one. NULL if there is none]]
+            get {
+
+            }
+            values {
+                prev : Efl.Tree.Base*;
+            }
         }
     }
     events {
