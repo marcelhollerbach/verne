@@ -35,6 +35,10 @@ LIST(APPEND WIDGET_LIBRARY
    file/elm_file_display.eo.x
    file/elm_file_display.eo.h
    file/elm_file_display.eo.legacy.h
+   file/elm_file_item_compare.c
+   file/elm_file_item_compare.eo
+   file/elm_file_item_compare.eo.x
+   file/elm_file_item_compare.eo.h
    #views
    file/elm_file_display_view.c
    file/elm_file_display_view.eo.h

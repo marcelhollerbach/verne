@@ -1,0 +1,13 @@
+class Elm.File.Item.Compare (Elm.Items.Item, Efl.Compare) {
+    methods {
+        @property file {
+            [[Set the efl file which will be used to compare]]
+            values {
+                file : Efm.File*;
+            }
+        }
+    }
+    implements {
+        Efl.Compare.compare;
+    }
+}

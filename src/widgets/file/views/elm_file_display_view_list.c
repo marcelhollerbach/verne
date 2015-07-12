@@ -168,13 +168,15 @@ _file_add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA
    const char *filename;
 
    pd = eo_data_scope_get(data, ELM_FILE_DISPLAY_VIEW_LIST_CLASS);
+
    eo_do(data, root = elm_items_display_tree_get());
 
    eo_do(event, filename = efm_file_filename_get());
 
    //create new object
-   item = eo_add(ELM_ITEMS_ITEM_CLASS, data);
-   eo_do(item, eo_key_data_set("__file", event);
+   item = eo_add(ELM_FILE_ITEM_COMPARE_CLASS, data);
+   eo_do(item, elm_file_item_compare_file_set(event);
+               eo_key_data_set("__file", event);
                it = elm_items_item_get();
                elm_items_item_search_set(filename);
                eo_event_callback_add(ELM_ITEMS_ITEM_EVENT_REALIZE, _realize, event);
@@ -191,7 +193,7 @@ _file_add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA
    evas_object_size_hint_weight_set(item, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    evas_object_show(item);
 
-   eo_do(root, efl_tree_base_append(it, NULL));
+   eo_do(root, efl_tree_base_insert_sorted(it));
 
    eina_hash_add(pd->files, &event, item);
 

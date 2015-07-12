@@ -7,6 +7,7 @@
 #include "./file/elm_file_mimetype_cache.eo.h"
 #include "./file/elm_file_icon.h"
 #include "./file/elm_file_display.h"
+#include "./file/elm_file_item_compare.eo.h"
 #include "./items/elm_items.h"
 
 EAPI void elm_ext_init();
