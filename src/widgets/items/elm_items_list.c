@@ -23,7 +23,7 @@ _elm_items_list_elm_items_display_child_pane_get(Eo *obj EINA_UNUSED, Elm_Items_
 }
 
 EOLIAN static void
-_elm_items_list_elm_items_display_sel_move(Eo *obj, Elm_Items_List_Data *pd, Elm_Items_Move_Dir direction)
+_elm_items_list_elm_items_display_sel_move(Eo *obj EINA_UNUSED, Elm_Items_List_Data *pd, Elm_Items_Move_Dir direction)
 {
 
    if (eina_list_count(pd->selected) == 1)
