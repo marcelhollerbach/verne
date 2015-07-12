@@ -146,9 +146,16 @@ static Eina_Bool
 _file_del(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
 {
    Elm_File_Display_View_List_Data *pd;
+   Elm_Items_Item *it;
 
    pd = eo_data_scope_get(data, ELM_FILE_DISPLAY_VIEW_LIST_CLASS);
-   eina_hash_del_by_key(pd->files, event);
+
+   //remove it from available files
+   it = eina_hash_find(pd->files, &event);
+   if (!it) return EINA_TRUE;
+   //remove it if it could be selected
+   pd->selected = eina_list_remove(pd->selected, it);
+   eina_hash_del_by_key(pd->files, &event);
    return EINA_TRUE;
 }
 
@@ -216,6 +223,9 @@ _elm_file_display_view_list_elm_file_display_view_path_set(Eo *obj, Elm_File_Dis
    //clear files
    if (pd->files)
      eina_hash_free(pd->files);
+
+   //free selected things
+   eina_list_free(pd->selected);
 
    //delete existing monitor
    if (pd->fm)
