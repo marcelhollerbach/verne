@@ -1,4 +1,4 @@
-class Elm.File.Display.View.List(Elm.Genlist, Elm.File.Display.View)
+class Elm.File.Display.View.List(Elm.Items.List, Elm.File.Display.View)
 {
     implements {
         Elm.File.Display.View.name_get;
