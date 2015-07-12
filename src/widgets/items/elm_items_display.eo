@@ -33,7 +33,7 @@ abstract Elm.Items.Display (Elm.Scroller) {
                 w : int;
                 h : int;
             }
-            return : Elm.Items.Item*;
+            return : list<Elm.Items.Item*>*;
         }
 
     }
@@ -43,5 +43,6 @@ abstract Elm.Items.Display (Elm.Scroller) {
         Evas.Object_Smart.add;
         Evas.Object_Smart.resize;
         Elm.Widget.event;
+        Eo.Base.destructor;
     }
 }

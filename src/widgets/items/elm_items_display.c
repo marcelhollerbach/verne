@@ -8,10 +8,10 @@ typedef struct {
 } Elm_Items_Display_Data;
 
 EOLIAN static Efl_Tree_Base *
-_elm_items_display_tree_get(Eo *obj, Elm_Items_Display_Data *pd)
+_elm_items_display_tree_get(Eo *obj EINA_UNUSED, Elm_Items_Display_Data *pd)
 {
    if (!pd->root)
-     pd->root = eo_add(EFL_TREE_BASE_CLASS, obj);
+     pd->root = eo_add(EFL_TREE_BASE_CLASS, NULL);
    return pd->root;
 }
 
@@ -19,7 +19,6 @@ EOLIAN static Eina_Bool
 _elm_items_display_elm_widget_event(Eo *obj, Elm_Items_Display_Data *pd, Evas_Object *source EINA_UNUSED, Evas_Callback_Type type, void *event_info)
 {
    Evas_Event_Key_Down *ev;
-
    if (type != EVAS_CALLBACK_KEY_DOWN) return EINA_TRUE;
 
    ev = event_info;
@@ -31,7 +30,7 @@ _elm_items_display_elm_widget_event(Eo *obj, Elm_Items_Display_Data *pd, Evas_Ob
 
         eina_strbuf_append(pd->search, ev->string);
         //TODO do something usefull
-        return EO_CALLBACK_STOP;
+        return EINA_TRUE;
      }
    else if (!strcmp(ev->key, "BackSpace"))
      {
@@ -56,42 +55,42 @@ _elm_items_display_elm_widget_event(Eo *obj, Elm_Items_Display_Data *pd, Evas_Ob
         eina_strbuf_append(pd->search, oldstr);
         free(oldstr);
         //TODO do something usefull
-        return EO_CALLBACK_STOP;
+        return EINA_TRUE;
      }
    else if (!strcmp(ev->key, "Right"))
      {
         //sent right
         eo_do(obj, elm_items_display_sel_move(ELM_ITEMS_MOVE_DIR_EAST));
-        return EO_CALLBACK_STOP;
+        return EINA_TRUE;
      }
    else if (!strcmp(ev->key, "Left"))
      {
         //sent let
         eo_do(obj, elm_items_display_sel_move(ELM_ITEMS_MOVE_DIR_WEST));
-        return EO_CALLBACK_STOP;
+        return EINA_TRUE;
      }
    else if (!strcmp(ev->key, "Up"))
      {
         //sent up
         eo_do(obj, elm_items_display_sel_move(ELM_ITEMS_MOVE_DIR_NORTH));
-        return EO_CALLBACK_STOP;
+        return EINA_TRUE;
      }
    else if (!strcmp(ev->key, "Down"))
      {
         //sent down
         eo_do(obj, elm_items_display_sel_move(ELM_ITEMS_MOVE_DIR_SOUTH));
-        return EO_CALLBACK_STOP;
+        return EINA_TRUE;
      }
    else if (!strcmp(ev->key, "Return"))
      {
         //select
-        return EO_CALLBACK_STOP;
+        return EINA_TRUE;
      }
    else if (!strcmp(ev->key, "Home"))
      {
         //first item
         eo_do(obj, elm_interface_scrollable_page_bring_in(0, 0));
-        return EO_CALLBACK_STOP;
+        return EINA_TRUE;
      }
    else if (!strcmp(ev->key, "End"))
      {
@@ -99,7 +98,7 @@ _elm_items_display_elm_widget_event(Eo *obj, Elm_Items_Display_Data *pd, Evas_Ob
         int h,v;
         eo_do(obj, elm_interface_scrollable_last_page_get(&h, &v);
                     elm_interface_scrollable_page_bring_in(h, v));
-        return EO_CALLBACK_STOP;
+        return EINA_TRUE;
      }
    else if (!strcmp(ev->key, "Next"))
      {
@@ -107,7 +106,7 @@ _elm_items_display_elm_widget_event(Eo *obj, Elm_Items_Display_Data *pd, Evas_Ob
         int h,v;
         eo_do(obj, elm_interface_scrollable_current_page_get(&h, &v);
                     elm_interface_scrollable_page_bring_in(h, v+1));
-        return EO_CALLBACK_STOP;
+        return EINA_TRUE;
      }
    else if (!strcmp(ev->key, "Prior"))
      {
@@ -115,9 +114,21 @@ _elm_items_display_elm_widget_event(Eo *obj, Elm_Items_Display_Data *pd, Evas_Ob
         int h,v;
         eo_do(obj, elm_interface_scrollable_current_page_get(&h, &v);
                     elm_interface_scrollable_page_bring_in(h, v-1));
-        return EO_CALLBACK_STOP;
+        return EINA_TRUE;
      }
    return EO_CALLBACK_CONTINUE;
+}
+
+static Eina_Bool
+_del(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Elm_Items_Display_Data *pd;
+
+   pd = eo_data_scope_get(data, ELM_ITEMS_DISPLAY_CLASS);
+
+   pd->realized = eina_list_remove(pd->realized, obj);
+
+   return EINA_TRUE;
 }
 
 static void
@@ -128,6 +139,7 @@ _viewport_recheck(Evas_Object *obj, Elm_Items_Display_Data *pd)
    Eina_List *children, *node, *realizes = NULL;
    Eina_List *realized = NULL;
    Elm_Items_Item *item;
+   Efl_Tree_Base *tree_item;
 
    //get the geometry of the viewport
    eo_do(obj, elm_interface_scrollable_content_viewport_geometry_get(&vpx, &vpy, &vpw, &vph));
@@ -136,11 +148,12 @@ _viewport_recheck(Evas_Object *obj, Elm_Items_Display_Data *pd)
    //get all the childs
    eo_do(pd->root, children = efl_tree_base_children(EINA_TRUE));
    //iterate throuw all the childs
-   EINA_LIST_FOREACH(children, node, item)
+   EINA_LIST_FOREACH(children, node, tree_item)
      {
         int x,y,w,h;
         Eina_Rectangle itemrect;
 
+        eo_do(tree_item, item = efl_tree_base_carry_get());
         //get the geometry of a new item
         evas_object_geometry_get(item, &x, &y, &w, &h);
         EINA_RECTANGLE_SET(&itemrect, x, y, w, h);
@@ -152,6 +165,10 @@ _viewport_recheck(Evas_Object *obj, Elm_Items_Display_Data *pd)
 
              if (eina_list_data_find(pd->realized, item))
                {
+                  /*
+                   * No need to subscribe to deletion for the item
+                   * it allready is
+                   */
                   //if the item is allready realized add it
                   realized = eina_list_append(realized, item);
                   //and remove it from the realized list
@@ -170,6 +187,8 @@ _viewport_recheck(Evas_Object *obj, Elm_Items_Display_Data *pd)
      {
         //unrealize the listed items
         eo_do(item, elm_items_item_unrealize());
+        //not interested in deletion anymore
+        eo_do(item, eo_event_callback_del(EO_BASE_EVENT_DEL, _del, obj));
      }
 
    //set the new list to the "still" realized items
@@ -180,14 +199,31 @@ _viewport_recheck(Evas_Object *obj, Elm_Items_Display_Data *pd)
      {
         //realize them
         eo_do(item, elm_items_item_realize());
+        //subscribe to possible deletion
+        eo_do(item, eo_event_callback_add(EO_BASE_EVENT_DEL, _del, obj));
         //append them to the new realized items
         pd->realized = eina_list_append(pd->realized, item);
      }
 
 }
 
+EOLIAN static void
+_elm_items_display_eo_base_destructor(Eo *obj, Elm_Items_Display_Data *pd)
+{
+   Elm_Items_Item *item;
+
+   EINA_LIST_FREE(pd->realized, item)
+     {
+        eo_do(item, eo_event_callback_del(EO_BASE_EVENT_DEL, _del, obj));
+     }
+
+   eo_del(pd->root);
+
+   eo_do_super(obj, ELM_ITEMS_DISPLAY_CLASS, eo_destructor());
+}
+
 static void
-_scroll_cb(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
+_scroll_cb2(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
    //recheck the realized items
    _viewport_recheck(obj, data);
@@ -200,9 +236,11 @@ _elm_items_display_evas_object_smart_add(Eo *obj, Elm_Items_Display_Data *pd)
    //take pane of the implementor
    eo_do(obj, pd->pane = elm_items_display_child_pane_get());
    //subscribe to scroll events
-   evas_object_smart_callback_add(obj, "scroll", _scroll_cb, pd);
+   evas_object_smart_callback_add(obj, "scroll", _scroll_cb2, pd);
    //give the pane to the scroller
    elm_object_content_set(obj, pd->pane);
+   evas_object_size_hint_align_set(pd->pane, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_size_hint_weight_set(pd->pane, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    //show the scroller panel
    evas_object_show(pd->pane);
 }
@@ -215,11 +253,13 @@ _elm_items_display_evas_object_smart_resize(Eo *obj, Elm_Items_Display_Data *pd,
    _viewport_recheck(obj, pd);
 }
 
-EOLIAN static Elm_Items_Item *
+EOLIAN static Eina_List *
 _elm_items_display_item_search_xywh(Eo *obj EINA_UNUSED, Elm_Items_Display_Data *pd, int xx, int yy, int ww, int hh)
 {
    Eina_List *children, *node;
+   Efl_Tree_Base *treeitem;
    Elm_Items_Item *item;
+   Eina_List *items = NULL;
    Eina_Rectangle viewport;
 
    EINA_RECTANGLE_SET(&viewport, xx, yy, ww, hh);
@@ -228,10 +268,12 @@ _elm_items_display_item_search_xywh(Eo *obj EINA_UNUSED, Elm_Items_Display_Data 
    eo_do(pd->root, children = efl_tree_base_children(EINA_TRUE));
 
    //iterate throuw all the childs
-   EINA_LIST_FOREACH(children, node, item)
+   EINA_LIST_FOREACH(children, node, treeitem)
      {
         int x,y,w,h;
         Eina_Rectangle itemrect;
+
+        eo_do(treeitem, item = efl_tree_base_carry_get());
 
         //get the geometry of a new item
         evas_object_geometry_get(item, &x, &y, &w, &h);
@@ -241,10 +283,10 @@ _elm_items_display_item_search_xywh(Eo *obj EINA_UNUSED, Elm_Items_Display_Data 
         if (eina_rectangles_intersect(&viewport, &itemrect))
           {
              //printf("%d-%d-%d-%d %d-%d-%d-%d\n", vpx,vpy,vpw,vph,x,y,w,h);
-             return item;
+             items = eina_list_append(items, item);
           }
      }
-   return NULL;
+   return items;
 }
 
 #include "elm_items_display.eo.x"
