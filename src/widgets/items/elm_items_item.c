@@ -12,6 +12,7 @@ EOLIAN static void
 _elm_items_item_content_set(Eo *obj EINA_UNUSED, Elm_Items_Item_Data *pd, Evas_Object *content)
 {
    pd->content = content;
+   elm_object_part_content_unset(pd->edje, "content");
    elm_object_part_content_set(pd->edje, "content", pd->content);
 }
 
