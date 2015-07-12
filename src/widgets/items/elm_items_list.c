@@ -150,8 +150,10 @@ _add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUS
    eo_do(good, eo_event_callback_add(ELM_ITEMS_ITEM_EVENT_SELECTED, _selected, data);
                eo_event_callback_add(ELM_ITEMS_ITEM_EVENT_UNSELECTED, _unselected, data);
         );
-   //set min size XXX: should not be needed!!
+   //set hints
    evas_object_size_hint_min_set(good, 1, 30);
+   evas_object_size_hint_align_set(good, EVAS_HINT_FILL, 1.0);
+   evas_object_size_hint_weight_set(good, EVAS_HINT_EXPAND, 0.0);
    //show the item
    evas_object_show(good);
    //check if we can prepend / append or need to pack and the end
