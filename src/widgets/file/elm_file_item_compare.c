@@ -101,7 +101,7 @@ sort_name_func(const void *data1, const void *data2)
 }
 
 EOLIAN static int
-_elm_file_item_compare_efl_compare_compare(Eo *obj, Elm_File_Item_Compare_Data *pd, const void *data)
+_elm_file_item_compare_efl_compare_compare(Eo *obj EINA_UNUSED, Elm_File_Item_Compare_Data *pd, const void *data)
 {
    Elm_File_Item_Compare_Data *pd2;
    Efm_File *f1, *f2;
