@@ -43,6 +43,7 @@ abstract Elm.Items.Display (Elm.Scroller) {
         Evas.Object_Smart.add;
         Evas.Object_Smart.resize;
         Elm.Widget.event;
+        Eo.Base.constructor;
         Eo.Base.destructor;
     }
 }

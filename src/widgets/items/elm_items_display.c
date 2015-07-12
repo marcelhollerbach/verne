@@ -10,8 +10,6 @@ typedef struct {
 EOLIAN static Efl_Tree_Base *
 _elm_items_display_tree_get(Eo *obj EINA_UNUSED, Elm_Items_Display_Data *pd)
 {
-   if (!pd->root)
-     pd->root = eo_add(EFL_TREE_BASE_CLASS, NULL);
    return pd->root;
 }
 
@@ -205,6 +203,17 @@ _viewport_recheck(Evas_Object *obj, Elm_Items_Display_Data *pd)
         pd->realized = eina_list_append(pd->realized, item);
      }
 
+}
+
+EOLIAN static Eo_Base *
+_elm_items_display_eo_base_constructor(Eo *obj, Elm_Items_Display_Data *pd)
+{
+   Eo *eo;
+
+   pd->root = eo_add(EFL_TREE_BASE_CLASS, NULL);
+
+   eo_do_super(obj, ELM_ITEMS_DISPLAY_CLASS, eo = eo_constructor());
+   return eo;
 }
 
 EOLIAN static void
