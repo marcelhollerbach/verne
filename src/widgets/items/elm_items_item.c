@@ -81,7 +81,7 @@ _timer_cb(void *data)
 static void
 _mouse_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
-   Evas_Event_Mouse_Down *ev;
+   Evas_Event_Mouse_Up *ev;
    Eina_Bool selected;
    Elm_Items_Item_Data *pd;
    Eo *sobj;
@@ -123,7 +123,7 @@ _elm_items_item_evas_object_smart_add(Eo *obj, Elm_Items_Item_Data *pd)
 {
    eo_do_super(obj,ELM_ITEMS_ITEM_CLASS,evas_obj_smart_add());
 
-   evas_object_event_callback_add(obj, EVAS_CALLBACK_MOUSE_DOWN, _mouse_down, NULL);
+   evas_object_event_callback_add(obj, EVAS_CALLBACK_MOUSE_UP, _mouse_down, NULL);
 
    pd->edje = elm_layout_add(obj);
 
