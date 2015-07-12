@@ -67,9 +67,15 @@ _timer_cb(void *data)
 
    pd = eo_data_scope_get(data, ELM_ITEMS_ITEM_CLASS);
 
+   if (!pd)
+     {
+        ERR("timer is not corrected correct /o\\");
+        return EINA_FALSE;
+     }
+
    pd->double_timer = NULL;
 
-   return EINA_TRUE;
+   return EINA_FALSE;
 }
 
 static void
