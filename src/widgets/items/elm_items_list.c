@@ -173,9 +173,9 @@ _add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUS
      }
    else
      elm_box_pack_end(pd->box, good);
+   elm_box_recalculate(pd->box);
 
-
-   return EINA_FALSE;
+   return EO_CALLBACK_CONTINUE;
 }
 
 static Eina_Bool
@@ -190,7 +190,7 @@ _del(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUS
 
    elm_box_unpack(pd->box, good);
    pd->selected = eina_list_remove(pd->selected, good);
-   return EINA_FALSE;
+   return EO_CALLBACK_CONTINUE;
 }
 
 EOLIAN static Eo_Base *
