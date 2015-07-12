@@ -5,12 +5,12 @@ typedef struct {
    Elm_Genlist_Item_Class *gic;
    Efm_Monitor *fm;
    Eina_Hash *files;
-   Eina_List *sel_files;
    struct {
       Eina_Bool only_folder;
       Eina_Bool show_hidden;
       int icon_size;
    } config;
+   Eina_List *selected;
 } Elm_File_Display_View_List_Data;
 
 EOLIAN static const char *
@@ -55,7 +55,23 @@ _elm_file_display_view_list_elm_file_display_view_items_select(Eo *obj, Elm_File
 EOLIAN static Eina_List *
 _elm_file_display_view_list_elm_file_display_view_selection_get(Eo *obj, Elm_File_Display_View_List_Data *pd)
 {
-    return NULL;
+    Eina_List *node, *result = NULL;
+    Elm_Items_Item *item;
+
+
+    EINA_LIST_FOREACH(pd->selected, node, item)
+      {
+         Elm_File_Display_View_DndFile *dnd;
+
+         dnd = calloc(1, sizeof(Elm_File_Display_View_DndFile));
+
+         eo_do(item, dnd->file_icon = elm_items_item_content_get());
+
+         evas_object_geometry_get(item, &dnd->x, &dnd->y, &dnd->w, &dnd->h);
+
+         result = eina_list_append(result, dnd);
+      }
+    return result;
 }
 
 static Eina_Bool
@@ -77,6 +93,30 @@ _unrealize(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *desc EI
    eo_do(obj, ic = elm_items_item_content_get());
    evas_object_del(ic);
    eo_do(obj, elm_items_item_content_set(NULL));
+   return EO_CALLBACK_CONTINUE;
+}
+
+static Eina_Bool
+_selected(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Elm_File_Display_View_List_Data *pd;
+
+   pd = eo_data_scope_get(data, ELM_FILE_DISPLAY_VIEW_LIST_CLASS);
+
+   pd->selected = eina_list_append(pd->selected, obj);
+
+   return EO_CALLBACK_CONTINUE;
+}
+
+static Eina_Bool
+_unselected(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Elm_File_Display_View_List_Data *pd;
+
+   pd = eo_data_scope_get(data, ELM_FILE_DISPLAY_VIEW_LIST_CLASS);
+
+   pd->selected = eina_list_remove(pd->selected, obj);
+
    return EO_CALLBACK_CONTINUE;
 }
 
@@ -126,6 +166,8 @@ _file_add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA
                it = elm_items_item_get();
                eo_event_callback_add(ELM_ITEMS_ITEM_EVENT_REALIZE, _realize, event);
                eo_event_callback_add(ELM_ITEMS_ITEM_EVENT_UNREALIZE, _unrealize, event);
+               eo_event_callback_add(ELM_ITEMS_ITEM_EVENT_SELECTED, _selected, data);
+               eo_event_callback_add(ELM_ITEMS_ITEM_EVENT_UNSELECTED, _unselected, data);
                eo_event_callback_add(ELM_ITEMS_ITEM_EVENT_CLICKED, _clicked, data);
                eo_event_callback_add(ELM_ITEMS_ITEM_EVENT_CLICKED_DOUBLE, _clicked_double, data);
                );
