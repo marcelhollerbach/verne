@@ -5,6 +5,7 @@ typedef struct {
     Eina_List *realized; //< list of realized items
     Evas_Object *pane;  //< the pane of the implementor
     Eina_Strbuf *search;
+    Ecore_Idler *recalc_idler;
 } Elm_Items_Display_Data;
 
 EOLIAN static Efl_Tree_Base *
@@ -156,10 +157,10 @@ _viewport_recheck(Evas_Object *obj, Elm_Items_Display_Data *pd)
         evas_object_geometry_get(item, &x, &y, &w, &h);
         EINA_RECTANGLE_SET(&itemrect, x, y, w, h);
 
+        //printf("====>%d-%d-%d-%d %d-%d-%d-%d\n", vpx,vpy,vpw,vph,x,y,w,h);
         //check if the item is in the viewport
         if (eina_rectangles_intersect(&viewport, &itemrect))
           {
-             //printf("%d-%d-%d-%d %d-%d-%d-%d\n", vpx,vpy,vpw,vph,x,y,w,h);
 
              if (eina_list_data_find(pd->realized, item))
                {
@@ -205,12 +206,46 @@ _viewport_recheck(Evas_Object *obj, Elm_Items_Display_Data *pd)
 
 }
 
+static Eina_Bool
+_idler_recalc(void *data)
+{
+   Elm_Items_Display_Data *pd;
+
+   pd = eo_data_scope_get(data, ELM_ITEMS_DISPLAY_CLASS);
+
+   _viewport_recheck(data, pd);
+   pd->recalc_idler = NULL;
+   return EINA_FALSE;
+}
+
+static Eina_Bool
+_tree_changed(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+   //do a idler to avoid recheck orgys
+   Elm_Items_Display_Data *pd;
+
+   pd = eo_data_scope_get(data, ELM_ITEMS_DISPLAY_CLASS);
+
+   if (pd->recalc_idler) return EINA_TRUE;
+
+   pd->recalc_idler = ecore_idler_add(_idler_recalc, data);
+
+   return EINA_TRUE;
+}
+
 EOLIAN static Eo_Base *
 _elm_items_display_eo_base_constructor(Eo *obj, Elm_Items_Display_Data *pd)
 {
    Eo *eo;
 
    pd->root = eo_add(EFL_TREE_BASE_CLASS, NULL);
+
+   eo_do(pd->root,
+    eo_event_callback_add(EFL_TREE_BASE_EVENT_CHILDREN_DEL_RECURSIVE, _tree_changed, obj);
+    eo_event_callback_add(EFL_TREE_BASE_EVENT_CHILDREN_DEL_DIRECT, _tree_changed, obj);
+    eo_event_callback_add(EFL_TREE_BASE_EVENT_CHILDREN_ADD_RECURSIVE, _tree_changed, obj);
+    eo_event_callback_add(EFL_TREE_BASE_EVENT_CHILDREN_ADD_DIRECT, _tree_changed, obj);
+    );
 
    eo_do_super(obj, ELM_ITEMS_DISPLAY_CLASS, eo = eo_constructor());
    return eo;
