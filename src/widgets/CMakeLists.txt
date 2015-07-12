@@ -12,6 +12,9 @@ LIST(APPEND WIDGET_LIBRARY
    items/elm_items_item.c
    items/elm_items_item.eo.x
    items/elm_items_item.eo.h
+   items/elm_items_list.c
+   items/elm_items_list.eo.x
+   items/elm_items_list.eo.h
    #filepackage
    file/elm_file_mimetype_cache.c
    file/elm_file_mimetype_cache.eo
