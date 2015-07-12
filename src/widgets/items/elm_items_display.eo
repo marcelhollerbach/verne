@@ -26,6 +26,9 @@ abstract Elm.Items.Display (Elm.Scroller) {
                 direction : Elm.Items.Move_Dir;
             }
         }
+        select {
+
+        }
         item_search_xywh {
             params {
                 x : int;
@@ -44,6 +47,7 @@ abstract Elm.Items.Display (Elm.Scroller) {
     implements {
         @virtual .child_pane.get;
         @virtual .sel_move;
+        @virtual .select;
         Evas.Object_Smart.add;
         Evas.Object_Smart.resize;
         Elm.Widget.event;

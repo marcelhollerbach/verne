@@ -83,6 +83,7 @@ _elm_items_display_elm_widget_event(Eo *obj, Elm_Items_Display_Data *pd, Evas_Ob
    else if (!strcmp(ev->key, "Return"))
      {
         //select
+        eo_do(obj, elm_items_display_select());
         return EINA_TRUE;
      }
    else if (!strcmp(ev->key, "Home"))

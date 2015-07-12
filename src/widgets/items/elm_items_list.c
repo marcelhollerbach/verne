@@ -23,6 +23,15 @@ _elm_items_list_elm_items_display_child_pane_get(Eo *obj EINA_UNUSED, Elm_Items_
 }
 
 EOLIAN static void
+_elm_items_list_elm_items_display_select(Eo *obj EINA_UNUSED, Elm_Items_List_Data *pd)
+{
+   if (eina_list_count(pd->selected) != 1)
+     return;
+   //emulate double click on this item XXX find a proper way
+   eo_do(eina_list_data_get(pd->selected), eo_event_callback_call(ELM_ITEMS_ITEM_EVENT_CLICKED_DOUBLE, NULL));
+}
+
+EOLIAN static void
 _elm_items_list_elm_items_display_sel_move(Eo *obj EINA_UNUSED, Elm_Items_List_Data *pd, Elm_Items_Move_Dir direction)
 {
 
