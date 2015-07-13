@@ -43,6 +43,14 @@ abstract Elm.Items.Display (Elm.Scroller) {
                 search : const(char)*;
             }
         }
+        @property selected {
+            get {
+
+            }
+            values {
+              selected : list<Elm.Items.Item*>*;
+            }
+        }
     }
     implements {
         @virtual .child_pane.get;

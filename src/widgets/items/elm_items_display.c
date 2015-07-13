@@ -6,6 +6,7 @@ typedef struct {
     Evas_Object *pane;  //< the pane of the implementor
     Eina_Strbuf *search;
     Ecore_Idler *recalc_idler;
+    Eina_List *selected; //< list of selected items
 } Elm_Items_Display_Data;
 
 EOLIAN static Efl_Tree_Base *
@@ -154,18 +155,6 @@ _elm_items_display_search(Eo *obj EINA_UNUSED, Elm_Items_Display_Data *pd, const
    eo_do(searched, elm_items_item_selected_set(EINA_TRUE));
 }
 
-static Eina_Bool
-_del(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
-{
-   Elm_Items_Display_Data *pd;
-
-   pd = eo_data_scope_get(data, ELM_ITEMS_DISPLAY_CLASS);
-
-   pd->realized = eina_list_remove(pd->realized, obj);
-
-   return EINA_TRUE;
-}
-
 static void
 _viewport_recheck(Evas_Object *obj, Elm_Items_Display_Data *pd)
 {
@@ -222,8 +211,6 @@ _viewport_recheck(Evas_Object *obj, Elm_Items_Display_Data *pd)
      {
         //unrealize the listed items
         eo_do(item, elm_items_item_unrealize());
-        //not interested in deletion anymore
-        eo_do(item, eo_event_callback_del(EO_BASE_EVENT_DEL, _del, obj));
      }
 
    //set the new list to the "still" realized items
@@ -234,8 +221,6 @@ _viewport_recheck(Evas_Object *obj, Elm_Items_Display_Data *pd)
      {
         //realize them
         eo_do(item, elm_items_item_realize());
-        //subscribe to possible deletion
-        eo_do(item, eo_event_callback_add(EO_BASE_EVENT_DEL, _del, obj));
         //append them to the new realized items
         pd->realized = eina_list_append(pd->realized, item);
      }
@@ -255,18 +240,81 @@ _idler_recalc(void *data)
 }
 
 static Eina_Bool
-_tree_changed(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+_scheudle_change(Evas_Object *obj, Elm_Items_Display_Data *pd)
 {
    //do a idler to avoid recheck orgys
+   if (pd->recalc_idler) return EINA_TRUE;
+
+   pd->recalc_idler = ecore_idler_add(_idler_recalc, obj);
+
+   return EINA_TRUE;
+}
+
+static Eina_Bool
+_selected(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
    Elm_Items_Display_Data *pd;
 
    pd = eo_data_scope_get(data, ELM_ITEMS_DISPLAY_CLASS);
+   pd->selected = eina_list_append(pd->selected, obj);
+   return EO_CALLBACK_CONTINUE;
+}
 
-   if (pd->recalc_idler) return EINA_TRUE;
+static Eina_Bool
+_unselected(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Elm_Items_Display_Data *pd;
 
-   pd->recalc_idler = ecore_idler_add(_idler_recalc, data);
+   pd = eo_data_scope_get(data, ELM_ITEMS_DISPLAY_CLASS);
+   pd->selected = eina_list_remove(pd->selected, obj);
+   return EO_CALLBACK_CONTINUE;
+}
 
-   return EINA_TRUE;
+static Eina_Bool
+_del(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Elm_Items_Display_Data *pd;
+   Eo *good;
+
+   pd = eo_data_scope_get(data, ELM_ITEMS_DISPLAY_CLASS);
+
+   _scheudle_change(data, pd);
+   //unsubscribe from events
+
+   eo_do(event, good = efl_tree_base_carry_get());
+   eo_do(good, eo_event_callback_del(ELM_ITEMS_ITEM_EVENT_SELECTED, _selected, data);
+               eo_event_callback_del(ELM_ITEMS_ITEM_EVENT_UNSELECTED, _unselected, data);
+    );
+
+   //remove from selected
+   pd->selected = eina_list_remove(pd->selected, good);
+   //remove from potential realized
+   pd->realized = eina_list_remove(pd->realized, good);
+   return EO_CALLBACK_CONTINUE;
+}
+
+static Eina_Bool
+_add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Elm_Items_Display_Data *pd;
+   Eo *good;
+
+   pd = eo_data_scope_get(data, ELM_ITEMS_DISPLAY_CLASS);
+
+   _scheudle_change(data, pd);
+   //subscribe to events
+   eo_do(event, good = efl_tree_base_carry_get());
+   eo_do(good, eo_event_callback_add(ELM_ITEMS_ITEM_EVENT_SELECTED, _selected, data);
+               eo_event_callback_add(ELM_ITEMS_ITEM_EVENT_UNSELECTED, _unselected, data);
+    );
+   //XXX: check if selected and add to list
+   return EO_CALLBACK_CONTINUE;
+}
+
+EOLIAN static Eina_List *
+_elm_items_display_selected_get(Eo *obj EINA_UNUSED, Elm_Items_Display_Data *pd)
+{
+   return pd->selected;
 }
 
 EOLIAN static Eo_Base *
@@ -277,10 +325,10 @@ _elm_items_display_eo_base_constructor(Eo *obj, Elm_Items_Display_Data *pd)
    pd->root = eo_add(EFL_TREE_BASE_CLASS, NULL);
 
    eo_do(pd->root,
-    eo_event_callback_add(EFL_TREE_BASE_EVENT_CHILDREN_DEL_RECURSIVE, _tree_changed, obj);
-    eo_event_callback_add(EFL_TREE_BASE_EVENT_CHILDREN_DEL_DIRECT, _tree_changed, obj);
-    eo_event_callback_add(EFL_TREE_BASE_EVENT_CHILDREN_ADD_RECURSIVE, _tree_changed, obj);
-    eo_event_callback_add(EFL_TREE_BASE_EVENT_CHILDREN_ADD_DIRECT, _tree_changed, obj);
+    eo_event_callback_add(EFL_TREE_BASE_EVENT_CHILDREN_DEL_RECURSIVE, _del, obj);
+    eo_event_callback_add(EFL_TREE_BASE_EVENT_CHILDREN_DEL_DIRECT, _del, obj);
+    eo_event_callback_add(EFL_TREE_BASE_EVENT_CHILDREN_ADD_RECURSIVE, _add, obj);
+    eo_event_callback_add(EFL_TREE_BASE_EVENT_CHILDREN_ADD_DIRECT, _add, obj);
     );
 
    eo_do_super(obj, ELM_ITEMS_DISPLAY_CLASS, eo = eo_constructor());
