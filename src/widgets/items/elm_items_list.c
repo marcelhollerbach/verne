@@ -6,7 +6,6 @@ typedef struct {
    //Eina_Hash *boxes; //< hash map of all the boxes which are appended to
    Eo *root; //< lazy root node -of the display
    Evas_Object *box; //< tmp box should be solved with hash tables
-   Eina_List *selected; //< a list of currently selected items
    Eina_Bool unselect_barrier;
 } Elm_Items_List_Data;
 
@@ -23,25 +22,32 @@ _elm_items_list_elm_items_display_child_pane_get(Eo *obj EINA_UNUSED, Elm_Items_
 }
 
 EOLIAN static void
-_elm_items_list_elm_items_display_select(Eo *obj EINA_UNUSED, Elm_Items_List_Data *pd)
+_elm_items_list_elm_items_display_select(Eo *obj, Elm_Items_List_Data *pd EINA_UNUSED)
 {
-   if (eina_list_count(pd->selected) != 1)
+   Eina_List *selection;
+
+   eo_do(obj, selection = elm_items_display_selected_get());
+
+   if (eina_list_count(selection) != 1)
      return;
    //emulate double click on this item XXX find a proper way
-   eo_do(eina_list_data_get(pd->selected), eo_event_callback_call(ELM_ITEMS_ITEM_EVENT_CLICKED_DOUBLE, NULL));
+   eo_do(eina_list_data_get(selection), eo_event_callback_call(ELM_ITEMS_ITEM_EVENT_CLICKED_DOUBLE, NULL));
 }
 
 EOLIAN static void
-_elm_items_list_elm_items_display_sel_move(Eo *obj EINA_UNUSED, Elm_Items_List_Data *pd, Elm_Items_Move_Dir direction)
+_elm_items_list_elm_items_display_sel_move(Eo *obj, Elm_Items_List_Data *pd, Elm_Items_Move_Dir direction)
 {
+   Eina_List *selection;
 
-   if (eina_list_count(pd->selected) == 1)
+   eo_do(obj, selection = elm_items_display_selected_get());
+
+   if (eina_list_count(selection) == 1)
      {
         //just select the next
         Eo *item;
         Eo *sel;
 
-        eo_do(eina_list_data_get(pd->selected), item = elm_items_item_get());
+        eo_do(eina_list_data_get(selection), item = elm_items_item_get());
         if (direction == ELM_ITEMS_MOVE_DIR_SOUTH || direction == ELM_ITEMS_MOVE_DIR_EAST)
           eo_do(item, sel = efl_tree_base_next_get());
         else
@@ -50,12 +56,12 @@ _elm_items_list_elm_items_display_sel_move(Eo *obj EINA_UNUSED, Elm_Items_List_D
           {
              Eo *good;
 
-             eo_do(eina_list_data_get(pd->selected), elm_items_item_selected_set(EINA_FALSE));
+             eo_do(eina_list_data_get(selection), elm_items_item_selected_set(EINA_FALSE));
              eo_do(sel, good = efl_tree_base_carry_get());
              eo_do(good, elm_items_item_selected_set(EINA_TRUE));
           }
      }
-   else if (pd->selected == NULL)
+   else if (selection == NULL)
      {
         Eo *first;
         Eo *item;
@@ -90,23 +96,28 @@ _selected(void *data, Eo *obj, const Eo_Event_Description *desc EINA_UNUSED, voi
    Elm_Items_List_Data *pd;
    Elm_Items_Item *sel;
    const Evas_Modifier *mods;
+   Eina_List *selection;
 
    pd = eo_data_scope_get(data, ELM_ITEMS_LIST_CLASS);
+   eo_do(data, selection = elm_items_display_selected_get());
 
    mods = evas_key_modifier_get(evas_object_evas_get(data));
+
    if (!evas_key_modifier_is_set(mods, "Control"))
      {
         Eina_List *selected;
 
-        selected = eina_list_clone(pd->selected);
-
+        selected = eina_list_clone(selection);
+        //stop unselecting work
+        pd->unselect_barrier = EINA_TRUE;
         EINA_LIST_FREE(selected, sel)
           {
+             if (sel == obj) continue;
              eo_do(sel, elm_items_item_selected_set(EINA_FALSE));
           }
-        pd->selected = NULL;
+        //restart unselecting work
+        pd->unselect_barrier = EINA_FALSE;
      }
-   pd->selected = eina_list_append(pd->selected, obj);
    return EO_CALLBACK_CONTINUE;
 }
 
@@ -115,29 +126,20 @@ _unselected(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EI
 {
    Elm_Items_List_Data *pd;
    const Evas_Modifier *mods;
+   Eina_List *selection;
 
    pd = eo_data_scope_get(data, ELM_ITEMS_LIST_CLASS);
+   eo_do(data, selection = elm_items_display_selected_get());
    if (pd->unselect_barrier) return EO_CALLBACK_CONTINUE;
 
    mods = evas_key_modifier_get(evas_object_evas_get(data));
+
    if (!evas_key_modifier_is_set(mods, "Control"))
      {
-        pd->unselect_barrier = EINA_TRUE;
-        Eina_List *selected;
-        Elm_Items_Item *sel;
+        if (eina_list_count(selection) > 1)
+          eo_do(obj, elm_items_item_selected_set(EINA_TRUE));
 
-        selected = eina_list_clone(pd->selected);
-
-        EINA_LIST_FREE(selected, sel)
-          {
-             eo_do(sel, elm_items_item_selected_set(EINA_FALSE));
-          }
-        pd->selected = NULL;
-        pd->unselect_barrier = EINA_FALSE;
      }
-   else
-     pd->selected = eina_list_remove(pd->selected, obj);
-
    return EO_CALLBACK_CONTINUE;
 }
 
@@ -198,7 +200,6 @@ _del(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUS
    eo_do(event, good = efl_tree_base_carry_get());
 
    elm_box_unpack(pd->box, good);
-   pd->selected = eina_list_remove(pd->selected, good);
    return EO_CALLBACK_CONTINUE;
 }
 
