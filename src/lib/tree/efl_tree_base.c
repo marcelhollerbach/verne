@@ -253,10 +253,8 @@ _efl_tree_base_eo_base_destructor(Eo *obj, Efl_Tree_Base_Data *pd)
    if (pd->good)
      eo_do(pd->good, eo_wref_del(&pd->good));
 
-   printf("DESTRUCT %p\n", obj);
    EINA_LIST_FOREACH(children, node, child)
      {
-        printf("DELETING %p\n", child);
         eo_do(obj, efl_tree_base_remove(child));
         eo_del(child);
      }
