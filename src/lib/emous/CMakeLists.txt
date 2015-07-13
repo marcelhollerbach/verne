@@ -55,6 +55,7 @@ set_property(TARGET emous
 
 target_link_libraries(emous
   ${EINA_LIRBRARIES}
+  ${EO_LIBRARIES}
   ${EIO_LIBRARIES}
   ${ECORE_LIBRARIES}
   ${ECORE_FILE_LIBRARIES}
