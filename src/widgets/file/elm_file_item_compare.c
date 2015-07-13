@@ -73,7 +73,7 @@ sort_name_func(const void *data1, const void *data2)
         eo_do(f1, st1 = efm_file_stat_get());
         eo_do(f2, st2 = efm_file_stat_get());
 
-        if (st1->size > st2->size)
+        if (st1->mtime > st2->mtime)
           return 1;
         else
           return -1;
