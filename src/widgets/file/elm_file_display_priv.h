@@ -18,6 +18,7 @@
 #include <Ecore.h>
 #include <Evas.h>
 #include <Eio.h>
+#include <Graph.h>
 #include "../elementary_ext_priv.h"
 
 #define FILESEP "file://"

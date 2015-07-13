@@ -150,11 +150,13 @@ _elm_items_item_item_get(Eo *obj, Elm_Items_Item_Data *pd)
 EOLIAN static void
 _elm_items_item_eo_base_destructor(Eo *obj, Elm_Items_Item_Data *pd)
 {
-   eo_del(pd->item);
+   if (pd->item)
+     eo_del(pd->item);
    ecore_timer_del(pd->double_timer);
    pd->double_timer = NULL;
    eo_do_super(obj, ELM_ITEMS_ITEM_CLASS, eo_destructor());
 }
+
 EOLIAN static void
 _elm_items_item_search_set(Eo *obj EINA_UNUSED, Elm_Items_Item_Data *pd, const char *string)
 {
