@@ -72,6 +72,9 @@ class Efl.Tree.Base(Eo.Base) {
             }
         }
     }
+    implements {
+        Eo.Base.destructor;
+    }
     events {
         children,add,direct : Efl.Tree.Base*; [[A child was added to this tree]]
         children,add,recursive : Efl.Tree.Update*; [[A child was added to a tree, which is a child of this tree item ]]

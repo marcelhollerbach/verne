@@ -243,5 +243,26 @@ _efl_tree_base_prev_get(Eo *obj EINA_UNUSED, Efl_Tree_Base_Data *pd)
    return pd->prev;
 }
 
+EOLIAN static void
+_efl_tree_base_eo_base_destructor(Eo *obj, Efl_Tree_Base_Data *pd)
+{
+   Eina_List *children = eina_list_clone(pd->children);
+   Eina_List *node;
+   Efl_Tree_Base *child;
+
+   if (pd->good)
+     eo_do(pd->good, eo_wref_del(&pd->good));
+
+   printf("DESTRUCT %p\n", obj);
+   EINA_LIST_FOREACH(children, node, child)
+     {
+        printf("DELETING %p\n", child);
+        eo_do(obj, efl_tree_base_remove(child));
+        eo_del(child);
+     }
+
+   eo_do_super(obj, EFL_TREE_BASE_CLASS, eo_destructor());
+}
+
 
 #include "efl_tree_base.eo.x"
