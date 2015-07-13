@@ -37,6 +37,7 @@ include_directories(
   ${ELEMENTARY_INCLUDE_DIRS}
   ../lib/efm
   ../widgets/
+  ../lib/tree/
   )
 
 target_link_libraries (efm
