@@ -12,7 +12,6 @@ LIST(APPEND WIDGET_LIBRARY
    elm_file_icon.eo
    elm_file_icon.eo.x
    elm_file_icon.eo.h
-   elm_file_icon.eo.legacy.h
    elm_file_icon.c
    elm_file_display.c
    elm_file_display.h
@@ -23,7 +22,6 @@ LIST(APPEND WIDGET_LIBRARY
    elm_file_display.eo
    elm_file_display.eo.x
    elm_file_display.eo.h
-   elm_file_display.eo.legacy.h
    #views
    elm_file_display_view.c
    elm_file_display_view.eo.h
