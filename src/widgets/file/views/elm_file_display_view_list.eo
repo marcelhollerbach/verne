@@ -9,7 +9,5 @@ class Elm.File.Display.View.List(Elm.Items.List, Elm.File.Display.View)
         Elm.File.Display.View.size_get;
         Elm.File.Display.View.config_set;
         Elm.File.Display.View.search;
-        Eo.Base.constructor;
-        Eo.Base.destructor;
     }
 }

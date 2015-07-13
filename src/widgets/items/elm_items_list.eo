@@ -5,6 +5,5 @@ class Elm.Items.List(Elm.Items.Display) {
         Elm.Items.Display.select;
         Evas.Object_Smart.add;
         Eo.Base.constructor;
-        Eo.Base.destructor;
     }
 }

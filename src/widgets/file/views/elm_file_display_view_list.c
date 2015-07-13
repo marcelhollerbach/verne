@@ -278,19 +278,5 @@ _elm_file_display_view_list_elm_file_display_view_search(Eo *obj, Elm_File_Displ
    eo_do(obj, elm_items_display_search(needle));
 }
 
-EOLIAN static Eo_Base *
-_elm_file_display_view_list_eo_base_constructor(Eo *obj, Elm_File_Display_View_List_Data *pd EINA_UNUSED)
-{
-   Eo *eo;
-
-   eo_do_super_ret(obj, ELM_FILE_DISPLAY_VIEW_LIST_CLASS, eo, eo_constructor());
-   return eo;
-}
-
-EOLIAN static void
-_elm_file_display_view_list_eo_base_destructor(Eo *obj, Elm_File_Display_View_List_Data *pd EINA_UNUSED)
-{
-   eo_do_super(obj, ELM_FILE_DISPLAY_VIEW_LIST_CLASS, eo_destructor());
-}
 
 #include "elm_file_display_view_list.eo.x"

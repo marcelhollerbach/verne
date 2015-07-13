@@ -207,7 +207,8 @@ _elm_items_list_eo_base_constructor(Eo *obj, Elm_Items_List_Data *pd)
 {
    Eo *eo;
 
-   eo_do_super_ret(obj, ELM_ITEMS_LIST_CLASS, eo, eo_constructor());
+   eo_do_super(obj, ELM_ITEMS_LIST_CLASS, eo = eo_constructor());
+
    if (!eo)
      return eo;
 
@@ -221,12 +222,6 @@ _elm_items_list_eo_base_constructor(Eo *obj, Elm_Items_List_Data *pd)
         );
 
    return eo;
-}
-
-EOLIAN static void
-_elm_items_list_eo_base_destructor(Eo *obj, Elm_Items_List_Data *pd EINA_UNUSED)
-{
-   eo_do_super(obj, ELM_ITEMS_LIST_CLASS, eo_destructor());
 }
 
 #include "elm_items_list.eo.x"
