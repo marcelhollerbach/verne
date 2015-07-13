@@ -23,7 +23,6 @@ LIST(APPEND WIDGET_LIBRARY
    file/elm_file_icon.eo
    file/elm_file_icon.eo.x
    file/elm_file_icon.eo.h
-   file/elm_file_icon.eo.legacy.h
    file/elm_file_icon.c
    file/elm_file_display.c
    file/elm_file_display.h
@@ -34,7 +33,6 @@ LIST(APPEND WIDGET_LIBRARY
    file/elm_file_display.eo
    file/elm_file_display.eo.x
    file/elm_file_display.eo.h
-   file/elm_file_display.eo.legacy.h
    file/elm_file_item_compare.c
    file/elm_file_item_compare.eo
    file/elm_file_item_compare.eo.x
