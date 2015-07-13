@@ -4,7 +4,7 @@ typedef struct {
     Eina_List *children;
     Eo *next;
     Eo *prev;
-    void* good;
+    Eo* good;
 } Efl_Tree_Base_Data;
 
 static Eina_Bool
@@ -219,7 +219,10 @@ _efl_tree_base_insert_sorted(Eo *obj EINA_UNUSED, Efl_Tree_Base_Data *pd, Efl_Tr
 EOLIAN static void
 _efl_tree_base_carry_set(Eo *obj EINA_UNUSED, Efl_Tree_Base_Data *pd, void *good)
 {
+   if (pd->good)
+     eo_do(pd->good, eo_wref_del(&pd->good));
    pd->good = good;
+   eo_do(pd->good, eo_wref_add(&pd->good));
 }
 
 EOLIAN static void *
