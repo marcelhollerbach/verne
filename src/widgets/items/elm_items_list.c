@@ -190,6 +190,7 @@ _elm_items_list_eo_base_constructor(Eo *obj, Elm_Items_List_Data *pd)
       Elm_Items_List_Pan_Data *pdpan = eo_data_scope_get(pd->pan, ELM_ITEMS_LIST_PAN_CLASS);
       pdpan->obj = obj;
       pdpan->box = evas_object_box_add(evas_object_evas_get(obj));
+      evas_object_smart_member_add(pdpan->box, pd->pan);
       evas_object_box_padding_set(pdpan->box, 0, 0);
       evas_object_box_align_set(pdpan->box, 0.0, 0.0);
       evas_object_box_layout_set(pdpan->box, evas_object_box_layout_vertical, pdpan->box, NULL);
