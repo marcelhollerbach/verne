@@ -7,6 +7,7 @@ typedef struct {
    Eina_Bool unselect_barrier;
    Evas_Object *pan;
    Eina_List *realitems;
+   Ecore_Idler *flush_idle;
 } Elm_Items_List_Data;
 
 typedef struct {
@@ -102,6 +103,19 @@ _unselected(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EI
 }
 
 static Eina_Bool
+_idle_tree_flush(void *data)
+{
+   Elm_Items_List_Data *pd;
+
+   pd = eo_data_scope_get(data, ELM_ITEMS_LIST_CLASS);
+   eo_do(pd->pan, elm_items_list_pan_realitems(pd->realitems));
+
+   pd->flush_idle = NULL;
+
+   return EINA_FALSE;
+}
+
+static Eina_Bool
 _add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
 {
    Eo *good;
@@ -127,8 +141,10 @@ _add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUS
    evas_object_show(good);
 
    pd->realitems = eina_list_append(pd->realitems, good);
-   //XXX: idle this change
-   eo_do(pd->pan, elm_items_list_pan_realitems(pd->realitems));
+
+   if (!pd->flush_idle)
+     pd->flush_idle = ecore_idler_add(_idle_tree_flush, data);
+
    return EO_CALLBACK_CONTINUE;
 }
 
@@ -143,6 +159,9 @@ _del(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUS
    eo_do(event, good = efl_tree_base_carry_get());
 
    pd->realitems = eina_list_remove(pd->realitems, good);
+
+   if (!pd->flush_idle)
+     pd->flush_idle = ecore_idler_add(_idle_tree_flush, data);
 
    return EO_CALLBACK_CONTINUE;
 }
