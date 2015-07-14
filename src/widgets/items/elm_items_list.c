@@ -325,6 +325,7 @@ _elm_items_list_pan_evas_object_smart_resize(Eo *obj EINA_UNUSED, Elm_Items_List
 {
    pd->w = w;
    pd->h = h;
+   _pan_update(obj, pd);
    eo_do_super(obj, ELM_ITEMS_LIST_PAN_CLASS, evas_obj_smart_resize(w, h));
 }
 
