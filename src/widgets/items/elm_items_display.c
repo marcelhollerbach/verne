@@ -155,101 +155,6 @@ _elm_items_display_search(Eo *obj EINA_UNUSED, Elm_Items_Display_Data *pd, const
    eo_do(searched, elm_items_item_selected_set(EINA_TRUE));
 }
 
-static void
-_viewport_recheck(Evas_Object *obj, Elm_Items_Display_Data *pd)
-{
-   int vpx,vpy,vpw,vph;
-   Eina_Rectangle viewport;
-   Eina_List *children, *node, *realizes = NULL;
-   Eina_List *realized = NULL;
-   Elm_Items_Item *item;
-   Efl_Tree_Base *tree_item;
-
-   //get the geometry of the viewport
-   eo_do(obj, elm_interface_scrollable_content_viewport_geometry_get(&vpx, &vpy, &vpw, &vph));
-   EINA_RECTANGLE_SET(&viewport, vpx, vpy, vpw, vph);
-
-   //get all the childs
-   eo_do(pd->root, children = efl_tree_base_children(EINA_TRUE));
-   //iterate throuw all the childs
-   EINA_LIST_FOREACH(children, node, tree_item)
-     {
-        int x,y,w,h;
-        Eina_Rectangle itemrect;
-
-        eo_do(tree_item, item = efl_tree_base_carry_get());
-        //get the geometry of a new item
-        evas_object_geometry_get(item, &x, &y, &w, &h);
-        EINA_RECTANGLE_SET(&itemrect, x, y, w, h);
-
-        //printf("====>%d-%d-%d-%d %d-%d-%d-%d\n", vpx,vpy,vpw,vph,x,y,w,h);
-        //check if the item is in the viewport
-        if (eina_rectangles_intersect(&viewport, &itemrect))
-          {
-
-             if (eina_list_data_find(pd->realized, item))
-               {
-                  /*
-                   * No need to subscribe to deletion for the item
-                   * it allready is
-                   */
-                  //if the item is allready realized add it
-                  realized = eina_list_append(realized, item);
-                  //and remove it from the realized list
-                  pd->realized = eina_list_remove(pd->realized, item);
-               }
-             else
-               {
-                  //if the item is not realized add it to the realizes
-                  realizes = eina_list_append(realizes, item);
-               }
-          }
-     }
-
-   //items in realized list needs to be unrealized, free them
-   EINA_LIST_FREE(pd->realized, item)
-     {
-        //unrealize the listed items
-        eo_do(item, elm_items_item_unrealize());
-     }
-
-   //set the new list to the "still" realized items
-   pd->realized = realized;
-
-   //Iterate throuw all the realizes
-   EINA_LIST_FREE(realizes, item)
-     {
-        //realize them
-        eo_do(item, elm_items_item_realize());
-        //append them to the new realized items
-        pd->realized = eina_list_append(pd->realized, item);
-     }
-
-}
-
-static Eina_Bool
-_idler_recalc(void *data)
-{
-   Elm_Items_Display_Data *pd;
-
-   pd = eo_data_scope_get(data, ELM_ITEMS_DISPLAY_CLASS);
-
-   _viewport_recheck(data, pd);
-   pd->recalc_idler = NULL;
-   return EINA_FALSE;
-}
-
-static Eina_Bool
-_scheudle_change(Evas_Object *obj, Elm_Items_Display_Data *pd)
-{
-   //do a idler to avoid recheck orgys
-   if (pd->recalc_idler) return EINA_TRUE;
-
-   pd->recalc_idler = ecore_idler_add(_idler_recalc, obj);
-
-   return EINA_TRUE;
-}
-
 static Eina_Bool
 _selected(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
 {
@@ -278,9 +183,6 @@ _del(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNU
 
    pd = eo_data_scope_get(data, ELM_ITEMS_DISPLAY_CLASS);
 
-   _scheudle_change(data, pd);
-   //unsubscribe from events
-
    eo_do(event, good = efl_tree_base_carry_get());
    eo_do(good, eo_event_callback_del(ELM_ITEMS_ITEM_EVENT_SELECTED, _selected, data);
                eo_event_callback_del(ELM_ITEMS_ITEM_EVENT_UNSELECTED, _unselected, data);
@@ -296,12 +198,8 @@ _del(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNU
 static Eina_Bool
 _add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
 {
-   Elm_Items_Display_Data *pd;
    Eo *good;
 
-   pd = eo_data_scope_get(data, ELM_ITEMS_DISPLAY_CLASS);
-
-   _scheudle_change(data, pd);
    //subscribe to events
    eo_do(event, good = efl_tree_base_carry_get());
    eo_do(good, eo_event_callback_add(ELM_ITEMS_ITEM_EVENT_SELECTED, _selected, data);
@@ -350,35 +248,48 @@ _elm_items_display_eo_base_destructor(Eo *obj, Elm_Items_Display_Data *pd)
    eo_do_super(obj, ELM_ITEMS_DISPLAY_CLASS, eo_destructor());
 }
 
-static void
-_scroll_cb2(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
+EOLIAN static void
+_elm_items_display_realizes_set(Eo *obj EINA_UNUSED, Elm_Items_Display_Data *pd, Eina_List *realized)
 {
-   //recheck the realized items
-   _viewport_recheck(obj, data);
+   Eina_List *node;
+   Eina_List *realizes = NULL;
+
+   Elm_Items_Item *item;
+   //get the diff between the two sets of items
+   EINA_LIST_FOREACH(realized, node, item)
+     {
+        if (eina_list_data_find_list(pd->realized, item))
+          {
+             //this item is allready realized
+             pd->realized = eina_list_remove(pd->realized, item);
+          }
+        else
+          {
+             //this items needs to be realized
+             realizes = eina_list_append(realizes, item);
+          }
+     }
+
+   //the items which are
+   EINA_LIST_FREE(pd->realized, item)
+     {
+        eo_do(item, elm_items_item_unrealize());
+        evas_object_hide(item);
+     }
+
+   EINA_LIST_FREE(realizes, item)
+     {
+        eo_do(item, elm_items_item_realize());
+        evas_object_show(item);
+     }
+
+   pd->realized = realized;
 }
 
-EOLIAN static void
-_elm_items_display_evas_object_smart_add(Eo *obj, Elm_Items_Display_Data *pd)
+EOLIAN static Eina_List *
+_elm_items_display_realizes_get(Eo *obj EINA_UNUSED, Elm_Items_Display_Data *pd)
 {
-   eo_do_super(obj, ELM_ITEMS_DISPLAY_CLASS, evas_obj_smart_add());
-   //take pane of the implementor
-   eo_do(obj, pd->pane = elm_items_display_child_pane_get());
-   //subscribe to scroll events
-   evas_object_smart_callback_add(obj, "scroll", _scroll_cb2, pd);
-   //give the pane to the scroller
-   elm_object_content_set(obj, pd->pane);
-   evas_object_size_hint_align_set(pd->pane, EVAS_HINT_FILL, EVAS_HINT_FILL);
-   evas_object_size_hint_weight_set(pd->pane, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-   //show the scroller panel
-   evas_object_show(pd->pane);
-}
-
-EOLIAN static void
-_elm_items_display_evas_object_smart_resize(Eo *obj, Elm_Items_Display_Data *pd, Evas_Coord w, Evas_Coord h)
-{
-   eo_do_super(obj, ELM_ITEMS_DISPLAY_CLASS, evas_obj_smart_resize(w,h));
-   //recheck the realized items
-   _viewport_recheck(obj, pd);
+   return pd->realized;
 }
 
 EOLIAN static Eina_List *

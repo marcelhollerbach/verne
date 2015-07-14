@@ -15,6 +15,8 @@ LIST(APPEND WIDGET_LIBRARY
    items/elm_items_list.c
    items/elm_items_list.eo.x
    items/elm_items_list.eo.h
+   items/elm_items_list_pan.eo.x
+   items/elm_items_list_pan.eo.h
    #filepackage
    file/elm_file_mimetype_cache.c
    file/elm_file_mimetype_cache.eo

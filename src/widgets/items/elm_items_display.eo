@@ -13,14 +13,6 @@ abstract Elm.Items.Display (Elm.Scroller) {
                 root : Efl.Tree.Base*;
             }
         }
-        @property child_pane {
-            get {
-
-            }
-            values {
-                pane : Evas.Object*;
-            }
-        }
         sel_move {
             params {
                 direction : Elm.Items.Move_Dir;
@@ -51,13 +43,15 @@ abstract Elm.Items.Display (Elm.Scroller) {
               selected : list<Elm.Items.Item*>*;
             }
         }
+        @property realizes {
+            values {
+              realizes : list <Elm.Items.Item*>*;
+            }
+        }
     }
     implements {
-        @virtual .child_pane.get;
         @virtual .sel_move;
         @virtual .select;
-        Evas.Object_Smart.add;
-        Evas.Object_Smart.resize;
         Elm.Widget.event;
         Eo.Base.constructor;
         Eo.Base.destructor;

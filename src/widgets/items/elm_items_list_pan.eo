@@ -1,0 +1,21 @@
+class Elm.Items.List.Pan (Elm_Pan) {
+    methods {
+        realitems {
+          params {
+            list : list<Elm.Items.Item*>*;
+          }
+        }
+    }
+
+    implements {
+      Elm_Pan.gravity.set;
+      Elm_Pan.gravity.get;
+      Elm_Pan.pos.set;
+      Elm_Pan.pos.get;
+      Elm_Pan.content_size.get;
+      Elm_Pan.pos_min.get;
+      Elm_Pan.pos_max.get;
+      Evas.Object_Smart.resize;
+      Evas.Object_Smart.move;
+    }
+}

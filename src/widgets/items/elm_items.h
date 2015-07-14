@@ -10,5 +10,7 @@
 #include "elm_items_item.eo.h"
 #include "elm_items_display.eo.h"
 #include "elm_items_list.eo.h"
+#include "elm_items_list_pan.eo.h"
+
 
 #endif
