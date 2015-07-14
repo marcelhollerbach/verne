@@ -269,18 +269,18 @@ _elm_items_display_realizes_set(Eo *obj EINA_UNUSED, Elm_Items_Display_Data *pd,
              realizes = eina_list_append(realizes, item);
           }
      }
-
-   //the items which are
-   EINA_LIST_FREE(pd->realized, item)
-     {
-        eo_do(item, elm_items_item_unrealize());
-        evas_object_hide(item);
-     }
-
+   //realize the new ones
    EINA_LIST_FREE(realizes, item)
      {
         eo_do(item, elm_items_item_realize());
         evas_object_show(item);
+     }
+
+   //unrealize the old realized which are not realized anymore
+   EINA_LIST_FREE(pd->realized, item)
+     {
+        eo_do(item, elm_items_item_unrealize());
+        evas_object_hide(item);
      }
 
    pd->realized = realized;
