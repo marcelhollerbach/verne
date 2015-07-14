@@ -239,6 +239,7 @@ _elm_items_list_pan_realitems(Eo *obj, Elm_Items_List_Pan_Data *pd, Eina_List *l
    pd->realitems = list;
    //update pan
    _pan_update(obj, pd);
+   eo_do(obj, eo_event_callback_call(ELM_PAN_EVENT_CHANGED, NULL));
 }
 
 EOLIAN static void
