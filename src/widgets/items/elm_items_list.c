@@ -214,24 +214,31 @@ _pan_update(Eo *obj, Elm_Items_List_Pan_Data *pd)
    first_item = pd->y / HACKY_HEIGHT;
    last_item = ((pd->y + pd->h) / HACKY_HEIGHT);
 
-   //remove all children from the box
-   evas_object_box_remove_all(pd->box, EINA_FALSE);
+   //remove all children from the box if we have new items
+   if (pd->old_last != last_item || pd->old_first != first_item)
+     evas_object_box_remove_all(pd->box, EINA_FALSE);
 
    //move the box to the new position
    evas_object_move(pd->box, pd->px, pd->py - (gap));
    evas_object_resize(pd->box, pd->w, (last_item - first_item) * HACKY_HEIGHT);
 
-   //add the new items
-   for (int i = first_item; i <= last_item; i++)
+   if (pd->old_last != last_item || pd->old_first != first_item)
      {
-        Eo *item;
+        //add the new items
+        for (int i = first_item; i <= last_item; i++)
+          {
+             Eo *item;
 
-        item = eina_list_nth(pd->realitems, i);
-        evas_object_box_append(pd->box, item);
-        realizes = eina_list_append(realizes, item);
+             item = eina_list_nth(pd->realitems, i);
+             evas_object_box_append(pd->box, item);
+             realizes = eina_list_append(realizes, item);
+          }
+        //update old items
+        pd->old_first = first_item;
+        pd->old_last = last_item;
+        //set new realizes
+        eo_do(pd->obj, elm_items_display_realizes_set(realizes));
      }
-
-   eo_do(pd->obj, elm_items_display_realizes_set(realizes));
 }
 
 EOLIAN static void
@@ -279,6 +286,7 @@ _elm_items_list_pan_elm_pan_gravity_get(Eo *obj, Elm_Items_List_Pan_Data *pd, do
 EOLIAN static void
 _elm_items_list_pan_elm_pan_pos_set(Eo *obj, Elm_Items_List_Pan_Data *pd, Evas_Coord x, Evas_Coord y)
 {
+   if (pd->y == y) return;
    pd->y = y;
 
    _pan_update(obj, pd);
