@@ -223,16 +223,22 @@ _pan_update(Eo *obj, Elm_Items_List_Pan_Data *pd)
    evas_object_move(pd->box, pd->px, pd->py - (gap));
    evas_object_resize(pd->box, pd->w, (last_item - first_item) * HACKY_HEIGHT);
 
+
    if (pd->old_last != last_item || pd->old_first != first_item)
      {
+        Eina_List *itemlist;
         //add the new items
+        itemlist = eina_list_nth_list(pd->realitems, first_item);
+
         for (int i = first_item; i <= last_item; i++)
           {
              Eo *item;
 
-             item = eina_list_nth(pd->realitems, i);
+             item = eina_list_data_get(itemlist);
+
              evas_object_box_append(pd->box, item);
              realizes = eina_list_append(realizes, item);
+             itemlist = eina_list_next(itemlist);
           }
         //update old items
         pd->old_first = first_item;
