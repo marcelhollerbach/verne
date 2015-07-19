@@ -251,22 +251,9 @@ _pan_update(Eo *obj, Elm_Items_List_Pan_Data *pd)
 EOLIAN static void
 _elm_items_list_pan_realitems(Eo *obj, Elm_Items_List_Pan_Data *pd, Eina_List *list)
 {
-   //unrealize all items
-   {
-      Eo *realized;
-      //make the box empty
-      evas_object_box_remove_all(pd->box, EINA_FALSE);
-
-      //free all realized items
-      EINA_LIST_FREE(pd->realized, realized)
-        {
-           eo_do(realized, elm_items_item_unrealize());
-           evas_object_hide(realized);
-        }
-
-      pd->old_first = -1;
-      pd->old_last = -1;
-   }
+   eo_do(pd->obj, elm_items_display_realizes_set(NULL));
+   pd->old_first = -1;
+   pd->old_last = -1;
    //set new list
    pd->realized = NULL;
    pd->realitems = list;
