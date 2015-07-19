@@ -304,16 +304,13 @@ _elm_items_display_item_search_xywh(Eo *obj EINA_UNUSED, Elm_Items_Display_Data 
    EINA_RECTANGLE_SET(&viewport, xx, yy, ww, hh);
 
    //get all the childs
-   eo_do(pd->root, children = efl_tree_base_children(EINA_TRUE));
+   //eo_do(pd->root, children = efl_tree_base_children(EINA_TRUE));
 
    //iterate throuw all the childs
-   EINA_LIST_FOREACH(children, node, treeitem)
+   EINA_LIST_FOREACH(pd->realized, node, item)
      {
         int x,y,w,h;
         Eina_Rectangle itemrect;
-
-        eo_do(treeitem, item = efl_tree_base_carry_get());
-
         //get the geometry of a new item
         evas_object_geometry_get(item, &x, &y, &w, &h);
         EINA_RECTANGLE_SET(&itemrect, x, y, w, h);
