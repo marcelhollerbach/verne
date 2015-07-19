@@ -10,19 +10,6 @@ typedef struct {
     const char * searchable;
 } Elm_Items_Item_Data;
 
-static Eina_Bool
-_realize_idle(void *data)
-{
-   Elm_Items_Item_Data *pd;
-
-   pd = eo_data_scope_get(data, ELM_ITEMS_ITEM_CLASS);
-
-   eo_do(data, eo_event_callback_call(ELM_ITEMS_ITEM_EVENT_REALIZE, NULL));
-
-   pd->realize_idle = NULL;
-   return EINA_FALSE;
-}
-
 EOLIAN static void
 _elm_items_item_content_set(Eo *obj EINA_UNUSED, Elm_Items_Item_Data *pd, Evas_Object *content)
 {
@@ -41,7 +28,8 @@ EOLIAN static void
 _elm_items_item_realize(Eo *obj EINA_UNUSED, Elm_Items_Item_Data *pd EINA_UNUSED)
 {
    //call realize event
-   pd->realize_idle = ecore_idler_add(_realize_idle, obj);
+  if (!pd->content)
+    eo_do(obj, eo_event_callback_call(ELM_ITEMS_ITEM_EVENT_REALIZE, NULL));
 }
 
 EOLIAN static void
