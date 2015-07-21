@@ -70,6 +70,8 @@ end:
      state = EMOUS_DEVICE_STATE_MOUNTED;
    else
      state = EMOUS_DEVICE_STATE_UMOUNTED;
+
+   _device_state_change(dev, state);
 }
 
 static Eina_Bool
