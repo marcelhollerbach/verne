@@ -400,7 +400,7 @@ _elm_file_display_view_grid_eo_base_constructor(Eo *obj, Elm_File_Display_View_G
    pd->gic->item_style = "default";
    pd->gic->func.content_get = _grid_content_get;
 
-   eo_do_super_ret(obj, ELM_FILE_DISPLAY_VIEW_GRID_CLASS, eo, eo_constructor());
+   eo_do_super(obj, ELM_FILE_DISPLAY_VIEW_GRID_CLASS, eo = eo_constructor());
 
    eo_do(obj, elm_interface_scrollable_page_relative_set(1.0, 0.9));
    elm_gengrid_align_set(obj, 0.5, 0.0);
