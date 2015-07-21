@@ -47,8 +47,6 @@ string(REPLACE "\n" "" EOLIAN_EO_DIR_WITHOUT_NEWLINE
 
 file(GLOB_RECURSE files "*.eo")
 
-message(${EOLIAN_EO_DIR})
-
 foreach(filename ${files})
 add_custom_command(
    OUTPUT ${filename}.x
