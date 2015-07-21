@@ -165,9 +165,6 @@ _efm_monitor_config_only_folder_get(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
 static void
 _fm_action(void *data EINA_UNUSED, Efm_Monitor *mon, const char *file, Fm_Action action)
 {
-   Efm_Monitor_Data *pd;
-   pd = eo_data_scope_get(mon, EFM_MONITOR_CLASS);
-
    if (action == ADD)
      {
        _add(mon, file);
