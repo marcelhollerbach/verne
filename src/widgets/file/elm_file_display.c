@@ -1132,7 +1132,6 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
         view = ELM_FILE_DISPLAY_VIEW_GRID_CLASS;
      }
 
-   view = ELM_FILE_DISPLAY_VIEW_LIST_CLASS;
    eo_do(obj, elm_obj_file_display_view_set(view));
 
    pd->event.rect = evas_object_rectangle_add(obj);
