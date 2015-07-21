@@ -65,14 +65,11 @@ _path_transform(const char *text)
 }
 
 static void
-_markup_filter(void *data EINA_UNUSED, Evas_Object *obj, char ** text)
+_markup_filter(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, char ** text)
 {
    char *n = *text;
    int c = 0;
    Eina_Strbuf *buf;
-   const char *existsing;
-
-   existsing = elm_object_text_get(obj);
 
    buf = eina_strbuf_new();
 
@@ -80,10 +77,6 @@ _markup_filter(void *data EINA_UNUSED, Evas_Object *obj, char ** text)
      {
         if (n[c] == '/')
           {
-             char tmp;
-
-             tmp = n[c];
-
              n[c] = '\0';
 
              eina_strbuf_append(buf, SEP);
