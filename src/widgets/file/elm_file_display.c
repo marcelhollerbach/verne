@@ -1214,10 +1214,13 @@ _elm_file_display_filepreview_show_get(Eo *obj EINA_UNUSED, Elm_File_Display_Dat
 EOLIAN static void
 _elm_file_display_show_hidden_file_set(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd, Eina_Bool hidden)
 {
+
+
    config->hidden_files = hidden;
    config_save();
    //refresh the url so the view is doing everything new
-    eo_do(pd->cached_view, elm_file_display_view_config_set(config->icon_size, config->only_folder, config->hidden_files));
+   eo_do(pd->cached_view, elm_file_display_view_config_set(config->icon_size, config->only_folder, config->hidden_files));
+
 }
 
 EOLIAN static Eina_Bool
@@ -1298,6 +1301,8 @@ _elm_file_display_case_sensetive_sort_get(Eo *obj EINA_UNUSED, Elm_File_Display_
 EOLIAN static Eina_Bool
 _elm_file_display_efl_file_file_set(Eo *obj, Elm_File_Display_Data *pd, const char *file, const char *key EINA_UNUSED)
 {
+   Efm_File *f;
+
    if (!ecore_file_exists(file))
      return EINA_FALSE;
    if (pd->current_path)
@@ -1306,6 +1311,10 @@ _elm_file_display_efl_file_file_set(Eo *obj, Elm_File_Display_Data *pd, const ch
    pd->current_path = eina_stringshare_add(file);
    eo_do(pd->cached_view, elm_file_display_view_path_set(pd->current_path));
    eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_PATH_CHANGED_USER, (void*)pd->current_path));
+
+   f = eo_add(EFM_FILE_CLASS, NULL);
+   eo_do(f, efm_file_generate(file));
+   filepreview_file_set(pd->preview, f);
    return EINA_TRUE;
 }
 
