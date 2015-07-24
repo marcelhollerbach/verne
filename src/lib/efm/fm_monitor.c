@@ -34,9 +34,9 @@ fm_monitor_add(Efm_Monitor *mon, Eio_Monitor *monitor, Fm_File_Action action)
 }
 
 void
-fm_monitor_del(Efm_Monitor *mon, Eio_Monitor *monitor)
+fm_monitor_del(Efm_Monitor *mon EINA_UNUSED, Eio_Monitor *monitor)
 {
-  eina_hash_del(ctx->open_monitors, &monitor, mon);
+   eina_hash_del(ctx->open_monitors, &monitor, NULL);
 }
 
 
