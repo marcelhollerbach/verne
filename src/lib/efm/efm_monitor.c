@@ -50,18 +50,13 @@ _add(Efm_Monitor *mon, const char *file)
    const char *path;
    Efm_File *ef;
    Efm_Monitor_Data *pd;
-   Eina_Bool result;
    path = eina_stringshare_add(file);
 
-   ef = eo_add(EFM_FILE_CLASS, mon, result = efm_file_generate(path));
+   eo_do(EFM_FILE_CLASS, ef = efm_file_generate(path));
 
    if (!ef)
-     return;
-
-   if (!result)
      {
        ERR("Creation of %s failed, this is ... strange", file);
-       eo_del(ef);
        return;
      }
 

@@ -162,7 +162,7 @@ _util_fuckyouglib_convert(Eldbus_Message_Iter *fuckyouglib)
 static void
 mountpoint_update_cb(void *data EINA_UNUSED, const Eldbus_Message *msg, Eldbus_Pending *p EINA_UNUSED)
 {
-   Eldbus_Message_Iter *var, *mountpoints;
+   Eldbus_Message_Iter *var, *mountpoints = NULL;
    Emous_Device *dev = data;
    Emous_Device_UDisks_Data *pd = eo_data_scope_get(dev, EMOUS_DEVICE_UDISKS_CLASS);
    Eina_List *list = NULL, *node = NULL, *ex_mountpoints = NULL;

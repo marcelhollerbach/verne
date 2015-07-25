@@ -192,15 +192,18 @@ _attributes_update(Eo *obj EINA_UNUSED, Efm_File_Data *pd)
     pd->stat.mtime = pd->st.st_mtim.tv_sec;
 }
 
-EOLIAN static Eina_Bool
-_efm_file_generate(Eo *obj, Efm_File_Data *pd, const char *filename)
+EOLIAN static Efm_File*
+_efm_file_generate(Eo *clas EINA_UNUSED, void *noth EINA_UNUSED, const char *filename)
 {
     int end;
+    Eo *obj = eo_add(EFM_FILE_CLASS, NULL);
+    Efm_File_Data *pd = eo_data_scope_get(obj, EFM_FILE_CLASS);
 
     //get the stat
     if (stat(filename, &pd->st) < 0)
       {
-         return EINA_FALSE;
+         eo_del(obj);
+         return NULL;
       }
 
     _attributes_update(obj, pd);
@@ -226,9 +229,10 @@ _efm_file_generate(Eo *obj, Efm_File_Data *pd, const char *filename)
 
     pd->file_mon = eio_monitor_add(pd->path);
     eina_hash_add(watch_files, &pd->file_mon, obj);
-    return EINA_TRUE;
+    return obj;
 }
-void
+
+EOLIAN static void
 _efm_file_eo_base_destructor(Eo *obj, Efm_File_Data *pd)
 {
     eina_stringshare_del(pd->path);

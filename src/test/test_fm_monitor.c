@@ -16,14 +16,13 @@
 START_TEST(efm_file_invalid_name)
 {
    Efm_File *file;
-   Eina_Bool res;
    const char *filename = "I-Am-Invalid";
 
    efm_init();
 
-   file = eo_add(EFM_FILE_CLASS, NULL, res = efm_file_generate(filename));
+   eo_do(EFM_FILE_CLASS, file = efm_file_generate(filename));
 
-   ck_assert_int_eq(res, 0);
+   ck_assert_ptr_ne(file, NULL);
 
    efm_shutdown();
 
@@ -45,7 +44,6 @@ START_TEST(efm_valid_file)
 {
    Efm_File *file;
    const char *filename = TEST_FILE;
-   Eina_Bool res;
 
    system("touch "TEST_FILE);
 
@@ -55,9 +53,9 @@ START_TEST(efm_valid_file)
 
    done = EINA_FALSE;
 
-   file = eo_add(EFM_FILE_CLASS, NULL, res = efm_file_generate(filename));
+   eo_do(EFM_FILE_CLASS, file = efm_file_generate(filename));
 
-   ck_assert_int_eq(res, 1);
+   ck_assert_ptr_ne(file, NULL);
 
    eo_do(file, eo_event_callback_add(EFM_FILE_EVENT_FSQUERY_DONE, _done_cb, NULL));
 
@@ -86,7 +84,6 @@ START_TEST(efm_stresstest)
 {
    Efm_File *file;
    const char *filename = TEST_FILE;
-   Eina_Bool res;
    int i;
 
    for(i = 0; i < TEST_FILE_ITER_MAX; i++)
@@ -97,7 +94,6 @@ START_TEST(efm_stresstest)
         system(buf);
      }
 
-
    eina_init();
    ecore_init();
    efm_init();
@@ -105,9 +101,9 @@ START_TEST(efm_stresstest)
    done = EINA_FALSE;
    for (i = 0; i < TEST_FILE_ITER_MAX; i++)
      {
-        file = eo_add(EFM_FILE_CLASS, NULL, res = efm_file_generate(filename));
+        eo_do(EFM_FILE_CLASS, file = efm_file_generate(filename));
 
-        ck_assert_int_eq(res, 1);
+        ck_assert_ptr_ne(file, NULL);
 
         eo_do(file, eo_event_callback_add(EFM_FILE_EVENT_FSQUERY_DONE, _done2_cb, NULL));
      }

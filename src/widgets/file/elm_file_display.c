@@ -1354,9 +1354,9 @@ _elm_file_display_efl_file_file_set(Eo *obj, Elm_File_Display_Data *pd, const ch
    eo_do(pd->cached_view, elm_file_display_view_path_set(pd->current_path));
    eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_PATH_CHANGED_USER, (void*)pd->current_path));
 
-   f = eo_add(EFM_FILE_CLASS, NULL);
-   eo_do(f, efm_file_generate(file));
-   filepreview_file_set(pd->preview, f);
+   eo_do(EFM_FILE_CLASS, f = efm_file_generate(file));
+   if (f)
+     filepreview_file_set(pd->preview, f);
    return EINA_TRUE;
 }
 

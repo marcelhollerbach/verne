@@ -66,13 +66,13 @@ class Efm.File(Eo.Base) {
             }
             return : bool; [[True if the file is of this type or false if not.]]
         }
-        generate {
+        generate @class {
             [[Creates a file and fills all not async attributes with the correct value]]
             params {
                 @in filename : const(char)*;
             }
 
-            return : bool;
+            return : Efm.File*;
         }
     }
     implements {
