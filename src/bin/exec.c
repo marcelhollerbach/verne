@@ -5,87 +5,110 @@ typedef struct {
   char* (*replacement)(Eina_List *f);
 } Command_Split;
 
+#define STRBUF_RETURN(s) \
+   { \
+     char *res; \
+     res = eina_strbuf_string_steal(s); \
+     eina_strbuf_free(s); \
+     return res; \
+   } \
+
+static void
+escape_path(const char *path, Eina_Strbuf *buf)
+{
+   Eina_Strbuf *tmp;
+
+   tmp = eina_strbuf_new();
+
+   eina_strbuf_append(tmp, path);
+   eina_strbuf_replace_all(tmp, " ", "\\ ");
+   eina_strbuf_replace_all(tmp, "(", "\\(");
+   eina_strbuf_replace_all(tmp, ")", "\\)");
+   eina_strbuf_replace_all(tmp, "[", "\\[");
+   eina_strbuf_replace_all(tmp, "]", "\\]");
+   eina_strbuf_replace_all(tmp, "{", "\\{");
+   eina_strbuf_replace_all(tmp, "}", "\\}");
+   eina_strbuf_append_buffer(buf, tmp);
+   eina_strbuf_free(tmp);
+}
+
 static char*
 filename(Eina_List *files)
 {
    Efm_File *f;
    const char *filename;
+   Eina_Strbuf *buf;
+
+   buf = eina_strbuf_new();
 
    f = eina_list_data_get(files);
 
-   return strdup(eo_do_ret(f, filename, efm_file_path_get()));
+   eo_do(f, filename = efm_file_path_get());
+
+   escape_path(filename, buf);
+
+   STRBUF_RETURN(buf)
 }
 
 static char*
 filelist(Eina_List *files)
 {
-  Eina_Strbuf *result;
-  Eina_List *node;
-  Efm_File *f;
+   Eina_Strbuf *result;
+   Eina_List *node;
+   Efm_File *f;
 
-  result = eina_strbuf_new();
+   result = eina_strbuf_new();
 
-  EINA_LIST_FOREACH(files, node, f)
-    {
-       const char *filename;
+   EINA_LIST_FOREACH(files, node, f)
+     {
+        const char *filename;
 
-       eo_do(f, filename = efm_file_path_get());
+        eo_do(f, filename = efm_file_path_get());
 
-       eina_strbuf_append(result, filename);
-       eina_strbuf_append(result, " ");
-    }
-   {
-     char *res;
+        escape_path(filename, result);
 
-     res = eina_strbuf_string_steal(result);
-     eina_strbuf_free(result);
+        eina_strbuf_append(result, " ");
+     }
 
-     return res;
-   }
+   STRBUF_RETURN(result);
 }
 
 static char*
 pathname(Eina_List *files)
 {
-   char result[PATH_MAX];
+   Eina_Strbuf *result;
    const char *filename;
    Efm_File *f;
+
+   result = eina_strbuf_new();
 
    f = eina_list_data_get(files);
    eo_do(f, filename = efm_file_path_get());
 
-   snprintf(result, sizeof(result), "file:///%s", filename);
+   escape_path(filename, result);
 
-   return strdup(result);
+   STRBUF_RETURN(result);
 }
 
 static char*
 pathlist(Eina_List *files)
 {
-  Eina_Strbuf *result;
-  Eina_List *node;
-  Efm_File *f;
+   Eina_Strbuf *result;
+   Eina_List *node;
+   Efm_File *f;
 
-  result = eina_strbuf_new();
+   result = eina_strbuf_new();
 
-  EINA_LIST_FOREACH(files, node, f)
-    {
-       const char *filename;
-       char path[PATH_MAX];
+   EINA_LIST_FOREACH(files, node, f)
+     {
+        const char *filename;
 
-       eo_do(f, filename = efm_file_path_get());
-       snprintf(path, sizeof(path), "file:///%s ", filename);
+        eo_do(f, filename = efm_file_path_get());
 
-       eina_strbuf_append(result, path);
-    }
-   {
-     char *res;
-
-     res = eina_strbuf_string_steal(result);
-     eina_strbuf_free(result);
-
-     return res;
-   }
+        eina_strbuf_append(result, "file:///");
+        escape_path(filename, result);
+     }
+   STRBUF_RETURN(result);
 }
 
 static char*
