@@ -20,8 +20,17 @@ printHelp()
 static Eina_Bool
 _dir_changed(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
 {
+   Eina_Strbuf *buf;
+   const char *filename;
+
+   buf = eina_strbuf_new();
    titlebar_path_set(event);
 
+   filename = ecore_file_file_get(event);
+
+   eina_strbuf_append_printf(buf, "elm - Jesus | %s", filename);
+   elm_win_title_set(win, eina_strbuf_string_get(buf));
+   eina_strbuf_free(buf);
    return EINA_FALSE;
 }
 
