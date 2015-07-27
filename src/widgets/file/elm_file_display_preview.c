@@ -9,6 +9,7 @@ typedef struct
    Evas_Object *group, *group_name;
    Evas_Object *ctime, *ctime_name;
    Evas_Object *mtype, *mtype_name;
+   Evas_Object *name, *name_name;
 } Filepreview;
  #if 0
 static const char*
@@ -39,12 +40,14 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
   char buf[PATH_MAX];
   const char *path;
   const char *mime_type;
+  const char *filename;
   Efm_File_Stat *st;
 
-  //char[] bytes = {"B", "KB", "MB", "GB", "TB", "PM", "EM", NULL}
   f = evas_object_data_get(w, "__ctx");
-  eo_do(file, path = efm_file_path_get());
-  eo_do(file, mime_type = efm_file_mimetype_get());
+  eo_do(file, path = efm_file_path_get();
+              mime_type = efm_file_mimetype_get();
+              filename = efm_file_filename_get();
+        );
 
   if (!f) return;
 
@@ -145,7 +148,9 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
 
   snprintf(buf, sizeof(buf), "%s", mime_type);
   elm_object_text_set(f->mtype, buf);
-
+  {
+    elm_object_text_set(f->name, filename);
+  }
   evas_object_show(w);
 }
 
@@ -178,6 +183,9 @@ filepreview_add(Evas_Object *w)
    evas_object_event_callback_add(resu, EVAS_CALLBACK_DEL, _del, NULL);
 
    bx = elm_box_add(resu);
+
+   LABEL(f->name_name, "Name:", 0.0, EINA_FALSE);
+   LABEL(f->name, "", EVAS_HINT_FILL, EINA_TRUE);
 
    LABEL(f->size_name, "Size:", 0.0, EINA_FALSE);
    LABEL(f->size, "", EVAS_HINT_FILL, EINA_TRUE);
