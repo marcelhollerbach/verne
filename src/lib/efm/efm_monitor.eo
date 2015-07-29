@@ -1,4 +1,10 @@
 class Efm.Monitor(Eo.Base) {
+    [[This object will monitor a given path.
+
+      This means if in the given directory a file/directory is added the object will emit the event to notify about it.
+      If a file itself gets deleted itself can be checked with the object passed by the event add
+      If the monitor object is deleted all created files are deleted if you dont have a reference on it.
+    ]]
     methods {
         start @class {
             [[Starts a monitor at the given directory.
@@ -50,7 +56,7 @@ class Efm.Monitor(Eo.Base) {
         Eo.Base.destructor;
     }
     events {
-        file,hide : Efm.File*; [[Called when the file wants to be hidden]]
+        file,hide : Efm.File*; [[If the buildin filter is changed and this file shoudlnt be published by the monitor anymore this is called]]
         file,add : Efm.File*; [[Called when a file was added]]
         error; [[called when the monitor got an error. The bahavoir after this event is unknown. The monitor should be deleted and never be used again!]]
     }

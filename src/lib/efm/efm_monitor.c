@@ -44,6 +44,16 @@ _take_filter(Efm_Monitor *mon EINA_UNUSED, Efm_Monitor_Data *pd, Efm_File *file)
    return EINA_TRUE;
 }
 
+static Eina_Bool
+_file_del(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Efm_Monitor_Data *pd;
+
+   pd = eo_data_scope_get(data, EFM_MONITOR_CLASS);
+   eina_hash_del_by_data(pd->file_icons, obj);
+   return EO_CALLBACK_CONTINUE;
+}
+
 static void
 _add(Efm_Monitor *mon, const char *file)
 {
@@ -53,7 +63,7 @@ _add(Efm_Monitor *mon, const char *file)
    path = eina_stringshare_add(file);
 
    eo_do(EFM_FILE_CLASS, ef = efm_file_generate(path));
-
+   eo_do(ef, eo_event_callback_add(EO_BASE_EVENT_DEL, _file_del, mon));
    if (!ef)
      {
        ERR("Creation of %s failed, this is ... strange", file);
@@ -216,12 +226,6 @@ _eio_error_cb(void *data, Eio_File *handler EINA_UNUSED, int error EINA_UNUSED)
    free(job);
 }
 
-void
-_mon_hash_free(void *data)
-{
-   eo_del(data);
-}
-
 EOLIAN static Efm_Monitor *
 _efm_monitor_start(Eo *obj EINA_UNUSED, void *data EINA_UNUSED, const char *directory, Eina_Bool hidden_files, Eina_Bool only_folder)
 {
@@ -237,7 +241,7 @@ _efm_monitor_start(Eo *obj EINA_UNUSED, void *data EINA_UNUSED, const char *dire
 
    pd->directory = eina_stringshare_add(directory);
 
-   pd->file_icons = eina_hash_stringshared_new(_mon_hash_free);
+   pd->file_icons = eina_hash_stringshared_new(NULL);
 
    {
      Efm_Monitor_Eio_Job *job;
@@ -254,12 +258,20 @@ _efm_monitor_start(Eo *obj EINA_UNUSED, void *data EINA_UNUSED, const char *dire
 static void
 _efm_monitor_eo_base_destructor(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
 {
+   Efm_File *file;
+
    if (pd->file)
      eio_file_cancel(pd->file);
 
    fm_monitor_del(obj, pd->mon);
    eio_monitor_del(pd->mon);
    eina_stringshare_del(pd->directory);
+
+   EINA_ITERATOR_FOREACH(eina_hash_iterator_data_new(pd->file_icons), file)
+     {
+        eo_del(file);
+     }
+
    eina_hash_free(pd->file_icons);
 
    eo_do_super(obj, EFM_MONITOR_CLASS, eo_destructor());
