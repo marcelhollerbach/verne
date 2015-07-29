@@ -51,8 +51,7 @@ _fs_cb(void *dat EINA_UNUSED, Ecore_Thread *thread)
 
              const char *mime_type;
 
-             mime_type = efreet_mime_special_type_get(data->path);
-             if (!mime_type) mime_type = efreet_mime_globs_type_get(data->path);
+             mime_type = efreet_mime_globs_type_get(data->path);
              if (!mime_type) mime_type = efreet_mime_fallback_type_get(data->path);
 
              data->mimetype = mime_type;
@@ -159,6 +158,7 @@ _efm_file_stat_get(Eo *obj EINA_UNUSED, Efm_File_Data *pd)
 {
     return &pd->stat;
 }
+
 EOLIAN static Eina_Bool
 _efm_file_is_type(Eo *obj EINA_UNUSED, Efm_File_Data *pd, Efm_File_Type type)
 {
@@ -225,7 +225,10 @@ _efm_file_generate(Eo *clas EINA_UNUSED, void *noth EINA_UNUSED, const char *fil
         end --;
     } while(end > 0);
 
-    _scheudle(obj, pd);
+    if (!S_ISREG(pd->st.st_mode))
+      pd->mimetype = efreet_mime_special_type_get(pd->path);
+    else
+      _scheudle(obj, pd);
 
     pd->file_mon = eio_monitor_add(pd->path);
     eina_hash_add(watch_files, &pd->file_mon, obj);
