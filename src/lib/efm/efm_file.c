@@ -238,6 +238,8 @@ _efm_file_generate(Eo *clas EINA_UNUSED, void *noth EINA_UNUSED, const char *fil
 EOLIAN static void
 _efm_file_eo_base_destructor(Eo *obj, Efm_File_Data *pd)
 {
+    DBG("Remove %p (%s)", obj, pd->path);
+
     eina_stringshare_del(pd->path);
     eio_monitor_del(pd->file_mon);
     eina_hash_del(watch_files, &pd->file_mon, obj);
