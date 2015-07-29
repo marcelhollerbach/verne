@@ -50,8 +50,8 @@ class Efm.Monitor(Eo.Base) {
         Eo.Base.destructor;
     }
     events {
-        file,del : Efm.File; [[Called when a file was deleted]]
-        file,add : Efm.File; [[Called when a file was added]]
+        file,hide : Efm.File*; [[Called when the file wants to be hidden]]
+        file,add : Efm.File*; [[Called when a file was added]]
         error; [[called when the monitor got an error. The bahavoir after this event is unknown. The monitor should be deleted and never be used again!]]
     }
 }

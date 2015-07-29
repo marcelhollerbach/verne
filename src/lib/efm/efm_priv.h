@@ -36,7 +36,7 @@ struct _EFM_Mount_Fs{
 };
 
 typedef enum {
-    ADD,DEL,ERROR,
+    ADD,ERROR,SELFDEL
 } Fm_Action;
 
 typedef void (*Fm_File_Action)(void *data, Efm_Monitor *mon, const char *file, Fm_Action add);

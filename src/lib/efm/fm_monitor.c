@@ -54,19 +54,6 @@ _file_add(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 }
 
 static Eina_Bool
-_file_del(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
-{
-   Eio_Monitor_Event *ev = event;
-   Monitor_Entry *me;
-
-   EVENT_ENTRY_GETTER
-
-   me->action(NULL, me->mon, ev->filename, DEL);
-
-   return EINA_TRUE;
-}
-
-static Eina_Bool
 _dir_add(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 {
    Eio_Monitor_Event *ev = event;
@@ -75,19 +62,6 @@ _dir_add(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
    EVENT_ENTRY_GETTER
 
    me->action(NULL, me->mon, ev->filename, ADD);
-
-   return EINA_TRUE;
-}
-
-static Eina_Bool
-_dir_del(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
-{
-   Eio_Monitor_Event *ev = event;
-   Monitor_Entry *me;
-
-   EVENT_ENTRY_GETTER
-
-   me->action(NULL, me->mon, ev->filename, DEL);
 
    return EINA_TRUE;
 }
@@ -108,7 +82,12 @@ _mon_err(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 static Eina_Bool
 _mon_del(void *data EINA_UNUSED, int type EINA_UNUSED, void *event EINA_UNUSED)
 {
-   //we are doing nothing here ... a selfdel will result in a error call this are handeld there
+   Eio_Monitor_Event *ev = event;
+   Monitor_Entry *me;
+
+   EVENT_ENTRY_GETTER
+
+   me->action(NULL, me->mon, NULL, SELFDEL);
    return EINA_TRUE;
 }
 
@@ -131,16 +110,8 @@ fm_monitor_init()
 
    ctx->fadd = ecore_event_handler_add(EIO_MONITOR_FILE_CREATED, _file_add, ctx);
    EINA_SAFETY_ON_NULL_GOTO(ctx->fadd, err);
-   ctx->fdel = ecore_event_handler_add(EIO_MONITOR_FILE_DELETED, _file_del, ctx);
-   EINA_SAFETY_ON_NULL_GOTO(ctx->fdel, err);
-
-
    ctx->dadd = ecore_event_handler_add(EIO_MONITOR_DIRECTORY_CREATED, _dir_add, ctx);
    EINA_SAFETY_ON_NULL_GOTO(ctx->dadd,err);
-   ctx->ddel = ecore_event_handler_add(EIO_MONITOR_DIRECTORY_DELETED, _dir_del, ctx);
-   EINA_SAFETY_ON_NULL_GOTO(ctx->ddel,err);
-
-
    ctx->selfdel = ecore_event_handler_add(EIO_MONITOR_SELF_DELETED, _mon_del, ctx);
    EINA_SAFETY_ON_NULL_GOTO(ctx->selfdel,err);
    ctx->err = ecore_event_handler_add(EIO_MONITOR_ERROR, _mon_err, ctx);

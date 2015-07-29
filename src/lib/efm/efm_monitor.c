@@ -69,22 +69,6 @@ _add(Efm_Monitor *mon, const char *file)
 
    eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_ADD, ef));
    eo_do(ef, MARK_POPULATED);
- }
-
-static void
-_del(Efm_Monitor *mon, const char *file)
-{
-   Efm_Monitor_Data *pd;
-   Efm_File *f;
-   const char *files;
-
-   files = eina_stringshare_add(file);
-   pd = eo_data_scope_get(mon, EFM_MONITOR_CLASS);
-   f = eina_hash_find(pd->file_icons, files);
-
-   eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_DEL, f));
-   eo_do(f, UNMARK_POPULATED);
-   eina_hash_del(pd->file_icons, files, NULL);
 }
 
 void
@@ -120,7 +104,7 @@ _refresh_files(Efm_Monitor *mon, Efm_Monitor_Data *pd)
         else if (!_take_filter(mon, pd, ef) && populated)
           {
              eo_do(ef, UNMARK_POPULATED);
-             eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_DEL, ef));
+             eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_HIDE, ef));
           }
      }
 }
@@ -164,9 +148,10 @@ _fm_action(void *data EINA_UNUSED, Efm_Monitor *mon, const char *file, Fm_Action
      {
        _add(mon, file);
      }
-   else if (action == DEL)
+   else if (action == SELFDEL)
      {
-       _del(mon, file);
+       //delete the monitor
+       eo_del(mon);
      }
    else
      {
