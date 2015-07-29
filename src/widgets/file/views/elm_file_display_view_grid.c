@@ -93,6 +93,7 @@ _file_del(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA
    Elm_File_Display_View_Grid_Data *pd = eo_data_scope_get(data, ELM_FILE_DISPLAY_VIEW_GRID_CLASS);
    Elm_Object_Item *it;
 
+   eo_do(icon, eo_event_callback_del(EO_BASE_EVENT_DEL, _file_del, data));
    it = eina_hash_find(pd->files, &icon);
    elm_object_item_del(it);
    eina_hash_del(pd->files, &icon, it);
@@ -108,6 +109,8 @@ _file_add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA
    Efm_File *icon = event;
    Elm_File_Display_View_Grid_Data *pd = eo_data_scope_get(data, ELM_FILE_DISPLAY_VIEW_GRID_CLASS);
    Elm_Object_Item *it;
+
+   eo_do(icon, eo_event_callback_add(EO_BASE_EVENT_DEL, _file_del, data));
 
    it = elm_gengrid_item_sorted_insert(data, pd->gic, icon, sort_func, _sel, icon);
    eina_hash_add(pd->files, &icon, it);
@@ -147,7 +150,7 @@ _elm_file_display_view_grid_elm_file_display_view_path_set(Eo *obj, Elm_File_Dis
                               pd->config.only_folder));
 
    eo_do(pd->fm, eo_event_callback_add(EFM_MONITOR_EVENT_FILE_ADD, _file_add, obj);
-                  eo_event_callback_add(EFM_MONITOR_EVENT_FILE_DEL, _file_del, obj);
+                  eo_event_callback_add(EFM_MONITOR_EVENT_FILE_HIDE, _file_del, obj);
                   eo_event_callback_add(EFM_MONITOR_EVENT_ERROR, _error, obj);
         );
 }

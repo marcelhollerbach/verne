@@ -58,6 +58,7 @@ _elm_file_display_view_list_elm_file_display_view_selection_get(Eo *obj, Elm_Fil
 static Eina_Bool
 _file_del(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
 {
+   //TODO need to delete
    return EINA_TRUE;
 }
 
@@ -77,6 +78,7 @@ _file_add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA
    it = elm_genlist_item_append(data, pd->gic, icon, NULL, 0, NULL, NULL);
    it = elm_genlist_item_sorted_insert(data, pd->gic, icon, NULL, 0, sort_func, NULL, icon);
    eina_hash_add(pd->files, &icon, it);
+   eo_do(icon, eo_event_callback_add(EO_BASE_EVENT_DEL, _file_del, data));
    return EINA_TRUE;
 }
 
@@ -109,7 +111,7 @@ _elm_file_display_view_list_elm_file_display_view_path_set(Eo *obj, Elm_File_Dis
 
    pd->files = eina_hash_pointer_new(NULL);
    eo_do(pd->fm, eo_event_callback_add(EFM_MONITOR_EVENT_FILE_ADD, _file_add, obj);
-                  eo_event_callback_add(EFM_MONITOR_EVENT_FILE_DEL, _file_del, obj);
+                  eo_event_callback_add(EFM_MONITOR_EVENT_FILE_HIDE, _file_del, obj);
                   eo_event_callback_add(EFM_MONITOR_EVENT_ERROR, _error, obj);
         );
 }
