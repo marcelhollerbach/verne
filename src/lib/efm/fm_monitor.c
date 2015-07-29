@@ -50,7 +50,7 @@ _file_add(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 
    me->action(NULL, me->mon, ev->filename, ADD);
 
-   return EINA_FALSE;
+   return EINA_TRUE;
 }
 
 static Eina_Bool
@@ -63,7 +63,7 @@ _file_del(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 
    me->action(NULL, me->mon, ev->filename, DEL);
 
-   return EINA_FALSE;
+   return EINA_TRUE;
 }
 
 static Eina_Bool
@@ -76,7 +76,7 @@ _dir_add(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 
    me->action(NULL, me->mon, ev->filename, ADD);
 
-   return EINA_FALSE;
+   return EINA_TRUE;
 }
 
 static Eina_Bool
@@ -89,7 +89,7 @@ _dir_del(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 
    me->action(NULL, me->mon, ev->filename, DEL);
 
-   return EINA_FALSE;
+   return EINA_TRUE;
 }
 
 static Eina_Bool
@@ -102,14 +102,14 @@ _mon_err(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 
    me->action(NULL, me->mon, ev->filename, ERROR);
 
-   return EINA_FALSE;
+   return EINA_TRUE;
 }
 
 static Eina_Bool
 _mon_del(void *data EINA_UNUSED, int type EINA_UNUSED, void *event EINA_UNUSED)
 {
    //we are doing nothing here ... a selfdel will result in a error call this are handeld there
-   return EINA_FALSE;
+   return EINA_TRUE;
 }
 
 static void
