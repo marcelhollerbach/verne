@@ -250,20 +250,39 @@ _mod_cb(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 
     f = eina_hash_find(watch_files, &ev->monitor);
 
-    if (!f) return EINA_FALSE;
+    if (!f) return EINA_TRUE;
 
     pd = eo_data_scope_get(f, EFM_FILE_CLASS);
 
     if (stat(pd->path, &pd->st) < 0)
       {
-         return EINA_FALSE;
+         return EINA_TRUE;
       }
 
     _attributes_update(f, pd);
 
+    DBG("File %p got modified", f);
+
     eo_do(f, eo_event_callback_call(EFM_FILE_EVENT_CHANGED, NULL));
 
     return EINA_TRUE;
+}
+
+static Eina_Bool
+_file_del_cb(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
+{
+   Eio_Monitor_Event *ev = event;
+   Efm_File *f;
+
+   f = eina_hash_find(watch_files, &ev->monitor);
+
+   if (!f) return EINA_TRUE;
+
+   DBG("File %p(%s) got deleted in storage", f, ev->filename);
+
+   eo_del(f);
+
+   return EINA_TRUE;
 }
 
 void
@@ -272,7 +291,7 @@ efm_file_init(void)
     eina_lock_new(&readlock);
     watch_files = eina_hash_pointer_new(NULL);
     handler = ecore_event_handler_add(EIO_MONITOR_FILE_MODIFIED, _mod_cb, NULL);
-}
+    handler = ecore_event_handler_add(EIO_MONITOR_SELF_DELETED, _file_del_cb, NULL);}
 
 void
 efm_file_shutdown(void)
