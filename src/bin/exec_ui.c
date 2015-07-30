@@ -103,7 +103,8 @@ _genlist_fill(Open_With_Ui *ui, const char *cmd)
   /* yeah we are creating a seperated item class for the default item
    * if we dont do this we have to pass a tuple or something as item data
    * which results in a allocation of memory, which is very very slow
-   * this is much faster */
+   * this is much faster 
+   */
   klassdefault = elm_genlist_item_class_new();
   klassdefault->item_style = "default";
   klassdefault->func.text_get = _text_get;
