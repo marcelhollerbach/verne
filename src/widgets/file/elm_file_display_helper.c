@@ -118,7 +118,7 @@ sort_name_func(const void *data1, const void *data2)
         else
           return -1;
      }
-   else //if (config->sort.type == SORT_TYPE_EXTENSION)
+   else // if (config->sort.type == SORT_TYPE_EXTENSION)
      {
         const char *ext1;
         const char *ext2;

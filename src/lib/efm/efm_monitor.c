@@ -111,7 +111,7 @@ _refresh_files(Efm_Monitor *mon, Efm_Monitor_Data *pd)
      {
         Eina_Bool populated;
         eo_do(ef, populated = CHECK_POPULATED ? EINA_TRUE : EINA_FALSE);
-        //this is a hidden file
+        // this is a hidden file
         if (_take_filter(mon, pd, ef) && !populated)
           {
              eo_do(ef, MARK_POPULATED);
@@ -177,7 +177,7 @@ _fm_action(void *data EINA_UNUSED, Efm_Monitor *mon, const char *file, Fm_Action
 static Eina_Bool
 _eio_filter_cb(void *data EINA_UNUSED, Eio_File *handler EINA_UNUSED, const char *file EINA_UNUSED)
 {
-   //We take everything, so the configuration can be easily changed later
+   // We take everything, so the configuration can be easily changed later
    return EINA_TRUE;
 }
 

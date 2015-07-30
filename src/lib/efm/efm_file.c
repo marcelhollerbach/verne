@@ -38,7 +38,7 @@ _fs_cb(void *dat EINA_UNUSED, Ecore_Thread *thread)
 
     while(!ecore_thread_check(thread) && query_stuff)
       {
-        //take a local copy of the list
+        // take a local copy of the list
         eina_lock_take(&readlock);
         copy = query_stuff;
         query_stuff = NULL;
@@ -70,20 +70,20 @@ _notify_cb(void *data EINA_UNUSED, Ecore_Thread *et EINA_UNUSED, void *pass)
 
     job = pass;
 
-    //check if our object is still valid
+    // check if our object is still valid
     if (!job->obj)
       return;
 
-    //we have a still valid object
+    // we have a still valid object
     file = job->obj;
     pd = eo_data_scope_get(file, EFM_FILE_CLASS);
 
-    //set the mimetpye
+    // set the mimetpye
     pd->mimetype = job->mimetype;
 
-    //Remove weak reference
+    // Remove weak reference
     eo_do(job->obj, eo_wref_del(&job->obj));
-    //notify that this efm_file is ready for the world
+    // notify that this efm_file is ready for the world
     eo_do(file, eo_event_callback_call(EFM_FILE_EVENT_FSQUERY_DONE, NULL));
     free(job);
 }
@@ -125,7 +125,7 @@ _scheudle(Eo *obj, Efm_File_Data *pd)
     eina_lock_take(&readlock);
     query_stuff = eina_list_append(query_stuff, job);
     eina_lock_release(&readlock);
-    //if there is a running thread the list will be took
+    // if there is a running thread the list will be took
     if (!fs_query)
       _mime_thread_fireup();
 }
@@ -182,7 +182,7 @@ _efm_file_is_type(Eo *obj EINA_UNUSED, Efm_File_Data *pd, Efm_File_Type type)
 static void
 _attributes_update(Eo *obj EINA_UNUSED, Efm_File_Data *pd)
 {
-    //parse stat to the eo struct
+    // parse stat to the eo struct
     pd->stat.uid = pd->st.st_uid;
     pd->stat.gid = pd->st.st_gid;
     pd->stat.size = pd->st.st_size;
@@ -199,7 +199,7 @@ _efm_file_generate(Eo *clas EINA_UNUSED, void *noth EINA_UNUSED, const char *fil
     Eo *obj = eo_add(EFM_FILE_CLASS, NULL);
     Efm_File_Data *pd = eo_data_scope_get(obj, EFM_FILE_CLASS);
 
-    //get the stat
+    // get the stat
     if (stat(filename, &pd->st) < 0)
       {
          eo_del(obj);
@@ -208,13 +208,13 @@ _efm_file_generate(Eo *clas EINA_UNUSED, void *noth EINA_UNUSED, const char *fil
 
     _attributes_update(obj, pd);
 
-    //safe this name
+    // safe this name
     pd->path = eina_stringshare_add(filename);
 
-    //get the filename
+    // get the filename
     pd->filename = ecore_file_file_get(pd->path);
 
-    //parse the fileending
+    // parse the fileending
     end = strlen(pd->path);
     do {
         if (pd->path[end] == '.')

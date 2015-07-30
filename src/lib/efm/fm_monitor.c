@@ -108,7 +108,7 @@ _mon_err(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 static Eina_Bool
 _mon_del(void *data EINA_UNUSED, int type EINA_UNUSED, void *event EINA_UNUSED)
 {
-   //we are doing nothing here ... a selfdel will result in a error call this are handeld there
+   // we are doing nothing here ... a selfdel will result in a error call this are handeld there
    return EINA_FALSE;
 }
 

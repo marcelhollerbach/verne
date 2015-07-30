@@ -21,10 +21,10 @@ _path_transform(const char *text)
     int c = 0;
     const char *result;
 
-    //split for /
+    // split for /
     parts = eina_str_split(text, SEP, 0);
 
-    //init result
+    // init result
     buf = eina_strbuf_new();
     dir = eina_strbuf_new();
     dir_break = EINA_FALSE;
@@ -37,7 +37,7 @@ _path_transform(const char *text)
          if (*parts[c] == '\0')
            continue;
 
-         //update durrect dir
+         // update durrect dir
          eina_strbuf_append(dir, "/");
          eina_strbuf_append(dir, parts[c]);
          dirr = eina_strbuf_string_get(dir);
@@ -115,10 +115,10 @@ _unfocus_idler(void *data)
       return EINA_FALSE;
 
     unfocus_barrier = EINA_FALSE;
-    //get the currect text
+    // get the currect text
     text = elm_object_text_get(data);
 
-    //save the current state
+    // save the current state
     evas_object_data_set(data, "__orig_text", strdup(text));
 
     elm_object_text_set(data, _path_transform(text));

@@ -93,15 +93,15 @@ Eina_Bool
 emous_debug_device_start(void)
 {
    eo_do(EMOUS_MANAGER_CLASS, emous_manager_device_type_add(EMOUS_TYPE_DEBUG_CLASS));
-   //add this one
+   // add this one
    Emous_Device_Debug *db = eo_add(EMOUS_DEVICE_DEBUG_CLASS, NULL);
    devices = eina_list_append(devices, db);
    eo_do(sd, eo_event_callback_call(EMOUS_TYPE_EVENT_DEVICE_ADDED, db));
-   //Add a second one
+   // Add a second one
    db = eo_add(EMOUS_DEVICE_DEBUG_CLASS, NULL);
    devices = eina_list_append(devices, db);
    eo_do(sd, eo_event_callback_call(EMOUS_TYPE_EVENT_DEVICE_ADDED, db));
-   //remove the first one
+   // remove the first one
    eo_do(sd, eo_event_callback_call(EMOUS_TYPE_EVENT_DEVICE_DELETED, db));
 
    return EINA_TRUE;

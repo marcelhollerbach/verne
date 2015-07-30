@@ -23,13 +23,13 @@ typedef void (*Cmd_Choosen)(Efm_File *file, const char *cmd);
 
 extern Jesus_Config *config;
 
-//the general window
+// the general window
 extern Evas_Object *win;
 
-//the filepreview widget
+// the filepreview widget
 extern Evas_Object *preview;
 
-//the main layout of the window
+// the main layout of the window
 extern Evas_Object *layout;
 
 void config_init(void);

@@ -54,7 +54,7 @@ mnt_event(void)
         const char *src = NULL, *mnt_point, *type;
         const char *omnt_point = NULL;
 
-        //null if the entry is gone
+        // null if the entry is gone
         if (new)
           src = mnt_fs_get_source(new);
 
@@ -130,7 +130,7 @@ _check_cb(void *data EINA_UNUSED, Ecore_Thread *thread)
 void
 _emous_mm_init(void)
 {
-   //first run just a empty table
+   // first run just a empty table
    mnt_table_old = mnt_new_table();
 
    /*

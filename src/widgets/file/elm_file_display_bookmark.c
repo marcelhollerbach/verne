@@ -97,7 +97,7 @@ _setup_list(Evas_Object *o)
 
    if (!config) return;
 
-   //standart bookmarks
+   // standart bookmarks
    EINA_LIST_FOREACH(config->bookmarks, node, tmp)
      {
         bookmark_entry_internal_add(o, tmp, ecore_file_file_get(tmp), "folder", EINA_TRUE, pd->bookmark_group_it);
@@ -161,7 +161,7 @@ _device_item_sel(void *data, Evas_Object *obj, void *event EINA_UNUSED)
      }
    else
      {
-        //TODO add a option pane which asks if you want to mount this device
+        // TODO add a option pane which asks if you want to mount this device
      }
 }
 
@@ -194,7 +194,7 @@ _device_item_content_get(void *data, Evas_Object *obj, const char *part EINA_UNU
            iconname = "drive-harddisk";
         break;
         case EMOUS_DEVICE_TYPE_NETWORK:
-           iconname = "network-wireless"; //XXX: here is no way to get just a simple "network"
+           iconname = "network-wireless"; // XXX: here is no way to get just a simple "network"
         break;
         case EMOUS_DEVICE_TYPE_FLOPPY:
            iconname = "drive-floppy";
@@ -206,7 +206,7 @@ _device_item_content_get(void *data, Evas_Object *obj, const char *part EINA_UNU
            iconname = "drive-optical";
         break;
         default:
-          iconname = "computer"; //Better show some thing shitty than nothing ...
+          iconname = "computer"; // Better show some thing shitty than nothing ...
         break;
      }
 
@@ -350,7 +350,7 @@ _dnd_droped(void *data EINA_UNUSED, Evas_Object *obj, Elm_Selection_Data *ev)
 
    for (int i = 0; splits[i]; i++)
      {
-        //parse out the name
+        // parse out the name
       if (ecore_file_is_dir(splits[i]))
         {
            bookmark_entry_add(obj, splits[i], ecore_file_file_get(splits[i]), NULL);
@@ -475,18 +475,18 @@ _ctx_menu_directory(Evas_Object *w, int x, int y, Directory *b)
   Evas_Object *menu, *o;
   Elm_Object_Item *it;
 
-  //create new menu
+  // create new menu
   menu = elm_menu_add(elm_object_top_widget_get(w));
-  //save the widget
+  // save the widget
   evas_object_data_set(menu, "_genlist", w);
 
   eo_do(w, eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_HOOK_MENU_BOOKMARKS_START , menu));
 
-  //if we are removable remove it
+  // if we are removable remove it
   if (b->removable)
     elm_menu_item_add(menu, NULL, "edit-delete" , "Del Bookmark", _ctx_del, b);
 
-  //option to display or hide gtk
+  // option to display or hide gtk
   o = elm_check_add(w);
   if (config)
     elm_check_state_set(o, config->display_gtk);
@@ -497,7 +497,7 @@ _ctx_menu_directory(Evas_Object *w, int x, int y, Directory *b)
 
   eo_do(w, eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_HOOK_MENU_BOOKMARKS_END, menu));
 
-  //move and show
+  // move and show
   elm_menu_move(menu, x, y);
   evas_object_show(menu);
 }
@@ -521,9 +521,9 @@ _ctx_menu_device(Evas_Object *w, int x, int y, Device *b)
 {
    Evas_Object *menu;
    Eina_Bool mounted;
-   //create menu
+   // create menu
    menu = elm_menu_add(elm_object_top_widget_get(w));
-   //save the widget
+   // save the widget
    evas_object_data_set(menu, "_genlist", w);
 
    eo_do(b->d, mounted = !!emous_device_mountpoints_get());
@@ -553,11 +553,11 @@ _right_click(void *data EINA_UNUSED, Evas_Object *obj, void *event_data)
    int x,y;
 
    it = event_data;
-   //get Bookmark of this item
+   // get Bookmark of this item
    b = elm_object_item_data_get(it);
-   //get mous position
+   // get mous position
    evas_pointer_canvas_xy_get(evas_object_evas_get(obj), &x, &y);
-   //open menu
+   // open menu
    if (b->type == BOOKMARK_TYPE_DIRECTORY)
      _ctx_menu_directory(obj, x, y, &(b->pd.dir));
    else
@@ -619,13 +619,13 @@ bookmark_add(Evas_Object *w)
    pd->device_item->func.text_get = _device_item_text_get;
    pd->device_item->func.del = _device_item_del;
 
-   //setup drop zone
+   // setup drop zone
    elm_drop_target_add(o, ELM_SEL_FORMAT_TARGETS,
                        _dnd_enter, NULL, _dnd_leave,
                        NULL, NULL, NULL,
                        _dnd_droped, NULL);
 
-   //subscribe to emous device events
+   // subscribe to emous device events
    eo_do(EMOUS_MANAGER_CLASS, m = emous_manager_object_get());
    eo_do(m, eo_event_callback_add(EMOUS_MANAGER_EVENT_DEVICE_ADD, _device_add_cb, o);
             eo_event_callback_add(EMOUS_MANAGER_EVENT_DEVICE_DEL, _device_del_cb, o););

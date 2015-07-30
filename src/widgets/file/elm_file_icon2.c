@@ -113,7 +113,7 @@ _elm_file_icon_efl_file_file_set(Eo *obj, Elm_File_Icon_Data *pd, const char *fi
    else
      eina_stringshare_replace(&(pd->path), file);
 
-   //FIXME ecore_file_exists is slow
+   // FIXME ecore_file_exists is slow
    if (!file || !ecore_file_exists(pd->path))
      {
         evas_object_hide(pd->entry);
@@ -130,14 +130,14 @@ _elm_file_icon_efl_file_file_set(Eo *obj, Elm_File_Icon_Data *pd, const char *fi
     eina_stringshare_replace(&(pd->name), filename);
 
   /* check if it is readable */
-  //FIXME should we do that here ?
+  // FIXME should we do that here ?
   if (access(file, W_OK) == 0)
     pd->write = EINA_TRUE;
   else
     pd->write = EINA_FALSE;
 
   /* check the mimetype */
-  //check directly with the file extension
+  // check directly with the file extension
   if (evas_object_image_extension_can_load_fast_get(pd->path))
     {
       pd->picmode = EINA_TRUE;
@@ -181,7 +181,7 @@ EOLIAN static void
 _elm_file_icon_evas_object_smart_del(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED)
 {
    eo_do_super(obj, ELM_FILE_ICON_CLASS, evas_obj_smart_del());
-   //eio_monitor_del(pd->monitor);
+   // eio_monitor_del(pd->monitor);
 }
 
 static void
@@ -313,22 +313,22 @@ _elm_file_icon_edit_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool edit)
            char buf[PATH_MAX];
 
            olddir = pd->path;
-           //get the pure dir
+           // get the pure dir
            dir = ecore_file_dir_get(olddir);
-           //build the new path
+           // build the new path
            snprintf(buf, sizeof(buf), "%s/%s", dir, val);
-           //add it as new stringshare
+           // add it as new stringshare
            newdir = eina_stringshare_add(eina_file_path_sanitize(buf));
-           //cleanup
+           // cleanup
            free((char*)dir);
            // mark that here is a rename
            pd->rename_in_progress = EINA_TRUE;
-           //TODO call rename event
-           //rename the file
+           // TODO call rename event
+           // rename the file
            ecore_file_mv(olddir, newdir);
-           //set the new file
+           // set the new file
            eo_do(obj, efl_file_set(newdir, NULL));
-           //mark that the rename is done
+           // mark that the rename is done
            pd->rename_in_progress = EINA_FALSE;
         }
     }
