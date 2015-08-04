@@ -51,7 +51,7 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
 
   if (!f) return;
 
-  //TODO make a nice thumbnail :)
+  // TODO make a nice thumbnail :)
   //- text thumbnail
   //- image file thumbnail
   //- just the mime type icon
@@ -85,7 +85,7 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
     #endif
     if (evas_object_image_extension_can_load_fast_get(path))
     {
-       //make a thumb
+       // make a thumb
        o = elm_thumb_add(w);
        eo_do(o, efl_file_set(path, NULL));
     }
@@ -94,7 +94,7 @@ filepreview_file_set(Evas_Object *w, Efm_File *file)
        const char *ic;
        Eina_Bool is;
 
-       //display the mime_type icon
+       // display the mime_type icon
        o = elm_icon_add(w);
        elm_icon_order_lookup_set(o, ELM_ICON_LOOKUP_FDO);
        if (eo_do_ret(file, is, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))

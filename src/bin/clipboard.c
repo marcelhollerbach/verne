@@ -35,7 +35,7 @@ clipboard_set(Clipboard_Mode m, Eina_List *list)
     Eina_List *node;
     Clipboard_Item *item;
 
-    //free existing clipboard
+    // free existing clipboard
     EINA_INLIST_FOREACH(clipboard, item)
       {
          eina_stringshare_del(item->file);

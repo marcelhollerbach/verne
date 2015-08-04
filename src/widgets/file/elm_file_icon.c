@@ -246,7 +246,7 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *fi
 
    if (dir)
      {
-        //add dnd
+        // add dnd
         elm_drop_target_add(obj, ELM_SEL_FORMAT_TARGETS, _enter_cb, obj,_leave_cb, NULL, NULL, NULL, _drop_cb, NULL);
      }
    else
@@ -258,11 +258,11 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *fi
           pd->picmode = EINA_FALSE;
       }
 
-   //delete existing partwidgets
+   // delete existing partwidgets
    if (pd->icon)
      evas_object_del(pd->icon);
 
-   //create new display icons
+   // create new display icons
    if (pd->picmode)
      {
         pd->icon = elm_thumb_add(obj);
@@ -274,17 +274,17 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *fi
         elm_icon_order_lookup_set(pd->icon, ELM_ICON_LOOKUP_FDO);
      }
 
-   //set the new conecnt
+   // set the new conecnt
    _content_set(obj, pd->icon);
 
-   //if the mime type is allready set FIXME fix it
+   // if the mime type is allready set FIXME fix it
 
     if (!mime_type)
       eo_do(pd->file, eo_event_callback_add(EFM_FILE_EVENT_FSQUERY_DONE,
                       _mime_ready, obj));
     else
       mime_ready(obj, pd);
-   //set the text of the filename
+   // set the text of the filename
    elm_object_text_set(pd->label, filename);
    elm_object_tooltip_text_set(pd->label, filename);
 }

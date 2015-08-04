@@ -21,7 +21,7 @@ _list_compare(Eina_List *list, const char *mime_type)
 }
 
 //====================================================
-//open with dialog things
+// open with dialog things
 //====================================================
 
 static char*
@@ -44,7 +44,7 @@ _gen_icon(Efreet_Desktop *desk, Evas_Object *obj)
   if (ecore_file_exists(desk->icon))
     eo_do(result, efl_file_set(desk->icon, NULL));
   else
-    elm_icon_standard_set(result, desk->icon); //FIXME this is slowing everything down ... find a better solution
+    elm_icon_standard_set(result, desk->icon); // FIXME this is slowing everything down ... find a better solution
 
   return result;
 }
@@ -100,10 +100,11 @@ _genlist_fill(Open_With_Ui *ui, const char *cmd)
   klass->func.text_get = _text_get;
   klass->func.content_get = _content_get;
 
-  //yeah we are creating a seperated item class for the default item
-  //if we dont do this we have to pass a tuple or something as item data
-  //which results in a allocation of memory, which is very very slow
-  //this is much faster
+  /* yeah we are creating a seperated item class for the default item
+   * if we dont do this we have to pass a tuple or something as item data
+   * which results in a allocation of memory, which is very very slow
+   * this is much faster 
+   */
   klassdefault = elm_genlist_item_class_new();
   klassdefault->item_style = "default";
   klassdefault->func.text_get = _text_get;
@@ -113,7 +114,7 @@ _genlist_fill(Open_With_Ui *ui, const char *cmd)
   gklass->item_style = "group_index";
   gklass->func.text_get = _group_text_get;
 
-  //initial headlines for recommented and not recommented apps
+  // initial headlines for recommented and not recommented apps
   last_recommend = elm_genlist_item_append(ui->wid->elm_genlist1, gklass, "Recommended apps", NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
   elm_genlist_item_append(ui->wid->elm_genlist1, gklass, "Normal apps", NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
   cats = efreet_util_desktop_categories_list();
@@ -135,12 +136,12 @@ _genlist_fill(Open_With_Ui *ui, const char *cmd)
 
             if (_list_compare(desk->mime_types, mime_type))
               {
-                 //this is a recommended app
+                 // this is a recommended app
                  last_recommend = elm_genlist_item_insert_after(ui->wid->elm_genlist1, choosen, desk, NULL, last_recommend, 0, NULL, NULL);
               }
             else
               {
-                 //this is not
+                 // this is not
                  elm_genlist_item_append(ui->wid->elm_genlist1, choosen, desk, NULL, 0, NULL, NULL);
               }
          }
@@ -214,7 +215,7 @@ exec_ui_open_with(Efm_File *file, Cmd_Choosen choosen)
     ui->choosen = choosen;
     ui->wid = wid = executorui_open_with_create(win);
 
-    //filling the ui
+    // filling the ui
     _genlist_fill(ui, cmd);
 
     evas_object_smart_callback_add(wid->open, "clicked", _open_cb, ui);

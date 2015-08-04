@@ -91,18 +91,18 @@ _error(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UN
 EOLIAN static void
 _elm_file_display_view_list_elm_file_display_view_path_set(Eo *obj, Elm_File_Display_View_List_Data *pd, const char *dir)
 {
-   //clear files
+   // clear files
    if (pd->files)
      eina_hash_free(pd->files);
 
-   //delete existing monitor
+   // delete existing monitor
    if (pd->fm)
      eo_del(pd->fm);
 
-   //free selected files
+   // free selected files
    eina_list_free(pd->sel_files);
 
-   //emit a signal that there is a new selection, =>nothing
+   // emit a signal that there is a new selection, =>nothing
    eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, NULL));
    elm_genlist_clear(obj);
 
@@ -299,13 +299,13 @@ _key_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EIN
      }
    else if (!strcmp(ev->key, "Home"))
      {
-        //first item
+        // first item
         eo_do(list, elm_interface_scrollable_page_bring_in(0, 0));
         return EO_CALLBACK_STOP;
      }
    else if (!strcmp(ev->key, "End"))
      {
-        //last item
+        // last item
         int h,v;
         eo_do(list, elm_interface_scrollable_last_page_get(&h, &v);
                     elm_interface_scrollable_page_bring_in(h, v));
@@ -313,7 +313,7 @@ _key_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EIN
      }
    else if (!strcmp(ev->key, "Next"))
      {
-        //next page
+        // next page
         int h,v;
         eo_do(list, elm_interface_scrollable_current_page_get(&h, &v);
                     elm_interface_scrollable_page_bring_in(h, v+1));
@@ -321,7 +321,7 @@ _key_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EIN
      }
    else if (!strcmp(ev->key, "Prior"))
      {
-        //prior page
+        // prior page
         int h,v;
         eo_do(list, elm_interface_scrollable_current_page_get(&h, &v);
                     elm_interface_scrollable_page_bring_in(h, v-1));

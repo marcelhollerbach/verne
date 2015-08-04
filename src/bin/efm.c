@@ -12,7 +12,7 @@
 #define SEP "<item relsize=15x15 vsize=full href=path/separator></item>"
 
 /*
- *the text shown in the about text
+ * the text shown in the about text
  */
 #define ABOUT_TEXT \
 "<align=0.5><h2>EFM is a elementary based filebrowser</h2><br>\
@@ -85,7 +85,7 @@ _fm_tab_stack_push(FM_Tab *tab)
    if (eina_list_count(tab->path_stack) - 1 > tab->ptr)
      {
         unsigned int i = tab->ptr;
-        //unstack
+        // unstack
         for (i = eina_list_count(tab->path_stack) - 1; i > tab->ptr; i--)
           {
              const char *path;

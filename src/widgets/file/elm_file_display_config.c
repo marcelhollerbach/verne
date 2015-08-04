@@ -27,7 +27,7 @@ _standart_setup(Config *c)
 
   c->sort.type = ELM_FILE_DISPLAY_SORT_TYPE_NAME;
   c->sort.folder_placement = ELM_FILE_DISPLAY_FOLDER_PLACEMENT_FIRST;
-  //TODO add good standart values
+  // TODO add good standart values
 }
 
 Eina_List*
@@ -184,8 +184,8 @@ config_init(void)
    ADD_BASIC("casesensetive", sort.casesensetive, EET_T_CHAR);
 
    snprintf(buf, sizeof(buf),"%s/efm_config.eet", efreet_config_home_get());
-   //TODO monitor of the file, if it changes reload!
-   //TODO add ecore event for the change
+   // TODO monitor of the file, if it changes reload!
+   // TODO add ecore event for the change
    ctx->path = eina_stringshare_add(buf);
 
    config_read();

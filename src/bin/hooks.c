@@ -13,7 +13,7 @@ _open_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description
 
     eo_do(select, mime_type = efm_file_mimetype_get());
 
-    //first check in config for a "special" open wish
+    // first check in config for a "special" open wish
     command = eina_hash_find(config->mime_type_open, mime_type);
 
     if (command)
@@ -23,7 +23,7 @@ _open_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description
 
     if (!mime_types)
       {
-         //todo error
+         // todo error
          return EINA_TRUE;
       }
 
@@ -84,7 +84,7 @@ _menu_selector_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event
     Eina_Bool dir;
     Elm_Object_Item *item;
 
-    //open with entry
+    // open with entry
     if (!eo_do_ret(file, dir, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
       {
          elm_menu_item_add(ev->menu, NULL, NULL, "Open", _open_cb2, ev->file);
