@@ -361,13 +361,13 @@ _key_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EIN
      }
    else if (!strcmp(ev->key, "Home"))
      {
-        //first item
+        // first item
         eo_do(grid, elm_interface_scrollable_page_bring_in(0, 0));
         return EO_CALLBACK_STOP;
      }
    else if (!strcmp(ev->key, "End"))
      {
-        //last item
+        // last item
         int h,v;
         eo_do(grid, elm_interface_scrollable_last_page_get(&h, &v);
                     elm_interface_scrollable_page_bring_in(h, v));
@@ -375,7 +375,7 @@ _key_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EIN
      }
    else if (!strcmp(ev->key, "Next"))
      {
-        //next page
+        // next page
         int h,v;
         eo_do(grid, elm_interface_scrollable_current_page_get(&h, &v);
                     elm_interface_scrollable_page_bring_in(h, v+1));
@@ -383,7 +383,7 @@ _key_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EIN
      }
    else if (!strcmp(ev->key, "Prior"))
      {
-        //prior page
+        // prior page
         int h,v;
         eo_do(grid, elm_interface_scrollable_current_page_get(&h, &v);
                     elm_interface_scrollable_page_bring_in(h, v-1));

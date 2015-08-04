@@ -12,7 +12,7 @@
  */
 EAPI int efm_init();
 /*
-  shutdown the fm_monitor
+ * shutdown the fm_monitor
  */
 EAPI void efm_shutdown();
 /*

@@ -54,7 +54,7 @@ _path_changed_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Des
              pointer ++;
              return EINA_TRUE;
           }
-        //unpop the upper items
+        // unpop the upper items
         while(eina_list_count(list) > pointer + 1)
           {
              const char *item;

@@ -1,7 +1,7 @@
 #include "jesus.h"
 
 typedef struct {
-  const char *split; //What will be splitted
+  const char *split; // What will be splitted
   char* (*replacement)(Eina_List *f);
 } Command_Split;
 
@@ -134,7 +134,7 @@ exec_run_cmd_gen(const char *cmd, Eina_List *files)
 
         parts = eina_str_split_full(tmpcmd, split.split, 0, &c);
 
-        //the split was not in the cmd
+        // the split was not in the cmd
         if (c < 2)
           continue;
 
@@ -145,7 +145,7 @@ exec_run_cmd_gen(const char *cmd, Eina_List *files)
         if (!name)
           continue;
 
-        //now reassamble our command
+        // now reassamble our command
         for(i = 0; parts[i]; i ++)
           {
              eina_strbuf_append(effective, parts[i]);

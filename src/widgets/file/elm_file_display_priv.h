@@ -75,11 +75,11 @@ typedef struct
 
 extern Config *config;
 
-//== calls which are just calling the cb of the view, but secure
+// == calls which are just calling the cb of the view, but secure
 
 Evas_Object* icon_create(Evas_Object *par, Efm_File *file);
 
-//event helper for selection
+// event helper for selection
 Eina_Bool _util_item_select_simple(void *data, Eo *obj, const Eo_Event_Description *desc, void *event);
 Eina_Bool _util_item_select_choosen(void *data, Eo *obj, const Eo_Event_Description *desc, void *event);
 /*

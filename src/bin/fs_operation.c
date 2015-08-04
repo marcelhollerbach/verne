@@ -7,7 +7,7 @@ typedef enum {
 } Operation_Type;
 
 typedef struct {
-    Eio_File *operation; //the _maybe_ running operation
+    Eio_File *operation; // the _maybe_ running operation
     struct {
       Evas_Object *layout; //< The ui used to display this
       Evas_Object *progress; //< the progressbar object
@@ -33,7 +33,7 @@ static void
 _progress_cb(void *data, Eio_File *file EINA_UNUSED, const Eio_Progress *prog)
 {
     Operation *op = data;
-    //update ui
+    // update ui
     if (!op->ui.layout)
       return;
 
@@ -51,7 +51,7 @@ _progress_cb(void *data, Eio_File *file EINA_UNUSED, const Eio_Progress *prog)
 static Eina_Bool
 _filter_cb(void *data EINA_UNUSED, Eio_File *file EINA_UNUSED, const Eina_File_Direct_Info *inf EINA_UNUSED)
 {
-    //just copy everything
+    // just copy everything
     return EINA_TRUE;
 }
 static void
@@ -81,7 +81,7 @@ _operation_convert(Eina_List *files, const char *goal, void (*job)(Operation *op
    Eina_List *node;
    const char *source;
 
-   //converts a list of strings into a list bunch of operations which will be added to the operationsarray
+   // converts a list of strings into a list bunch of operations which will be added to the operationsarray
    EINA_LIST_FOREACH(files, node, source)
      {
         Operation *operation;
@@ -93,13 +93,13 @@ _operation_convert(Eina_List *files, const char *goal, void (*job)(Operation *op
         operation = calloc(1, sizeof(Operation));
         operation->from = source;
 
-        //if there is a goal directory, build a not existing path
+        // if there is a goal directory, build a not existing path
         if (goal)
           {
-             //build the path
+             // build the path
              snprintf(path, sizeof(path), "%s/%s", goal, filename);
 
-             //check if the path allready exists
+             // check if the path allready exists
              if (ecore_file_exists(path))
                {
                   char orig[PATH_MAX];
@@ -107,7 +107,7 @@ _operation_convert(Eina_List *files, const char *goal, void (*job)(Operation *op
                   char *fileending;
                   int i = 0;
 
-                  //copy string to orig
+                  // copy string to orig
                   snprintf(orig, sizeof(orig), "%s", path);
 
                   fileending = strrchr(orig, '.');
@@ -238,20 +238,20 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
          {
             case OP_COPY:
             case OP_MOVE:
-              //set correct file
+              // set correct file
               if (operation->type == OP_MOVE)
                 eo_do(layout, efl_file_set(THEME_PATH"/efm.edc.edj", "jesus.fs_op.move"));
               else
                 eo_do(layout, efl_file_set(THEME_PATH"/efm.edc.edj", "jesus.fs_op.copy"));
 
-              //add progressbar
+              // add progressbar
               progress = eo_add(ELM_PROGRESSBAR_CLASS, obj);
               eo_do(progress, eo_wref_add(&operation->ui.progress));
-              //set part and text
+              // set part and text
               elm_object_part_content_set(layout, "jesus.progress", progress);
               elm_object_part_text_set(layout, "jesus.to", operation->goal);
               elm_object_part_text_set(layout, "jesus.from", operation->from);
-              //set progress to correct values
+              // set progress to correct values
               elm_progressbar_value_set(progress, operation->ui.progress_value);
             break;
             case OP_REMOVE:
@@ -287,7 +287,7 @@ fs_operations_init(void)
 {
     elm_layout_signal_callback_add(layout, "jesus.fsaction.popup", "theme", _popup_cb, NULL);
 
-    //Only enable for debugging
+    // Only enable for debugging
     #if 0
     Operation *op;
     op = calloc(1, sizeof(Operation));
@@ -319,7 +319,7 @@ fs_operations_init(void)
     #endif
 }
 
-//helperfunctions
+// helperfunctions
 
 void
 preview_copy(void)

@@ -1,7 +1,7 @@
 #include "jesus.h"
 
 typedef struct {
-    const char *key; //the key which needs to be set
+    const char *key; // the key which needs to be set
     struct modifier {
         Eina_Bool ctrl;
         Eina_Bool alt;
@@ -10,7 +10,7 @@ typedef struct {
         Eina_Bool meta;
         Eina_Bool hyper;
     } mods;
-    void (*callback)(void); //callback which will get called
+    void (*callback)(void); // callback which will get called
 } Shortcut;
 
 #define ONLY_CTRL {EINA_TRUE, EINA_FALSE, EINA_FALSE, EINA_FALSE, EINA_FALSE, EINA_FALSE}
@@ -21,7 +21,7 @@ typedef struct {
 
 static void window_close(void);
 
-//the list of shortcuts
+// the list of shortcuts
 static Shortcut shortcuts[] = {
     {"c", ONLY_CTRL, preview_copy},
     {"v", ONLY_CTRL, preview_paste},

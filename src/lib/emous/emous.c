@@ -16,7 +16,7 @@ static Eina_Array *modules = NULL;
 static Eina_Bool
 _module_load_cb(Eina_Module *m, void *data EINA_UNUSED)
 {
-   //we take everything!
+   // we take everything!
    DBG("Loading module %s", eina_module_file_get(m));
    return EINA_TRUE;
 }
@@ -66,15 +66,15 @@ _emous_init(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 {
    if (mount_ref > 0)
      return ++mount_ref;
-   //init the libs
+   // init the libs
    eo_do(EMOUS_CLASS, emous_init_lib());
-   //loading modules
+   // loading modules
    modules = eina_module_list_get(modules, EMOUS_MODULE_PATH, EINA_FALSE, _module_load_cb, NULL);
-   //load all found modules
+   // load all found modules
    eina_module_list_load(modules);
-   //init mountpoints
-   //init this after loading modules
-   //so every module is getting the initial mountpoints
+   // init mountpoints
+   // init this after loading modules
+   // so every module is getting the initial mountpoints
    _emous_mm_init();
    mount_ref = 1;
    return mount_ref;
@@ -83,16 +83,16 @@ _emous_init(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 EOLIAN static void
 _emous_shutdown(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 {
-   //dec refs
+   // dec refs
    mount_ref --;
    if (mount_ref  != 0)
      return;
 
-   //unload the modules
+   // unload the modules
    eina_module_list_unload(modules);
-   //shutdown mountpointslistening
+   // shutdown mountpointslistening
    _emous_mm_shutdown();
-   //shutdown the libs
+   // shutdown the libs
    eo_do(EMOUS_CLASS, emous_shutdown_lib());
 
 }

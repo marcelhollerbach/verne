@@ -17,7 +17,7 @@ _added_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Descriptio
 {
     Emous_Device *device = event;
 
-    //a device appeared
+    // a device appeared
     if (!sd) return EINA_TRUE;
 
     sd->devices = eina_list_append(sd->devices, device);
@@ -74,21 +74,21 @@ EOLIAN static void
 _emous_manager_device_type_del(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const Eo_Class *type)
 {
     Emous_Type *device_type;
-    if (!sd) //there cannot be a type
+    if (!sd) // there cannot be a type
       return;
 
     eo_do(type, device_type = emous_type_object_get());
 
-    //check if this device type is valid
+    // check if this device type is valid
     if (!device_type)
       {
          ERR("Error device type does not contain a object");
       }
 
-    //remove them from the known list
+    // remove them from the known list
     sd->device_types = eina_list_remove(sd->device_types, type);
 
-    //do not monitor them anymore
+    // do not monitor them anymore
     eo_do(device_type, eo_event_callback_del(EMOUS_TYPE_EVENT_DEVICE_ADDED, _added_cb, NULL);
                 eo_event_callback_del(EMOUS_TYPE_EVENT_DEVICE_DELETED, _deled_cb, NULL);
                 );

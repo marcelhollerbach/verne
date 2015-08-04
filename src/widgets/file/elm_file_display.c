@@ -34,11 +34,11 @@ typedef struct
 {
    Eina_Bool anim_mode; //< true if animation mode is choosen
    Eina_List *icons; //< a list of 3 icons which are the later sample
-   const char *ptr; //the string
+   const char *ptr; // the string
    Evas_Object *obj; //< the object to start the drag on
    struct {
       Eina_List *icons; //< the animated icons
-      Ecore_Animator *timer; //the ecore_animator for the animation
+      Ecore_Animator *timer; // the ecore_animator for the animation
    } anim;
 } Anim_Struct;
 
@@ -347,7 +347,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
       Evas_Object *rad;
       int c;
       char buf[PATH_MAX];
-      //make the menu for the icons
+      // make the menu for the icons
 
       for (c = ICON_SIZE_INF; c < ICON_SIZE_SUP; c += STEP_SIZE)
         {
@@ -371,14 +371,14 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
    {
       Evas_Object *gr, *rad, *ck;
 
-      //SORT_TYPE_SIZE
+      // SORT_TYPE_SIZE
       it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_DISPLAY_SORT_TYPE_SIZE);
       gr = rad = elm_radio_add(menu);
       elm_object_text_set(rad, "Size");
       elm_radio_state_value_set(rad, 0);
       elm_object_item_content_set(it2, rad);
 
-      //SORT_TYPE_DATE
+      // SORT_TYPE_DATE
       it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_DISPLAY_SORT_TYPE_DATE);
       rad = elm_radio_add(menu);
       elm_radio_group_add(rad, gr);
@@ -386,7 +386,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
       elm_radio_state_value_set(rad, 1);
       elm_object_item_content_set(it2, rad);
 
-      //SORT_TYPE_NAME
+      // SORT_TYPE_NAME
       it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_DISPLAY_SORT_TYPE_NAME);
       rad = elm_radio_add(menu);
       elm_radio_group_add(rad, gr);
@@ -394,7 +394,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
       elm_radio_state_value_set(rad, 2);
       elm_object_item_content_set(it2, rad);
 
-      //SORT_TYPE_EXTENSION
+      // SORT_TYPE_EXTENSION
       it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_DISPLAY_SORT_TYPE_EXTENSION);
       rad = elm_radio_add(menu);
       elm_radio_group_add(rad, gr);
@@ -405,7 +405,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
 
       elm_menu_item_separator_add(menu, it);
 
-      //FOLDER_FIRST
+      // FOLDER_FIRST
       it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_folder_placement, (void *)(uintptr_t)ELM_FILE_DISPLAY_FOLDER_PLACEMENT_FIRST);
       ck = elm_check_add(menu);
       if (config->sort.folder_placement == ELM_FILE_DISPLAY_FOLDER_PLACEMENT_FIRST)
@@ -488,7 +488,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
  * if the mousebutton is left before that everything will be freed.
  */
 
-/* Hide the icons of a animation*/
+/* Hide the icons of a animation */
 static void
 _drag_anim_hide(Anim_Struct *as)
 {
@@ -573,7 +573,7 @@ _list_to_char(Eina_List *items)
         const char *path;
         Efm_File *file;
 
-        if (!it->file_icon) continue; //bugger
+        if (!it->file_icon) continue; // bugger
 
         eo_do(it->file_icon, file = elm_obj_file_icon_fm_monitor_file_get());
         eo_do(file, path = efm_file_path_get());
@@ -725,7 +725,7 @@ _event_rect_mouse_up(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UNUS
    /* clear selected */
    if (pd->event.on_item)
      {
-        //drop ...
+        // drop ...
         pd->event.on_item = EINA_FALSE;
 
         if (pd->drag_data)
@@ -761,13 +761,13 @@ _event_rect_mouse_down(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UN
   Efm_File *file = NULL;
   Eina_Bool renamemode = EINA_FALSE;
 
-  //check if there is a item under it and save it if it is
+  // check if there is a item under it and save it if it is
   eo_do(pd->cached_view, file_icon = elm_file_display_view_item_get(ev->output.x, ev->output.y));
   if (file_icon)
     eo_do(file_icon, file = elm_obj_file_icon_fm_monitor_file_get();
                      renamemode = elm_obj_file_icon_rename_get());
 
-  //dont do anything if this icon is renamed
+  // don't do anything if this icon is renamed
   if (renamemode) return;
 
   if (ev->button == 1)
@@ -776,7 +776,7 @@ _event_rect_mouse_down(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UN
          {
             pd->event.on_item = EINA_TRUE;
          }
-       else //save the coords otherwise
+       else // save the coords otherwise
          {
             pd->event.mouse_down.x = ev->output.x;
             pd->event.mouse_down.y = ev->output.y;
@@ -970,7 +970,7 @@ _event_key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *de
 
     pd = eo_data_scope_get(obj, ELM_FILE_DISPLAY_CLASS);
     ev = event;
-    //look if its a single character, so it could be a searchpart
+    // look if its a single character, so it could be a searchpart
     if (evas_key_modifier_is_set(ev->modifiers, "Control") && (!strcmp(ev->key, "H") || !strcmp(ev->key, "h")))
       {
          Eina_Bool b;
@@ -983,14 +983,14 @@ _event_key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *de
 
          if (_is_rename_active(pd))
             return EO_CALLBACK_CONTINUE;
-         //update search string
+         // update search string
          _reset_clear_timer(pd);
          if (!pd->search.searchpart)
           pd->search.searchpart = eina_strbuf_new();
 
          eina_strbuf_append(pd->search.searchpart, ev->string);
          searchme = eina_strbuf_string_get(pd->search.searchpart);
-         //SET string in ui
+         // SET string in ui
          eo_do(obj, elm_obj_file_display_search(searchme));
 
          pd->search.clear_timer = ecore_timer_add(0.9, _timer_cb, obj);
@@ -1005,7 +1005,7 @@ _event_key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *de
             return EO_CALLBACK_CONTINUE;
 
          const char *searchme;
-         //shrink search string
+         // shrink search string
          _reset_clear_timer(pd);
 
          if (!pd->search.searchpart)
@@ -1017,15 +1017,15 @@ _event_key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *de
          if (oldlength == 0)
            return EO_CALLBACK_STOP;
 
-         //reset the string
+         // reset the string
          eina_strbuf_reset(pd->search.searchpart);
-         //cut off the last bit
+         // cut off the last bit
          oldstr[oldlength - 1] = '\0';
 
          eina_strbuf_append(pd->search.searchpart, oldstr);
          free(oldstr);
          searchme = eina_strbuf_string_get(pd->search.searchpart);
-         //SET string in ui
+         // SET string in ui
          eo_do(obj, elm_obj_file_display_search(searchme));
 
          pd->search.clear_timer = ecore_timer_add(0.9, _timer_cb, obj);
@@ -1033,7 +1033,7 @@ _event_key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *de
       }
     else if (!strcmp(ev->key, "F2"))
       {
-        //start rename mode
+        // start rename mode
         Eina_List *node, *selection;
         Elm_File_Display_View_DndFile *file;
         eo_do(pd->cached_view, selection = elm_file_display_view_selection_get());
@@ -1049,7 +1049,7 @@ _event_key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *de
       }
     else if (!strcmp(ev->key, "Escape"))
       {
-        //stop rename mode
+        // stop rename mode
         Eina_List *node, *selection;
         Elm_File_Display_View_DndFile *file;
         eo_do(pd->cached_view, selection = elm_file_display_view_selection_get());
@@ -1067,7 +1067,7 @@ _event_key_down(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *de
       {
         if (!_is_rename_active(pd))
           return EO_CALLBACK_CONTINUE;
-        //stop rename mode
+        // stop rename mode
         Eina_List *node, *selection;
         Elm_File_Display_View_DndFile *file;
         eo_do(pd->cached_view, selection = elm_file_display_view_selection_get());
@@ -1181,7 +1181,7 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
    evas_object_color_set(pd->event.rect, 0, 0, 0, 0);
    evas_object_event_callback_add(pd->event.rect, EVAS_CALLBACK_MOUSE_DOWN, _event_rect_mouse_down, obj);
 
-   //listen for key downs for the searchbar
+   // listen for key downs for the searchbar
    eo_do(obj, eo_event_callback_add(EVAS_OBJECT_EVENT_KEY_DOWN, _event_key_down, NULL));
 
    pd->event.mouse_down.x = -1;
@@ -1193,7 +1193,7 @@ _elm_file_display_show_icon_size_set(Eo *obj EINA_UNUSED, Elm_File_Display_Data 
 {
      config->icon_size = size;
      config_save();
-     //refresh the url so the view is doing everything new
+     // refresh the url so the view is doing everything new
      eo_del(cache);
      eo_do(ELM_FILE_MIMETYPE_CACHE_CLASS, cache = elm_file_mimetype_cache_generate(size));
      eo_do(pd->cached_view, elm_file_display_view_config_set(config->icon_size, config->only_folder, config->hidden_files));
@@ -1260,7 +1260,7 @@ _elm_file_display_show_hidden_file_set(Eo *obj EINA_UNUSED, Elm_File_Display_Dat
 
    config->hidden_files = hidden;
    config_save();
-   //refresh the url so the view is doing everything new
+   // refresh the url so the view is doing everything new
    eo_do(pd->cached_view, elm_file_display_view_config_set(config->icon_size, config->only_folder, config->hidden_files));
 
 }
@@ -1276,7 +1276,7 @@ _elm_file_display_only_folder_set(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd
 {
     config->only_folder = only_folder;
     config_save();
-    //refresh the view
+    // refresh the view
     eo_do(pd->cached_view, elm_file_display_view_config_set(config->icon_size, config->only_folder, config->hidden_files));
 }
 
@@ -1291,7 +1291,7 @@ _elm_file_display_sort_type_set(Eo *obj, Elm_File_Display_Data *pd, Elm_File_Dis
 {
    config->sort.type = t;
    config_save();
-   //refresh the url so the view is doing everything new
+   // refresh the url so the view is doing everything new
    eo_do(obj, efl_file_set(pd->current_path, NULL));
 }
 
@@ -1300,7 +1300,7 @@ _elm_file_display_folder_placement_set(Eo *obj, Elm_File_Display_Data *pd, Elm_F
 {
    config->sort.folder_placement = t;
    config_save();
-   //refresh the url so the view is doing everything new
+   // refresh the url so the view is doing everything new
    eo_do(obj, efl_file_set(pd->current_path, NULL));
 }
 
@@ -1315,7 +1315,7 @@ _elm_file_display_reverse_sort_set(Eo *obj, Elm_File_Display_Data *pd, Eina_Bool
 {
    config->sort.reverse = b;
    config_save();
-   //refresh the url so the view is doing everything new
+   // refresh the url so the view is doing everything new
    eo_do(obj, efl_file_set(pd->current_path, NULL));
 }
 
@@ -1330,7 +1330,7 @@ _elm_file_display_case_sensetive_sort_set(Eo *obj, Elm_File_Display_Data *pd, Ei
 {
    config->sort.casesensetive = b;
    config_save();
-   //refresh the url so the view is doing everything new
+   // refresh the url so the view is doing everything new
    eo_do(obj, efl_file_set(pd->current_path, NULL));
 }
 
