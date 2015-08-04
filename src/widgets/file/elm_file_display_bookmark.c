@@ -97,7 +97,7 @@ _setup_list(Evas_Object *o)
 
    if (!config) return;
 
-   // standart bookmarks
+   // standard bookmarks
    EINA_LIST_FOREACH(config->bookmarks, node, tmp)
      {
         bookmark_entry_internal_add(o, tmp, ecore_file_file_get(tmp), "folder", EINA_TRUE, pd->bookmark_group_it);
