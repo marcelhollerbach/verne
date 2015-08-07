@@ -60,16 +60,17 @@ _add(Efm_Monitor *mon, const char *file)
    const char *path;
    Efm_File *ef;
    Efm_Monitor_Data *pd;
-   path = eina_stringshare_add(file);
 
-   eo_do(EFM_FILE_CLASS, ef = efm_file_generate(path));
-   eo_do(ef, eo_event_callback_add(EO_BASE_EVENT_DEL, _file_del, mon));
+   eo_do(EFM_FILE_CLASS, ef = efm_file_generate(file));
+
    if (!ef)
      {
        ERR("Creation of %s failed, this is ... strange", file);
        return;
      }
 
+   eo_do(ef,  path = efm_file_path_get();
+              eo_event_callback_add(EO_BASE_EVENT_DEL, _file_del, mon));
    pd = eo_data_scope_get(mon, EFM_MONITOR_CLASS);
 
    eina_hash_add(pd->file_icons, path, ef);
