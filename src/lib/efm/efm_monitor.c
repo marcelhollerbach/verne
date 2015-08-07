@@ -85,7 +85,10 @@ _add(Efm_Monitor *mon, const char *file)
 void
 _error(Efm_Monitor *efm)
 {
+   //tell everyone that this monitor is crashed now
    eo_do(efm, eo_event_callback_call(EFM_MONITOR_EVENT_ERROR, NULL));
+   //delete the monitor
+   eo_del(efm);
 }
 
 EOLIAN static const char*
