@@ -18,8 +18,6 @@ efm_init()
    if (!_efm_domain)
      return 0;
 
-   eina_log_domain_level_set("efm",EINA_LOG_LEVEL_DBG);
-
    if (!fm_monitor_init())
      {
         ERR("Failed to init resolve");
