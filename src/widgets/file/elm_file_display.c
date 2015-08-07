@@ -880,17 +880,34 @@ _event_rect_mouse_move(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UN
  * VIEW EVENTS
  *======================================
  */
+
+static void
+_view_resize(Evas_Object *event, Eo *view)
+{
+   int x,y,w,h;
+   eo_do(view, elm_file_display_view_size_get(&x, &y, &w, &h));
+   evas_object_geometry_set(event, x, y, w, h);
+}
+
+
+static Eina_Bool
+_view_changed_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desk EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Elm_File_Display_Data *pd;
+
+   pd = data;
+   _view_resize(pd->event.rect, pd->cached_view);
+
+   return EO_CALLBACK_CONTINUE;
+}
+
 static Eina_Bool
 _view_resize_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desk EINA_UNUSED, void *event EINA_UNUSED)
 {
   Elm_File_Display_Data *pd;
-  int x, y, w, h;
 
   pd = data;
-  eo_do(pd->cached_view, elm_file_display_view_size_get(&x, &y, &w, &h));
-
-  evas_object_resize(pd->event.rect, w, h);
-  evas_object_move(pd->event.rect, x, y);
+  _view_resize(pd->event.rect, pd->cached_view);
 
   evas_object_show(pd->event.rect);
   evas_object_layer_set(pd->event.rect, EVAS_LAYER_MAX);
@@ -1100,6 +1117,7 @@ _elm_file_display_view_set(Eo *obj, Elm_File_Display_Data *pd, const Eo_Class *k
    elm_object_part_content_set(obj, "content", pd->cached_view);
    evas_object_show(pd->cached_view);
    eo_do(pd->cached_view, eo_event_callback_add(EVAS_OBJECT_EVENT_RESIZE, _view_resize_cb, pd);
+                          eo_event_callback_add(ELM_INTERFACE_SCROLLABLE_EVENT_CHANGED, _view_changed_cb, pd);
                           eo_event_callback_add(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_SIMPLE, _util_item_select_simple, obj);
                           eo_event_callback_add(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHOOSEN, _util_item_select_choosen, obj);
                           eo_event_callback_add(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, _item_select_changed, obj);
