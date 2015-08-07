@@ -82,6 +82,8 @@ _notify_cb(void *data EINA_UNUSED, Ecore_Thread *et EINA_UNUSED, void *pass)
 
     // Remove weak reference
     eo_do(job->obj, eo_wref_del(&job->obj));
+    //unref stringshare
+    eina_stringshare_del(job->path);
     // notify that this efm_file is ready for the world
     eo_do(file, eo_event_callback_call(EFM_FILE_EVENT_FSQUERY_DONE, NULL));
     free(job);
@@ -119,8 +121,7 @@ _scheudle(Eo *obj, Efm_File_Data *pd)
     job = calloc(1, sizeof(Thread_Job));
 
     eo_do(obj, eo_wref_add(&job->obj));
-    job->path = pd->path;
-
+    job->path = eina_stringshare_ref(pd->path);
     eina_lock_take(&readlock);
     query_stuff = eina_list_append(query_stuff, job);
     eina_lock_release(&readlock);
