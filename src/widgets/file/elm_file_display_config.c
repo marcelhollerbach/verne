@@ -70,6 +70,7 @@ _config_free(void)
      }
    eina_stringshare_del(config->viewname);
    free(config);
+   config = NULL;
 }
 
 void
