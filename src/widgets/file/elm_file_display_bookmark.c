@@ -571,12 +571,19 @@ _right_click(void *data EINA_UNUSED, Evas_Object *obj, void *event_data)
 static void
 _del(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
 {
+   Emous_Manager *m;
+
    PRIV_DATA(obj);
 
    elm_genlist_item_class_free(pd->place_item);
    elm_genlist_item_class_free(pd->device_item);
    elm_genlist_item_class_free(pd->dnd_ic);
    elm_genlist_item_class_free(pd->group_item);
+
+   eo_do(EMOUS_MANAGER_CLASS, m = emous_manager_object_get());
+   eo_do(m, eo_event_callback_del(EMOUS_MANAGER_EVENT_DEVICE_ADD, _device_add_cb, obj);
+            eo_event_callback_del(EMOUS_MANAGER_EVENT_DEVICE_DEL, _device_del_cb, obj);
+            );
 
    free(pd);
 }
