@@ -1141,7 +1141,7 @@ _elm_file_display_eo_base_destructor(Eo *obj, Elm_File_Display_Data *pd EINA_UNU
 {
    eo_del(pd->cached_view);
    efm_shutdown();
-   emous_shutdown();
+   eo_do(EMOUS_CLASS, emous_shutdown());
    config_shutdown();
    ecore_shutdown();
    eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, eo_destructor());
