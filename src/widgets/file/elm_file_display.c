@@ -1165,6 +1165,17 @@ _elm_file_display_eo_base_destructor(Eo *obj, Elm_File_Display_Data *pd EINA_UNU
    eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, eo_destructor());
 }
 
+static Eina_Bool
+_path_changed(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+   const char *file;
+
+   eo_do(obj, efl_file_get(&file, NULL));
+
+   eo_do(data, efl_file_set(file, NULL));
+   return EO_CALLBACK_CONTINUE;
+}
+
 
 EOLIAN static void
 _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
@@ -1179,7 +1190,8 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
         CRI("Failed to set theme file\n");
      }
 
-   pd->bookmark = o = bookmark_add(obj);
+   pd->bookmark = o = eo_add(ELM_FILE_BOOKMARKS_CLASS, obj);
+   eo_do(o, eo_event_callback_add(ELM_FILE_BOOKMARKS_EVENT_PATH_SELECTED, _path_changed, obj));
    elm_object_part_content_set(obj, "bookmark", o);
 
    pd->preview = o = filepreview_add(obj);

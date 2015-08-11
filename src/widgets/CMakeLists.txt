@@ -16,6 +16,10 @@ LIST(APPEND WIDGET_LIBRARY
    file/elm_file_icon.eo.x
    file/elm_file_icon.eo.h
    file/elm_file_icon.c
+   file/elm_file_bookmarks.eo
+   file/elm_file_bookmarks.eo.x
+   file/elm_file_bookmarks.eo.h
+   file/elm_file_bookmarks.c
    file/elm_file_config.c
    file/elm_file_config.h
    file/elm_file_display.c
