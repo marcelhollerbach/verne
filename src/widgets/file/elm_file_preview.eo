@@ -1,0 +1,17 @@
+class Elm.File.Preview(Elm.Layout) {
+    methods {
+        @property file {
+            values {
+                file : Efm.File*;
+            }
+        }
+        @property cache {
+            values {
+                cache : Elm.File.MimeType.Cache*;
+            }
+        }
+    }
+    implements {
+        Evas.Object_Smart.add;
+    }
+}

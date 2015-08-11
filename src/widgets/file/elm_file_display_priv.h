@@ -66,11 +66,6 @@ Evas_Object* icon_create(Evas_Object *par, Efm_File *file);
 Eina_Bool _util_item_select_simple(void *data, Eo *obj, const Eo_Event_Description *desc, void *event);
 Eina_Bool _util_item_select_choosen(void *data, Eo *obj, const Eo_Event_Description *desc, void *event);
 
-
-void filepreview_file_set(Evas_Object *w, Efm_File *file);
-Evas_Object* filepreview_add(Evas_Object *w);
-
-
 /*
  * Sort helper function
  */

@@ -192,7 +192,7 @@ _util_item_select_simple(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Descrip
    Efm_File *f = event;
    Elm_File_Display_Data *pd = eo_data_scope_get(data, ELM_FILE_DISPLAY_CLASS);
 
-   filepreview_file_set(pd->preview, f);
+   eo_do(pd->preview, elm_file_preview_file_set(f));
    return EINA_TRUE;
 }
 

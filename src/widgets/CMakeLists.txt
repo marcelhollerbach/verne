@@ -20,11 +20,14 @@ LIST(APPEND WIDGET_LIBRARY
    file/elm_file_bookmarks.eo.x
    file/elm_file_bookmarks.eo.h
    file/elm_file_bookmarks.c
+   file/elm_file_preview.c
+   file/elm_file_preview.eo.x
+   file/elm_file_preview.eo.h
+   file/elm_file_preview.eo
    file/elm_file_config.c
    file/elm_file_config.h
    file/elm_file_display.c
    file/elm_file_display.h
-   file/elm_file_display_preview.c
    file/elm_file_display_helper.c
    file/elm_file_display.eo
    file/elm_file_display.eo.x

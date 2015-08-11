@@ -8,6 +8,7 @@
 #include "./file/elm_file_icon.h"
 #include "./file/elm_file_display.h"
 #include "./file/elm_file_bookmarks.eo.h"
+#include "./file/elm_file_preview.eo.h"
 
 EAPI void elm_ext_init();
 

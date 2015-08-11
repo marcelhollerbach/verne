@@ -1194,7 +1194,7 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
    eo_do(o, eo_event_callback_add(ELM_FILE_BOOKMARKS_EVENT_PATH_SELECTED, _path_changed, obj));
    elm_object_part_content_set(obj, "bookmark", o);
 
-   pd->preview = o = filepreview_add(obj);
+   pd->preview = o = eo_add(ELM_FILE_PREVIEW_CLASS, obj);
    elm_object_part_content_set(obj, "filepreview", o);
 
    view = eina_hash_find(views, config->viewname);
@@ -1386,7 +1386,7 @@ _elm_file_display_efl_file_file_set(Eo *obj, Elm_File_Display_Data *pd, const ch
 
    eo_do(EFM_FILE_CLASS, f = efm_file_generate(file));
    if (f)
-     filepreview_file_set(pd->preview, f);
+     eo_do(pd->preview, elm_file_preview_file_set(f));
    return EINA_TRUE;
 }
 
