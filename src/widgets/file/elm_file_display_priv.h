@@ -65,10 +65,6 @@ Evas_Object* icon_create(Evas_Object *par, Efm_File *file);
 // event helper for selection
 Eina_Bool _util_item_select_simple(void *data, Eo *obj, const Eo_Event_Description *desc, void *event);
 Eina_Bool _util_item_select_choosen(void *data, Eo *obj, const Eo_Event_Description *desc, void *event);
-/*
- * Helper function to add the bookmarklist
- */
-Evas_Object* bookmark_add(Evas_Object *w);
 
 
 void filepreview_file_set(Evas_Object *w, Efm_File *file);

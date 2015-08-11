@@ -24,7 +24,6 @@ LIST(APPEND WIDGET_LIBRARY
    file/elm_file_config.h
    file/elm_file_display.c
    file/elm_file_display.h
-   file/elm_file_display_bookmark.c
    file/elm_file_display_preview.c
    file/elm_file_display_helper.c
    file/elm_file_display.eo
