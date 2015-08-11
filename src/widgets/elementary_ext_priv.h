@@ -1,6 +1,10 @@
 #ifndef ELM_EXT_PRIV_H
 #define ELM_EXT_PRIV_H
 
+#define EFL_BETA_API_SUPPORT
+#define EFL_EO_API_SUPPORT
+#include <Efl.h>
+#include <Elementary.h>
 #include "Elementary_Ext.h"
 
 #ifdef EAPI

@@ -19,6 +19,7 @@
 #include <Evas.h>
 #include <Eio.h>
 #include "../elementary_ext_priv.h"
+#include "elm_file_config.h"
 
 #define FILESEP "file://"
 #define FILESEP_LEN sizeof(FILESEP) - 1
@@ -57,24 +58,6 @@ typedef struct
 
 } Elm_File_Display_Data;
 
-typedef struct
-{
-   Eina_List *bookmarks;
-   char display_gtk;
-   const char *viewname;
-   int icon_size;
-   char hidden_files;
-   char only_folder;
-   struct{
-      int folder_placement;
-      int type;
-      char reverse;
-      char casesensetive;
-   }sort;
-} Config ;
-
-extern Config *config;
-
 // == calls which are just calling the cb of the view, but secure
 
 Evas_Object* icon_create(Evas_Object *par, Efm_File *file);
@@ -97,38 +80,5 @@ Evas_Object* filepreview_add(Evas_Object *w);
  */
 int sort_func(const void *data1, const void *data2);
 
-/*
- * Return a list of gtk bookmarks
- *
- * @return a list of stringshares
- */
-Eina_List* util_bookmarks_load_gtk(void);
 
-
-/*
- * Helper function to add/del bookmark,
- * save is done.
- */
-void helper_bookmarks_add(const char *ptr);
-void helper_bookmarks_del(const char *ptr);
-
-/*
- * init the config sutff
- */
-void config_init(void);
-
-/*
- * Save the config
- */
-void config_save(void);
-
-/*
- * Load the config
- */
-void config_read(void);
-
-/*
- * Shutdown the system, the config will be cleared
- */
-void config_shutdown(void);
 #endif
