@@ -122,6 +122,7 @@ EOLIAN static void
 _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
 {
    Evas_Object *o;
+   Eo *cache;
 
    eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, evas_obj_smart_add());
 
@@ -130,17 +131,9 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
         CRI("Failed to set theme file\n");
      }
 
-   pd->bookmark = o = eo_add(ELM_FILE_BOOKMARKS_CLASS, obj);
-   eo_do(o, eo_event_callback_add(ELM_FILE_BOOKMARKS_EVENT_PATH_SELECTED, _bookmark_path_changed, obj));
-   elm_object_part_content_set(obj, "bookmark", o);
-   evas_object_show(o);
-
-   pd->preview = o = eo_add(ELM_FILE_PREVIEW_CLASS, obj);
-   elm_object_part_content_set(obj, "filepreview", o);
-   evas_object_show(o);
-
    pd->selector = o = eo_add(ELM_FILE_SELECTOR_CLASS, obj);
    eo_do(o,
+    cache = elm_file_selector_cache_get();
     eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, _menu_cb, obj);
     eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _selector_path_changed, obj);
     eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED_USER, _update_preview, obj);
@@ -148,6 +141,20 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
     );
    elm_object_part_content_set(obj, "content", o);
    evas_object_show(o);
+
+   pd->bookmark = o = eo_add(ELM_FILE_BOOKMARKS_CLASS, obj);
+   eo_do(o, eo_event_callback_add(ELM_FILE_BOOKMARKS_EVENT_PATH_SELECTED, _bookmark_path_changed, obj));
+   elm_object_part_content_set(obj, "bookmark", o);
+   evas_object_show(o);
+
+   pd->preview = o = eo_add(ELM_FILE_PREVIEW_CLASS, obj);
+   eo_do(o,
+    elm_file_preview_cache_set(cache)
+   );
+   elm_object_part_content_set(obj, "filepreview", o);
+   evas_object_show(o);
+
+
 }
 
 EOLIAN static void
