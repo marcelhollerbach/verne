@@ -105,7 +105,7 @@ _elm_file_display_eo_base_destructor(Eo *obj, Elm_File_Display_Data *pd)
 }
 
 EOLIAN static Eo_Base *
-_elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd)
+_elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd EINA_UNUSED)
 {
    Eo *eo;
 
