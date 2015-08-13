@@ -365,7 +365,7 @@ preview_paste(void)
 {
    const char *goal;
 
-   eo_do(preview, efl_file_get(&goal, NULL));
+   eo_do(selector, efl_file_get(&goal, NULL));
 
    clipboard_paste(goal);
 }

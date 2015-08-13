@@ -71,7 +71,7 @@ _search_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj E
 void
 shortcuts_init()
 {
-   evas_object_event_callback_add(preview, EVAS_CALLBACK_KEY_DOWN, _search_key_down, NULL);
+   evas_object_event_callback_add(selector, EVAS_CALLBACK_KEY_DOWN, _search_key_down, NULL);
 }
 
 static void

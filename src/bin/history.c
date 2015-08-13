@@ -16,7 +16,7 @@ _back_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, const char *emiss
 
     path = eina_list_nth(list, pointer);
     barrier = EINA_TRUE;
-    eo_do(preview, efl_file_set(path, NULL));
+    eo_do(selector, efl_file_set(path, NULL));
     barrier = EINA_FALSE;
 }
 
@@ -32,7 +32,7 @@ _forward_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, const char *em
 
    pointed = eina_list_nth(list, pointer);
 
-   eo_do(preview, efl_file_set(pointed, NULL));
+   eo_do(selector, efl_file_set(pointed, NULL));
 }
 
 static Eina_Bool
@@ -76,9 +76,6 @@ _path_changed_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Des
 void
 history_init(void)
 {
-   Evas_Object *selector;
-
-   eo_do(preview, selector = elm_file_display_selector_get());
    elm_layout_signal_callback_add(layout, "jesus.history.back", "theme", _back_cb, NULL);
    elm_layout_signal_callback_add(layout, "jesus.history.forward", "theme", _forward_cb, NULL);
    eo_do(selector, eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED_USER, _path_changed_cb, NULL));
