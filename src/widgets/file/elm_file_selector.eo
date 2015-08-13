@@ -1,0 +1,125 @@
+
+enum Elm.File.Selector.Sort_Type {
+   [[ The different sort types]]
+   SIZE = 0, [[Sort from size]]
+   DATE = 1, [[Sort from date]]
+   NAME = 2, [[Sort from name]]
+   EXTENSION = 3 [[Sort from extension]]
+}
+
+enum Elm.File.Selector.Folder_Placement {
+  [[Where to place the folders in the view if files and dirs are splited, each sector will be sorted for itself]]
+  FIRST,  [[ Place folders at first]]
+  LAST, [[Place folders at last]]
+  TRIVIAL [[Do not put the folders anywhere, and sort files and dirs at once]]
+}
+
+struct Elm.File.Selector.Menu_Hook {
+   [[Used to pass the file and object at once to the event]]
+   menu : Evas.Object*;
+   file : Efm.File*;
+}
+
+class Elm.File.Selector (Elm.Layout, Efl.File) {
+   [[ The file display widget class used to display the files and dirs of a specific path]]
+   methods {
+      view_pool_add @class {
+         [[Adds the given Display view to the pool.
+           The pool will be used to display different view options in the ui]]
+         params {
+            view : const(Eo.Class)*; [[Should be a Elm.File.Display.View]]
+         }
+      }
+      view_pool_del @class {
+         [[Remove the given View from the pool]]
+         params {
+            view : const(Eo.Class)*;
+         }
+      }
+      @property view {
+         [[Sets the view which should be used to display the "to display" path]]
+         values {
+            klass: const(Eo.Class)*; [[klass should implement elm.File.Display.View]]
+         }
+      }
+      search {
+         [[Tells the widget to search for the given needle in the file ]]
+         params {
+            value : const(char)*;
+         }
+      }
+      @property show_icon_size {
+         [[Set the size of the icons to display, its up to the view how they are interprating the icon size]]
+         values {
+            size : int;
+         }
+      }
+      @property show_hidden_file {
+         [[Show hidden files (Files which are starting with a .)]]
+         values {
+            hidden : bool; [[true to show them false to hide them]]
+         }
+      }
+      @property only_folder {
+         [[Only display folders]]
+         values {
+            hidden : bool; [[true to show them false to hide them]]
+         }
+      }
+      @property sort_type {
+         [[ Set the sort type a view should use to sort the files]]
+         values {
+            t : Elm.File.Selector.Sort_Type;
+         }
+      }
+      @property folder_placement {
+         [[ Set the Folderplacement a view should use to place files and folders]]
+         values {
+            t : Elm.File.Selector.Folder_Placement;
+         }
+      }
+      @property reverse_sort {
+         [[True to reverse the sort, if false a-z if true z-a]]
+         values {
+            b : bool; [[true to reverse the sort ]]
+         }
+      }
+      @property case_sensetive_sort {
+         [[True to have casesensetive sort, False to have A/a right next to each other]]
+         values {
+            b : bool; [[The casesensetivity]]
+         }
+      }
+      @property selection {
+         [[Selection of the displaying view]]
+         get {
+            [[Get the selection of the displaying view]]
+         }
+         values {
+            list : list<Efm.File*>*;
+         }
+      }
+   }
+
+   implements {
+      Eo.Base.constructor;
+      Eo.Base.destructor;
+      Evas.Object_Smart.add;
+      Efl.File.file.set;
+      Efl.File.file.get;
+      Elm.Widget.event;
+   }
+
+   events {
+      path,changed : const(char)*; [[Called if the path has changed because of a user interaction]]
+      path,changed,user : const(char)*; [[Called if the path was changed by user or by api]]
+      item,selection,changed : list<Efm.File*>*; [[The selection of the view has changed]]
+      item,choosen : Efm.File*; [[A item is selected, this means its _not_ a directry and the view decived to *click* this file]]
+      item,selected : Efm.File*; [[A item got selected, _not_ chossen]]
+      dnd,item,hover; [[A item was hovered above another item ]]
+      dnd,item,droped; [[Item was droped above another item]]
+      dnd,droped; [[Item droped in the file display]]
+      hook,menu,selector,start : Elm.File.Selector.Menu_Hook*; [[*@ Menu_Hook will be passed ]]
+      hook,menu,selector,end : Elm.File.Selector.Menu_Hook*; [[Menu_Hook will be passed]]
+   }
+}

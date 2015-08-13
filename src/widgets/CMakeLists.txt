@@ -24,6 +24,10 @@ LIST(APPEND WIDGET_LIBRARY
    file/elm_file_preview.eo.x
    file/elm_file_preview.eo.h
    file/elm_file_preview.eo
+   file/elm_file_selector.c
+   file/elm_file_selector.eo.x
+   file/elm_file_selector.eo.h
+   file/elm_file_selector.eo
    file/elm_file_config.c
    file/elm_file_config.h
    file/elm_file_display.c
