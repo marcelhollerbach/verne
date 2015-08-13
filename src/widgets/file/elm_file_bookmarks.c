@@ -514,7 +514,7 @@ _ctx_menu_directory(Evas_Object *w, int x, int y, Directory *b)
   // save the widget
   evas_object_data_set(menu, "_genlist", w);
 
-  eo_do(w, eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_HOOK_MENU_BOOKMARKS_START , menu));
+  eo_do(w, eo_event_callback_call(ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_START , menu));
 
   // if we are removable remove it
   if (b->removable)
@@ -529,7 +529,7 @@ _ctx_menu_directory(Evas_Object *w, int x, int y, Directory *b)
   it = elm_menu_item_add(menu, NULL, NULL, NULL, _ctx_gtk, w);
   elm_object_item_content_set(it, o);
 
-  eo_do(w, eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_HOOK_MENU_BOOKMARKS_END, menu));
+  eo_do(w, eo_event_callback_call(ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_END, menu));
 
   // move and show
   elm_menu_move(menu, x, y);
