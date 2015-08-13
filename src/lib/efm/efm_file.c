@@ -197,8 +197,13 @@ EOLIAN static Efm_File*
 _efm_file_generate(Eo *clas EINA_UNUSED, void *noth EINA_UNUSED, const char *filename)
 {
     int end;
-    Eo *obj = eo_add(EFM_FILE_CLASS, NULL);
-    Efm_File_Data *pd = eo_data_scope_get(obj, EFM_FILE_CLASS);
+    Eo *obj;
+    Efm_File_Data *pd;
+
+    EINA_SAFETY_ON_NULL_RETURN_VAL(watch_files, NULL);
+
+    obj = eo_add(EFM_FILE_CLASS, NULL);
+    pd = eo_data_scope_get(obj, EFM_FILE_CLASS);
 
     // get the stat
     if (stat(filename, &pd->st) < 0)
@@ -243,7 +248,9 @@ _efm_file_eo_base_destructor(Eo *obj, Efm_File_Data *pd)
 
     eina_stringshare_del(pd->path);
     eio_monitor_del(pd->file_mon);
-    eina_hash_del(watch_files, &pd->file_mon, obj);
+    //if this file lives longer than the lib XXX this should never happen
+    if (watch_files)
+      eina_hash_del(watch_files, &pd->file_mon, obj);
     eo_do_super(obj, EFM_FILE_CLASS, eo_destructor());
 }
 
@@ -303,8 +310,10 @@ void
 efm_file_shutdown(void)
 {
     ecore_event_handler_del(handler);
+    handler = NULL;
     eina_lock_free(&readlock);
     eina_hash_free(watch_files);
+    watch_files = NULL;
 }
 
 #include "efm_file.eo.x"
