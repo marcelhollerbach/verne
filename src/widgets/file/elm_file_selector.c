@@ -94,11 +94,11 @@ _elm_file_selector_view_pool_del(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, cons
  *======================================
  */
 static Eina_Bool
-_view_selected_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desk EINA_UNUSED, void *event EINA_UNUSED)
+_view_selected_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desk EINA_UNUSED, void *event EINA_UNUSED)
 {
    Efm_File *f = event;
 
-   eo_do(obj, eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_ITEM_SELECTED, f));
+   eo_do(data, eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_ITEM_SELECTED, f));
    return EINA_TRUE;
 }
 
@@ -260,7 +260,7 @@ _elm_file_selector_evas_object_smart_add(Eo *obj, Elm_File_Selector_Data *pd EIN
 }
 
 EOLIAN static Eina_Bool
-_elm_file_selector_efl_file_file_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd, const char *file, const char *key EINA_UNUSED)
+_elm_file_selector_efl_file_file_set(Eo *obj, Elm_File_Selector_Data *pd, const char *file, const char *key EINA_UNUSED)
 {
    if (!ecore_file_exists(file)) return EINA_FALSE;
    if (pd->path && !strcmp(pd->path, file)) return EINA_TRUE;
