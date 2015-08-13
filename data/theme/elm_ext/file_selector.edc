@@ -1,0 +1,66 @@
+images.image: "darken_square.png" COMP;
+group { name: "elm/file_selector/base/default";
+    parts {
+        swallow { "content"
+           desc { "default";
+
+           }
+        }
+        rect { "search_clip"
+            nomouse;
+            desc { "default"
+                color: 0 0 0 0;
+                //color: 255 255 255 255;
+                rel1.to: "search_pic";
+                rel2.to: "search_pic";
+            }
+            desc { "enable"
+                inherit: "default";
+                color: 255 255 255 255;
+            }
+        }
+        image { "search_pic";
+            nomouse;
+            clip_to: "search_clip";
+            desc { "default"
+                rel1.to: "search";
+                rel1.offset: -6 -6;
+                rel2.to: "search";
+                rel2.offset: 6 6;
+                image.normal: "darken_square.png";
+                image.border: 6 6 6 6;
+                fill.smooth: 0;
+                fixed: 1 1;
+            }
+        }
+        text { "search"
+            nomouse;
+            clip_to: "search_clip";
+            desc {
+                rel1.relative: 0.5 0.5;
+                rel2.relative: 0.5 0.5;
+                text { font: FNBD; size: 10;
+                   min: 1 1;
+                   ellipsis: -1;
+                   align: 0.0 0.5;
+                   size: 12;
+                }
+                fixed: 1 1;
+            }
+        }
+    }
+    programs {
+        program {
+            signal: "search,enable";
+            action: STATE_SET "enable" 0.0;
+            target: "search_clip";
+            source: "elm";
+        }
+        program {
+            signal: "search,disable";
+            action: STATE_SET "default" 0.0;
+            target: "search_clip";
+            source: "elm";
+        }
+   }
+}
