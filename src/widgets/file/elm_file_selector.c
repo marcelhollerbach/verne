@@ -1171,7 +1171,7 @@ _elm_file_selector_icon_generate(Eo *obj, Elm_File_Selector_Data *pd EINA_UNUSED
 }
 
 EOLIAN static Elm_File_MimeType_Cache *
-_elm_file_selector_cache_get(Eo *obj, Elm_File_Selector_Data *pd)
+_elm_file_selector_cache_get(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd)
 {
    return pd->cache;
 }
