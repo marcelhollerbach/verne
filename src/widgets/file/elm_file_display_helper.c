@@ -1,49 +1,5 @@
 #include "elm_file_display_priv.h"
 
-Elm_File_MimeType_Cache *cache;
-
-static Eina_Bool
-_drop_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
-{
- eo_do(data,
-         eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_DND_ITEM_DROPED, NULL));
-   return EINA_FALSE;
-}
-
-static Eina_Bool
-_hover_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
-{
-   eo_do(data,
-         eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_DND_ITEM_HOVER, NULL));
-   return EINA_FALSE;
-}
-
-Evas_Object*
-icon_create(Evas_Object *par, Efm_File *file)
-{
-   Evas_Object *ic, *widget;
-
-   widget = elm_object_parent_widget_get(par);
-
-   #if 1
-      ic = eo_add(ELM_FILE_ICON_CLASS, par);
-      eo_do(ic,
-        elm_obj_file_icon_mimetype_cache_set(cache);
-        elm_obj_file_icon_fm_monitor_file_set(file);
-        eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_DROP, _drop_cb, widget);
-        eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_HOVER, _hover_cb, widget)
-      );
-   #else
-      const char *name;
-      name = efm_file_path_get(file);
-      ic = elm_label_add(par);
-      elm_object_text_set(ic, name);
-   #endif
-   evas_object_show(ic);
-
-   return ic;
-}
-
 static int
 _alphabetic_sort(const char *n1, const char *n2)
 {

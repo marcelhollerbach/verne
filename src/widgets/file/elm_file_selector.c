@@ -219,7 +219,7 @@ _elm_file_selector_eo_base_constructor(Eo *obj, Elm_File_Selector_Data *pd)
    if (!views)
      _views_standart_init();
 
-   eo_do(ELM_FILE_MIMETYPE_CACHE_CLASS, cache = pd->cache = elm_file_mimetype_cache_generate(config->icon_size));
+   eo_do(ELM_FILE_MIMETYPE_CACHE_CLASS, pd->cache = elm_file_mimetype_cache_generate(config->icon_size));
 
    eo_do_super(obj, ELM_FILE_SELECTOR_CLASS, eo = eo_constructor());
 
@@ -429,11 +429,14 @@ _dnd_item_get_cb(Evas_Object *obj, Evas_Coord x, Evas_Coord y, int *xposret, int
 }
 
 static Eina_List*
-_dnd_anim_ics_gen(Evas_Object *view, Eina_List **anim_icons, Eina_List **mimetypes)
+_dnd_anim_ics_gen(Evas_Object *obj, Evas_Object *view, Eina_List **anim_icons, Eina_List **mimetypes)
 {
+   PRIV_DATA(obj)
    Eina_List *node, *list;
    Eina_List *result = NULL;
    Elm_File_Icon *icon;
+
+
    eo_do(view, list = elm_file_display_view_selection_get());
    *anim_icons = NULL;
    *mimetypes = NULL;
@@ -446,7 +449,7 @@ _dnd_anim_ics_gen(Evas_Object *view, Eina_List **anim_icons, Eina_List **mimetyp
 
         eo_do(icon, f = elm_obj_file_icon_fm_monitor_file_get());
         eo_do(f, mimetype = efm_file_mimetype_get());
-        eo_do(cache, file = elm_file_mimetype_cache_mimetype_get(mimetype));
+        eo_do(pd->cache, file = elm_file_mimetype_cache_mimetype_get(mimetype));
 
         icon = elm_icon_add(view);
         evas_object_geometry_get(icon, &place.x, &place.y, &place.w, &place.h);
@@ -545,10 +548,13 @@ static Eina_Bool
 _dnd_data_get_cb(Evas_Object *obj, Elm_Object_Item *it EINA_UNUSED, Elm_Drag_User_Info *info)
 {
     Animpass *pass = calloc(1, sizeof(Animpass));
+    Evas_Object *parent;
     Eina_List *mimetypelist;
     Eina_List *anim_icons;
 
-    _dnd_anim_ics_gen(obj, &anim_icons, &mimetypelist);
+    eo_do(obj, parent = eo_parent_get());
+
+    _dnd_anim_ics_gen(parent, obj, &anim_icons, &mimetypelist);
     pass->icons = mimetypelist;
 
     info->format = ELM_SEL_FORMAT_TARGETS;
@@ -1011,8 +1017,8 @@ _elm_file_selector_show_icon_size_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Dat
    config->icon_size = size;
    config_save();
    eo_del(pd->cache);
-   // FIXME remove
-   eo_do(ELM_FILE_MIMETYPE_CACHE_CLASS, cache = pd->cache = elm_file_mimetype_cache_generate(size));
+
+   eo_do(ELM_FILE_MIMETYPE_CACHE_CLASS, pd->cache = elm_file_mimetype_cache_generate(size));
    eo_do(pd->view.obj, elm_file_display_view_config_set(config->icon_size, config->only_folder, config->hidden_files));
 }
 
@@ -1122,6 +1128,52 @@ _elm_file_selector_search(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd, const
    eina_strbuf_append(pd->search.buffer, value);
    //call for display and view update
    _search_update(obj, pd);
+}
+
+static Eina_Bool
+_drop_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+ eo_do(data,
+         eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_DND_ITEM_DROPED, NULL));
+   return EINA_FALSE;
+}
+
+static Eina_Bool
+_hover_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+   eo_do(data,
+         eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_DND_ITEM_HOVER, NULL));
+   return EINA_FALSE;
+}
+
+EOLIAN static Elm_File_Icon *
+_elm_file_selector_icon_generate(Eo *obj, Elm_File_Selector_Data *pd EINA_UNUSED, Efm_File *file)
+{
+   Evas_Object *ic;
+
+#if 1
+   ic = eo_add(ELM_FILE_ICON_CLASS, obj);
+   eo_do(ic,
+     elm_obj_file_icon_mimetype_cache_set(pd->cache);
+     elm_obj_file_icon_fm_monitor_file_set(file);
+     eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_DROP, _drop_cb, obj);
+     eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_HOVER, _hover_cb, obj)
+  );
+#else
+   const char *name;
+   name = efm_file_path_get(file);
+   ic = elm_label_add(par);
+   elm_object_text_set(ic, name);
+#endif
+   evas_object_show(ic);
+
+   return ic;
+}
+
+EOLIAN static Elm_File_MimeType_Cache *
+_elm_file_selector_cache_get(Eo *obj, Elm_File_Selector_Data *pd)
+{
+   return pd->cache;
 }
 
 #include "elm_file_selector.eo.x"

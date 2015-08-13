@@ -144,14 +144,18 @@ static Evas_Object *
 _grid_content_get(void *data, Evas_Object *obj, const char *part)
 {
    Evas_Object *ic;
+   Evas_Object *parent;
    Efm_File *file;
+
+   eo_do(obj, parent = eo_parent_get());
 
    if (!!strcmp(part, "elm.swallow.icon")) return NULL;
 
    file = data;
 
-   ic = icon_create(obj, file);
+   eo_do(parent, ic = elm_file_selector_icon_generate(file));
    elm_object_style_set(ic, "line");
+
    return ic;
 }
 
