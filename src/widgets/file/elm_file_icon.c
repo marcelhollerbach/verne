@@ -109,6 +109,21 @@ _elm_file_icon_evas_object_smart_add(Eo *obj, Elm_File_Icon_Data *pd)
    elm_object_part_content_set(obj, "text", pd->label);
 }
 
+static Eina_Bool
+_key_down_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Evas_Event_Key_Down *ev;
+
+   ev = event;
+
+   if (!strcmp(ev->key, "Escape"))
+     eo_do(data, elm_obj_file_icon_rename_set(EINA_FALSE, EINA_FALSE));
+   else if (!strcmp(ev->key, "Return"))
+     eo_do(data, elm_obj_file_icon_rename_set(EINA_FALSE, EINA_TRUE));
+
+   return EO_CALLBACK_CONTINUE;
+}
+
 EOLIAN static void
 _elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode, Eina_Bool take)
 {
@@ -124,6 +139,8 @@ _elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode, Eina_
         eo_do(pd->file, filename = efm_file_filename_get());
 
         pd->entry = elm_entry_add(obj);
+        eo_do(pd->entry, eo_event_callback_add(EVAS_OBJECT_EVENT_KEY_DOWN, _key_down_cb, obj));
+        evas_object_propagate_events_set(pd->entry, EINA_FALSE);
         elm_entry_scrollable_set(pd->entry, EINA_TRUE);
         elm_scroller_policy_set(pd->entry, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
         elm_entry_single_line_set(pd->entry, EINA_TRUE);
