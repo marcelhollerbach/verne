@@ -236,6 +236,8 @@ _efm_monitor_start(Eo *obj EINA_UNUSED, void *data EINA_UNUSED, const char *dire
    Efm_Monitor *mon;
    Efm_Monitor_Data *pd;
 
+   EINA_SAFETY_ON_NULL_RETURN_VAL(directory, NULL);
+
    mon = eo_add(EFM_MONITOR_CLASS, NULL);
 
    pd = eo_data_scope_get(mon, EFM_MONITOR_CLASS);
