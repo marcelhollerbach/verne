@@ -247,25 +247,12 @@ static Eina_Bool
 _key_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event)
 {
    Evas_Event_Key_Down *ev = event;
-   const Eina_List *selected, *node;
+   const Eina_List *selected;
    Eo *grid = data;
    Elm_Object_Item *mover;
    Elm_Object_Item *next;
-   Elm_Object_Item *sel;
    Evas_Object *track;
    int x,y,w,h;
-
-   selected = elm_gengrid_selected_items_get(grid);
-   EINA_LIST_FOREACH(selected, node, sel)
-     {
-        Evas_Object *icon;
-        Eina_Bool rename;
-
-        icon = elm_object_item_part_content_get(sel, "elm.swallow.icon");
-        eo_do(icon, rename = elm_obj_file_icon_rename_get());
-        if (rename)
-          return EO_CALLBACK_CONTINUE;
-     }
 
    if (!strcmp(ev->key, "Right"))
      {
