@@ -25,6 +25,8 @@ fm_monitor_add(Efm_Monitor *mon, Eio_Monitor *monitor, Fm_File_Action action)
 {
    Monitor_Entry *entry;
 
+   EINA_SAFETY_ON_NULL_RETURN(ctx);
+
    entry = calloc(1, sizeof(Monitor_Entry));
 
    entry->mon = mon;
@@ -36,6 +38,8 @@ fm_monitor_add(Efm_Monitor *mon, Eio_Monitor *monitor, Fm_File_Action action)
 void
 fm_monitor_del(Efm_Monitor *mon EINA_UNUSED, Eio_Monitor *monitor)
 {
+   EINA_SAFETY_ON_NULL_RETURN(ctx);
+
    eina_hash_del(ctx->open_monitors, &monitor, NULL);
 }
 
