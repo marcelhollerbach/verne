@@ -1,4 +1,5 @@
 #include "elm_file_display_priv.h"
+#include <Eio.h>
 
 #define GTK_FILESEP "file://"
 #define GTK_FILESEP_LEN sizeof(FILESEP) - 1
