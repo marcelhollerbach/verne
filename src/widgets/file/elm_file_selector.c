@@ -126,7 +126,7 @@ _view_choosen_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *de
         /*call path changed */
         eo_do(data,
           efl_file_set(path, NULL);
-          eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_PATH_CHANGED, (void*)path);
+          eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, (void*)path);
         );
      }
    else if (efm_archive_file_supported(fileending))
@@ -143,7 +143,7 @@ _view_choosen_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *de
         /* set path to the archive */
         eo_do(data,
           efl_file_set(buf, NULL);
-          eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_PATH_CHANGED, (void*)buf);
+          eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, (void*)buf);
         );
      }
    else
@@ -153,7 +153,7 @@ _view_choosen_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *de
          * event should be called
          */
         eo_do(data,
-              eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_ITEM_CHOOSEN, f);
+              eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_ITEM_CHOOSEN, f);
         );
      }
    eina_stringshare_del(path);
@@ -171,7 +171,7 @@ _view_select_changed_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Descript
      return EO_CALLBACK_CONTINUE;
 
    pd->selection = event;
-   eo_do(wid, eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_ITEM_SELECTION_CHANGED, pd->selection));
+   eo_do(wid, eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_ITEM_SELECTION_CHANGED, pd->selection));
    return EO_CALLBACK_CONTINUE;
 }
 
@@ -634,8 +634,8 @@ _elm_file_selector_elm_widget_event(Eo *obj, Elm_File_Selector_Data *pd, Evas_Ob
    if (evas_key_modifier_is_set(ev->modifiers, "Control") && (!strcmp(ev->key, "H") || !strcmp(ev->key, "h")))
      {
         Eina_Bool b;
-        eo_do(obj, b = elm_obj_file_display_show_hidden_file_get();
-                   elm_obj_file_display_show_hidden_file_set(!b));
+        eo_do(obj, b = elm_file_selector_show_hidden_file_get();
+                   elm_file_selector_show_hidden_file_set(!b));
      }
    if (ev->string && strlen(ev->string) == 1 &&
          (isalnum(ev->string[0]) || ev->string[0] == '.')
@@ -826,7 +826,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
    ev.file = file;
 
    eo_do(obj,
-         eo_event_callback_call(&_ELM_FILE_DISPLAY_EVENT_HOOK_MENU_SELECTOR_START,
+         eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_START,
                                 &ev));
    elm_menu_item_separator_add(menu, NULL);
    /*
@@ -991,7 +991,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
 
    elm_menu_item_separator_add(menu, NULL);
    eo_do(obj,
-         eo_event_callback_call(&_ELM_FILE_DISPLAY_EVENT_HOOK_MENU_SELECTOR_END,
+         eo_event_callback_call(&_ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END,
                                 &ev));
    elm_menu_move(menu, x, y);
    evas_object_show(menu);

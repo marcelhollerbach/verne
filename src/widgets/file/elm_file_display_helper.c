@@ -6,7 +6,7 @@ static Eina_Bool
 _drop_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
 {
  eo_do(data,
-         eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_DND_ITEM_DROPED, NULL));
+         eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_DND_ITEM_DROPED, NULL));
    return EINA_FALSE;
 }
 
@@ -14,7 +14,7 @@ static Eina_Bool
 _hover_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
 {
    eo_do(data,
-         eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_DND_ITEM_HOVER, NULL));
+         eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_DND_ITEM_HOVER, NULL));
    return EINA_FALSE;
 }
 
