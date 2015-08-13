@@ -1,14 +1,3 @@
-
-struct Elm.File.Display.View.DndFile{
-   [[Struct to use when you have to five feedback to the view about your dnd selection]]
-   x : int; [[x coord]]
-   y : int; [[y coord]]
-   w : int; [[width of the icon]]
-   h : int; [[height of the icon]]
-   file_icon : Elm.File.Icon*; [[The represented icon]]
-}
-
-
 interface Elm.File.Display.View {
    [[ Interface to abstract communication between the elm.file.display and the displaying view]]
    methods {
@@ -35,9 +24,8 @@ interface Elm.File.Display.View {
          }
       }
       selection_get {
-         [[Return the current selection of the view for dnd.
-           This means x,y,w and h must be set correctly for the dnd animation]]
-         return : list<Elm.File.Display.View.DndFile>*;
+         [[Return the current selection of the view for dnd.]]
+         return : list<Elm.File.Icon*>*;
       }
       path_set {
          [[Set a new path to display]]

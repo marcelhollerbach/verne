@@ -433,23 +433,24 @@ _dnd_anim_ics_gen(Evas_Object *view, Eina_List **anim_icons, Eina_List **mimetyp
 {
    Eina_List *node, *list;
    Eina_List *result = NULL;
-   Elm_File_Display_View_DndFile *dndfile;
+   Elm_File_Icon *icon;
    eo_do(view, list = elm_file_display_view_selection_get());
    *anim_icons = NULL;
    *mimetypes = NULL;
-   EINA_LIST_FOREACH(list, node, dndfile)
+   EINA_LIST_FOREACH(list, node, icon)
      {
-        Evas_Object *icon;
+        Eina_Rectangle place;
         Efm_File *f;
         const char *file;
         const char *mimetype;
 
-        eo_do(dndfile->file_icon, f = elm_obj_file_icon_fm_monitor_file_get());
+        eo_do(icon, f = elm_obj_file_icon_fm_monitor_file_get());
         eo_do(f, mimetype = efm_file_mimetype_get());
         eo_do(cache, file = elm_file_mimetype_cache_mimetype_get(mimetype));
 
         icon = elm_icon_add(view);
-        evas_object_geometry_set(icon, dndfile->x, dndfile->y, dndfile->w, dndfile->h);
+        evas_object_geometry_get(icon, &place.x, &place.y, &place.w, &place.h);
+        evas_object_geometry_set(icon, place.x, place.y, place.w, place.h);
         elm_image_file_set(icon, file, NULL);
         evas_object_show(icon);
 
@@ -465,17 +466,17 @@ _dnd_items_gen(Evas_Object *view)
 {
    Eina_Strbuf *buf;
    Eina_List *node, *list;
-   Elm_File_Display_View_DndFile *ret;
+   Elm_File_Icon *icon;
 
    buf = eina_strbuf_new();
    eo_do(view, list = elm_file_display_view_selection_get());
 
-   EINA_LIST_FOREACH(list, node, ret)
+   EINA_LIST_FOREACH(list, node, icon)
      {
         Efm_File *f;
         const char *path;
 
-        eo_do(ret->file_icon, f = elm_obj_file_icon_fm_monitor_file_get());
+        eo_do(icon, f = elm_obj_file_icon_fm_monitor_file_get());
         eo_do(f, path = efm_file_path_get());
         eina_strbuf_append(buf, FILESEP);
         eina_strbuf_append(buf, path);
@@ -678,11 +679,12 @@ _elm_file_selector_elm_widget_event(Eo *obj, Elm_File_Selector_Data *pd, Evas_Ob
       {
         // start rename mode
         Eina_List *node, *selection;
-        Elm_File_Display_View_DndFile *file;
+        Elm_File_Icon *icon;
+
         eo_do(pd->view.obj, selection = elm_file_display_view_selection_get());
-        EINA_LIST_FOREACH(selection, node, file)
+        EINA_LIST_FOREACH(selection, node, icon)
           {
-             eo_do(file->file_icon,
+             eo_do(icon,
                eo_event_callback_add(ELM_FILE_ICON_EVENT_RENAME_DONE, _icon_rename_cb, NULL);
                elm_obj_file_icon_rename_set(EINA_TRUE, EINA_FALSE);
              );

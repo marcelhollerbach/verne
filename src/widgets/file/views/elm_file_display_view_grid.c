@@ -61,21 +61,11 @@ _elm_file_display_view_grid_elm_file_display_view_selection_get(Eo *obj EINA_UNU
 
    EINA_LIST_FOREACH(sel_list, node, it)
      {
-        int x = 0, y = 0, w = 20, h = 20;
-        Elm_File_Display_View_DndFile *dnd;
         Evas_Object *content;
 
         content = elm_object_item_part_content_get(it, "elm.swallow.icon");
-        evas_object_geometry_get(content, &x, &y, &w, &h);
 
-        dnd = calloc(1, sizeof(Elm_File_Display_View_DndFile));
-        dnd->x = x;
-        dnd->y = y;
-        dnd->w = w;
-        dnd->h = h;
-        dnd->file_icon = content;
-
-        result = eina_list_append(result, dnd);
+        result = eina_list_append(result, content);
      }
      return result;
 }
