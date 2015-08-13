@@ -45,7 +45,7 @@ _elm_file_mimetype_cache_mimetype_get(Eo *obj EINA_UNUSED, Elm_File_MimeType_Cac
          else
            eina_hash_direct_add(pd->mime_type, name, result);
       }
-    else if (result == NO_ENTRY)
+    else if (!strcmp(result, NO_ENTRY))
       {
          return NULL;
       }
