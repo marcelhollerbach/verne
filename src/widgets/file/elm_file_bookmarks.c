@@ -52,7 +52,7 @@ static void _device_update(Bookmark_Item *d);
 static Bookmark_Item* _device_add(Emous_Device *d, Evas_Object *w);
 
 EOLIAN static Eina_Bool
-_elm_file_bookmarks_efl_file_file_set(Eo *obj EINA_UNUSED, Elm_File_Bookmarks_Data *pd, const char *file, const char *key EINA_UNUSED)
+_elm_file_bookmarks_efl_file_file_set(Eo *obj, Elm_File_Bookmarks_Data *pd, const char *file, const char *key EINA_UNUSED)
 {
    Elm_Widget_Item *it;
 
@@ -63,7 +63,7 @@ _elm_file_bookmarks_efl_file_file_set(Eo *obj EINA_UNUSED, Elm_File_Bookmarks_Da
      elm_genlist_item_selected_set(it, EINA_TRUE);
    else
      {
-        it = elm_genlist_selected_item_get(it);
+        it = elm_genlist_selected_item_get(obj);
         elm_genlist_item_selected_set(it, EINA_FALSE);
      }
 
