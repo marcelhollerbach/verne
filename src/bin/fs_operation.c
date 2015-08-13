@@ -326,7 +326,7 @@ preview_copy(void)
 {
    Eina_List *selection;
 
-   eo_do(preview, selection = elm_obj_file_display_selection_get());
+   eo_do(selector, selection = elm_file_selector_selection_get());
    clipboard_set(COPY, selection);
 }
 
@@ -335,7 +335,7 @@ preview_move(void)
 {
    Eina_List *selection;
 
-   eo_do(preview, selection = elm_obj_file_display_selection_get());
+   eo_do(selector, selection = elm_file_selector_selection_get());
    clipboard_set(MOVE, selection);
 }
 
@@ -346,7 +346,7 @@ preview_remove(void)
    Eina_List *pass = NULL, *node;
    Efm_File *file;
 
-   eo_do(preview, selection = elm_obj_file_display_selection_get());
+   eo_do(selector, selection = elm_file_selector_selection_get());
 
    EINA_LIST_FOREACH(selection, node, file)
      {

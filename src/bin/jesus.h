@@ -29,6 +29,9 @@ extern Evas_Object *win;
 // the filepreview widget
 extern Evas_Object *preview;
 
+// the filepreview widget
+extern Evas_Object *selector;
+
 // the main layout of the window
 extern Evas_Object *layout;
 

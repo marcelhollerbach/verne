@@ -2,6 +2,7 @@
 
 Evas_Object *win;
 Evas_Object *preview;
+Evas_Object *selector;
 Evas_Object *layout;
 
 static void
@@ -58,7 +59,8 @@ ui_init()
    evas_object_size_hint_align_set(preview, EVAS_HINT_FILL, EVAS_HINT_FILL);
    evas_object_size_hint_weight_set(preview, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    elm_object_part_content_set(layout, "jesus.content", preview);
-   eo_do(preview, eo_event_callback_add(ELM_FILE_DISPLAY_EVENT_PATH_CHANGED_USER,
+   eo_do(preview, selector = elm_file_display_selector_get());
+   eo_do(selector, eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED_USER,
                                  _dir_changed, NULL););
    evas_object_show(preview);
 
@@ -133,7 +135,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    fs_operations_init();
 
    // set the correct path
-   eo_do(preview, efl_file_set(path, NULL));
+   eo_do(selector, efl_file_set(path, NULL));
    titlebar_path_set(path);
 
    elm_run();

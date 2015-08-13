@@ -141,12 +141,17 @@ _menu_device_end(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Des
 void
 hooks_init(void)
 {
-    eo_do(preview, eo_event_callback_add(ELM_FILE_DISPLAY_EVENT_HOOK_MENU_SELECTOR_START, _menu_selector_start, NULL);
-        eo_event_callback_add(ELM_FILE_DISPLAY_EVENT_HOOK_MENU_SELECTOR_END, _menu_selector_end, NULL);
-        eo_event_callback_add(ELM_FILE_DISPLAY_EVENT_HOOK_MENU_BOOKMARKS_START, _menu_bookmarks_start, NULL);
-        eo_event_callback_add(ELM_FILE_DISPLAY_EVENT_HOOK_MENU_BOOKMARKS_END, _menu_bookmarks_end, NULL);
-        eo_event_callback_add(ELM_FILE_DISPLAY_EVENT_HOOK_MENU_DEVICE_START, _menu_device_start, NULL);
-        eo_event_callback_add(ELM_FILE_DISPLAY_EVENT_HOOK_MENU_DEVICE_END, _menu_device_end, NULL);
-        eo_event_callback_add(ELM_FILE_DISPLAY_EVENT_ITEM_CHOOSEN, _open_cb, NULL);
-        );
+   Evas_Object *bookmarks;
+
+   eo_do(preview, bookmarks = elm_file_display_bookmarks_get());
+   eo_do(selector,
+        eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_START, _menu_selector_start, NULL);
+        eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, _menu_selector_end, NULL);
+        eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_ITEM_CHOOSEN, _open_cb, NULL););
+
+   eo_do(bookmarks,
+        eo_event_callback_add(ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_START, _menu_bookmarks_start, NULL);
+        eo_event_callback_add(ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_END, _menu_bookmarks_end, NULL);
+        eo_event_callback_add(ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_DEVICE_START, _menu_device_start, NULL);
+        eo_event_callback_add(ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_DEVICE_END, _menu_device_end, NULL););
 }
