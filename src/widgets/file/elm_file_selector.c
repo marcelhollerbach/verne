@@ -1061,7 +1061,7 @@ _elm_file_selector_sort_type_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd
 {
    config->sort.type = t;
    config_save();
-   eo_do(pd->view.obj, efl_file_set(pd->path, NULL));
+   eo_do(pd->view.obj, elm_file_display_view_path_set(pd->path));
 }
 
 EOLIAN static Elm_File_Selector_Sort_Type
@@ -1075,7 +1075,7 @@ _elm_file_selector_folder_placement_set(Eo *obj EINA_UNUSED, Elm_File_Selector_D
 {
    config->sort.folder_placement = t;
    config_save();
-   eo_do(pd->view.obj, efl_file_set(pd->path, NULL));
+   eo_do(pd->view.obj, elm_file_display_view_path_set(pd->path));
 }
 
 EOLIAN static Elm_File_Selector_Folder_Placement
@@ -1089,7 +1089,7 @@ _elm_file_selector_reverse_sort_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data 
 {
    config->sort.reverse = b;
    config_save();
-   eo_do(pd->view.obj, efl_file_set(pd->path, NULL));
+   eo_do(pd->view.obj, elm_file_display_view_path_set(pd->path));
 }
 
 EOLIAN static Eina_Bool
@@ -1103,7 +1103,7 @@ _elm_file_selector_case_sensetive_sort_set(Eo *obj EINA_UNUSED, Elm_File_Selecto
 {
    config->sort.casesensetive = b;
    config_save();
-   eo_do(pd->view.obj, efl_file_set(pd->path, NULL));
+   eo_do(pd->view.obj, elm_file_display_view_path_set(pd->path));
 }
 
 EOLIAN static Eina_Bool
