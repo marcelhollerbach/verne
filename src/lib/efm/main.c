@@ -1,10 +1,11 @@
-#include "efm_priv.h"
 #include <Efreet.h>
+#include "efm_priv.h"
+
 static int counter = 0;
 
 int _efm_domain;
 
-int
+EAPI int
 efm_init()
 {
    eina_init();
@@ -30,7 +31,7 @@ inc:
     return counter;
 }
 
-void
+EAPI void
 efm_shutdown()
 {
    counter --;

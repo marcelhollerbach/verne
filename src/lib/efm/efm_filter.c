@@ -1,5 +1,6 @@
-#include "efm_priv.h"
 #include <regex.h>
+
+#include "efm_priv.h"
 
 typedef struct {
     Eina_Bool init;

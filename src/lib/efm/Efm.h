@@ -1,6 +1,10 @@
-#ifndef EIO_FM_H
-#define EIO_FM_H
+#ifndef EFM_FM_H
+#define EFM_FM_H
 
+#define EFL_BETA_API_SUPPORT
+#define EFL_EO_API_SUPPORT
+
+#include <Efl.h>
 #include <Eina.h>
 #include <Eo.h>
 
@@ -8,6 +12,12 @@
 #include "efm_file.eo.h"
 #include "efm_filter.eo.h"
 #include "efm_monitor.eo.h"
+
+#ifdef EAPI
+# undef EAPI
+#endif
+
+#define EAPI
 
 /*
  * Inits the fm_monitor
@@ -26,5 +36,7 @@ EAPI Eina_Bool efm_archive_file_supported(const char *fileending);
 EAPI Eina_Bool efm_archive_file_extract(const char *file, const char *goal);
 
 EAPI const char *efm_archive_lasterror_get(void);
+
+#undef EAPI
 
 #endif

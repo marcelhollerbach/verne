@@ -6,7 +6,7 @@ const char* FILEENDINGS[] = {"tar", "zip", "tar.gz", NULL};
 
 const char *lasterror;
 
-Eina_Bool
+EAPI Eina_Bool
 efm_archive_file_supported(const char *fileending)
 {
    int i = 0;
@@ -21,7 +21,7 @@ efm_archive_file_supported(const char *fileending)
    return EINA_FALSE;
 }
 
-Eina_Bool
+EAPI Eina_Bool
 efm_archive_file_extract(const char *file, const char *goal)
 {
    struct archive *a;
@@ -86,7 +86,7 @@ efm_archive_file_extract(const char *file, const char *goal)
    return EINA_TRUE;
 }
 
-const char*
+EAPI const char*
 efm_archive_lasterror_get(void)
 {
    return lasterror;

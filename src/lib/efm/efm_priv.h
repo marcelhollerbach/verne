@@ -7,6 +7,10 @@
 #include <Efreet_Mime.h>
 #include "Efm.h"
 
+#ifdef EAPI
+# undef EAPI
+#endif
+
 #ifdef _WIN32
 # ifdef EFL_ECORE_BUILD
 #  ifdef DLL_EXPORT
