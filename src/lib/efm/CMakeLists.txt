@@ -36,6 +36,9 @@ LIST(APPEND FM_MONITOR
    efm_file.c
    efm_file.eo.x
    efm_file.eo.h
+   efm_filter.c
+   efm_filter.eo.x
+   efm_filter.eo.h
    archive.c
    main.c
    Efm.h

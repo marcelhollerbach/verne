@@ -5,6 +5,7 @@
 #include <Eo.h>
 
 #include "efm_file.eo.h"
+#include "efm_filter.eo.h"
 #include "efm_monitor.eo.h"
 
 /*

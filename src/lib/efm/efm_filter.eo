@@ -1,0 +1,32 @@
+class Efm.Filter(Eo.Base) {
+    methods {
+        attribute_add {
+            params {
+                attribute : Efm.Attribute;
+                reg : char*;
+            }
+        }
+        attribute_del {
+            params {
+                attribute : Efm.Attribute;
+                req : char*;
+            }
+        }
+        type_add {
+            params {
+                type : Efm.File.Type;
+            }
+        }
+        type_del {
+            params {
+                type : Efm.File.Type;
+            }
+        }
+        matches {
+            params {
+                file : Efm.File*;
+            }
+            return : bool;
+        }
+    }
+}
