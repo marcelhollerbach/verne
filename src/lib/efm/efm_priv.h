@@ -33,12 +33,6 @@
 # endif
 #endif /* ! _WIN32 */
 
-struct _EFM_Mount_Fs{
-   const char *name;
-   const char *script_path;
-   const char *description;
-};
-
 typedef enum {
     ADD,ERROR,SELFDEL
 } Fm_Action;
