@@ -12,11 +12,9 @@ typedef struct
    Eio_File *file; //< The eio file as long as the ls is running
 
    Eina_Hash *file_icons; // < Hash table of all listed FM_Monitor_Files
+   Efm_Filter *filter;
+   Eina_Bool whitelist;
 
-   struct {
-      Eina_Bool only_folder;
-      Eina_Bool hidden_files;
-   } config;
 } Efm_Monitor_Data;
 
 typedef struct {
@@ -30,16 +28,19 @@ typedef struct {
 static inline Eina_Bool
 _take_filter(Efm_Monitor *mon EINA_UNUSED, Efm_Monitor_Data *pd, Efm_File *file)
 {
-   Eina_Bool dir;
-   const char *filename;
+   if (pd->filter)
+     {
+        Eina_Bool match;
 
-   if (pd->config.only_folder &&
-       !eo_do_ret(file, dir, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
-     return EINA_FALSE;
+        eo_do(pd->filter, match = efm_filter_matches(file));
 
-   if (!pd->config.hidden_files &&
-       eo_do_ret(file, filename, efm_file_filename_get())[0] == '.')
-     return EINA_FALSE;
+        if (pd->whitelist && match)
+          return EINA_TRUE;
+        //populate
+        if (!pd->whitelist && !match)
+          return EINA_TRUE;
+        return EINA_FALSE;
+     }
 
    return EINA_TRUE;
 }
@@ -91,12 +92,6 @@ _error(Efm_Monitor *efm)
    eo_del(efm);
 }
 
-EOLIAN static const char*
-_efm_monitor_path_get(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
-{
-   return pd->directory;
-}
-
 static void
 _refresh_files(Efm_Monitor *mon, Efm_Monitor_Data *pd)
 {
@@ -123,38 +118,6 @@ _refresh_files(Efm_Monitor *mon, Efm_Monitor_Data *pd)
      }
 }
 
-EOLIAN static void
-_efm_monitor_config_hidden_files_set(Eo *obj, Efm_Monitor_Data *pd, Eina_Bool hidden)
-{
-   if (pd->config.hidden_files == hidden)
-     return;
-   pd->config.hidden_files = hidden;
-   _refresh_files(obj, pd);
-}
-
-EOLIAN static Eina_Bool
-_efm_monitor_config_hidden_files_get(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
-{
-   return pd->config.hidden_files;
-}
-
-EOLIAN static void
-_efm_monitor_config_only_folder_set(Eo *obj, Efm_Monitor_Data *pd, Eina_Bool folder)
-{
-   if (pd->config.only_folder == folder)
-     return;
-
-   pd->config.only_folder = folder;
-
-   _refresh_files(obj, pd);
-}
-
-EOLIAN static Eina_Bool
-_efm_monitor_config_only_folder_get(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
-{
-   return pd->config.only_folder;
-}
-
 static void
 _fm_action(void *data EINA_UNUSED, Efm_Monitor *mon, const char *file, Fm_Action action)
 {
@@ -171,6 +134,38 @@ _fm_action(void *data EINA_UNUSED, Efm_Monitor *mon, const char *file, Fm_Action
      {
         _error(mon);
      }
+}
+
+EOLIAN static void
+_efm_monitor_filter_set(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd, Efm_Filter *filter)
+{
+   if (pd->filter)
+     eo_do(pd->filter, eo_wref_del(&pd->filter));
+
+   pd->filter = filter;
+
+   if (pd->filter)
+     eo_do(pd->filter, eo_wref_add(&pd->filter));
+
+   _refresh_files(obj, pd);
+}
+
+EOLIAN static Efm_Filter *
+_efm_monitor_filter_get(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
+{
+   return pd->filter;
+}
+
+EOLIAN static void
+_efm_monitor_whitelist_set(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd, Eina_Bool whitelist)
+{
+   pd->whitelist = whitelist;
+}
+
+EOLIAN static Eina_Bool
+_efm_monitor_whitelist_get(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
+{
+   return pd->whitelist;
 }
 
 static Eina_Bool
@@ -196,22 +191,26 @@ _eio_main_cb(void *data, Eio_File *handler EINA_UNUSED, const char *file)
 static void
 _eio_done_cb(void *data, Eio_File *handler EINA_UNUSED)
 {
-  Efm_Monitor_Eio_Job *job;
-  Efm_Monitor_Data *pd;
-
+   Efm_Monitor_Eio_Job *job;
+   Efm_Monitor_Data *pd;
+   Efm_Monitor *mon;
    job = data;
 
    if (!job->monitor)
      return;
 
    pd = eo_data_scope_get(job->monitor, EFM_MONITOR_CLASS);
-
-   pd->mon = eio_monitor_stringshared_add(pd->directory);
-   fm_monitor_add(job->monitor, pd->mon, _fm_action);
+   //free the eio file
    pd->file = NULL;
 
+   //free the job of the monitor
+   mon = job->monitor;
    eo_do(job->monitor, eo_wref_del(&job->monitor));
    free(job);
+
+   //start monitoring
+   pd->mon = eio_monitor_stringshared_add(pd->directory);
+   fm_monitor_add(mon, pd->mon, _fm_action);
 }
 
 static void
@@ -230,38 +229,57 @@ _eio_error_cb(void *data, Eio_File *handler EINA_UNUSED, int error EINA_UNUSED)
    free(job);
 }
 
-EOLIAN static Efm_Monitor *
-_efm_monitor_start(Eo *obj EINA_UNUSED, void *data EINA_UNUSED, const char *directory, Eina_Bool hidden_files, Eina_Bool only_folder)
+EOLIAN static Eo_Base*
+_efm_monitor_eo_base_constructor(Eo *obj, Efm_Monitor_Data *pd)
 {
-   Efm_Monitor *mon;
-   Efm_Monitor_Data *pd;
+   Eo_Base *construct;
 
-   EINA_SAFETY_ON_NULL_RETURN_VAL(directory, NULL);
-
-   mon = eo_add(EFM_MONITOR_CLASS, NULL);
-
-   pd = eo_data_scope_get(mon, EFM_MONITOR_CLASS);
-
-   pd->config.only_folder = only_folder;
-   pd->config.hidden_files = hidden_files;
-
-   pd->directory = eina_stringshare_add(directory);
+   eo_do_super(obj, EFM_MONITOR_CLASS, construct = eo_constructor());
 
    pd->file_icons = eina_hash_stringshared_new(NULL);
 
-   {
-     Efm_Monitor_Eio_Job *job;
+   pd->whitelist = EINA_TRUE;
 
-     job = calloc(1, sizeof(Efm_Monitor_Eio_Job));
-     eo_do(mon, eo_wref_add(&job->monitor));
-
-     pd->file = eio_file_ls(pd->directory, _eio_filter_cb, _eio_main_cb,
-                           _eio_done_cb, _eio_error_cb, job);
-   }
-   return mon;
+   return construct;
 }
 
-static void
+EOLIAN static Eo_Base*
+_efm_monitor_eo_base_finalize(Eo *obj, Efm_Monitor_Data *pd)
+{
+   Eo_Base *base;
+   Efm_Monitor_Eio_Job *job;
+
+   eo_do_super(obj, EFM_MONITOR_CLASS, base = eo_finalize());
+
+   if (!pd->directory)
+     ERR("monitor does not have a set path");
+
+   //prepare the listing
+   job = calloc(1, sizeof(Efm_Monitor_Eio_Job));
+   job->monitor = obj;
+   eo_do(obj, eo_wref_add(&job->monitor));
+
+   //start the listing
+   pd->file = eio_file_ls(pd->directory, _eio_filter_cb, _eio_main_cb,
+                           _eio_done_cb, _eio_error_cb, job);
+   return base;
+}
+
+EOLIAN static void
+_efm_monitor_install(Eo *obj, Efm_Monitor_Data *pd, const char *path, Efm_Filter *filter)
+{
+   eina_stringshare_replace(&pd->directory, path);
+
+   eo_do(obj, efm_monitor_filter_set(filter));
+}
+
+EOLIAN static const char *
+_efm_monitor_path_get(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
+{
+   return pd->directory;
+}
+
+EOLIAN static void
 _efm_monitor_eo_base_destructor(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
 {
    Efm_File *file;

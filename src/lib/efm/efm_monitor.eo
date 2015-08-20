@@ -6,54 +6,42 @@ class Efm.Monitor(Eo.Base) {
       If the monitor object is deleted all created files are deleted if you dont have a reference on it.
     ]]
     methods {
-        start @class {
-            [[Starts a monitor at the given directory.
-              The Monitor will give notifications if a {file or dir} gets added in this directory]]
-            params {
-                @in directory : const(char)*; [[The directory to monitor, has to exist]]
-                @in hidden_files : bool; [[True to show hidden files, false if not]]
-                @in only_folder : bool; [[True to only show folders]]
+        @property filter {
+            [[The filter which is used to check if a Efm.File should be populated or not]]
+            values {
+                filter : Efm.Filter*;
             }
-            return : Efm.Monitor*;
+        }
+        @property whitelist {
+            [[If this is true a file will only be populated if the filter applys on this file.
+              If it is false, a file will always be populated, only not if the filter applys.]]
+            values {
+                whitelist : bool;
+            }
+        }
+        install {
+            [[constructor to construct to Monitor]]
+            params {
+                path : const(char)*;
+                filter : Efm.Filter*;
+            }
         }
         @property path {
-            [[The Path which gets monitored]]
             get {
-
+                [[returns the path this monitor is running on]]
             }
             values {
                 path : const(char)*;
             }
         }
-
-        @property config_hidden_files {
-            [[Configuration for handling of files which starts with a . .]]
-            get {
-                [[Get the configuration]]
-            }
-            set {
-                [[Set the configuration]]
-            }
-            values {
-                hidden : bool;
-            }
-        }
-
-        @property config_only_folder {
-            [[Configuration for handling of folder / files handling]]
-            get {
-                [[Get the configuration]]
-            }
-            set {
-                [[Set the configuration]]
-            }
-            values {
-                path : bool;
-            }
-        }
     }
     implements {
         Eo.Base.destructor;
+        Eo.Base.constructor;
+        Eo.Base.finalize;
+    }
+    constructors {
+        .install;
     }
     events {
         file,hide : Efm.File*; [[If the buildin filter is changed and this file shoudlnt be published by the monitor anymore this is called]]
