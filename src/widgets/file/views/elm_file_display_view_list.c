@@ -7,10 +7,9 @@ typedef struct {
    Eina_Hash *files;
    Eina_List *sel_files;
    struct {
-      Eina_Bool only_folder;
-      Eina_Bool show_hidden;
       int icon_size;
    } config;
+   Efm_Filter *f;
 } Elm_File_Display_View_List_Data;
 
 EOLIAN static const char *
@@ -88,6 +87,12 @@ _error(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UN
    return EINA_TRUE;
 }
 
+EO_CALLBACKS_ARRAY_DEFINE(_monitor_event_cbs,
+  {EFM_MONITOR_EVENT_FILE_ADD, _file_add},
+  {EFM_MONITOR_EVENT_FILE_HIDE, _file_del},
+  {EFM_MONITOR_EVENT_ERROR, _error}
+);
+
 EOLIAN static void
 _elm_file_display_view_list_elm_file_display_view_path_set(Eo *obj, Elm_File_Display_View_List_Data *pd, const char *dir)
 {
@@ -105,15 +110,10 @@ _elm_file_display_view_list_elm_file_display_view_path_set(Eo *obj, Elm_File_Dis
    // emit a signal that there is a new selection, =>nothing
    eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, NULL));
    elm_genlist_clear(obj);
-
-   eo_do(EFM_MONITOR_CLASS, pd->fm = efm_monitor_start(dir,pd->config.show_hidden,
-                              pd->config.only_folder));
-
    pd->files = eina_hash_pointer_new(NULL);
-   eo_do(pd->fm, eo_event_callback_add(EFM_MONITOR_EVENT_FILE_ADD, _file_add, obj);
-                  eo_event_callback_add(EFM_MONITOR_EVENT_FILE_HIDE, _file_del, obj);
-                  eo_event_callback_add(EFM_MONITOR_EVENT_ERROR, _error, obj);
-        );
+
+   pd->fm = eo_add(EFM_MONITOR_CLASS, NULL, efm_monitor_install(dir, pd->f));
+   eo_do(pd->fm, eo_event_callback_array_add(_monitor_event_cbs(), obj));
 }
 
 EOLIAN static void
@@ -123,16 +123,9 @@ _elm_file_display_view_list_elm_file_display_view_size_get(Eo *obj, Elm_File_Dis
 }
 
 EOLIAN static void
-_elm_file_display_view_list_elm_file_display_view_config_set(Eo *obj, Elm_File_Display_View_List_Data *pd, int iconsize, Eina_Bool only_folder, Eina_Bool hidden_files)
+_elm_file_display_view_list_elm_file_display_view_config_set(Eo *obj, Elm_File_Display_View_List_Data *pd, int iconsize)
 {
    pd->config.icon_size = iconsize;
-   pd->config.only_folder = only_folder;
-   pd->config.show_hidden = hidden_files;
-
-   if (pd->fm)
-      eo_do(pd->fm, efm_monitor_config_hidden_files_set(pd->config.show_hidden);
-                    efm_monitor_config_only_folder_set(pd->config.only_folder);
-            );
 }
 
 EOLIAN static void
@@ -364,5 +357,13 @@ _elm_file_display_view_list_eo_base_destructor(Eo *obj, Elm_File_Display_View_Li
 {
    eo_do_super(obj, ELM_FILE_DISPLAY_VIEW_LIST_CLASS, eo_destructor());
 }
+
+EOLIAN static void
+_elm_file_display_view_list_elm_file_display_view_filter_set(Eo *obj, Elm_File_Display_View_List_Data *pd, Efm_Filter *filter)
+{
+   pd->f = filter;
+   eo_do(pd->fm, efm_monitor_filter_set(filter));
+}
+
 
 #include "elm_file_display_view_list.eo.x"

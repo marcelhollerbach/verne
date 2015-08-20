@@ -8,6 +8,7 @@ class Elm.File.Display.View.Grid(Elm.Gengrid, Elm.File.Display.View)
         Elm.File.Display.View.path_set;
         Elm.File.Display.View.size_get;
         Elm.File.Display.View.config_set;
+        Elm.File.Display.View.filter.set;
         Elm.File.Display.View.search;
         Eo.Base.constructor;
         Eo.Base.destructor;
