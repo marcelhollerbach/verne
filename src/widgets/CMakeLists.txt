@@ -40,6 +40,8 @@ LIST(APPEND WIDGET_LIBRARY
    file/elm_file_display_view.c
    file/elm_file_display_view.eo.h
    file/elm_file_display_view.eo.x
+   file/views/view_common.h
+   file/views/view_common.c
    file/views/elm_file_display_view_debug.c
    file/views/elm_file_display_view_debug.eo.x
    file/views/elm_file_display_view_debug.eo.h
