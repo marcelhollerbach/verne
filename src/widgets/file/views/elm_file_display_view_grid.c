@@ -1,16 +1,12 @@
-#define EFM_EO_NEED
-
 #include "../elm_file_display_priv.h"
+#include "view_common.h"
 
 typedef struct {
    Elm_Gengrid_Item_Class *gic;
-   Efm_Monitor *fm;
-   Eina_Hash *files;
-   Eina_List *sel_files;
+   View_Common common;
    struct {
       int icon_size;
    } config;
-   Efm_Filter *f;
 } Elm_File_Display_View_Grid_Data;
 
 EOLIAN static const char *
@@ -75,75 +71,30 @@ _sel(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
    eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_SIMPLE, data));
 }
 
-static Eina_Bool
-_file_del(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
+static void
+_file_del(View_Common *common, Elm_Object_Item *res)
 {
-   Efm_File *icon = event;
-   Elm_File_Display_View_Grid_Data *pd = eo_data_scope_get(data, ELM_FILE_DISPLAY_VIEW_GRID_CLASS);
-   Elm_Object_Item *it;
-
-   eo_do(icon, eo_event_callback_del(EO_BASE_EVENT_DEL, _file_del, data));
-   it = eina_hash_find(pd->files, &icon);
-   elm_object_item_del(it);
-   eina_hash_del(pd->files, &icon, it);
-
-   pd->sel_files =  eina_list_remove(pd->sel_files, icon);
-
-   return EINA_TRUE;
+   elm_object_item_del(res);
 }
 
-static Eina_Bool
-_file_add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
+static Elm_Object_Item*
+_file_add(View_Common *common, Efm_File *file)
 {
-   Efm_File *icon = event;
-   Elm_File_Display_View_Grid_Data *pd = eo_data_scope_get(data, ELM_FILE_DISPLAY_VIEW_GRID_CLASS);
-   Elm_Object_Item *it;
-
-   eo_do(icon, eo_event_callback_add(EO_BASE_EVENT_DEL, _file_del, data));
-
-   it = elm_gengrid_item_sorted_insert(data, pd->gic, icon, sort_func, _sel, icon);
-   eina_hash_add(pd->files, &icon, it);
-
-   return EINA_TRUE;
+   Elm_File_Display_View_Grid_Data *pd = eo_data_scope_get(common->obj, ELM_FILE_DISPLAY_VIEW_GRID_CLASS);
+   return elm_gengrid_item_sorted_insert(common->obj, pd->gic, file, sort_func, _sel, file);
 }
 
-static Eina_Bool
-_error(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+static void
+_error(View_Common *common)
 {
-   Elm_File_Display_View_Grid_Data *pd = eo_data_scope_get(data, ELM_FILE_DISPLAY_VIEW_GRID_CLASS);
 
-   elm_gengrid_clear(data);
-   pd->fm = NULL;
-
-   return EINA_TRUE;
 }
-
-EO_CALLBACKS_ARRAY_DEFINE(_monitor_event_cbs,
-  {EFM_MONITOR_EVENT_FILE_ADD, _file_add},
-  {EFM_MONITOR_EVENT_FILE_HIDE, _file_del},
-  {EFM_MONITOR_EVENT_ERROR, _error}
-);
 
 EOLIAN static void
 _elm_file_display_view_grid_elm_file_display_view_path_set(Eo *obj, Elm_File_Display_View_Grid_Data *pd EINA_UNUSED, const char *dir)
 {
-   if (pd->fm)
-     eo_del(pd->fm);
-
-   if (pd->files)
-     eina_hash_free(pd->files);
-
-   eina_list_free(pd->sel_files);
-   pd->sel_files = NULL;
-   eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, pd->sel_files));
-
-   pd->files = eina_hash_pointer_new(NULL);
-
+   view_path_set(&pd->common, dir);
    elm_gengrid_clear(obj);
-
-   pd->fm = eo_add(EFM_MONITOR_CLASS, NULL, efm_monitor_install(dir, pd->f));
-   eo_do(pd->fm, efm_monitor_whitelist_set(EINA_FALSE);
-                 eo_event_callback_array_add(_monitor_event_cbs(), obj));
 }
 
 EOLIAN static void
@@ -194,8 +145,7 @@ _selection_add(void *data EINA_UNUSED, Evas_Object *obj, void *event_info)
 
    file = elm_object_item_data_get(event_info);
 
-   pd->sel_files = eina_list_append(pd->sel_files, file);
-   eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, pd->sel_files));
+   view_file_select(&pd->common, file);
 }
 
 static void
@@ -206,8 +156,7 @@ _selection_del(void *data EINA_UNUSED, Evas_Object *obj, void *event_info)
 
    file = elm_object_item_data_get(event_info);
 
-   pd->sel_files = eina_list_remove(pd->sel_files, file);
-   eo_do(obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, pd->sel_files));
+   view_file_unselect(&pd->common, file);
 }
 
 static Eina_Bool
@@ -391,69 +340,35 @@ _elm_file_display_view_grid_eo_base_constructor(Eo *obj, Elm_File_Display_View_G
    evas_object_smart_callback_add(obj, "unselected", _selection_del, NULL);
 
    evas_object_smart_callback_add(eo, "clicked,double", _double_click, NULL);
+
+   view_common_init(&pd->common, obj, _file_add, _file_del, _error);
    return eo;
 }
 
 EOLIAN static void
 _elm_file_display_view_grid_elm_file_display_view_search(Eo *obj, Elm_File_Display_View_Grid_Data *pd, const char *needle)
 {
-   Eina_Iterator *itr;
-   Elm_Widget_Item *it;
-   Elm_Widget_Item *searched = NULL;
+   Elm_Object_Item *searched;
    const Eina_List *selected;
-   Efm_File *file;
-   const char *filename;
-   int min = -1;
 
-   if (!needle)
-     return;
+   if (!needle) return;
 
-   itr = eina_hash_iterator_data_new(pd->files);
-
+   searched = view_search(&pd->common, needle);
    selected = elm_gengrid_selected_items_get(obj);
-
-   EINA_ITERATOR_FOREACH(itr, it)
-     {
-        char *f;
-        file = elm_object_item_data_get(it);
-        eo_do(file, filename = efm_file_filename_get());
-        if ((f = strstr(filename, needle)))
-          {
-             int tmin = f - filename;
-             if (min == -1)
-               min = tmin;
-
-             if (tmin > min)
-               continue;
-             min = tmin;
-             searched = it;
-          }
-     }
-
    _item_select_swap(obj, selected, searched);
 }
 
 EOLIAN static void
 _elm_file_display_view_grid_eo_base_destructor(Eo *obj, Elm_File_Display_View_Grid_Data *pd)
 {
-   elm_gengrid_clear(obj);
-
-   if (pd->fm)
-     eo_del(pd->fm);
-   if (pd->files)
-     eina_hash_free(pd->files);
-
    elm_gengrid_item_class_free(pd->gic);
-
    eo_do_super(obj, ELM_FILE_DISPLAY_VIEW_GRID_CLASS, eo_destructor());
 }
 
 EOLIAN static void
 _elm_file_display_view_grid_elm_file_display_view_filter_set(Eo *obj, Elm_File_Display_View_Grid_Data *pd, Efm_Filter *filter)
 {
-  pd->f = filter;
-
-  eo_do(pd->fm, efm_monitor_filter_set(filter));
+   view_filter_set(&pd->common, filter);
 }
 
 #include "elm_file_display_view_grid.eo.x"
