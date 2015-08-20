@@ -1,8 +1,8 @@
-#include "Elementary_Ext.h"
+#include "elementary_ext_priv.h"
 
 int log_domain;
 
-void
+EAPI void
 elm_ext_init()
 {
 
