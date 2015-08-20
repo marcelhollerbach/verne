@@ -46,8 +46,14 @@ interface Elm.File.Display.View {
          [[Gives the view the current config]]
          params {
             iconsize : int;
-            only_folder : bool;
-            hidden_files : bool;
+         }
+      }
+      @property filter {
+         set {
+
+         }
+         values {
+            filter : Efm.Filter*;
          }
       }
       search {

@@ -32,6 +32,8 @@ typedef struct
    const char *path;
    Elm_File_MimeType_Cache *cache;
    Eina_List *selection;
+
+   Efm_Filter *filter;
 } Elm_File_Selector_Data;
 
 typedef struct {
@@ -46,6 +48,33 @@ static Elm_Object_Item* _dnd_item_get_cb(Evas_Object *obj, Evas_Coord x, Evas_Co
 static Eina_Bool _dnd_data_get_cb(Evas_Object *obj, Elm_Object_Item *it, Elm_Drag_User_Info *info);
 static void _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file);
 static void _search_update(Eo *obj, Elm_File_Selector_Data *pd);
+
+/*
+ *======================================
+ * flush filter settings to the filter and view
+ *======================================
+ */
+static void
+_filter_update_hidden(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd)
+{
+   if (!config->hidden_files)
+     eo_do(pd->filter, efm_filter_attribute_add(EFM_ATTRIBUTE_FILENAME, "^[^\\.]"));
+   else
+     eo_do(pd->filter, efm_filter_attribute_del(EFM_ATTRIBUTE_FILENAME, "^[^\\.]"));
+
+   eo_do(pd->view.obj, elm_file_display_view_filter_set(pd->filter));
+}
+
+static void
+_filter_update_only_folder(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd)
+{
+   if (config->only_folder)
+     eo_do(pd->filter, efm_filter_type_add(EFM_FILE_TYPE_DIRECTORY));
+   else
+     eo_do(pd->filter, efm_filter_type_del(EFM_FILE_TYPE_DIRECTORY));
+
+   eo_do(pd->view.obj, elm_file_display_view_filter_set(pd->filter));
+}
 
 /*
  *======================================
@@ -192,9 +221,11 @@ _elm_file_selector_view_set(Eo *obj, Elm_File_Selector_Data *pd, const Eo_Class 
                           eo_event_callback_add(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHOOSEN, _view_choosen_cb, obj);
                           eo_event_callback_add(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, _view_select_changed_cb, obj);
                           eo_event_callback_add(EVAS_OBJECT_EVENT_MOUSE_DOWN, _event_rect_mouse_down, obj);
-                          elm_file_display_view_config_set(config->icon_size, config->only_folder, config->hidden_files);
+                          elm_file_display_view_config_set(config->icon_size);
                           elm_file_display_view_search(NULL);
                           );
+   _filter_update_hidden(obj, pd);
+   _filter_update_only_folder(obj, pd);
    if (pd->path)
      eo_do(pd->view.obj, elm_file_display_view_path_set(pd->path));
 }
@@ -218,6 +249,10 @@ _elm_file_selector_eo_base_constructor(Eo *obj, Elm_File_Selector_Data *pd)
 
    if (!views)
      _views_standart_init();
+
+   pd->filter = eo_add(EFM_FILTER_CLASS, NULL);
+   _filter_update_hidden(obj, pd);
+   _filter_update_only_folder(obj, pd);
 
    eo_do(ELM_FILE_MIMETYPE_CACHE_CLASS, pd->cache = elm_file_mimetype_cache_generate(config->icon_size));
 
@@ -1019,7 +1054,7 @@ _elm_file_selector_show_icon_size_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Dat
    eo_del(pd->cache);
 
    eo_do(ELM_FILE_MIMETYPE_CACHE_CLASS, pd->cache = elm_file_mimetype_cache_generate(size));
-   eo_do(pd->view.obj, elm_file_display_view_config_set(config->icon_size, config->only_folder, config->hidden_files));
+   eo_do(pd->view.obj, elm_file_display_view_config_set(config->icon_size));
 }
 
 EOLIAN static int
@@ -1028,12 +1063,13 @@ _elm_file_selector_show_icon_size_get(Eo *obj EINA_UNUSED, Elm_File_Selector_Dat
    return config->icon_size;
 }
 
+
 EOLIAN static void
 _elm_file_selector_show_hidden_file_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd, Eina_Bool hidden)
 {
    config->hidden_files = hidden;
    config_save();
-   eo_do(pd->view.obj, elm_file_display_view_config_set(config->icon_size, config->only_folder, config->hidden_files));
+   _filter_update_hidden(obj, pd);
 }
 
 EOLIAN static Eina_Bool
@@ -1047,7 +1083,7 @@ _elm_file_selector_only_folder_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *
 {
    config->only_folder = hidden;
    config_save();
-   eo_do(pd->view.obj, elm_file_display_view_config_set(config->icon_size, config->only_folder, config->hidden_files));
+   _filter_update_only_folder(obj, pd);
 }
 
 EOLIAN static Eina_Bool
