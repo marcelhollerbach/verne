@@ -1,3 +1,5 @@
+import efm;
+
 class Efm.Filter(Eo.Base) {
     methods {
         attribute_add {

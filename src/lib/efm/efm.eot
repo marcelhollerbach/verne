@@ -1,0 +1,9 @@
+enum Efm.File.Type {
+    REGULAR_FILE , DIRECTORY, CHARACTER_DEVICE, BLOCK_DEVICE, FIFO, SYM_LINK, SOCKET
+}
+enum Efm.Attribute {
+    FILEENDING = 0,
+    FILENAME = 1,
+    MIMETYPE = 2,
+    END = 3
+}

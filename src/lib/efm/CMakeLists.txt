@@ -16,19 +16,31 @@ file(GLOB files "*.eo")
 foreach(filename ${files})
 add_custom_command(
    OUTPUT ${filename}.x
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} --gc --eo -o ${filename}.x ${filename}
+   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I${CMAKE_SOURCE_DIR}/src/lib/efm --gc --eo -o ${filename}.x ${filename}
    DEPENDS ${filename}
 )
 
 add_custom_command(
    OUTPUT ${filename}.h
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} --gh --eo -o ${filename}.h ${filename}
+   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I${CMAKE_SOURCE_DIR}/src/lib/efm --gh --eo -o ${filename}.h ${filename}
    DEPENDS ${filename}
 )
 
 endforeach()
 
+file(GLOB_RECURSE files "*.eot")
+
+foreach(filename ${files})
+
+add_custom_command(
+   OUTPUT ${filename}.h
+   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/lib/ -I ${CMAKE_SOURCE_DIR} --gh --eo -o ${filename}.h ${filename}
+   DEPENDS ${filename}
+)
+endforeach()
+
 LIST(APPEND FM_MONITOR
+   efm.eot.h
    fm_monitor.c
    efm_monitor.c
    efm_monitor.eo.x

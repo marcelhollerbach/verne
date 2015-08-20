@@ -1,3 +1,5 @@
+import efm;
+
 struct Efm.File.Stat{
     size : long;
     uid : int;
@@ -5,10 +7,6 @@ struct Efm.File.Stat{
     mtime : long;
     ctime : long;
     atime : long;
-}
-
-enum Efm.File.Type {
-    REGULAR_FILE , DIRECTORY, CHARACTER_DEVICE, BLOCK_DEVICE, FIFO, SYM_LINK, SOCKET
 }
 
 class Efm.File(Eo.Base) {
