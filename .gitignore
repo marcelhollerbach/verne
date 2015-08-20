@@ -1,6 +1,7 @@
 *.eo.legacy.h
 *.eo.x
 *.eo.h
+*.eot.h
 *.sublime-*
 Makefile
 build/
