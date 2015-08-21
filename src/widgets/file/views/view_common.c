@@ -1,5 +1,5 @@
 #include "view_common.h"
-#include "../elm_file_display_priv.h"
+#include "../../elementary_ext_priv.h"
 
 static void
 _file_remove(View_Common *common, Efm_File *file)

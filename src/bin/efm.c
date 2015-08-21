@@ -62,7 +62,7 @@ _about_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info
 static Eina_Bool
 _fm_tab_menu_hook_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
 {
-   Elm_File_Display_Menu_Hook_Event *ev = event;
+   Elm_File_Selector_Menu_Hook_Event *ev = event;
 
    elm_menu_item_add(ev->menu, NULL, NULL, "Open in Tab",
                      _new_tab_cb, ev->file);

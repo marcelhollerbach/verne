@@ -1,5 +1,5 @@
 #define EFL_BETA_API_SUPPORT
-#include "elm_file_display_priv.h"
+#include "../elementary_ext_priv.h"
 
 #define PRIV_DATA(o) Elm_File_Display_Data *pd = eo_data_scope_get(o, ELM_FILE_DISPLAY_CLASS);
 

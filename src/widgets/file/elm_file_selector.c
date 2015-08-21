@@ -4,7 +4,7 @@
 #include <Emous.h>
 #include <Eo.h>
 #include "../elementary_ext_priv.h"
-#include "elm_file_display_priv.h"
+#include "elm_file_config.h"
 #include <elm_widget.h>
 
 #define PRIV_DATA(o) Elm_File_Selector_Data *pd = eo_data_scope_get(o, ELM_FILE_SELECTOR_CLASS);
@@ -860,7 +860,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
 {
    Evas_Object *menu;
    Elm_Object_Item *it, *it2;
-   Elm_File_Display_Menu_Hook ev;
+   Elm_File_Selector_Menu_Hook ev;
 
    menu = elm_menu_add(elm_object_top_widget_get(obj));
    evas_object_data_set(menu, "__w", obj);
@@ -937,14 +937,14 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
       Evas_Object *gr, *rad, *ck;
 
       // SORT_TYPE_SIZE
-      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_DISPLAY_SORT_TYPE_SIZE);
+      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_SELECTOR_SORT_TYPE_SIZE);
       gr = rad = elm_radio_add(menu);
       elm_object_text_set(rad, "Size");
       elm_radio_state_value_set(rad, 0);
       elm_object_item_content_set(it2, rad);
 
       // SORT_TYPE_DATE
-      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_DISPLAY_SORT_TYPE_DATE);
+      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_SELECTOR_SORT_TYPE_DATE);
       rad = elm_radio_add(menu);
       elm_radio_group_add(rad, gr);
       elm_object_text_set(rad, "Date");
@@ -952,7 +952,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
       elm_object_item_content_set(it2, rad);
 
       // SORT_TYPE_NAME
-      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_DISPLAY_SORT_TYPE_NAME);
+      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_SELECTOR_SORT_TYPE_NAME);
       rad = elm_radio_add(menu);
       elm_radio_group_add(rad, gr);
       elm_object_text_set(rad, "Name");
@@ -960,7 +960,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
       elm_object_item_content_set(it2, rad);
 
       // SORT_TYPE_EXTENSION
-      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_DISPLAY_SORT_TYPE_EXTENSION);
+      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_sort_type, (void *)(uintptr_t)ELM_FILE_SELECTOR_SORT_TYPE_EXTENSION);
       rad = elm_radio_add(menu);
       elm_radio_group_add(rad, gr);
       elm_object_text_set(rad, "Extension");
@@ -971,16 +971,16 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
       elm_menu_item_separator_add(menu, it);
 
       // FOLDER_FIRST
-      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_folder_placement, (void *)(uintptr_t)ELM_FILE_DISPLAY_FOLDER_PLACEMENT_FIRST);
+      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_folder_placement, (void *)(uintptr_t)ELM_FILE_SELECTOR_FOLDER_PLACEMENT_FIRST);
       ck = elm_check_add(menu);
-      if (config->sort.folder_placement == ELM_FILE_DISPLAY_FOLDER_PLACEMENT_FIRST)
+      if (config->sort.folder_placement == ELM_FILE_SELECTOR_FOLDER_PLACEMENT_FIRST)
         elm_check_state_set(ck, EINA_TRUE);
       elm_object_text_set(ck, "Folder first");
       elm_object_item_content_set(it2, ck);
 
-      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_folder_placement, (void *)(uintptr_t)ELM_FILE_DISPLAY_FOLDER_PLACEMENT_LAST);
+      it2 = elm_menu_item_add(menu, it, NULL, NULL, _ctx_folder_placement, (void *)(uintptr_t)ELM_FILE_SELECTOR_FOLDER_PLACEMENT_LAST);
       ck = elm_check_add(menu);
-      if (config->sort.folder_placement == ELM_FILE_DISPLAY_FOLDER_PLACEMENT_LAST)
+      if (config->sort.folder_placement == ELM_FILE_SELECTOR_FOLDER_PLACEMENT_LAST)
         elm_check_state_set(ck, EINA_TRUE);
       elm_object_text_set(ck, "Folder last");
       elm_object_item_content_set(it2, ck);

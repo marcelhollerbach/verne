@@ -1,6 +1,4 @@
-
-#include "../elm_file_display_priv.h"
-#include "view_common.h"
+#include "View.h"
 
 typedef struct {
    Elm_Genlist_Item_Class *gic;

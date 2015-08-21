@@ -1,25 +1,3 @@
-
-enum Elm.File.Display.Sort_Type {
-   [[ The different sort types]]
-   SIZE = 0, [[Sort from size]]
-   DATE = 1, [[Sort from date]]
-   NAME = 2, [[Sort from name]]
-   EXTENSION = 3 [[Sort from extension]]
-}
-
-enum Elm.File.Display.Folder_Placement {
-  [[Where to place the folders in the view if files and dirs are splited, each sector will be sorted for itself]]
-  FIRST,  [[ Place folders at first]]
-  LAST, [[Place folders at last]]
-  TRIVIAL [[Do not put the folders anywhere, and sort files and dirs at once]]
-}
-
-struct Elm.File.Display.Menu_Hook {
-   [[Used to pass the file and object at once to the event]]
-   menu : Evas.Object*;
-   file : Efm.File*;
-}
-
 class Elm_File_Display (Elm.Layout) {
    [[ The file display widget class used to display the files and dirs of a specific path]]
    methods {
