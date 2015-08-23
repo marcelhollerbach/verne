@@ -188,9 +188,6 @@ mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
    const char *file, *mime_type;;
    Eina_Bool dir;
 
-   if (!pd->file)
-     return;
-
    eo_do(pd->file, mime_type = efm_file_mimetype_get());
 
    if (!mime_type)
@@ -199,11 +196,6 @@ mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
    if (pd->picmode)
     return;
 
-   if (!pd->cache)
-     {
-        ERR("A cache needs to be set at first");
-        return;
-     }
    if (eo_do_ret(pd->file, dir, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
      elm_icon_standard_set(pd->icon, "folder");
    else
@@ -307,6 +299,9 @@ _elm_file_icon_file_get(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
 EOLIAN static void
 _elm_file_icon_install(Eo *obj, Elm_File_Icon_Data *pd, Elm_File_MimeType_Cache *cache, Efm_File *file)
 {
+   EINA_SAFETY_ON_NULL_RETURN(cache);
+   EINA_SAFETY_ON_NULL_RETURN(file);
+
    pd->cache = cache;
    _file_set(obj, pd, file);
 }
@@ -326,9 +321,9 @@ _elm_file_icon_eo_base_finalize(Eo *obj, Elm_File_Icon_Data *pd)
 static void
 _elm_file_icon_eo_base_destructor(Eo *obj, Elm_File_Icon_Data *pd)
 {
-   if (pd->file)
-     eo_do(pd->file, eo_event_callback_del(EFM_FILE_EVENT_FSQUERY_DONE, _mime_ready, obj));
+   eo_do(pd->file, eo_event_callback_del(EFM_FILE_EVENT_FSQUERY_DONE, _mime_ready, obj));
    eo_do(pd->file, eo_wref_del(&pd->file));
+
    eo_do_super(obj, ELM_FILE_ICON_CLASS, eo_destructor());
 }
 
