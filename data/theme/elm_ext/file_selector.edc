@@ -24,9 +24,9 @@ group { name: "elm/file_selector/base/default";
             clip_to: "search_clip";
             desc { "default"
                 rel1.to: "search";
-                rel1.offset: -6 -6;
+                rel1.offset: -12 -12;
                 rel2.to: "search";
-                rel2.offset: 6 6;
+                rel2.offset: 12 12;
                 image.normal: "darken_square.png";
                 image.border: 6 6 6 6;
                 fill.smooth: 0;
