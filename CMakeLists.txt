@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.81)
-
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-
+include(eo_helper)
 project(efm)
 
 enable_testing()

@@ -8,47 +8,20 @@ include_directories(
 
 set (EMOUS_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/lib/emous/")
 
-string(REPLACE "\n" "" EOLIAN_EO_DIR_WITHOUT_NEWLINE
-"${EOLIAN_EO_DIR}")
-
-file(GLOB files "*.eo")
-
-foreach(filename ${files})
-add_custom_command(
-   OUTPUT ${filename}.x
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I${CMAKE_SOURCE_DIR}/src/lib/efm --gc --eo -o ${filename}.x ${filename}
-   DEPENDS ${filename}
-)
-
-add_custom_command(
-   OUTPUT ${filename}.h
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I${CMAKE_SOURCE_DIR}/src/lib/efm --gh --eo -o ${filename}.h ${filename}
-   DEPENDS ${filename}
-)
-
-endforeach()
-
-file(GLOB_RECURSE files "*.eot")
-
-foreach(filename ${files})
-
-add_custom_command(
-   OUTPUT ${filename}.h
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/lib/ -I ${CMAKE_SOURCE_DIR} --gh --eo -o ${filename}.h ${filename}
-   DEPENDS ${filename}
-)
-endforeach()
-
 LIST(APPEND FM_MONITOR
+   efm.eot
    efm.eot.h
    fm_monitor.c
    efm_monitor.c
+   efm_monitor.eo
    efm_monitor.eo.x
    efm_monitor.eo.h
    efm_file.c
+   efm_file.eo
    efm_file.eo.x
    efm_file.eo.h
    efm_filter.c
+   efm_filter.eo
    efm_filter.eo.x
    efm_filter.eo.h
    archive.c
@@ -56,6 +29,12 @@ LIST(APPEND FM_MONITOR
    Efm.h
    efm_priv.h
    )
+
+list(APPEND FM_DEPS
+  ./
+)
+
+eo_rule_create("${FM_MONITOR}" "${FM_DEPS}")
 
 add_library(efm_lib SHARED ${FM_MONITOR})
 

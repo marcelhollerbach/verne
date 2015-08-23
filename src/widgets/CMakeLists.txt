@@ -36,6 +36,7 @@ LIST(APPEND WIDGET_LIBRARY
    file/elm_file_display.eo.h
    #views
    file/elm_file_display_view.c
+   file/elm_file_display_view.eo
    file/elm_file_display_view.eo.h
    file/elm_file_display_view.eo.x
    file/views/View.h
@@ -55,32 +56,12 @@ LIST(APPEND WIDGET_LIBRARY
    file/views/elm_file_display_view_list.eo.x
    file/views/elm_file_display_view_list.eo.h
    )
-
-string(REPLACE "\n" "" EOLIAN_EO_DIR_WITHOUT_NEWLINE
-"${EOLIAN_EO_DIR}")
-
-file(GLOB_RECURSE files "*.eo")
-
-foreach(filename ${files})
-add_custom_command(
-   OUTPUT ${filename}.x
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/widgets -I ../lib/efm/ -I ../lib/efm/ --gc --eo -o ${filename}.x ${filename}
-   DEPENDS ${filename}
+list(APPEND WIDGET_INCLUDE
+  ./
+  ./file/
+  ../lib/efm/
 )
-
-add_custom_command(
-   OUTPUT ${filename}.h
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/ -I ../lib/efm/ --gh --eo -o ${filename}.h ${filename}
-   DEPENDS ${filename}
-)
-
-add_custom_command(
-   OUTPUT ${filename}.legacy.h
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/widgets -I ../lib/efm/ --gh --legacy -o ${filename}.legacy.h ${filename}
-   DEPENDS ${filename}
-)
-
-endforeach()
+eo_rule_create("${WIDGET_LIBRARY}" "${WIDGET_INCLUDE}")
 
 add_library(widgets SHARED ${WIDGET_LIBRARY})
 

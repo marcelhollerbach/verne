@@ -9,44 +9,33 @@ include_directories(
 
 set (EMOUS_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/lib/emous/")
 
-string(REPLACE "\n" "" EOLIAN_EO_DIR_WITHOUT_NEWLINE
-"${EOLIAN_EO_DIR}")
-
-file(GLOB files "*.eo")
-
-foreach(filename ${files})
-add_custom_command(
-   OUTPUT ${filename}.x
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} --gc --eo -o ${filename}.x ${filename}
-   DEPENDS ${filename}
-)
-
-add_custom_command(
-   OUTPUT ${filename}.h
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} --gh --eo -o ${filename}.h ${filename}
-   DEPENDS ${filename}
-)
-
-endforeach()
-
 LIST(APPEND EMOUS_FILES
    Emous.h
    emous_priv.h
    emous_mm_linux.c
    emous_mp.c
    emous.c
+   emous.eo
    emous.eo.x
    emous.eo.h
    emous_manager.c
+   emous_manager.eo
    emous_manager.eo.x
    emous_manager.eo.h
    emous_device.c
+   emous_device.eo
    emous_device.eo.x
    emous_device.eo.h
    emous_type.c
+   emous_type.eo
    emous_type.eo.x
    emous_type.eo.h
    )
+
+list(APPEND include
+   ./
+)
+eo_rule_create("${EMOUS_FILES}" "${include}")
 
 add_library(emous SHARED ${EMOUS_FILES})
 
