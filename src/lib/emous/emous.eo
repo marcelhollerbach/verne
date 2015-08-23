@@ -26,7 +26,7 @@ class Emous {
               or if exact is set to 20.2 MB
             ]]
             params {
-                exact : Eina_Bool; [[Set to true if you want to get the exact size with maximum 3 numbers after . .]]
+                exact : bool; [[Set to true if you want to get the exact size with maximum 3 numbers after . .]]
                 bytes : long; [[The Number of bytes to convert]]
             }
 
