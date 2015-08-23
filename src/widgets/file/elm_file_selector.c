@@ -425,7 +425,7 @@ _event_rect_mouse_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Descripti
    else if (ev->button == 3)
      {
         Efm_File *file = NULL;
-        eo_do(file_icon, file = elm_obj_file_icon_fm_monitor_file_get());
+        eo_do(file_icon, file = elm_obj_file_icon_file_get());
         _ctx_menu_open(data, ev->output.x, ev->output.y, file_icon, file);
      }
 
@@ -482,7 +482,7 @@ _dnd_anim_ics_gen(Evas_Object *obj, Evas_Object *view, Eina_List **anim_icons, E
         const char *file;
         const char *mimetype;
 
-        eo_do(icon, f = elm_obj_file_icon_fm_monitor_file_get());
+        eo_do(icon, f = elm_obj_file_icon_file_get());
         eo_do(f, mimetype = efm_file_mimetype_get());
         eo_do(pd->cache, file = elm_file_mimetype_cache_mimetype_get(mimetype));
 
@@ -514,7 +514,7 @@ _dnd_items_gen(Evas_Object *view)
         Efm_File *f;
         const char *path;
 
-        eo_do(icon, f = elm_obj_file_icon_fm_monitor_file_get());
+        eo_do(icon, f = elm_obj_file_icon_file_get());
         eo_do(f, path = efm_file_path_get());
         eina_strbuf_append(buf, FILESEP);
         eina_strbuf_append(buf, path);
@@ -615,7 +615,7 @@ _icon_rename_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Desc
    const char *filename;
    Efm_File *file;
 
-   eo_do(obj, file = elm_obj_file_icon_fm_monitor_file_get());
+   eo_do(obj, file = elm_obj_file_icon_file_get());
 
    if (!file) return EINA_FALSE;
 
@@ -1188,10 +1188,9 @@ _elm_file_selector_icon_generate(Eo *obj, Elm_File_Selector_Data *pd EINA_UNUSED
    Evas_Object *ic;
 
 #if 1
-   ic = eo_add(ELM_FILE_ICON_CLASS, obj);
+   ic = eo_add(ELM_FILE_ICON_CLASS, obj,
+    elm_obj_file_icon_install(pd->cache, file));
    eo_do(ic,
-     elm_obj_file_icon_mimetype_cache_set(pd->cache);
-     elm_obj_file_icon_fm_monitor_file_set(file);
      eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_DROP, _drop_cb, obj);
      eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_HOVER, _hover_cb, obj)
   );

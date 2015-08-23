@@ -1,23 +1,21 @@
 class Elm_File_Icon (Elm.Layout) {
    eo_prefix: elm_obj_file_icon;
    methods {
-      @property fm_monitor_file {
-        [[Sets a Efm.File to display]]
-        set {
-
-        }
-        get {
-
-        }
-        values {
+      install {
+        [[
+        ]]
+        params {
+           cache : Elm.File.MimeType.Cache*;
            file : Efm.File*;
         }
       }
-      mimetype_cache_set {
-        [[Sets the mimetype cache which should be used to take the mimetypes]]
-        params {
-          cache : Elm.File.MimeType.Cache*;
-        }
+      @property file {
+         get {
+
+         }
+         values {
+           file : Efm.File*;
+         }
       }
       util_icon_theme_get @class{
          [[Will return the name of the icon theme]]
@@ -50,6 +48,10 @@ class Elm_File_Icon (Elm.Layout) {
      Evas.Object_Smart.add;
      Evas.Object_Smart.resize;
      Eo.Base.destructor;
+     Eo.Base.finalize;
+   }
+   constructors {
+     .install;
    }
    events {
      rename,start; [[The widget has gone to rename mode]]

@@ -50,13 +50,6 @@ _long_cb(void *data)
 }
 
 EOLIAN static void
-_elm_file_icon_mimetype_cache_set(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, Elm_File_MimeType_Cache *cache)
-{
-   pd->cache = cache;
-}
-
-
-EOLIAN static void
 _elm_file_icon_evas_object_smart_del(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED)
 {
   if (pd->t)
@@ -242,8 +235,8 @@ _mime_ready(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Descript
    return EINA_TRUE;
 }
 
-EOLIAN static void
-_elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
+static inline void
+_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
 {
    Eina_Bool dir;
    const char *path, *mime_type, *filename;
@@ -307,9 +300,27 @@ _elm_file_icon_fm_monitor_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *fi
 }
 
 EOLIAN static Efm_File *
-_elm_file_icon_fm_monitor_file_get(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
+_elm_file_icon_file_get(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
 {
    return pd->file;
+}
+EOLIAN static void
+_elm_file_icon_install(Eo *obj, Elm_File_Icon_Data *pd, Elm_File_MimeType_Cache *cache, Efm_File *file)
+{
+   pd->cache = cache;
+   _file_set(obj, pd, file);
+}
+EOLIAN static Eo_Base*
+_elm_file_icon_eo_base_finalize(Eo *obj, Elm_File_Icon_Data *pd)
+{
+   Eo *res;
+
+   eo_do_super(obj, ELM_FILE_ICON_CLASS, res = eo_finalize());
+
+   EINA_SAFETY_ON_NULL_RETURN_VAL(pd->cache, NULL);
+   EINA_SAFETY_ON_NULL_RETURN_VAL(pd->file, NULL);
+
+   return res;
 }
 
 static void
