@@ -135,57 +135,8 @@ static Eina_Bool
 _view_choosen_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desk EINA_UNUSED, void *event EINA_UNUSED)
 {
    Efm_File *f = event;
-   Eina_Bool is;
-   char buf[PATH_MAX];
-   const char *path, *fileending, *filename;
 
-   eo_do(f, path = efm_file_path_get();
-            filename = efm_file_filename_get();
-            fileending = efm_file_fileending_get()
-         );
-
-   eina_stringshare_ref(path);
-
-   /*
-    * if it is a standart directory
-    * open it
-    */
-   if (eo_do_ret(f, is, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
-     {
-        /*call path changed */
-        eo_do(data,
-          efl_file_set(path, NULL);
-          eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, (void*)path);
-        );
-     }
-   else if (efm_archive_file_supported(fileending))
-     {
-       /*
-        * if it is a archiv
-        * extract it and change the directory
-        */
-        /* gen dir */
-        snprintf(buf, sizeof(buf), "/tmp/%s", filename);
-        if (!ecore_file_exists(buf))
-          /* extract the file */
-          efm_archive_file_extract(path, buf);
-        /* set path to the archive */
-        eo_do(data,
-          efl_file_set(buf, NULL);
-          eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, (void*)buf);
-        );
-     }
-   else
-     {
-        /*
-         * if it is nothing of all choose
-         * event should be called
-         */
-        eo_do(data,
-              eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_ITEM_CHOOSEN, f);
-        );
-     }
-   eina_stringshare_del(path);
+   eo_do(data, eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_ITEM_CHOOSEN, f));
 
    return EINA_TRUE;
 }
