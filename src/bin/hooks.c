@@ -13,7 +13,6 @@ _open_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description
     select = event;
     if (eo_do_ret(select, b, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
       {
-         printf("TADAA\n");
          const char *path;
          eo_do(select, path = efm_file_path_get());
          eo_do(selector, efl_file_set(path, NULL));
