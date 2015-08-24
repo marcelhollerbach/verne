@@ -29,6 +29,7 @@ find_package(Threads REQUIRED)
 
 pkg_check_modules(Mount REQUIRED mount)
 pkg_check_modules(Check REQUIRED check)
+pkg_check_modules(Enlightenment REQUIRED enlightenment)
 
 if (${Eolian_VERSION} VERSION_LESS 1.16.99)
     message("Using legecy eo_helper")
@@ -42,6 +43,7 @@ add_subdirectory(src/lib/efm)
 add_subdirectory(src/widgets)
 add_subdirectory(src/test)
 add_subdirectory(src/bin)
+add_subdirectory(src/module)
 
 INSTALL(FILES ${CMAKE_SOURCE_DIR}/data/jesus.desktop
         DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications/)
