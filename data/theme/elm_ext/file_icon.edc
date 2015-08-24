@@ -54,6 +54,11 @@
                action: STATE_SET "drop" 0.0;
                target: "drop_indicator";
             }
+            program { signal: "file_icon,mode,display";
+               source: "elm";
+               action: STATE_SET "default" 0.0;
+               target: "drop_indicator";
+            }
         }
    }
    group { name: "elm/file_icon/base/line";
@@ -70,7 +75,7 @@
             description { state: "default" 0.0;
                color: 0 0 0 0;
                rel1.to: "content";
-               rel1.relative: 0.0 0.0;
+               rel1.relative: 1.0 0.0;
                rel2.relative: 1.0 1.0;
                align: 0.0 0.5;
                fixed: 1 1;
@@ -96,6 +101,11 @@
             program { signal: "file_icon,mode,drop";
                source: "elm";
                action: STATE_SET "drop" 0.0;
+               target: "drop_indicator";
+            }
+            program { signal: "file_icon,mode,display";
+               source: "elm";
+               action: STATE_SET "default" 0.0;
                target: "drop_indicator";
             }
         }
