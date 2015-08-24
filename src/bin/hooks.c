@@ -4,33 +4,42 @@ static Eina_Bool
 _open_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
 {
     Efm_File *select;
+    Eina_Bool b;
     Eina_List *mime_types;
     Efreet_Desktop *icon;
     const char *mime_type = NULL;
     const char *command = NULL;
 
     select = event;
-
-    eo_do(select, mime_type = efm_file_mimetype_get());
-
-    // first check in config for a "special" open wish
-    command = eina_hash_find(config->mime_type_open, mime_type);
-
-    if (command)
-      goto open;
-
-    mime_types = efreet_util_desktop_mime_list(mime_type);
-
-    if (!mime_types)
+    if (eo_do_ret(select, b, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
       {
-         // todo error
-         return EINA_TRUE;
+         printf("TADAA\n");
+         const char *path;
+         eo_do(select, path = efm_file_path_get());
+         eo_do(selector, efl_file_set(path, NULL));
       }
+    else
+      {
+         eo_do(select, mime_type = efm_file_mimetype_get());
 
-    icon = eina_list_data_get(mime_types);
-    command = icon->exec;
-open:
-    exec_run(command, select);
+         // first check in config for a "special" open wish
+         command = eina_hash_find(config->mime_type_open, mime_type);
+
+         if (!command)
+           {
+              mime_types = efreet_util_desktop_mime_list(mime_type);
+
+              if (!mime_types)
+                {
+                   // todo error
+                   return EINA_TRUE;
+                }
+
+              icon = eina_list_data_get(mime_types);
+              command = icon->exec;
+           }
+         exec_run(command, select);
+      }
     return EINA_TRUE;
 }
 
