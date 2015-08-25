@@ -39,13 +39,15 @@ static void
 ui_init()
 {
    Evas_Object *icon;
+   Evas_Image *img;
 
    win = elm_win_util_standard_add("efm", "efm - Jesus");
 
    icon = elm_icon_add(win);
    elm_icon_standard_set(icon, "system-file-manager");
    evas_object_show(icon);
-   elm_win_icon_object_set(win, icon);
+   img = elm_image_object_get(icon);
+   elm_win_icon_object_set(win, img);
 
    evas_object_smart_callback_add(win, "delete,request", on_done, NULL);
 
