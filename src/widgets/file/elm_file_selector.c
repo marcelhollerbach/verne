@@ -813,7 +813,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
    Elm_Object_Item *it, *it2;
    Elm_File_Selector_Menu_Hook ev;
 
-   menu = elm_menu_add(elm_object_top_widget_get(obj));
+   menu = elm_menu_add(obj);
    evas_object_data_set(menu, "__w", obj);
 
    ev.menu = menu;
