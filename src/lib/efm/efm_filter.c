@@ -2,6 +2,8 @@
 
 #include "efm_priv.h"
 
+#define POPULATE_CHANGE(obj) eo_do(obj, eo_event_callback_call(EFM_FILTER_EVENT_FILTER_CHANGED, NULL))
+
 typedef struct {
     Eina_Bool init;
     regex_t reg;
@@ -15,7 +17,7 @@ typedef struct
 } Efm_Filter_Data;
 
 EOLIAN static void
-_efm_filter_attribute_add(Eo *obj EINA_UNUSED, Efm_Filter_Data *pd, Efm_Attribute attribute, char *reg)
+_efm_filter_attribute_add(Eo *obj, Efm_Filter_Data *pd, Efm_Attribute attribute, char *reg)
 {
    Filter *f;
 
@@ -24,10 +26,11 @@ _efm_filter_attribute_add(Eo *obj EINA_UNUSED, Efm_Filter_Data *pd, Efm_Attribut
    f->regexp = eina_stringshare_add(reg);
 
    pd->attribute[attribute] = eina_list_append(pd->attribute[attribute], f);
+   POPULATE_CHANGE(obj);
 }
 
 EOLIAN static void
-_efm_filter_attribute_del(Eo *obj EINA_UNUSED, Efm_Filter_Data *pd, Efm_Attribute attribute, char *req)
+_efm_filter_attribute_del(Eo *obj, Efm_Filter_Data *pd, Efm_Attribute attribute, char *req)
 {
    Filter *f;
    Eina_List *node;
@@ -45,18 +48,21 @@ _efm_filter_attribute_del(Eo *obj EINA_UNUSED, Efm_Filter_Data *pd, Efm_Attribut
              break;
           }
      }
+   POPULATE_CHANGE(obj);
 }
 
 EOLIAN static void
-_efm_filter_type_add(Eo *obj EINA_UNUSED, Efm_Filter_Data *pd, Efm_File_Type type)
+_efm_filter_type_add(Eo *obj, Efm_Filter_Data *pd, Efm_File_Type type)
 {
    pd->types = eina_list_append(pd->types, (void*)(uintptr_t) type);
+   POPULATE_CHANGE(obj);
 }
 
 EOLIAN static void
-_efm_filter_type_del(Eo *obj EINA_UNUSED, Efm_Filter_Data *pd, Efm_File_Type type)
+_efm_filter_type_del(Eo *obj, Efm_Filter_Data *pd, Efm_File_Type type)
 {
    pd->types = eina_list_remove(pd->types, (void*)(uintptr_t) type);
+   POPULATE_CHANGE(obj);
 }
 
 EOLIAN static Eina_Bool

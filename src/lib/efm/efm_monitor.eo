@@ -7,7 +7,9 @@ class Efm.Monitor(Eo.Base) {
     ]]
     methods {
         @property filter {
-            [[The filter which is used to check if a Efm.File should be populated or not]]
+            [[The filter which is used to check if a Efm.File should be populated or not
+
+              If the filter changes all files are populated/unpopulated]]
             values {
                 filter : Efm.Filter*;
             }

@@ -1,34 +1,46 @@
 import efm;
 
 class Efm.Filter(Eo.Base) {
+    [[The filter object ownes a bunch of rules.
+
+      You can check by a function call if a Efm.File matches the owned rules.
+    ]]
     methods {
         attribute_add {
+            [[Add a regex which needs to be matched by a file to match]]
             params {
                 attribute : Efm.Attribute;
                 reg : char*;
             }
         }
         attribute_del {
+            [[Remove a added attribute req]]
             params {
                 attribute : Efm.Attribute;
                 req : char*;
             }
         }
         type_add {
+            [[A matched file only matches if the type is one of those which are added here]]
             params {
                 type : Efm.File.Type;
             }
         }
         type_del {
+            [[remove this matched type]]
             params {
                 type : Efm.File.Type;
             }
         }
         matches {
+            [[Matches a passed file against the rules of this object]]
             params {
                 file : Efm.File*;
             }
             return : bool;
         }
+    }
+    events {
+        filter,changed; [[Called if a rule got added or removed]]
     }
 }

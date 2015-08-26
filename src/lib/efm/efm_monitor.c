@@ -136,16 +136,30 @@ _fm_action(void *data EINA_UNUSED, Efm_Monitor *mon, const char *file, Fm_Action
      }
 }
 
+static Eina_Bool
+_filter_changed_cb(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Efm_Monitor_Data *pd = eo_data_scope_get(data, EFM_MONITOR_CLASS);
+   _refresh_files(obj, pd);
+   return EO_CALLBACK_CONTINUE;
+}
+
 EOLIAN static void
 _efm_monitor_filter_set(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd, Efm_Filter *filter)
 {
    if (pd->filter)
-     eo_do(pd->filter, eo_wref_del(&pd->filter));
+     {
+        eo_do(pd->filter, eo_wref_del(&pd->filter));
+        eo_do(pd->filter, eo_event_callback_del(EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, NULL));
+     }
 
    pd->filter = filter;
 
    if (pd->filter)
-     eo_do(pd->filter, eo_wref_add(&pd->filter));
+     {
+        eo_do(pd->filter, eo_wref_add(&pd->filter));
+        eo_do(pd->filter, eo_event_callback_add(EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, NULL));
+     }
 
    _refresh_files(obj, pd);
 }
