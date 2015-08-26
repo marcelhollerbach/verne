@@ -48,6 +48,7 @@ class Efm.Monitor(Eo.Base) {
     events {
         file,hide : Efm.File*; [[If the buildin filter is changed and this file shoudlnt be published by the monitor anymore this is called]]
         file,add : Efm.File*; [[Called when a file was added]]
+        listing,done;
         error; [[called when the monitor got an error. The bahavoir after this event is unknown. The monitor should be deleted and never be used again!]]
     }
 }

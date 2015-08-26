@@ -222,6 +222,9 @@ _eio_done_cb(void *data, Eio_File *handler EINA_UNUSED)
    eo_do(job->monitor, eo_wref_del(&job->monitor));
    free(job);
 
+   //call changed event
+   eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_LISTING_DONE, NULL));
+
    //start monitoring
    pd->mon = eio_monitor_stringshared_add(pd->directory);
    fm_monitor_add(mon, pd->mon, _fm_action);
