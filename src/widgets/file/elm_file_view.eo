@@ -1,0 +1,58 @@
+interface Elm.File.View(Efl.File) {
+   [[ Interface to abstract communication between the elm.file.selector and the displaying view]]
+   methods {
+      @property name @class {
+         [[The name of this view]]
+         get {
+            [[The value will be displayed]]
+         }
+         values {
+            name : const(char)*;
+         }
+      }
+      search_items {
+         params {
+            select : Eina.Rectangle*;
+         }
+         return : list<Elm.File.Icon*>*;
+      }
+      @property selection {
+         [[Return the current selection of the view for dnd.]]
+         values {
+            selection : list<Elm.File.Icon*>*;
+         }
+      }
+      @property iconsize {
+         [[A value between 0 and 100]]
+         values {
+            iconsize : int;
+         }
+      }
+      @property filter {
+         [[A correctly setup filter to use for the monitor]]
+         values {
+            filter : Efm.Filter*;
+         }
+      }
+      size_get {
+         [[Give back the actual size where dnd and rect selection should work]]
+         params {
+            size : Eina.Rectangle*;
+         }
+      }
+      search {
+         [[Search for the given value]]
+         params {
+            needle : const(char)*;
+         }
+      }
+   }
+   events {
+      item,select,hover : Efm.File*; [[The mouse hovers over a item]]
+      item,select,simple : Efm.File*; [[A item got selected ]]
+      item,select,choosen : Efm.File*; [[A item got choosen]]
+      item,select,changed : list<Efm.File*>*; [[called when the selection has changed. Used to keep a internal list of all selected files. The pointer given to the event will just be updated each time the list is _never_ touched by the displayer. the view has to take care of freeing the list]]
+      working,start; [[The view has started listing work]]
+      working,done; [[The view has stopped listing work]]
+   }
+}

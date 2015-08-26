@@ -17,6 +17,7 @@
 #include "./file/elm_file_selector.eo.h"
 #include "./file/elm_file_preview.eo.h"
 #include "./file/elm_file_display.eo.h"
+#include "./file/elm_file_view.eo.h"
 #include "./file/views/elm_file_display_view_grid.eo.h"
 #include "./file/views/elm_file_display_view_list.eo.h"
 

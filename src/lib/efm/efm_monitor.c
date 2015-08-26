@@ -304,6 +304,12 @@ _efm_monitor_eo_base_destructor(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
    if (pd->file)
      eio_file_cancel(pd->file);
 
+   if (pd->filter)
+     {
+        eo_do(pd->filter, eo_wref_del(&pd->filter));
+        eo_do(pd->filter, eo_event_callback_del(EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, NULL));
+     }
+
    fm_monitor_del(obj, pd->mon);
    eio_monitor_del(pd->mon);
    eina_stringshare_del(pd->directory);

@@ -6,6 +6,7 @@
 #include <Efl.h>
 #include <Elementary.h>
 #include "Elementary_Ext.h"
+#include "./file/views/elm_file_display_view_debug.eo.h"
 
 #ifdef EAPI
 # undef EAPI
