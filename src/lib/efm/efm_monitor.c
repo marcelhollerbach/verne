@@ -137,7 +137,7 @@ _fm_action(void *data EINA_UNUSED, Efm_Monitor *mon, const char *file, Fm_Action
 }
 
 static Eina_Bool
-_filter_changed_cb(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+_filter_changed_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
 {
    Efm_Monitor_Data *pd = eo_data_scope_get(data, EFM_MONITOR_CLASS);
 
