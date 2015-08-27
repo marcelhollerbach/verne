@@ -17,7 +17,7 @@ interface Elm.File.View(Efl.File) {
          return : list<Elm.File.Icon*>*;
       }
       @property selection {
-         [[Return the current selection of the view for dnd.]]
+         [[Return the current selection]]
          values {
             selection : list<Elm.File.Icon*>*;
          }
