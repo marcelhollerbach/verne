@@ -72,7 +72,7 @@ _error(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UN
 
    common->err(common);
 
-   eo_do(common->obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, NULL));
+   eo_do(common->obj, eo_event_callback_call(ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, NULL));
 
    return EINA_TRUE;
 }
@@ -98,14 +98,14 @@ void
 view_file_select(View_Common *common, Efm_File *f)
 {
    common->selection = eina_list_append(common->selection, f);
-   eo_do(common->obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection));
+   eo_do(common->obj, eo_event_callback_call(ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection));
 }
 
 void
 view_file_unselect(View_Common *common, Efm_File *f)
 {
    common->selection = eina_list_remove(common->selection, f);
-   eo_do(common->obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection));
+   eo_do(common->obj, eo_event_callback_call(ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection));
 }
 
 void
@@ -113,7 +113,7 @@ view_path_set(View_Common *common, const char *path)
 {
    _view_free(common);
 
-   eo_do(common->obj, eo_event_callback_call(ELM_FILE_DISPLAY_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection));
+   eo_do(common->obj, eo_event_callback_call(ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection));
    common->files = eina_hash_pointer_new(NULL);
 
    common->monitor = eo_add(EFM_MONITOR_CLASS, NULL, efm_monitor_install(path, common->f));
