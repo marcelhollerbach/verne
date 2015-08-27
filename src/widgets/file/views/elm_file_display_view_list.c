@@ -349,6 +349,7 @@ _elm_file_display_view_list_eo_base_constructor(Eo *obj, Elm_File_Display_View_L
    pd->gic->func.content_get = _grid_content_get;
 
    eo_do_super(obj, ELM_FILE_DISPLAY_VIEW_LIST_CLASS, eo = eo_constructor());
+   elm_genlist_homogeneous_set(obj, EINA_TRUE);
 
    eo_do(obj, elm_interface_scrollable_page_relative_set(1.0, 0.9));
    eo_do(obj, parent = eo_parent_get());
