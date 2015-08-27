@@ -29,6 +29,8 @@ typedef struct
      const char *string;
    } search;
 
+   Evas_Object *work_indicator;
+
    const char *path;
    Elm_File_MimeType_Cache *cache;
    Eina_List *selection;
@@ -158,16 +160,27 @@ _view_select_changed_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Descript
 }
 
 static Eina_Bool
-_work_done(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desk EINA_UNUSED, void *event EINA_UNUSED)
+_work_done(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desk EINA_UNUSED, void *event EINA_UNUSED)
 {
-   ERR("Work done");
+   PRIV_DATA(data);
+   eo_del(pd->work_indicator);
+   pd->work_indicator = NULL;
+
    return EO_CALLBACK_CONTINUE;
 }
 
 static Eina_Bool
-_work_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desk EINA_UNUSED, void *event EINA_UNUSED)
+_work_start(void *data, Eo *obj, const Eo_Event_Description *desk EINA_UNUSED, void *event EINA_UNUSED)
 {
-   ERR("Work started");
+   PRIV_DATA(data);
+
+   pd->work_indicator = elm_progressbar_add(obj);
+   elm_object_style_set(pd->work_indicator, "wheel");
+   elm_progressbar_pulse_set(pd->work_indicator, EINA_TRUE);
+   elm_progressbar_pulse(pd->work_indicator, EINA_TRUE);
+   elm_object_part_content_set(data, "waiting", pd->work_indicator);
+   evas_object_show(pd->work_indicator);
+
    return EO_CALLBACK_CONTINUE;
 }
 

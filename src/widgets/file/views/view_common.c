@@ -77,10 +77,20 @@ _error(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UN
    return EINA_TRUE;
 }
 
+static Eina_Bool
+_listing_done(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+{
+   View_Common *common = data;
+
+   eo_do(common->obj, eo_event_callback_call(ELM_FILE_VIEW_EVENT_WORKING_DONE , NULL));
+   return EO_CALLBACK_CONTINUE;
+}
+
 EO_CALLBACKS_ARRAY_DEFINE(_monitor_event_cbs,
   {EFM_MONITOR_EVENT_FILE_ADD, _file_add},
   {EFM_MONITOR_EVENT_FILE_HIDE, _file_hide},
-  {EFM_MONITOR_EVENT_ERROR, _error}
+  {EFM_MONITOR_EVENT_ERROR, _error},
+  {EFM_MONITOR_EVENT_LISTING_DONE, _listing_done}
 );
 
 void
@@ -116,6 +126,7 @@ view_path_set(View_Common *common, const char *path)
    eo_do(common->obj, eo_event_callback_call(ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection));
    common->files = eina_hash_pointer_new(NULL);
 
+   eo_do(common->obj, eo_event_callback_call(ELM_FILE_VIEW_EVENT_WORKING_START , NULL));
    common->monitor = eo_add(EFM_MONITOR_CLASS, NULL, efm_monitor_install(path, common->f));
    eo_do(common->monitor, efm_monitor_whitelist_set(EINA_FALSE));
    eo_do(common->monitor, eo_event_callback_array_add(_monitor_event_cbs(), common));
