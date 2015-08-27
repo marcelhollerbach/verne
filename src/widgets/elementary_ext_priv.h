@@ -6,10 +6,17 @@
 #include <Efl.h>
 #include <Elementary.h>
 #include "Elementary_Ext.h"
-#include "./file/views/elm_file_display_view_debug.eo.h"
+
+#ifdef DEBUG
+#  include "./file/views/elm_file_display_view_debug.eo.h"
+#endif
 
 #ifdef EAPI
 # undef EAPI
+#endif
+
+#ifndef THEME_PATH
+# warning THEME_PATH NOT DEFINED
 #endif
 
 #ifdef _WIN32

@@ -4,6 +4,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 project(efm)
 include(eo_helper)
 
+option(Debug "Show the debug screen" OFF)
+
 enable_testing()
 set(CMAKE_BUILD_TYPE DEBUG)
 

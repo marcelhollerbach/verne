@@ -88,7 +88,9 @@ _views_standart_init()
    eo_do(ELM_FILE_SELECTOR_CLASS,
       elm_file_selector_view_pool_add(ELM_FILE_DISPLAY_VIEW_GRID_CLASS);
       elm_file_selector_view_pool_add(ELM_FILE_DISPLAY_VIEW_LIST_CLASS);
+#ifdef DEBUG
       elm_file_selector_view_pool_add(ELM_FILE_DISPLAY_VIEW_DEBUG_CLASS);
+#endif
     );
 }
 

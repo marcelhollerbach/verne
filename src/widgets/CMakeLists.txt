@@ -1,7 +1,5 @@
 set(THEME_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/share/elm_ext/")
 
-set(THEME_PATH_DEFINITION THEME_PATH="${THEME_INSTALL_PATH}")
-
 LIST(APPEND WIDGET_LIBRARY
    Elementary_Ext.h
    elementary_ext.c
@@ -43,10 +41,6 @@ LIST(APPEND WIDGET_LIBRARY
    file/views/sort.c
    file/views/view_common.c
    file/views/view_common.h
-   file/views/elm_file_display_view_debug.c
-   file/views/elm_file_display_view_debug.eo
-   file/views/elm_file_display_view_debug.eo.x
-   file/views/elm_file_display_view_debug.eo.h
    file/views/elm_file_display_view_grid.c
    file/views/elm_file_display_view_grid.eo
    file/views/elm_file_display_view_grid.eo.x
@@ -56,6 +50,16 @@ LIST(APPEND WIDGET_LIBRARY
    file/views/elm_file_display_view_list.eo.x
    file/views/elm_file_display_view_list.eo.h
    )
+if (DEBUG)
+  list(APPEND WIDGET_LIBRARY
+   file/views/elm_file_display_view_debug.c
+   file/views/elm_file_display_view_debug.eo
+   file/views/elm_file_display_view_debug.eo.x
+   file/views/elm_file_display_view_debug.eo.h
+  )
+endif(DEBUG)
+
+
 list(APPEND WIDGET_INCLUDE
   ./
   ./file/
@@ -82,9 +86,20 @@ target_link_libraries(widgets
   emous
 )
 
-set_property(TARGET widgets
-   PROPERTY COMPILE_DEFINITIONS ${THEME_PATH_DEFINITION})
+list(APPEND definitions
+            THEME_PATH="${THEME_INSTALL_PATH}"
+    )
+if (DEBUG)
+list(APPEND definitions
+            DEBUG
+    )
+endif(DEBUG)
 
+
+set_property(TARGET widgets
+   PROPERTY COMPILE_DEFINITIONS
+   ${definitions}
+)
 INSTALL(FILES Elementary_Ext.h DESTINATION include/elm_ext-1/)
 INSTALL(TARGETS widgets
   LIBRARY DESTINATION lib
