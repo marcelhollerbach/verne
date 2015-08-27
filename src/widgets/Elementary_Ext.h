@@ -12,7 +12,6 @@
 
 #include "./file/elm_file_mimetype_cache.eo.h"
 #include "./file/elm_file_icon.eo.h"
-#include "./file/elm_file_display_view.eo.h"
 #include "./file/elm_file_bookmarks.eo.h"
 #include "./file/elm_file_selector.eo.h"
 #include "./file/elm_file_preview.eo.h"
