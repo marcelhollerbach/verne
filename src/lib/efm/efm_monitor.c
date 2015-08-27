@@ -67,7 +67,7 @@ _add(Efm_Monitor *mon, const char *file)
 
    if (!ef)
      {
-       ERR("Creation of %s failed, this is ... strange", file);
+       INF("Creation of %s failed, this is ... strange", file);
        return;
      }
 
