@@ -372,17 +372,21 @@ _elm_file_display_view_grid_eo_base_constructor(Eo *obj, Elm_File_Display_View_G
    return eo;
 }
 
-EOLIAN static void
+EOLIAN static Eina_Bool
 _elm_file_display_view_grid_elm_file_view_search(Eo *obj, Elm_File_Display_View_Grid_Data *pd, const char *needle)
 {
    Elm_Object_Item *searched;
    const Eina_List *selected;
 
-   if (!needle) return;
+   if (!needle) return EINA_TRUE;
 
    searched = view_search(&pd->common, needle);
+   if (!searched) return EINA_FALSE;
+
    selected = elm_gengrid_selected_items_get(obj);
    _item_select_swap(obj, selected, searched);
+
+   return EINA_TRUE;
 }
 
 EOLIAN static void

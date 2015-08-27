@@ -53,10 +53,12 @@ _elm_file_display_view_debug_elm_file_view_size_get(Eo *obj EINA_UNUSED, Elm_Fil
    evas_object_geometry_get(pd->selectable, &size->x, &size->y, &size->w, &size->h);
 }
 
-EOLIAN static void
+EOLIAN static Eina_Bool
 _elm_file_display_view_debug_elm_file_view_search(Eo *obj EINA_UNUSED, Elm_File_Display_View_Debug_Data *pd, const char *needle)
 {
    elm_object_text_set(pd->search, needle);
+
+   return EINA_FALSE;
 }
 
 EOLIAN static Eina_Bool

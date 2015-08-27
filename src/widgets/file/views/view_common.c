@@ -144,7 +144,7 @@ Efm_File*
 view_search(View_Common *common, const char *search)
 {
    Eina_Iterator *itr;
-   Efm_File **file, *searched;
+   Efm_File **file, *searched = NULL;
    int min = -1;
 
    if (!common->files) return NULL;
@@ -169,5 +169,9 @@ view_search(View_Common *common, const char *search)
              searched = *file;
           }
      }
-   return eina_hash_find(common->files, &searched);
+
+   if (searched)
+     return eina_hash_find(common->files, &searched);
+   else
+     return NULL;
 }

@@ -644,6 +644,7 @@ static void
 _search_update(Eo *obj, Elm_File_Selector_Data *pd)
 {
    const char *search = NULL;
+   Eina_Bool found;
 
    if (pd->search.buffer)
      search = eina_strbuf_string_get(pd->search.buffer);
@@ -655,7 +656,12 @@ _search_update(Eo *obj, Elm_File_Selector_Data *pd)
 
    elm_layout_text_set(obj, "search", search);
 
-   eo_do(pd->view.obj, elm_file_view_search(search));
+   eo_do(pd->view.obj, found = elm_file_view_search(search));
+
+   if (!found)
+     elm_layout_signal_emit(obj, "search,failed", "elm");
+   else
+     elm_layout_signal_emit(obj, "search,found", "elm");
 }
 
 /*

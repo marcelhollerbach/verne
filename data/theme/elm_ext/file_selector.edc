@@ -1,4 +1,6 @@
 images.image: "darken_square.png" COMP;
+images.image: "bg_led.png" COMP;
+images.image: "bg_led_strobe.png" COMP;
 group { name: "elm/file_selector/base/default";
     parts {
         swallow { "content"
@@ -32,14 +34,66 @@ group { name: "elm/file_selector/base/default";
             nomouse;
             clip_to: "search_clip";
             desc { "default"
-                rel1.to: "search";
-                rel1.offset: -12 -12;
+                rel1.to_x: "search_indic";
+                rel1.to_y: "search";
+                rel1.offset: 0 -12;
                 rel2.to: "search";
                 rel2.offset: 12 12;
                 image.normal: "darken_square.png";
                 image.border: 6 6 6 6;
                 fill.smooth: 0;
                 fixed: 1 1;
+            }
+        }
+        image { "search_strobo"
+            nomouse;
+            clip_to: "search_clip";
+            desc { "default";
+               fixed: 1 1;
+               visible: 0;
+               color: 255 255 255 0;
+               rel1.to: "search_indic";
+               rel2.to: "search_indic";
+               image.normal: "bg_led_strobe.png";
+               map {
+                  on: 1;
+                  smooth: 1;
+                  rotation.center: "search_indic";
+               }
+            }
+            desc { "spin";
+               inherit: "default" 0.0;
+               visible: 1;
+               color: 255 255 255 255;
+               map.rotation.z: 36.0;
+            }
+            desc{ "spin_done";
+               inherit: "default" 0.0;
+               map.rotation.z: 720.0;
+            }
+        }
+        image { "search_indic"
+            nomouse;
+            clip_to: "search_clip";
+            desc { "default";
+                rel1.to: "search";
+                rel1.offset: -12 0;
+                rel1.relative: 0.0 0.0;
+                rel2.to: "search";
+                rel2.relative: 0.0 0.0;
+                image.normal: "bg_led.png";
+            }
+            desc { "on";
+                inherit: "default";
+                visible: 1;
+                rel1.offset: -12 -12;
+                rel1.to: "search";
+                rel1.relative: 0.0 0.0;
+                rel2.to: "search";
+                rel2.relative: 0.0 1.0;
+                rel2.offset: 12 12;
+                aspect: 1 1;
+                align: 1.0 0.5;
             }
         }
         text { "search"
@@ -61,15 +115,49 @@ group { name: "elm/file_selector/base/default";
     programs {
         program {
             signal: "search,enable";
+            source: "elm";
             action: STATE_SET "enable" 0.0;
             target: "search_clip";
-            source: "elm";
         }
         program {
             signal: "search,disable";
+            source: "elm";
             action: STATE_SET "default" 0.0;
             target: "search_clip";
+        }
+        program {
+            signal: "search,failed";
             source: "elm";
+            action: STATE_SET "on" 0.0;
+            transition: LINEAR 0.1;
+            target: "search_indic";
+            after: "strobo";
+        }
+        program {
+            name: "strobo";
+            action: STATE_SET "spin" 0.0;
+            transition: LINEAR 0.1;
+            target: "search_strobo";
+            after: "strobo2";
+        }
+        program {
+            name: "strobo2";
+            action: STATE_SET "spin_done" 0.0;
+            transition: LINEAR 0.9;
+            target: "search_strobo";
+            after: "strobo3";
+        }
+        program {
+            name: "strobo3";
+            action: STATE_SET "default" 0.0;
+            target: "search_strobo";
+        }
+        program {
+            signal: "search,found";
+            source: "elm";
+            action: STATE_SET "default" 0.0;
+            transition: LINEAR 0.1;
+            target: "search_indic";
         }
    }
 }

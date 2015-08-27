@@ -45,6 +45,7 @@ interface Elm.File.View(Efl.File) {
          params {
             needle : const(char)*;
          }
+         return : bool; [[say if the search found a item]]
       }
    }
    events {

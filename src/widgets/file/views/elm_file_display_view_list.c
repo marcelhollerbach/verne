@@ -158,18 +158,21 @@ _elm_file_display_view_list_elm_file_view_iconsize_set(Eo *obj EINA_UNUSED, Elm_
    pd->config.icon_size = iconsize;
 }
 
-EOLIAN static void
+EOLIAN static Eina_Bool
 _elm_file_display_view_list_elm_file_view_search(Eo *obj, Elm_File_Display_View_List_Data *pd, const char *needle)
 {
    Elm_Object_Item *searched;
    const Eina_List *selected;
 
-   if (!needle) return;
+   if (!needle) return EINA_TRUE;
 
    searched = view_search(&pd->common, needle);
+
+   if (!searched) return EINA_FALSE;
    selected = elm_genlist_selected_items_get(obj);
    _item_select_swap(obj, selected, searched);
 
+   return EINA_TRUE;
 }
 
 static Evas_Object *
