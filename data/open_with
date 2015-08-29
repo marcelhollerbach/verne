@@ -1,0 +1,219 @@
+{
+  "JSON_Version":"1",
+  "Settings":
+  {
+    "project":"open_with2"
+  },
+  "Widgets":
+  {
+    "main_win":
+    {
+      "Desc":
+      {
+        "parent":null,
+        "class":"Elm.Win",
+        "public":true
+      },
+      "Properties":
+      {
+        "Elm.Win.title":["elm_win1"],
+        "Evas.Object.size_hint_weight":[1, 1],
+        "Efl.Gfx.Base.visible":[true],
+        "Elm.Win.type":["ELM_WIN_BASIC"],
+        "Efl.Gfx.Base.size":[454, 379],
+        "Elm.Win.autodel":[true]
+      },
+      "Contains":["elm_bg1", "elm_box1"]
+    },
+    "elm_win1_main_menu":
+    {
+      "Desc":
+      {
+        "parent":"main_win",
+        "class":"Elm.Menu"
+      }
+    },
+    "elm_box1":
+    {
+      "Desc":
+      {
+        "parent":"main_win",
+        "class":"Elm.Box"
+      },
+      "Properties":
+      {
+        "Evas.Object.size_hint_weight":[1, 1],
+        "Efl.Gfx.Base.visible":[true],
+        "Evas.Object.size_hint_align":[-1, -1],
+        "Efl.Gfx.Base.position":[72, 86]
+      },
+      "Contains":["elm_box3", "search", "elm_genlist1", "elm_box2"]
+    },
+    "elm_label1":
+    {
+      "Desc":
+      {
+        "parent":"elm_box3",
+        "class":"Elm.Label"
+      },
+      "Properties":
+      {
+        "Efl.Gfx.Base.visible":[true],
+        "Efl.Gfx.Base.size":[60, 30],
+        "Evas.Object.size_hint_weight":[1, 0],
+        "Evas.Object.size_hint_align":[-1, 0.50],
+        "Elm.Widget.part_text":[null, "Current default:"]
+      }
+    },
+    "elm_genlist1":
+    {
+      "Desc":
+      {
+        "parent":"elm_box1",
+        "class":"Elm.Genlist",
+        "public":true
+      },
+      "Properties":
+      {
+        "Efl.Gfx.Base.visible":[true],
+        "Efl.Gfx.Base.size":[70, 60],
+        "Evas.Object.size_hint_weight":[1, 1],
+        "Evas.Object.size_hint_align":[-1, -1]
+      }
+    },
+    "elm_box2":
+    {
+      "Desc":
+      {
+        "parent":"elm_box1",
+        "class":"Elm.Box"
+      },
+      "Properties":
+      {
+        "Efl.Gfx.Base.visible":[true],
+        "Elm.Box.horizontal":[true],
+        "Evas.Object.size_hint_align":[-1, -1],
+        "Evas.Object.size_hint_weight":[1, 0]
+      },
+      "Contains":["asdefault", "open"]
+    },
+    "open":
+    {
+      "Desc":
+      {
+        "parent":"elm_box2",
+        "class":"Elm.Button",
+        "public":true
+      },
+      "Properties":
+      {
+        "Evas.Object.size_hint_weight":[1, 1],
+        "Efl.Gfx.Base.visible":[true],
+        "Efl.Gfx.Base.size":[73, 30],
+        "Evas.Object.size_hint_align":[-1, -1],
+        "Elm.Widget.part_text":[null, "Open"]
+      }
+    },
+    "asdefault":
+    {
+      "Desc":
+      {
+        "parent":"elm_box2",
+        "class":"Elm.Button",
+        "public":true
+      },
+      "Properties":
+      {
+        "Evas.Object.size_hint_weight":[1, 1],
+        "Efl.Gfx.Base.visible":[true],
+        "Efl.Gfx.Base.size":[73, 30],
+        "Evas.Object.size_hint_align":[-1, -1],
+        "Elm.Widget.part_text":[null, "Set as default"]
+      }
+    },
+    "elm_box3":
+    {
+      "Desc":
+      {
+        "parent":"elm_box1",
+        "class":"Elm.Box"
+      },
+      "Properties":
+      {
+        "Efl.Gfx.Base.visible":[true],
+        "Evas.Object.size_hint_align":[-1, 0],
+        "Elm.Box.horizontal":[true],
+        "Evas.Object.size_hint_weight":[0, 0]
+      },
+      "Contains":["elm_label1", "current_app"]
+    },
+    "current_app":
+    {
+      "Desc":
+      {
+        "parent":"elm_box3",
+        "class":"Elm.Label",
+        "public":true
+      },
+      "Properties":
+      {
+        "Evas.Object.size_hint_weight":[1, 1],
+        "Efl.Gfx.Base.visible":[true],
+        "Elm.Widget.part_text":[null, "Label"],
+        "Efl.Gfx.Base.size":[60, 30]
+      }
+    },
+    "search":
+    {
+      "Desc":
+      {
+        "parent":"elm_box1",
+        "class":"Elm.Entry",
+        "public":true
+      },
+      "Properties":
+      {
+        "Efl.Gfx.Base.visible":[true],
+        "Efl.Gfx.Base.size":[60, 30],
+        "Evas.Object.size_hint_weight":[1, 0],
+        "Evas.Object.size_hint_align":[-1, 0],
+        "Elm.Entry.icon_visible":[false],
+        "Elm.Entry.scrollable":[true],
+        "Elm.Entry.single_line":[true],
+        "Elm.Widget.part_text":["guide", "search"]
+      },
+      "Contains":
+      {
+        "elm_icon1":["icon"]
+      }
+    },
+    "elm_icon1":
+    {
+      "Desc":
+      {
+        "parent":"search",
+        "class":"Elm.Icon"
+      },
+      "Properties":
+      {
+        "Evas.Object.size_hint_weight":[1, 1],
+        "Efl.Gfx.Base.visible":[true],
+        "Efl.Gfx.Base.size":[40, 40],
+        "Elm.Icon.standard":["search"]
+      }
+    },
+    "elm_bg1":
+    {
+      "Desc":
+      {
+        "parent":"main_win",
+        "class":"Elm.Bg"
+      },
+      "Properties":
+      {
+        "Evas.Object.size_hint_weight":[1, 1],
+        "Efl.Gfx.Base.visible":[true]
+      }
+    }
+  }
+ }
