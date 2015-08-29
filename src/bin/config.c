@@ -1,7 +1,7 @@
 #include "jesus.h"
 
 #define CONFIG_NAME "jesus-config"
-#define CONFIG_VERSION "0.1"
+#define CONFIG_VERSION "0.2"
 #define CONFIG_KEY CONFIG_NAME"-"CONFIG_VERSION
 static Eet_Data_Descriptor *edd;
 
