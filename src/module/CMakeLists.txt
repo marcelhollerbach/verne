@@ -6,8 +6,17 @@ include_directories(
 )
 
 LIST(APPEND jesus_files
+   e_bg_widget.c
+   e_bg_widget.eo
+   e_bg_widget.eo.x
+   e_bg_widget.eo.h
    e_mod_main.c
    )
+list(APPEND bg_deps
+  ../widgets/file/
+  )
+
+eo_rule_create("${jesus_files}" "${bg_deps}")
 
 add_library(jesus MODULE ${jesus_files})
 

@@ -2,6 +2,7 @@
 #define EFL_EO_API_SUPPORT
 
 #include <e.h>
+#include "e_bg_widget.eo.h"
 #include <Elementary_Ext.h>
 
 typedef struct {
@@ -43,7 +44,7 @@ _fm_add(E_Zone *zone)
    Evas_Object *fm;
    const char *desk;
 
-   fm = eo_add(ELM_FILE_SELECTOR_CLASS, e_comp->elm);
+   fm = eo_add(E_BG_WIDGET_CLASS, e_comp->elm);
    desk = efreet_desktop_dir_get();
    eo_do(fm, efl_file_set(desk, NULL));
 
@@ -82,6 +83,9 @@ e_modapi_init(E_Module *m)
 {
    Eina_List *l;
    E_Zone *zone;
+
+   elm_need_ethumb();
+   elm_need_efreet();
 
    sd = calloc(1, sizeof(Jesus_Data));
 

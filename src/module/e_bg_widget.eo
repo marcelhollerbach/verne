@@ -1,0 +1,5 @@
+class E.Bg.Widget(Elm.File.Selector) {
+    implements {
+        Elm.File.Selector.icon_generate;
+    }
+}
