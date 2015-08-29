@@ -5,13 +5,15 @@
 
 typedef struct
 {
-   Eo *open_with;
-   Eo *elm_genlist1;
+   Eo *main_win;
+   Eo *current_app;
+   Eo *search;
+   Eo *desktop_list;
+   Eo *asdefault;
    Eo *open;
-   Eo *set_as_default;
-} Executorui_Open_With_Widgets;
+} Open_With2_Main_Win_Widgets;
 
 
-Executorui_Open_With_Widgets *executorui_open_with_create(Eo *parent);
+Open_With2_Main_Win_Widgets *open_with2_main_win_create(Eo *parent);
 
 #endif

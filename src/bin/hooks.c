@@ -5,10 +5,6 @@ _open_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description
 {
     Efm_File *select;
     Eina_Bool b;
-    Eina_List *mime_types;
-    Efreet_Desktop *icon;
-    const char *mime_type = NULL;
-    const char *command = NULL;
 
     select = event;
     if (eo_do_ret(select, b, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
@@ -19,25 +15,7 @@ _open_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description
       }
     else
       {
-         eo_do(select, mime_type = efm_file_mimetype_get());
-
-         // first check in config for a "special" open wish
-         command = eina_hash_find(config->mime_type_open, mime_type);
-
-         if (!command)
-           {
-              mime_types = efreet_util_desktop_mime_list(mime_type);
-
-              if (!mime_types)
-                {
-                   // todo error
-                   return EINA_TRUE;
-                }
-
-              icon = eina_list_data_get(mime_types);
-              command = icon->exec;
-           }
-         exec_run(command, select);
+         exec_execute(select);
       }
     return EINA_TRUE;
 }
@@ -49,9 +27,9 @@ _open_cb2(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 }
 
 static void
-_open_with_choosen(Efm_File *f, const char *cmd)
+_open_with_choosen(Efm_File *f, Efreet_Desktop *name)
 {
-    exec_run(cmd, f);
+    exec_run(name, f);
 }
 
 static void
