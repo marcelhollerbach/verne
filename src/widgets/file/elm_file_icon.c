@@ -15,7 +15,7 @@ typedef struct
    Evas_Object *label;
    Evas_Object *entry;
 
-   Eina_Bool picmode;
+   Eina_Bool preview;
    Ecore_Timer *t;
    Elm_File_MimeType_Cache *cache;
 
@@ -193,9 +193,6 @@ mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
    if (!mime_type)
      return;
 
-   if (pd->picmode)
-    return;
-
    if (eo_do_ret(pd->file, dir, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
      elm_icon_standard_set(pd->icon, "folder");
    else
@@ -227,65 +224,74 @@ _mime_ready(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Descript
    return EINA_TRUE;
 }
 
+typedef enum {
+  FILE_MODE_IMAGE, FILE_MODE_DESKTOP, FILE_MODE_TRIVIAL
+} File_Mode;
+
 static inline void
 _file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
 {
    Eina_Bool dir;
-   const char *path, *mime_type, *filename;
+   File_Mode filemode = FILE_MODE_TRIVIAL;
+   const char *path, *mime_type, *filename, *fileextension;
 
-   if (pd->file)
-     {
-        eo_do(pd->file, eo_wref_del(&pd->file);
-                        eo_event_callback_del(EFM_FILE_EVENT_FSQUERY_DONE, _mime_ready, obj));
-     }
    eo_do(file, eo_wref_add(&pd->file));
-
-   elm_drop_target_del(obj, ELM_SEL_FORMAT_TARGETS, _enter_cb, obj,_leave_cb, NULL, NULL, NULL, _drop_cb, NULL);
    eo_do(pd->file, path = efm_file_path_get();
                    dir = efm_file_is_type(EFM_FILE_TYPE_DIRECTORY);
                    mime_type = efm_file_mimetype_get();
-                   filename = efm_file_filename_get());
+                   filename = efm_file_filename_get();
+                   fileextension = efm_file_fileending_get()
+        );
+   printf("%s\n", fileextension);
 
    if (dir)
      {
         // add dnd
         elm_drop_target_add(obj, ELM_SEL_FORMAT_TARGETS, _enter_cb, obj,_leave_cb, NULL, NULL, NULL, _drop_cb, NULL);
      }
-   else
+
+   if (!dir && pd->preview)
      {
         //check if this file can be loaded
-        //if (evas_object_image_extension_can_load_fast_get(path))
-        //  pd->picmode = EINA_TRUE;
-        //else
-          pd->picmode = EINA_FALSE;
+        if (evas_object_image_extension_can_load_fast_get(path))
+          filemode = FILE_MODE_IMAGE;
+        else if (fileextension && !strcmp(fileextension, "desktop"))
+          filemode = FILE_MODE_DESKTOP;
+        else
+          filemode = FILE_MODE_TRIVIAL;
       }
 
-   // delete existing partwidgets
-   if (pd->icon)
-     evas_object_del(pd->icon);
-
    // create new display icons
-   if (pd->picmode)
+   if (filemode == FILE_MODE_IMAGE)
      {
         pd->icon = elm_thumb_add(obj);
         eo_do(pd->icon, efl_file_set(path, NULL));
      }
-   else
+   else if (filemode == FILE_MODE_DESKTOP)
+     {
+        Efreet_Desktop *desktop;
+
+        desktop = efreet_desktop_new(path);
+
+        pd->icon = elm_icon_add(obj);
+        elm_icon_order_lookup_set(pd->icon, ELM_ICON_LOOKUP_FDO);
+        elm_icon_standard_set(pd->icon, desktop->icon);
+     }
+   else if (filemode == FILE_MODE_TRIVIAL)
      {
         pd->icon = elm_icon_add(obj);
         elm_icon_order_lookup_set(pd->icon, ELM_ICON_LOOKUP_FDO);
+
+        if (!mime_type)
+          eo_do(pd->file, eo_event_callback_add(EFM_FILE_EVENT_FSQUERY_DONE,
+                          _mime_ready, obj));
+        else
+          mime_ready(obj, pd);
      }
 
    // set the new conecnt
    _content_set(obj, pd->icon);
 
-   // if the mime type is allready set FIXME fix it
-
-    if (!mime_type)
-      eo_do(pd->file, eo_event_callback_add(EFM_FILE_EVENT_FSQUERY_DONE,
-                      _mime_ready, obj));
-    else
-      mime_ready(obj, pd);
    // set the text of the filename
    elm_object_text_set(pd->label, filename);
    elm_object_tooltip_text_set(pd->label, filename);
@@ -297,12 +303,13 @@ _elm_file_icon_file_get(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
    return pd->file;
 }
 EOLIAN static void
-_elm_file_icon_install(Eo *obj, Elm_File_Icon_Data *pd, Elm_File_MimeType_Cache *cache, Efm_File *file)
+_elm_file_icon_install(Eo *obj, Elm_File_Icon_Data *pd, Elm_File_MimeType_Cache *cache, Efm_File *file, Eina_Bool preview)
 {
    EINA_SAFETY_ON_NULL_RETURN(cache);
    EINA_SAFETY_ON_NULL_RETURN(file);
 
    pd->cache = cache;
+   pd->preview = preview;
    _file_set(obj, pd, file);
 }
 EOLIAN static Eo_Base*

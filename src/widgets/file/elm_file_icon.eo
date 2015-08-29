@@ -5,17 +5,19 @@ class Elm_File_Icon (Elm.Layout) {
         [[
         ]]
         params {
-           cache : Elm.File.MimeType.Cache*;
-           file : Efm.File*;
+           cache : Elm.File.MimeType.Cache*; [[Cache to use]]
+           file : Efm.File*; [[Set the file which should be visualized ]]
+           preview : bool; [[Set if you want to have preview of images and .desktop files]]
         }
       }
       @property file {
-         get {
-
-         }
-         values {
-           file : Efm.File*;
-         }
+        [[File which is visualized]]
+        get {
+          [[get the file]]
+        }
+        values {
+          file : Efm.File*;
+        }
       }
       util_icon_theme_get @class{
          [[Will return the name of the icon theme]]

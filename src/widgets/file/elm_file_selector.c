@@ -1194,7 +1194,7 @@ _elm_file_selector_icon_generate(Eo *obj, Elm_File_Selector_Data *pd EINA_UNUSED
 
 #if 1
    ic = eo_add(ELM_FILE_ICON_CLASS, obj,
-    elm_obj_file_icon_install(pd->cache, file));
+    elm_obj_file_icon_install(pd->cache, file, EINA_TRUE));
    eo_do(ic,
      eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_DROP, _drop_cb, obj);
      eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_HOVER, _hover_cb, obj)
