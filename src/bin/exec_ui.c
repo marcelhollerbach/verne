@@ -118,7 +118,7 @@ _genlist_fill(Open_With_Ui *ui)
         if (_list_compare(desktop->mime_types, mime_type))
           {
              // this is a recommended app
-             last_recommend = elm_genlist_item_sorted_insert(ui->wid->desktop_list, klass, desktop, recommented, 0, _compare,NULL, NULL);
+             last_recommend = elm_genlist_item_sorted_insert(ui->wid->desktop_list, klass, desktop, recommented, 0, _compare, NULL, desktop);
           }
         it = elm_genlist_item_sorted_insert(ui->wid->desktop_list, klass, desktop, normal, 0, _compare, NULL, desktop);
         //allways add the normal app
@@ -216,7 +216,12 @@ _as_default_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED
 
    req = data;
    it = elm_genlist_selected_item_get(req->wid->desktop_list);
+
+   if (!it) return;
+
    desk = elm_object_item_data_get(it);
+
+   if (!desk) return;
 
    eo_do(req->file, mime_type = efm_file_mimetype_get());
 
@@ -224,6 +229,14 @@ _as_default_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED
    eina_hash_add(config->mime_type_open, mime_type, desk->name);
 
    config_flush();
+
+   {
+      const char *hash = NULL;
+      //check if the save worked
+      hash = eina_hash_find(config->mime_type_open, mime_type);
+      if (!hash)
+        printf("Error, config save failed!! You should delete your config.");
+   }
 
    elm_genlist_clear(req->wid->desktop_list);
    eina_list_free(req->entrys);
