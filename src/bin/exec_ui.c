@@ -225,18 +225,12 @@ _as_default_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED
 
    eo_do(req->file, mime_type = efm_file_mimetype_get());
 
-   eina_hash_del(config->mime_type_open, mime_type, NULL);
-   eina_hash_add(config->mime_type_open, mime_type, desk->name);
+   if (eina_hash_find(config->mime_type_open, mime_type))
+     eina_hash_del(config->mime_type_open, mime_type, NULL);
+   if (!eina_hash_add(config->mime_type_open, mime_type, desk->name))
+     printf("Error, adding mimetype failed");
 
    config_flush();
-
-   {
-      const char *hash = NULL;
-      //check if the save worked
-      hash = eina_hash_find(config->mime_type_open, mime_type);
-      if (!hash)
-        printf("Error, config save failed!! You should delete your config.");
-   }
 
    elm_genlist_clear(req->wid->desktop_list);
    eina_list_free(req->entrys);
