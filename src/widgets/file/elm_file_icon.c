@@ -242,7 +242,6 @@ _file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
                    filename = efm_file_filename_get();
                    fileextension = efm_file_fileending_get()
         );
-   printf("%s\n", fileextension);
 
    if (dir)
      {
