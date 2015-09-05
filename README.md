@@ -4,8 +4,6 @@ Like the header says. A filemanager, written in C using the EFL and elementary
 
 ## Building and installing ##
 
-Right now there are just install targets for the libraries. The application itself will not be installed!!
-
 To build do:
 ```
 cd <here is the clonedplace> 
@@ -18,15 +16,11 @@ cmake ..
 
 make all 
 
-./src/bin/efm 
-
-->have fun 
-```
-## Install ##
-
-```
 sudo make install
+
 ```
+
+Now you can run efm
 ## Bugs ##
 
 Bugs can be reported via github (marcelhollerbach) or phab.enlightenment.org(bu5hm4n).
