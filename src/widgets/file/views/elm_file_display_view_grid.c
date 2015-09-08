@@ -43,6 +43,7 @@ _elm_file_display_view_grid_elm_file_view_search_items(Eo *obj EINA_UNUSED, Elm_
              content = elm_object_item_part_content_get(it, "elm.swallow.icon");
 
              result = eina_list_append(result, content);
+             printf("Found in %d %d : %p\n", x1, y1, result);
           }
      }
    return result;

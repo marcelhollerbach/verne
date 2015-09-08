@@ -401,6 +401,8 @@ _event_rect_mouse_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Descripti
 
    EINA_RECTANGLE_SET(&search, ev->output.x, ev->output.y, 1, 1);
 
+   printf("Mouse at %d %d\n", ev->output.x, ev->output.y);
+
    eo_do(pd->view.obj, icons = elm_file_view_search_items(&search));
    eo_do(pd->view.obj, elm_file_view_size_get(&view));
 
