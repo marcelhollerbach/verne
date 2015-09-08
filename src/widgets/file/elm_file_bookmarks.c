@@ -73,7 +73,7 @@ _elm_file_bookmarks_efl_file_file_set(Eo *obj, Elm_File_Bookmarks_Data *pd, cons
 EOLIAN static void
 _elm_file_bookmarks_efl_file_file_get(Eo *obj EINA_UNUSED, Elm_File_Bookmarks_Data *pd, const char **file, const char **key EINA_UNUSED)
 {
-   if (*file)
+   if (file)
      *file = pd->path;
 }
 
