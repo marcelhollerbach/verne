@@ -205,10 +205,12 @@ empty_check(Evas_Object *obj)
 static void
 _item_select_swap(Evas_Object *obj, const Eina_List *selected, Elm_Object_Item *it)
 {
-   const Eina_List *node;
+   Eina_List *selected_safe;
    Elm_Object_Item *mover;
 
-   EINA_LIST_FOREACH(selected, node, mover)
+   selected_safe = eina_list_clone(selected);
+
+   EINA_LIST_FREE(selected_safe, mover)
      {
         elm_gengrid_item_selected_set(mover, EINA_FALSE);
      }
