@@ -142,23 +142,6 @@ end:
    return EINA_FALSE;
 }
 
-static Eina_Stringshare *
-_util_fuckyouglib_convert(Eldbus_Message_Iter *fuckyouglib)
-{
-   Eldbus_Message_Iter *no_really;
-   unsigned char c, buf[PATH_MAX] = {0};
-   unsigned int x = 0;
-
-   if (!eldbus_message_iter_arguments_get(fuckyouglib, "ay", &no_really)) return NULL;
-   while (eldbus_message_iter_get_and_next(no_really, 'y', &c))
-     {
-        buf[x] = c;
-        x++;
-     }
-   if (!buf[0]) return NULL;
-   return eina_stringshare_add((char*)buf);
-}
-
 static void
 mountpoint_update_cb(void *data EINA_UNUSED, const Eldbus_Message *msg, Eldbus_Pending *p EINA_UNUSED)
 {
@@ -166,7 +149,15 @@ mountpoint_update_cb(void *data EINA_UNUSED, const Eldbus_Message *msg, Eldbus_P
    Emous_Device *dev = data;
    Emous_Device_UDisks_Data *pd = eo_data_scope_get(dev, EMOUS_DEVICE_UDISKS_CLASS);
    Eina_List *list = NULL, *node = NULL, *ex_mountpoints = NULL;
-   const char *mp;
+   Eldbus_Message_Iter *string = NULL;
+   const char *errname;
+   const char *errmsg;
+
+   if (eldbus_message_error_get(msg, &errname, &errmsg))
+     {
+        printf("Message error %s - %s\n\n", errname, errmsg);
+        return;
+     }
 
    if (!eldbus_message_arguments_get(msg, "v", &var))
      {
@@ -174,31 +165,33 @@ mountpoint_update_cb(void *data EINA_UNUSED, const Eldbus_Message *msg, Eldbus_P
         return;
      }
 
-   if (!var)
-     return;
-
    if (!eldbus_message_iter_arguments_get(var, "aay", &mountpoints))
      {
         printf("Failed to receive mountpoints");
         return;
       }
 
-   if (!mountpoints)
-     return;
-   do
+   while(eldbus_message_iter_arguments_get(mountpoints, "ay", &string))
      {
-        mp = _util_fuckyouglib_convert(mountpoints);
+        const char *reallyastring = NULL;
+        int i;
 
-        if (!mp)
+        if (!eldbus_message_iter_fixed_array_get(string, 'y', &reallyastring, &i))
+          {
+             ERR("Failed to fetch pseudo string");
+             continue;
+          }
+
+        if (!reallyastring)
           continue;
 
-        list = eina_list_append(list, mp);
+        list = eina_list_append(list, eina_stringshare_add(reallyastring));
      }
-   while(eldbus_message_iter_next(mountpoints));
 
    ex_mountpoints = eina_list_clone(pd->mountpoints);
 
    //delete the now existing mounpoints out of the old list
+   const char *mp;
    EINA_LIST_FOREACH(list, node, mp)
      {
         ex_mountpoints = eina_list_remove(ex_mountpoints, mp);
