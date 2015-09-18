@@ -14,7 +14,7 @@ typedef struct {
 static int
 _calc_icon_size(int bounce)
 {
-   return SMALL + SIZE*((float)bounce/100);
+   return SMALL + SIZE*((float)bounce/100)*elm_config_scale_get();
 }
 
 EOLIAN static const char *
