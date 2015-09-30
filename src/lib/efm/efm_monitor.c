@@ -78,7 +78,10 @@ _add(Efm_Monitor *mon, const char *file)
    eina_hash_add(pd->file_icons, path, ef);
 
    if (!_take_filter(mon, pd, ef))
-     return;
+     {
+        eo_do(ef, UNMARK_POPULATED);
+        return;
+     }
 
    eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_FILE_ADD, ef));
    eo_do(ef, MARK_POPULATED);
