@@ -152,19 +152,21 @@ _filter_changed_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 
 EOLIAN static void
 _efm_monitor_filter_set(Eo *obj, Efm_Monitor_Data *pd, Efm_Filter *filter)
 {
-   if (pd->filter)
+   if (filter != pd->filter)
      {
-        eo_do(pd->filter, eo_event_callback_del(EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, obj));
-        eo_do(pd->filter, eo_wref_del(&pd->filter));
-     }
+        if (pd->filter)
+          {
+             eo_do(pd->filter, eo_event_callback_del(EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, obj));
+             eo_do(pd->filter, eo_wref_del(&pd->filter));
+          }
 
-   pd->filter = filter;
+        pd->filter = filter;
 
-
-   if (pd->filter)
-     {
-        eo_do(pd->filter, eo_event_callback_add(EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, obj));
-        eo_do(pd->filter, eo_wref_add(&pd->filter));
+        if (pd->filter)
+          {
+             eo_do(pd->filter, eo_event_callback_add(EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, obj));
+             eo_do(pd->filter, eo_wref_add(&pd->filter));
+          }
      }
 
    _refresh_files(obj, pd);
