@@ -40,6 +40,9 @@ _elm_file_display_view_grid_elm_file_view_search_items(Eo *obj EINA_UNUSED, Elm_
              Evas_Object *content;
 
              it = elm_gengrid_at_xy_item_get(obj, x1, y1, NULL, NULL);
+
+             if (!it) continue;
+
              content = elm_object_item_part_content_get(it, "elm.swallow.icon");
 
              result = eina_list_append(result, content);
