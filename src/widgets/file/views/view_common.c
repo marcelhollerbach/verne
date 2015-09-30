@@ -94,7 +94,7 @@ EO_CALLBACKS_ARRAY_DEFINE(_monitor_event_cbs,
 );
 
 void
-view_common_init(View_Common *common, Eo *obj, Item_Add_Cb add, Item_Del_Cb del, Error_Cb err)
+view_common_init(View_Common *common, Eo *obj, Item_Add_Cb add, Item_Del_Cb del, Error_Cb err, Item_Select_Cb sel)
 {
    memset(common, 0, sizeof(View_Common));
 
@@ -102,11 +102,17 @@ view_common_init(View_Common *common, Eo *obj, Item_Add_Cb add, Item_Del_Cb del,
    common->add = add;
    common->del = del;
    common->err = err;
+   common->sel = sel;
 }
 
 void
 view_file_select(View_Common *common, Efm_File *f)
 {
+   Elm_Object_Item *it;
+
+   it = eina_hash_find(common->files, &f);
+   common->sel(common, it, EINA_TRUE);
+
    common->selection = eina_list_append(common->selection, f);
    eo_do(common->obj, eo_event_callback_call(ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection));
 }
@@ -114,6 +120,11 @@ view_file_select(View_Common *common, Efm_File *f)
 void
 view_file_unselect(View_Common *common, Efm_File *f)
 {
+   Elm_Object_Item *it;
+
+   it = eina_hash_find(common->files, &f);
+   common->sel(common, it, EINA_FALSE);
+
    common->selection = eina_list_remove(common->selection, f);
    eo_do(common->obj, eo_event_callback_call(ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection));
 }

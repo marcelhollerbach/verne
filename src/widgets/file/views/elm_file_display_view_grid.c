@@ -112,6 +112,12 @@ _error(View_Common *common EINA_UNUSED)
 
 }
 
+static void
+_file_select(View_Common *common EINA_UNUSED, Elm_Object_Item *it, Eina_Bool sel)
+{
+   elm_gengrid_item_selected_set(it, sel);
+}
+
 EOLIAN static Eina_Bool
 _elm_file_display_view_grid_efl_file_file_set(Eo *obj, Elm_File_Display_View_Grid_Data *pd EINA_UNUSED, const char *dir, const char *key EINA_UNUSED)
 {
@@ -373,7 +379,7 @@ _elm_file_display_view_grid_eo_base_constructor(Eo *obj, Elm_File_Display_View_G
 
    evas_object_smart_callback_add(eo, "clicked,double", _double_click, NULL);
 
-   view_common_init(&pd->common, obj, _file_add, _file_del, _error);
+   view_common_init(&pd->common, obj, _file_add, _file_del, _error, _file_select);
    return eo;
 }
 

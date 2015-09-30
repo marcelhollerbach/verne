@@ -129,6 +129,12 @@ _error(View_Common *common EINA_UNUSED)
    //TODO something really bad happendhi
 }
 
+static void
+_file_select(View_Common *common EINA_UNUSED, Elm_Object_Item *it, Eina_Bool sel)
+{
+   elm_genlist_item_selected_set(it, sel);
+}
+
 EOLIAN static Eina_Bool
 _elm_file_display_view_list_efl_file_file_set(Eo *obj, Elm_File_Display_View_List_Data *pd, const char *dir, const char *key EINA_UNUSED)
 {
@@ -360,7 +366,7 @@ _elm_file_display_view_list_eo_base_constructor(Eo *obj, Elm_File_Display_View_L
 
    evas_object_smart_callback_add(eo, "clicked,double", _double_click, NULL);
 
-   view_common_init(&pd->common, obj, _file_add, _file_del, _error);
+   view_common_init(&pd->common, obj, _file_add, _file_del, _error, _file_select);
 
    return obj;
 }
