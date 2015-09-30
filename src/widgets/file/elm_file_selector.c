@@ -63,8 +63,6 @@ _filter_update_hidden(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd)
      eo_do(pd->filter, efm_filter_attribute_add(EFM_ATTRIBUTE_FILENAME, "^[^\\.]"));
    else
      eo_do(pd->filter, efm_filter_attribute_del(EFM_ATTRIBUTE_FILENAME, "^[^\\.]"));
-
-   eo_do(pd->view.obj, elm_file_view_filter_set(pd->filter));
 }
 
 static void
@@ -74,8 +72,6 @@ _filter_update_only_folder(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd)
      eo_do(pd->filter, efm_filter_type_add(EFM_FILE_TYPE_DIRECTORY));
    else
      eo_do(pd->filter, efm_filter_type_del(EFM_FILE_TYPE_DIRECTORY));
-
-   eo_do(pd->view.obj, elm_file_view_filter_set(pd->filter));
 }
 
 /*
@@ -209,6 +205,7 @@ _elm_file_selector_view_set(Eo *obj, Elm_File_Selector_Data *pd, const Eo_Class 
    eo_do(pd->view.obj,
     eo_event_callback_array_add(view_events(), obj);
     elm_file_view_iconsize_set(config->icon_size);
+    elm_file_view_filter_set(pd->filter);
    );
    _filter_update_hidden(obj, pd);
    _filter_update_only_folder(obj, pd);
