@@ -675,6 +675,7 @@ _elm_file_bookmarks_eo_base_constructor(Eo *obj, Elm_File_Bookmarks_Data *pd)
 
    eo_do_super(obj, ELM_FILE_BOOKMARKS_CLASS, eo = eo_constructor());
 
+   elm_scroller_policy_set(obj, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_AUTO);
    elm_object_style_set(obj, "file_display");
 
    evas_object_smart_callback_add(obj, "clicked,right", _right_click, NULL);
