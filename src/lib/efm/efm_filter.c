@@ -44,8 +44,6 @@ _efm_filter_attribute_del(Eo *obj, Efm_Filter_Data *pd, Efm_Attribute attribute,
              if (f->init)
                regfree(&f->reg);
              free(f);
-
-             break;
           }
      }
    POPULATE_CHANGE(obj);
