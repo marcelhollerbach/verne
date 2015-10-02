@@ -1,43 +1,59 @@
 #include <Efreet.h>
 #include "efm_priv.h"
 
-static int counter = 0;
+typedef struct
+{
+  int counter;
+  Eina_Hash *factory;
+} Efm_Static_Data;
+
+static Efm_Static_Data *sd;
 
 int _efm_domain;
 
-EAPI int
-efm_init()
+
+EOLIAN static int
+_efm_init(Eo *obj, void *pd)
 {
    eina_init();
    ecore_init();
    efreet_init();
    eio_init();
-   if (counter > 0)
+   if (sd && sd->counter > 0)
      goto inc;
 
    _efm_domain = eina_log_domain_register("efm", NULL);
    if (!_efm_domain)
      return 0;
 
+   sd = calloc(1, sizeof(Efm_Static_Data));
+   if (!sd)
+     return 0;
+
+   sd->factory = eina_hash_string_small_new(NULL);
    if (!fm_monitor_init())
      {
         ERR("Failed to init resolve");
-        counter --;
+        free(sd);
+        sd = NULL;
         return 0;
      }
    efm_file_init();
 inc:
-    counter ++;
-    return counter;
+    sd->counter ++;
+    return sd->counter;
 }
 
-EAPI void
-efm_shutdown()
+EOLIAN static void
+_efm_shutdown(Eo *obj, void *pd)
 {
-   counter --;
+   sd->counter --;
 
-   if (counter > 0)
+   if (sd->counter > 0)
      return;
+
+   free(sd);
+   sd = NULL;
 
    fm_monitor_shutdown();
 
@@ -48,4 +64,18 @@ efm_shutdown()
    efreet_shutdown();
    ecore_shutdown();
    eina_shutdown();
+}
+
+EOLIAN static Efm_File*
+_efm_file_get(Eo *obj, void *pd, const char *name)
+{
+   Efm_File *file;
+
+   file = eina_hash_find(sd->factory, &name);
+
+   if (file)
+     return file;
+
+   eo_do(EFM_FILE_CLASS, file = efm_file_generate(name));
+   return file;
 }

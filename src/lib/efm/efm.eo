@@ -1,0 +1,19 @@
+class Efm (Eo.Base) {
+    methods {
+        init @class {
+            [[Init the library]]
+            return : int;
+        }
+        shutdown @class {
+            [[Shutdown the library]]
+        }
+        file_get @class {
+            [[This will generate a new file handle for the given file.
+              If someone allready created that handle the same handle will be returned at this call]]
+              params {
+                name : const(char)*; [[The path of the file]]
+              }
+              return : Efm.File*; [[The handle to the file, or NULL if the file does not exist]]
+        }
+    }
+}
