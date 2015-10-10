@@ -3,8 +3,9 @@
 
 group {
     name: "elm/genlist/base/file_display";
-    inherit: "elm/scroller/base/default";
+    inherit: "elm/scroller/base/popup/no_inset_shadow";
     parts {
+
     }
 }
 
@@ -19,7 +20,7 @@ group { "elm/genlist/item/group_index/file_display"; nomouse; program_source: "e
 
    parts {
       text { "elm.text";
-         effect: SHADOW BOTTOM;
+         effect: GLOW ;
          scale;
          desc { "default";
             rel1.offset: 2 3;
@@ -29,13 +30,13 @@ group { "elm/genlist/item/group_index/file_display"; nomouse; program_source: "e
             rel2.relative: 0.0 1.0;
             rel2.to_x: "elm.swallow.end";
             color: FN_COL_DEFAULT;
-            color_class: "list_default_item";
+            color_class: "list_item";
+            color2: 51 153 255 12;
             text { font: FNBD; size: 10;
                min: 1 1;
                ellipsis: -1;
                align: 0.0 0.5;
-               text_class: "list_default_item";
-               size: 9;
+               text_class: "list_item";
             }
             link.base: "elm,state,enabled";
          }
@@ -53,6 +54,7 @@ group { "elm/genlist/item/group_index/file_display"; nomouse; program_source: "e
             rel1.offset: 2 2;
             rel2.relative: 0.0 1.0;
             rel2.offset: 2 -3;
+            visible: 0;
          }
       }
       swallow { "elm.swallow.icon"; mouse;
@@ -80,6 +82,96 @@ group { "elm/genlist/item/group_index/file_display"; nomouse; program_source: "e
 }
 
 group {
-    name: "elm/genlist/item/default/file_display";
-    inherit: "elm/genlist/item/default/default";
+   name: "elm/genlist/item/default/file_display";
+   data.item: "selectraise" "on";
+   data.item: "texts" "elm.text";
+   data.item: "contents" "elm.swallow.icon";
+   data.item: "treesize" 0;
+
+   images.image: "shadow_square_tiny.png" COMP;
+   images.image: "bevel_out.png" COMP;
+   images.image: "horizontal_separated_bar_small_glow.png" COMP;
+
+   parts {
+      rect {
+         desc {
+            color: 0 0 0 0;
+         }
+      }
+      swallow { "elm.swallow.pad"; mouse;
+         desc { "default";
+            fixed: 1 0;
+            align: 0.0 0.5;
+            rel2.relative: 0.0 1.0;
+         }
+      }
+      swallow { "elm.swallow.icon"; mouse;
+         desc { "default";
+            fixed: 1 0;
+            align: 0.0 0.5;
+            aspect: 1.0 1.0;
+            rel1.offset: 20 0;
+            rel1.to_x: "elm.swallow.pad";
+            rel1.relative: 1.0 0.0;
+            rel2.to_x: "elm.swallow.pad";
+            rel2.relative: 1.0 1.0;
+            link.base: "elm,state,flip,disabled";
+         }
+         desc { "flip_enabled";
+            inherit: "default";
+            hid;
+            link.base: "elm,state,flip,enabled";
+         }
+      }
+      text { "elm.text"; mouse;
+         effect: GLOW;
+         scale;
+         desc { "default";
+            rel1.to_x: "elm.swallow.icon";
+            rel1.relative: 1.0 0.0;
+            rel1.offset: 5 0;
+            rel2.to: "elm.swallow.icon";
+            color: FN_COL_DEFAULT;
+            color_class: "list_item";
+            align: 0.0 0.5;
+            color2: 51 153 255 0;
+            text { font: FN; size: 10;
+               min: 1 1;
+               ellipsis: -1;
+               align: 0.0 0.5;
+               text_class: "list_item";
+            }
+         }
+         desc { "selected"
+            inherit: "default";
+            color2: 51 153 255 180;
+         }
+      }
+      rect { "event_block"; mouse;
+          desc { "default";
+             color: 0 0 0 0;
+             hid;
+             link.base: "elm,state,enabled";
+          }
+          desc { "disabled";
+             inherit: "default";
+             vis;
+             link.base: "elm,state,disabled";
+          }
+       }
+   }
+   programs {
+      program {
+         source: "elm";
+         signal: "elm,state,selected";
+         action: STATE_SET "selected";
+         target: "elm.text";
+      }
+      program {
+         source: "elm";
+         signal: "elm,state,unselected";
+         action: STATE_SET "unselected";
+         target: "elm.text";
+      }
+   }
 }
