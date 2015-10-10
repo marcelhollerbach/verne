@@ -135,7 +135,7 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
    eo_do(o,
     cache = elm_file_selector_cache_get();
     eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, _menu_cb, obj);
-    eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _selector_path_changed, obj);
+    eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED_USER, _selector_path_changed, obj);
     eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED_USER, _update_preview, obj);
     eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_ITEM_SELECTED, _update_preview, obj);
     );
