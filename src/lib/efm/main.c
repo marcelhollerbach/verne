@@ -1,6 +1,10 @@
 #include <Efreet.h>
 #include "efm_priv.h"
 
+typedef struct {
+
+} Efm_Data;
+
 typedef struct
 {
   int counter;
@@ -13,7 +17,7 @@ int _efm_domain;
 
 
 EOLIAN static int
-_efm_init(Eo *obj, void *pd)
+_efm_init(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 {
    eina_init();
    ecore_init();
@@ -21,7 +25,6 @@ _efm_init(Eo *obj, void *pd)
    eio_init();
    if (sd && sd->counter > 0)
      goto inc;
-
    _efm_domain = eina_log_domain_register("efm", NULL);
    if (!_efm_domain)
      return 0;
@@ -45,7 +48,7 @@ inc:
 }
 
 EOLIAN static void
-_efm_shutdown(Eo *obj, void *pd)
+_efm_shutdown(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 {
    sd->counter --;
 
@@ -67,7 +70,7 @@ _efm_shutdown(Eo *obj, void *pd)
 }
 
 EOLIAN static Efm_File*
-_efm_file_get(Eo *obj, void *pd, const char *name)
+_efm_file_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *name)
 {
    Efm_File *file;
 
@@ -79,3 +82,5 @@ _efm_file_get(Eo *obj, void *pd, const char *name)
    eo_do(EFM_FILE_CLASS, file = efm_file_generate(name));
    return file;
 }
+
+#include "efm.eo.x"

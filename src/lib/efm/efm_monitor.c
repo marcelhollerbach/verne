@@ -167,9 +167,9 @@ _efm_monitor_filter_set(Eo *obj, Efm_Monitor_Data *pd, Efm_Filter *filter)
              eo_do(pd->filter, eo_event_callback_add(EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, obj));
              eo_do(pd->filter, eo_wref_add(&pd->filter));
           }
+        _refresh_files(obj, pd);
      }
 
-   _refresh_files(obj, pd);
 }
 
 EOLIAN static Efm_Filter *

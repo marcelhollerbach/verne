@@ -7,6 +7,9 @@ include_directories(
 )
 
 LIST(APPEND FM_MONITOR
+   efm.eo
+   efm.eo.x
+   efm.eo.h
    efm.eot
    efm.eot.h
    fm_monitor.c

@@ -10,6 +10,7 @@
 
 #include "efm.eot.h"
 #include "efm_file.eo.h"
+#include "efm.eo.h"
 #include "efm_filter.eo.h"
 #include "efm_monitor.eo.h"
 
@@ -18,15 +19,6 @@
 #endif
 
 #define EAPI
-
-/*
- * Inits the fm_monitor
- */
-EAPI int efm_init();
-/*
- * shutdown the fm_monitor
- */
-EAPI void efm_shutdown();
 
 #undef EAPI
 

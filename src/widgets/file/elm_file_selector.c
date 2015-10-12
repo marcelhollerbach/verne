@@ -227,7 +227,8 @@ EOLIAN static Eo_Base *
 _elm_file_selector_eo_base_constructor(Eo *obj, Elm_File_Selector_Data *pd)
 {
    Eo *eo;
-   efm_init();
+
+   eo_do(EFM_CLASS, efm_init());
    config_init();
 
    if (!views)

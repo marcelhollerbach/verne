@@ -18,8 +18,10 @@ START_TEST(efm_file_invalid_name)
    Efm_File *file;
    const char *filename = "I-Am-Invalid";
 
-   efm_init();
+   eo_init();
+   eo_do(EFM_CLASS, efm_init());
 
+   //eo_do(EFM_CLASS, efm_fil)
    eo_do(EFM_FILE_CLASS, file = efm_file_generate(filename));
 
    ck_assert_ptr_ne(file, NULL);
@@ -47,9 +49,8 @@ START_TEST(efm_valid_file)
 
    system("touch "TEST_FILE);
 
-   eina_init();
-   ecore_init();
-   efm_init();
+   eo_init();
+   eo_do(EFM_CLASS, efm_init());
 
    done = EINA_FALSE;
 
@@ -63,7 +64,7 @@ START_TEST(efm_valid_file)
 
    ck_assert_int_eq(done, 1);
 
-   efm_shutdown();
+   eo_do(EFM_CLASS, efm_shutdown());
    ecore_shutdown();
    eina_shutdown();
 }
@@ -96,7 +97,7 @@ START_TEST(efm_stresstest)
 
    eina_init();
    ecore_init();
-   efm_init();
+   eo_do(EFM_CLASS, efm_init());
 
    done = EINA_FALSE;
    for (i = 0; i < TEST_FILE_ITER_MAX; i++)
@@ -150,7 +151,7 @@ START_TEST(efm_monitor_test)
    Efm_Monitor *mon;
    int i;
 
-   system("mkdir "TEST_DIRECTORY);
+   system("mkdir -p "TEST_DIRECTORY);
 
    for(i = 0; i < TEST_DIRECTORY_FILES_MAX; i++)
      {
@@ -162,7 +163,8 @@ START_TEST(efm_monitor_test)
    error = EINA_FALSE;
    files = 0;
 
-   efm_init();
+   eo_init();
+   eo_do(EFM_CLASS, efm_init());
 
    mon = eo_add(EFM_MONITOR_CLASS, NULL, efm_monitor_install(TEST_DIRECTORY, NULL));
    eo_do (mon,
@@ -170,11 +172,12 @@ START_TEST(efm_monitor_test)
       eo_event_callback_add(EFM_MONITOR_EVENT_FILE_ADD, _add, NULL);
       eo_event_callback_add(EFM_MONITOR_EVENT_ERROR, _error, NULL);
    );
+
    ecore_main_loop_begin();
 
    ck_assert_int_eq(error, 0);
    ck_assert_int_eq(files, TEST_DIRECTORY_FILES_MAX);
-   efm_shutdown();
+   eo_do(EFM_CLASS, efm_shutdown());
 }
 END_TEST
 
@@ -195,6 +198,7 @@ Suite * efm_suite(void)
     tcase_add_test(tc_core, efm_stresstest);
 
     tc_core = tcase_create("efm_monitor");
+    tcase_set_timeout(tc_core, 1000);
     tcase_add_test(tc_core, efm_monitor_test);
 
     suite_add_tcase(s, tc_core);
