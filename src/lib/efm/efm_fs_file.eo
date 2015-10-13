@@ -1,0 +1,22 @@
+class Efm.Fs.File (Eo.Base, Efm.File) {
+    methods {
+        generate {
+            params {
+                path : const(char)*;
+            }
+        }
+    }
+    implements {
+        Efm.File.filename.get;
+        Efm.File.path.get;
+        Efm.File.fileending.get;
+        Efm.File.mimetype.get;
+        Efm.File.stat.get;
+        Efm.File.is_type;
+        Eo.Base.finalize;
+        Eo.Base.destructor;
+    }
+    constructors {
+        .generate;
+    }
+}

@@ -63,7 +63,7 @@ _add(Efm_Monitor *mon, const char *file)
    Efm_File *ef;
    Efm_Monitor_Data *pd;
 
-   eo_do(EFM_FILE_CLASS, ef = efm_file_generate(file));
+   eo_do(EFM_CLASS, ef = efm_file_get(file));
 
    if (!ef)
      {

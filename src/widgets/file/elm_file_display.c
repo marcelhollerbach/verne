@@ -34,7 +34,7 @@ _update_preview(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *de
    if (desc == ELM_FILE_SELECTOR_EVENT_ITEM_SELECTED)
      f = event_info;
    else
-     eo_do(EFM_FILE_CLASS, f = efm_file_generate(event_info));
+     eo_do(EFM_CLASS, f = efm_file_get(event_info));
 
    eo_do(pd->preview, elm_file_preview_file_set(f));
    return EO_CALLBACK_CONTINUE;

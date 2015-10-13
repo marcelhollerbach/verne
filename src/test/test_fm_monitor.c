@@ -21,8 +21,7 @@ START_TEST(efm_file_invalid_name)
    eo_init();
    eo_do(EFM_CLASS, efm_init());
 
-   //eo_do(EFM_CLASS, efm_fil)
-   eo_do(EFM_FILE_CLASS, file = efm_file_generate(filename));
+   eo_do(EFM_CLASS, file = efm_file_get(filename));
 
    ck_assert_ptr_ne(file, NULL);
 
@@ -54,7 +53,7 @@ START_TEST(efm_valid_file)
 
    done = EINA_FALSE;
 
-   eo_do(EFM_FILE_CLASS, file = efm_file_generate(filename));
+   eo_do(EFM_CLASS, file = efm_file_get(filename));
 
    ck_assert_ptr_ne(file, NULL);
 
@@ -102,7 +101,7 @@ START_TEST(efm_stresstest)
    done = EINA_FALSE;
    for (i = 0; i < TEST_FILE_ITER_MAX; i++)
      {
-        eo_do(EFM_FILE_CLASS, file = efm_file_generate(filename));
+        eo_do(EFM_CLASS, file = efm_file_get(filename));
 
         ck_assert_ptr_ne(file, NULL);
 

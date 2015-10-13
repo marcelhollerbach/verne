@@ -79,8 +79,7 @@ _efm_file_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *name)
    if (file)
      return file;
 
-   eo_do(EFM_FILE_CLASS, file = efm_file_generate(name));
-   return file;
+   return eo_add(EFM_FS_FILE_CLASS, NULL, efm_fs_file_generate(name));
 }
 
 #include "efm.eo.x"
