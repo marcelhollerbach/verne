@@ -4,34 +4,22 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/lib/emous
 )
 
-string(REPLACE "\n" "" EOLIAN_EO_DIR_WITHOUT_NEWLINE
-"${EOLIAN_EO_DIR}")
-
-file(GLOB files "*.eo")
-
-foreach(filename ${files})
-add_custom_command(
-   OUTPUT ${filename}.x
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/lib/emous --gc --eo -o ${filename}.x ${filename}
-   DEPENDS ${filename}
-)
-
-add_custom_command(
-   OUTPUT ${filename}.h
-   COMMAND eolian_gen -I ${EOLIAN_EO_DIR_WITHOUT_NEWLINE} -I ${CMAKE_SOURCE_DIR}/src/lib/emous --gh --eo -o ${filename}.h ${filename}
-   DEPENDS ${filename}
-)
-
-endforeach()
-
 LIST(APPEND EMOUS_DEBUG
+   emous_device_debug.eo
    emous_device_debug.eo.x
    emous_device_debug.eo.h
+   emous_type_debug.eo
    emous_type_debug.eo.x
    emous_type_debug.eo.h
    main.c
    test_mount.c
    )
+
+list(APPEND EMOUS_DEPS
+  ../../lib/emous/
+)
+
+eo_rule_create("${EMOUS_DEBUG}" "${EMOUS_DEPS}")
 
 add_executable(test_emous ${EMOUS_DEBUG})
 
