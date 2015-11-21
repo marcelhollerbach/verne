@@ -51,6 +51,7 @@ target_link_libraries(emous
   ${EFREET_MIME_LIBRARIES}
   ${CMAKE_THREAD_LIBS_INIT}
   ${Mount_LIBRARIES}
+  m
 )
 
 INSTALL(TARGETS emous
