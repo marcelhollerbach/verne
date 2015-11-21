@@ -39,13 +39,16 @@ eo_rule_create("${FM_MONITOR}" "${FM_DEPS}")
 add_library(efm_lib SHARED ${FM_MONITOR})
 
 target_link_libraries(efm_lib
-  ${EINA_LIRBRARIES}
+  ${EINA_LIBRARIES}
+  ${EO_LIBRARIES}
   ${EIO_LIBRARIES}
   ${ECORE_LIBRARIES}
   ${EEZE_LIBRARIES}
   ${ECORE_FILE_LIBRARIES}
+  ${EFREET_LIBRARIES}
   ${EFREET_MIME_LIBRARIES}
   ${LibArchive_LIBRARIES}
+  ${CMAKE_THREAD_LIBS_INIT}
 )
 
 set_property(TARGET efm_lib

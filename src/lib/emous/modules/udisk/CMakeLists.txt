@@ -26,6 +26,13 @@ eo_rule_create("${EMOUS_UDISK_FILES}" "${udisks_include}")
 
 add_library(emous_udisk MODULE ${EMOUS_UDISK_FILES})
 
+target_link_libraries(emous_udisk
+  ${EINA_LIBRARIES}
+  ${EO_LIBRARIES}
+  ${ELDBUS_LIBRARIES}
+  emous
+)
+
 INSTALL(TARGETS emous_udisk
   DESTINATION ${EMOUS_MODULE_PATH}
 )

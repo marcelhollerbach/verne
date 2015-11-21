@@ -79,9 +79,13 @@ include_directories(
 
 target_link_libraries(widgets
   ${EIO_LIBRARIES}
-  ${ECORE_FILE_LIBRARYS}
-  ${ELEMENTARY_LIRBRARIES}
-  ${EFREET_TRASH}
+  ${EVAS_LIBRARIES}
+  ${EFL_LIBRARIES}
+  ${EET_LIBRARIES}
+  ${ECORE_FILE_LIBRARIES}
+  ${ELEMENTARY_LIBRARIES}
+  ${EFREET_TRASH_LIBRARIES}
+  ${CMAKE_THREAD_LIBS_INIT}
   efm_lib
   emous
 )
