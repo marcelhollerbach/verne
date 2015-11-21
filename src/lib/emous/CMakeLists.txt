@@ -43,7 +43,7 @@ set_property(TARGET emous
              PROPERTY COMPILE_DEFINITIONS EMOUS_MODULE_PATH="${EMOUS_MODULE_PATH}")
 
 target_link_libraries(emous
-  ${EINA_LIRBRARIES}
+  ${EINA_LIBRARIES}
   ${EO_LIBRARIES}
   ${EIO_LIBRARIES}
   ${ECORE_LIBRARIES}
