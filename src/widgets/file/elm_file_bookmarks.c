@@ -662,11 +662,7 @@ _elm_file_bookmarks_eo_base_constructor(Eo *obj, Elm_File_Bookmarks_Data *pd)
 
    _static_data_ref();
    pd->icons = eina_hash_stringshared_new(NULL);
-   // setup drop zone
-   elm_drop_target_add(obj, ELM_SEL_FORMAT_TARGETS,
-                       _dnd_enter, NULL, _dnd_leave,
-                       NULL, NULL, NULL,
-                       _dnd_droped, NULL);
+
 
    eo_do(EMOUS_MANAGER_CLASS, m = emous_manager_object_get());
    eo_do(m, eo_event_callback_add(EMOUS_MANAGER_EVENT_DEVICE_ADD, _device_add_cb, obj);
@@ -674,6 +670,12 @@ _elm_file_bookmarks_eo_base_constructor(Eo *obj, Elm_File_Bookmarks_Data *pd)
         );
 
    eo_do_super(obj, ELM_FILE_BOOKMARKS_CLASS, eo = eo_constructor());
+
+   // setup drop zone
+   elm_drop_target_add(obj, ELM_SEL_FORMAT_TARGETS,
+                       _dnd_enter, NULL, _dnd_leave,
+                       NULL, NULL, NULL,
+                       _dnd_droped, NULL);
 
    elm_scroller_policy_set(obj, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_AUTO);
    elm_object_style_set(obj, "file_display");
