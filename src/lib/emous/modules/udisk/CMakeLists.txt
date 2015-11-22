@@ -5,8 +5,6 @@ include_directories(
   ../../
 )
 
-set (EMOUS_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/lib/emous/")
-
 LIST(APPEND EMOUS_UDISK_FILES
    emous_device_udisks.eo
    emous_device_udisks.eo.x
@@ -34,5 +32,5 @@ target_link_libraries(emous_udisk
 )
 
 INSTALL(TARGETS emous_udisk
-  DESTINATION ${EMOUS_MODULE_PATH}
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/emous-1/
 )

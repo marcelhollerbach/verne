@@ -6,8 +6,6 @@ include_directories(
   ${ECORE_FILE_INCLUDE_DIRS}
 )
 
-set (EMOUS_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/lib/emous/")
-
 LIST(APPEND FM_MONITOR
    efm.eot
    efm.eot.h
@@ -51,10 +49,7 @@ target_link_libraries(efm_lib
   ${CMAKE_THREAD_LIBS_INIT}
 )
 
-set_property(TARGET efm_lib
-   PROPERTY COMPILE_DEFINITIONS ${RESOLVER_DIR_DEFINITION})
-
 INSTALL(TARGETS efm_lib
-  LIBRARY DESTINATION lib
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
-INSTALL(FILES Efm.h efm_file.eo.h efm_monitor.eo.h DESTINATION include/efm-1/)
+INSTALL(FILES Efm.h efm_file.eo.h efm_monitor.eo.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/efm-1/)

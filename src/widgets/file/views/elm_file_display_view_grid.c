@@ -225,6 +225,7 @@ _item_select_swap(Evas_Object *obj, const Eina_List *selected, Elm_Object_Item *
      }
 
    elm_gengrid_item_selected_set(it, EINA_TRUE);
+
    empty_check(obj);
 }
 

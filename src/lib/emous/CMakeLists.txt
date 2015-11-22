@@ -7,7 +7,9 @@ include_directories(
   ./
 )
 
-set (EMOUS_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/lib/emous/")
+set (EMOUS_MODULE_PATH "${CMAKE_INSTALL_FULL_LIBDIR}/emous-1/")
+
+message(${EMOUS_MODULE_PATH})
 
 LIST(APPEND EMOUS_FILES
    Emous.h
@@ -55,9 +57,9 @@ target_link_libraries(emous
 )
 
 INSTALL(TARGETS emous
-  LIBRARY DESTINATION lib
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
 INSTALL(FILES Emous.h emous_device.eo.h emous_type.eo.h emous_manager.eo.h emous.eo.h
-  DESTINATION "include/emous-1/"
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/emous-1/
 )
