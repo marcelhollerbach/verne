@@ -153,7 +153,7 @@ _setup_list(Evas_Object *o)
      {
         bookmark_entry_internal_add(o, pd, tmp, ecore_file_file_get(tmp), "folder", EINA_TRUE, pd->bookmark_group_it);
      }
-
+#if 0
    if(!config->display_gtk) goto device;
 
    Eina_List *lst = util_bookmarks_load_gtk();
@@ -163,6 +163,7 @@ _setup_list(Evas_Object *o)
         bookmark_entry_internal_add(o, pd, tmp, ecore_file_file_get(tmp), "folder", EINA_FALSE, pd->bookmark_group_it);
         eina_stringshare_del(tmp);
      }
+#endif
 device:
 
    pd->device_group_it = it = elm_genlist_item_append(o, sd->group_item_class, eina_stringshare_add("Devices"), NULL, 0, NULL, NULL);
