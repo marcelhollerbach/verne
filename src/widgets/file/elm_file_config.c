@@ -49,9 +49,13 @@ util_bookmarks_load_gtk(void)
 
    while(fscanf(fd, "%s\n", filebuf) != EOF)
      {
-        char *file = filebuf + GTK_FILESEP_LEN;
+        Efreet_Uri *uri;
+        char **contents = eina_str_split(filebuf, " ", 2);
 
-        result = eina_list_append(result, eina_stringshare_add(file));
+        uri = efreet_uri_decode(contents[0]);
+        if (!uri) continue;
+
+        result = eina_list_append(result, eina_stringshare_add(uri->path));
      }
 
    fclose(fd);
