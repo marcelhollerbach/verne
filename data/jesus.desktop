@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Efm - Jesus
 Comment=A Elementary based Filemanager
-Exec=efm %d
+Exec=jesus %d
 Terminal=false
 Icon=system-file-manager
 Type=Application
