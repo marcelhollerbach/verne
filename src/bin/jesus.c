@@ -41,7 +41,7 @@ ui_init()
    Evas_Object *icon;
    Evas_Image *img;
 
-   win = elm_win_util_standard_add("efm", "efm - Jesus");
+   win = elm_win_util_standard_add("Jesus", "Jesus - Fm");
 
    icon = elm_icon_add(win);
    elm_icon_standard_set(icon, "system-file-manager");
@@ -52,7 +52,7 @@ ui_init()
    evas_object_smart_callback_add(win, "delete,request", on_done, NULL);
 
    layout = elm_layout_add(win);
-   eo_do(layout, efl_file_set(THEME_PATH"/efm.edc.edj", "headbar"));
+   eo_do(layout, efl_file_set(THEME_PATH"/jesus.edc.edj", "headbar"));
    evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
    evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    evas_object_show(layout);
