@@ -3,7 +3,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 project(efm)
 
-include(eo_helper)
 include(GNUInstallDirs)
 
 option(Debug "Show the debug screen" OFF)
@@ -30,6 +29,16 @@ find_package(Threads REQUIRED)
 
 pkg_check_modules(Mount REQUIRED mount)
 pkg_check_modules(Check REQUIRED check)
+
+if ((${Eolian_VERSION_MINOR} LESS 17) AND
+    (((${Eolian_VERSION_MINOR} EQUAL 16) AND
+        (${Eolian_VERSION_PATCH} LESS 99))))
+    message("Using legecy eo_helper")
+    include(eo_helper)
+endif((${Eolian_VERSION_MINOR} LESS 17) AND
+    (((${Eolian_VERSION_MINOR} EQUAL 16) AND
+        (${Eolian_VERSION_PATCH} LESS 99))))
+
 
 add_subdirectory(data/theme/elm_ext)
 add_subdirectory(src/lib/emous)
