@@ -67,7 +67,7 @@ list(APPEND WIDGET_INCLUDE
 )
 eo_rule_create("${WIDGET_LIBRARY}" "${WIDGET_INCLUDE}")
 
-add_library(widgets SHARED ${WIDGET_LIBRARY})
+add_library(elm_ext SHARED ${WIDGET_LIBRARY})
 
 include_directories(
   ${EINA_INCLUDE_DIRS}
@@ -77,7 +77,7 @@ include_directories(
   ../lib/emous
 )
 
-target_link_libraries(widgets
+target_link_libraries(elm_ext
   ${EIO_LIBRARIES}
   ${EVAS_LIBRARIES}
   ${EFL_LIBRARIES}
@@ -100,11 +100,11 @@ list(APPEND definitions
 endif(DEBUG)
 
 
-set_property(TARGET widgets
+set_property(TARGET elm_ext
    PROPERTY COMPILE_DEFINITIONS
    ${definitions}
 )
 INSTALL(FILES Elementary_Ext.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/elm_ext-1/)
-INSTALL(TARGETS widgets
+INSTALL(TARGETS elm_ext
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )

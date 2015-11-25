@@ -33,7 +33,7 @@ target_link_libraries (filedisplay_test
    ${EO_LIBRARIES}
    ${ECORE_LIBRARIES}
    ${ELEMENTARY_LIBRARIES}
-   widgets
+   elm_ext
    efm_lib
 )
 
