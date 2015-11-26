@@ -106,6 +106,24 @@ _focus_idler(void *data)
    return EINA_FALSE;
 }
 
+static void
+_trigger_change(const char *text) {
+    char **parts;
+    char path[PATH_MAX];
+
+    parts = eina_str_split(text, SEP, 0);
+
+    path[0] = '\0';
+
+    for(int i = 0; parts[i]; i++) {
+      strcat(path, "/");
+      strcat(path, parts[i]);
+    }
+
+    printf("Change %s\n", path);
+    eo_do(selector, efl_file_set(path, NULL));
+}
+
 static Eina_Bool
 _unfocus_idler(void *data)
 {
@@ -118,10 +136,13 @@ _unfocus_idler(void *data)
     // get the currect text
     text = elm_object_text_get(data);
 
+    _trigger_change(text);
+
     // save the current state
     evas_object_data_set(data, "__orig_text", strdup(text));
 
     elm_object_text_set(data, _path_transform(text));
+
 
     return EINA_FALSE;
 }
