@@ -753,6 +753,10 @@ _ctx_view_sel(void *data, Evas_Object *obj, void *event EINA_UNUSED)
 {
    Evas_Object *w = evas_object_data_get(obj, "__w");
 
+   eo_do(data, config->viewname = elm_file_view_name_get());
+
+   config_save();
+
    eo_do(w, elm_file_selector_view_set(data));
 }
 
