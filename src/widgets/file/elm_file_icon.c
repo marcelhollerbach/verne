@@ -143,6 +143,8 @@ _elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode, Eina_
         elm_object_part_content_unset(obj, "text");
         elm_object_part_content_set(obj, "text", pd->entry);
         evas_object_hide(pd->label);
+        evas_object_show(pd->entry);
+        elm_object_focus_set(pd->entry, EINA_TRUE);
      }
    else
      {
