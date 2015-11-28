@@ -1,4 +1,4 @@
-#define GAP 9
+#define GAP 7
 externals {
    external: "elm";
 }
@@ -215,35 +215,11 @@ collections{
 
    group { name: "headbar";
       parts {
-         spacer { "base"
-            desc { "default"
-
-            }
-         }
-         spacer { "headbar"
-            desc { "default"
-               rel1.to: "base";
-               rel2.to: "base";
-               rel1.relative: 0.0 0.0;
-               rel2.relative: 1.0 0.0;
-               rel2.offset: 0 30;
-               fixed: 1 1;
-            }
-         }
-         rect { "line"
-            desc { "default"
-               color: 40 40 40 255;
-               rel1.to: "headbar";
-               rel1.relative: 0.0 1.0;
-               rel2.to: "headbar";
-               rel2.offset: 0 1;
-            }
-         }
          spacer { "back"
             desc { "default"
                aspect: 1 1;
-               rel1.to: "headbar";
-               rel2.to: "headbar";
+               rel1.to_y: "jesus.textbar";
+               rel2.to_y: "jesus.textbar";
                rel2.relative: 0.0 1.0;
                align: 0.0 0.0;
             }
@@ -278,37 +254,23 @@ collections{
          }
          swallow { "jesus.textbar"
             desc { "default"
-               rel1.to_y: "headbar";
                rel1.to_x: "forward";
-               rel1.relative: 1.0 0.5;
-               rel2.to: "headbar";
-               rel2.relative: 1.0 0.5;
-               fixed: 1 1;
+               rel1.relative: 1.0 0.0;
+               rel2.to_x: "fsaction";
+               rel2.relative: 0.0 1.0;
             }
          }
          external { "fsaction"
             source: "elm/icon";
             desc { "default"
-               rel1.to_y: "headbar";
-               rel1.offset: 5 5;
                rel1.relative: 1.0 0.0;
-               rel2.to: "headbar";
+               rel2.to_y: "jesus.textbar";
                rel2.relative: 1.0 1.0;
-               rel2.offset: -5 -5;
                aspect: 1 1;
                align: 1.0 0.0;
                params {
                   string: icon edit-paste;
                }
-            }
-         }
-         part { name: "jesus.content"; type: SWALLOW;
-            description { state: "default" 0.0;
-               rel1.to: "headbar";
-               rel1.relative: 0.0 1.0;
-               rel1.offset: 0 3;
-               rel2.to: "base";
-               rel2.relative: 1.0 1.0;
             }
          }
       }
