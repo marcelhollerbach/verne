@@ -38,7 +38,7 @@ _dir_changed(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Descrip
 static void
 ui_init()
 {
-   Evas_Object *icon;
+   Evas_Object *icon, *seperator, *box;
    Evas_Image *img;
 
    win = elm_win_util_standard_add("Jesus", "Jesus - Fm");
@@ -51,20 +51,34 @@ ui_init()
 
    evas_object_smart_callback_add(win, "delete,request", on_done, NULL);
 
+   box = elm_box_add(win);
+   evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+   evas_object_show(box);
+
    layout = elm_layout_add(win);
    eo_do(layout, efl_file_set(THEME_PATH"/jesus.edc.edj", "headbar"));
-   evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
-   evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+   evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, 0.0);
+   evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, 0.0);
+   elm_box_pack_end(box, layout);
    evas_object_show(layout);
+
+   seperator = elm_separator_add(win);
+   elm_separator_horizontal_set(seperator, EINA_TRUE);
+   evas_object_size_hint_align_set(seperator, EVAS_HINT_FILL, 0.0);
+   evas_object_size_hint_weight_set(seperator, EVAS_HINT_EXPAND, 0.0);
+   elm_box_pack_end(box, seperator);
+   evas_object_show(seperator);
 
    preview = eo_add(ELM_FILE_DISPLAY_CLASS, win);
    evas_object_size_hint_align_set(preview, EVAS_HINT_FILL, EVAS_HINT_FILL);
    evas_object_size_hint_weight_set(preview, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-   elm_object_part_content_set(layout, "jesus.content", preview);
+   elm_box_pack_end(box, preview);
    eo_do(preview, selector = elm_file_display_selector_get());
    eo_do(selector, eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED_USER,
                                  _dir_changed, NULL););
    evas_object_show(preview);
+
 
    elm_object_focus_set(preview, EINA_TRUE);
 
@@ -72,7 +86,7 @@ ui_init()
 
    shortcuts_init();
 
-   elm_win_resize_object_add(win, layout);
+   elm_win_resize_object_add(win, box);
    evas_object_resize(win, 800,600);
    evas_object_show(win);
 }
