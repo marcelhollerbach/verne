@@ -120,7 +120,6 @@ _trigger_change(const char *text) {
       strcat(path, parts[i]);
     }
 
-    printf("Change %s\n", path);
     eo_do(selector, efl_file_set(path, NULL));
 }
 
