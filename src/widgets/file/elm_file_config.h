@@ -9,6 +9,7 @@ typedef struct
    int icon_size;
    char hidden_files;
    char only_folder;
+   char image_preview;
    struct{
       int folder_placement;
       int type;

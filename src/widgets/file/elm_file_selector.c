@@ -862,6 +862,17 @@ _ctx_new_folder(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSE
 }
 
 static void
+_ctx_image_preview(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Evas_Object *w = evas_object_data_get(obj, "__w");
+   Eina_Bool b;
+
+   eo_do(w, b = elm_file_selector_image_preview_get();
+            elm_file_selector_image_preview_set(!b);
+          );
+}
+
+static void
 _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
 {
    Evas_Object *menu;
@@ -1038,6 +1049,18 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
       elm_object_item_content_set(it, ck);
    }
 
+   it = elm_menu_item_add(menu, NULL, NULL, "", _ctx_image_preview, NULL);
+   {
+      Evas_Object *ck;
+      ck = elm_check_add(menu);
+      if (config->image_preview != 0)
+        elm_check_state_set(ck, EINA_TRUE);
+      else
+        elm_check_state_set(ck, EINA_FALSE);
+      elm_object_text_set(ck, "Enable image preview");
+      elm_object_item_content_set(it, ck);
+   }
+
    elm_menu_item_separator_add(menu, NULL);
    eo_do(obj,
          eo_event_callback_call(&_ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END,
@@ -1154,6 +1177,20 @@ _elm_file_selector_case_sensetive_sort_get(Eo *obj EINA_UNUSED, Elm_File_Selecto
    return config->sort.casesensetive;
 }
 
+EOLIAN static void
+_elm_file_selector_image_preview_set(Eo *obj, Elm_File_Selector_Data *pd, Eina_Bool b)
+{
+   config->image_preview = b;
+   config_save();
+   eo_do(pd->view.obj, efl_file_set(pd->path, NULL));
+}
+
+EOLIAN static Eina_Bool
+_elm_file_selector_image_preview_get(Eo *obj, Elm_File_Selector_Data *pd)
+{
+   return config->image_preview;
+}
+
 EOLIAN static Eina_List *
 _elm_file_selector_selection_get(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd)
 {
@@ -1195,7 +1232,7 @@ _elm_file_selector_icon_generate(Eo *obj, Elm_File_Selector_Data *pd EINA_UNUSED
 
 #if 1
    ic = eo_add(ELM_FILE_ICON_CLASS, obj,
-    elm_obj_file_icon_install(pd->cache, file, EINA_FALSE));
+    elm_obj_file_icon_install(pd->cache, file, config->image_preview));
    eo_do(ic,
      eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_DROP, _drop_cb, obj);
      eo_event_callback_add(ELM_FILE_ICON_EVENT_ITEM_HOVER, _hover_cb, obj)

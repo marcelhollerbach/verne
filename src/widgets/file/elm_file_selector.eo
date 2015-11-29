@@ -99,6 +99,12 @@ class Elm.File.Selector (Elm.Layout, Efl.File) {
             list : list<Efm.File*>*;
          }
       }
+      @property image_preview {
+         [[Create image preview or just display icons]]
+         values {
+            b : bool; [[true to create preview]]
+         }
+      }
       @property cache {
          [[Get the cache of this selector]]
          get {
