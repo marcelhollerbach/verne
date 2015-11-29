@@ -88,7 +88,7 @@ _menu_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA
    it = elm_menu_item_add(menu, NULL, NULL, NULL, _ctx_preview_cb, data);
    ck = elm_check_add(menu);
    elm_check_state_set(ck, pd->preview_show);
-   elm_object_text_set(ck, "Preview");
+   elm_object_text_set(ck, "File Details");
    elm_object_item_content_set(it, ck);
    evas_object_show(ck);
 

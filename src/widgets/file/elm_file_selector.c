@@ -862,7 +862,7 @@ _ctx_new_folder(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSE
 }
 
 static void
-_ctx_image_preview(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
+_ctx_image_preview(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
    Evas_Object *w = evas_object_data_get(obj, "__w");
    Eina_Bool b;
@@ -1020,6 +1020,20 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
    }
    elm_menu_item_separator_add(menu, NULL);
    /*
+     Icon preview
+   */
+   it = elm_menu_item_add(menu, NULL, NULL, "", _ctx_image_preview, NULL);
+   {
+      Evas_Object *ck;
+      ck = elm_check_add(menu);
+      if (config->image_preview != 0)
+        elm_check_state_set(ck, EINA_TRUE);
+      else
+        elm_check_state_set(ck, EINA_FALSE);
+      elm_object_text_set(ck, "Icon preview");
+      elm_object_item_content_set(it, ck);
+   }
+   /*
      Hidden files
     */
    it = elm_menu_item_add(menu, NULL, NULL, "", _ctx_hidden_files, NULL);
@@ -1046,18 +1060,6 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
       else
         elm_check_state_set(ck, EINA_FALSE);
       elm_object_text_set(ck, "Only folder");
-      elm_object_item_content_set(it, ck);
-   }
-
-   it = elm_menu_item_add(menu, NULL, NULL, "", _ctx_image_preview, NULL);
-   {
-      Evas_Object *ck;
-      ck = elm_check_add(menu);
-      if (config->image_preview != 0)
-        elm_check_state_set(ck, EINA_TRUE);
-      else
-        elm_check_state_set(ck, EINA_FALSE);
-      elm_object_text_set(ck, "Enable image preview");
       elm_object_item_content_set(it, ck);
    }
 
@@ -1178,7 +1180,7 @@ _elm_file_selector_case_sensetive_sort_get(Eo *obj EINA_UNUSED, Elm_File_Selecto
 }
 
 EOLIAN static void
-_elm_file_selector_image_preview_set(Eo *obj, Elm_File_Selector_Data *pd, Eina_Bool b)
+_elm_file_selector_image_preview_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd EINA_UNUSED, Eina_Bool b)
 {
    config->image_preview = b;
    config_save();
@@ -1186,7 +1188,7 @@ _elm_file_selector_image_preview_set(Eo *obj, Elm_File_Selector_Data *pd, Eina_B
 }
 
 EOLIAN static Eina_Bool
-_elm_file_selector_image_preview_get(Eo *obj, Elm_File_Selector_Data *pd)
+_elm_file_selector_image_preview_get(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd EINA_UNUSED)
 {
    return config->image_preview;
 }
