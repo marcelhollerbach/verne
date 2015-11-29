@@ -6,11 +6,11 @@
 typedef struct
 {
    Eo *main_win;
+   Eo *elm_genlist1;
+   Eo *open;
+   Eo *asdefault;
    Eo *current_app;
    Eo *search;
-   Eo *desktop_list;
-   Eo *asdefault;
-   Eo *open;
 } Open_With2_Main_Win_Widgets;
 
 

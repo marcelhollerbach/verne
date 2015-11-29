@@ -16,12 +16,12 @@
       },
       "Properties":
       {
-        "Elm.Win.title":["elm_win1"],
         "Evas.Object.size_hint_weight":[1, 1],
         "Efl.Gfx.Base.visible":[true],
         "Elm.Win.type":["ELM_WIN_BASIC"],
         "Efl.Gfx.Base.size":[454, 379],
-        "Elm.Win.autodel":[true]
+        "Elm.Win.autodel":[true],
+        "Elm.Win.title":["Open with"]
       },
       "Contains":["elm_bg1", "elm_box1"]
     },
@@ -48,22 +48,6 @@
         "Efl.Gfx.Base.position":[72, 86]
       },
       "Contains":["elm_box3", "search", "elm_genlist1", "elm_box2"]
-    },
-    "elm_label1":
-    {
-      "Desc":
-      {
-        "parent":"elm_box3",
-        "class":"Elm.Label"
-      },
-      "Properties":
-      {
-        "Efl.Gfx.Base.visible":[true],
-        "Efl.Gfx.Base.size":[60, 30],
-        "Evas.Object.size_hint_weight":[1, 0],
-        "Evas.Object.size_hint_align":[-1, 0.50],
-        "Elm.Widget.part_text":[null, "Current default:"]
-      }
     },
     "elm_genlist1":
     {
@@ -146,6 +130,22 @@
         "Evas.Object.size_hint_weight":[0, 0]
       },
       "Contains":["elm_label1", "current_app"]
+    },
+    "elm_label1":
+    {
+      "Desc":
+      {
+        "parent":"elm_box3",
+        "class":"Elm.Label"
+      },
+      "Properties":
+      {
+        "Efl.Gfx.Base.visible":[true],
+        "Efl.Gfx.Base.size":[60, 30],
+        "Evas.Object.size_hint_weight":[1, 0],
+        "Evas.Object.size_hint_align":[-1, 0.50],
+        "Elm.Widget.part_text":[null, "Current default:"]
+      }
     },
     "current_app":
     {

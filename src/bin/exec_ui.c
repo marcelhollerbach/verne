@@ -108,8 +108,8 @@ _genlist_fill(Open_With_Ui *ui)
    gklass->func.text_get = _group_text_get;
 
    // initial headlines for recommented and not recommented apps
-   recommented = last_recommend = elm_genlist_item_append(ui->wid->desktop_list, gklass, "Recommended apps", NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
-   normal = elm_genlist_item_append(ui->wid->desktop_list, gklass, "Normal apps", NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
+   recommented = last_recommend = elm_genlist_item_append(ui->wid->elm_genlist1, gklass, "Recommended apps", NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
+   normal = elm_genlist_item_append(ui->wid->elm_genlist1, gklass, "Normal apps", NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
    desktops = efreet_util_desktop_name_glob_list("*");
 
    EINA_LIST_FREE(desktops, desktop)
@@ -118,9 +118,9 @@ _genlist_fill(Open_With_Ui *ui)
         if (_list_compare(desktop->mime_types, mime_type))
           {
              // this is a recommended app
-             last_recommend = elm_genlist_item_sorted_insert(ui->wid->desktop_list, klass, desktop, recommented, 0, _compare, NULL, desktop);
+             last_recommend = elm_genlist_item_sorted_insert(ui->wid->elm_genlist1, klass, desktop, recommented, 0, _compare, NULL, desktop);
           }
-        it = elm_genlist_item_sorted_insert(ui->wid->desktop_list, klass, desktop, normal, 0, _compare, NULL, desktop);
+        it = elm_genlist_item_sorted_insert(ui->wid->elm_genlist1, klass, desktop, normal, 0, _compare, NULL, desktop);
         //allways add the normal app
         ui->entrys = eina_list_append(ui->entrys, it);
      }
@@ -197,7 +197,7 @@ _open_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
    Elm_Object_Item *it;
 
    req = data;
-   it = elm_genlist_selected_item_get(req->wid->desktop_list);
+   it = elm_genlist_selected_item_get(req->wid->elm_genlist1);
    desk = elm_object_item_data_get(it);
 
    evas_object_del(req->wid->main_win);
@@ -215,7 +215,7 @@ _as_default_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED
    const char *mime_type;
 
    req = data;
-   it = elm_genlist_selected_item_get(req->wid->desktop_list);
+   it = elm_genlist_selected_item_get(req->wid->elm_genlist1);
 
    if (!it) return;
 
@@ -232,7 +232,7 @@ _as_default_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED
 
    config_flush();
 
-   elm_genlist_clear(req->wid->desktop_list);
+   elm_genlist_clear(req->wid->elm_genlist1);
    eina_list_free(req->entrys);
    req->entrys = NULL;
 
