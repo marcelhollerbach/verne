@@ -216,7 +216,7 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
     if (eina_list_count(operations) == 0)
       return;
 
-    popup = elm_ctxpopup_add(obj);
+    popup = elm_ctxpopup_add(win);
     elm_ctxpopup_direction_priority_set(popup, ELM_CTXPOPUP_DIRECTION_UP,
                                                ELM_CTXPOPUP_DIRECTION_UP,
                                                ELM_CTXPOPUP_DIRECTION_UP,
