@@ -68,10 +68,29 @@ _search_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj E
 
 }
 
+static Eina_Bool
+_hover(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event_info) {
+   Elm_File_Icon *icon = event_info;
+   Efm_File *file;
+   const char *path;
+
+   eo_do(icon, file = elm_obj_file_icon_file_get());
+   eo_do(file, path = efm_file_path_get());
+   eo_do(selector, efl_file_set(path, NULL));
+   titlebar_path_set(path);
+
+   return EO_CALLBACK_CONTINUE;
+}
+
 void
 shortcuts_init()
 {
+   //init key shortcuts
    evas_object_event_callback_add(selector, EVAS_CALLBACK_KEY_DOWN, _search_key_down, NULL);
+
+   //add dnd shortcut
+   eo_do(selector,
+    eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_DND_ITEM_HOVER, _hover, NULL));
 }
 
 static void
