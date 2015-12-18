@@ -73,7 +73,7 @@ _elm_file_display_view_list_elm_file_view_selection_get(Eo *obj EINA_UNUSED, Elm
    Eina_List *result = NULL;
    Elm_Object_Item *it;
 
-   sel_list = elm_gengrid_selected_items_get(obj);
+   sel_list = elm_genlist_selected_items_get(obj);
 
    EINA_LIST_FOREACH(sel_list, node, it)
      {
