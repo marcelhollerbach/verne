@@ -1,5 +1,4 @@
-  images.image: "outline_glow.png" COMP;
-  group { name: "elm/file_icon/base/default";
+group { name: "elm/file_icon/base/default";
       parts {
          part { name: "base";
             type: RECT;
@@ -32,34 +31,7 @@
                fixed: 1 1;
             }
          }
-         part { name: "drop_indicator";
-            description { state: "default" 0.0;
-               rel1.to: "base";
-               rel2.to: "base";
-               image {
-                  normal: "outline_glow.png";
-                  border: 2 2 2 2;
-               }
-               visible: 0;
-            }
-            description { state: "drop" 0.0;
-               inherit: "default";
-               visible: 1;
-            }
-         }
       }
-      programs {
-            program { signal: "file_icon,mode,drop";
-               source: "elm";
-               action: STATE_SET "drop" 0.0;
-               target: "drop_indicator";
-            }
-            program { signal: "file_icon,mode,display";
-               source: "elm";
-               action: STATE_SET "default" 0.0;
-               target: "drop_indicator";
-            }
-        }
    }
    group { name: "elm/file_icon/base/line";
       parts {
@@ -97,16 +69,4 @@
             }
          }
       }
-      programs {
-            program { signal: "file_icon,mode,drop";
-               source: "elm";
-               action: STATE_SET "drop" 0.0;
-               target: "drop_indicator";
-            }
-            program { signal: "file_icon,mode,display";
-               source: "elm";
-               action: STATE_SET "default" 0.0;
-               target: "drop_indicator";
-            }
-        }
    }
