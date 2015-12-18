@@ -138,7 +138,7 @@ class Elm.File.Selector (Elm.Layout, Efl.File) {
       item,selection,changed : list<Efm.File*>*; [[The selection of the view has changed]]
       item,choosen : Efm.File*; [[A item is selected, this means its _not_ a directry and the view decived to *click* this file]]
       item,selected : Efm.File*; [[A item got selected, _not_ chossen]]
-      dnd,item,hover; [[A item was hovered above another item ]]
+      dnd,item,hover : Elm.File.Icon*; [[A item was hovered above another item ]]
       dnd,item,droped; [[Item was droped above another item]]
       dnd,droped; [[Item droped in the file display]]
       hook,menu,selector,start : Elm.File.Selector.Menu_Hook*; [[*@ Menu_Hook will be passed ]]
