@@ -43,8 +43,8 @@ _long_cb(void *data)
    PRIV_DATA
 
    ecore_timer_del(pd->t);
-   eo_do(obj, eo_event_callback_call(ELM_FILE_ICON_EVENT_ITEM_HOVER, NULL));
    pd->t = NULL;
+   eo_do(obj, eo_event_callback_call(ELM_FILE_ICON_EVENT_ITEM_HOVER, NULL));
 
    return EINA_FALSE;
 }
