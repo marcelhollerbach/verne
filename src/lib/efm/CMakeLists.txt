@@ -17,6 +17,10 @@ LIST(APPEND FM_MONITOR
    efm_monitor.eo
    efm_monitor.eo.x
    efm_monitor.eo.h
+   efm_archive_file.c
+   efm_archive_file.eo
+   efm_archive_file.eo.x
+   efm_archive_file.eo.h
    efm_fs_file.c
    efm_fs_file.eo
    efm_fs_file.eo.x
@@ -32,6 +36,8 @@ LIST(APPEND FM_MONITOR
    main.c
    Efm.h
    efm_priv.h
+   archive_libarchive.c
+   archive.h
    )
 
 list(APPEND FM_DEPS

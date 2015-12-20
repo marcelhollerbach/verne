@@ -6,6 +6,8 @@
 #include <Ecore_File.h>
 #include <Efreet_Mime.h>
 #include "efm_fs_file.eo.h"
+#include "efm_archive_file.eo.h"
+#include "archive.h"
 #include "Efm.h"
 
 #ifdef EAPI

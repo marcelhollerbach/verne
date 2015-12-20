@@ -1,0 +1,18 @@
+class Efm.Archive.File (Efm.Fs.File) {
+    methods {
+        generate {
+            params {
+                archive : const(char)*;
+                internal : const(char)*;
+            }
+        }
+    }
+    constructors {
+        .generate;
+    }
+    implements {
+        Efm.File.path.get;
+        Eo.Base.destructor;
+        Eo.Base.finalize;
+    }
+}

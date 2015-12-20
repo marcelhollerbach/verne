@@ -15,5 +15,13 @@ class Efm (Eo.Base) {
               }
               return : Efm.File*; [[The handle to the file, or NULL if the file does not exist]]
         }
+        archive_get @class {
+              [[Will return you a handle to the inner file of the archive or NULL if the archive path is invalid or the inner path is invalid]]
+              params {
+                archive : const(char)*;
+                path : const(char)*;
+              }
+              return : Efm.File*;
+        }
     }
 }

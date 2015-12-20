@@ -181,6 +181,22 @@ START_TEST(efm_monitor_test)
 END_TEST
 
 
+START_TEST(efm_archive_test)
+{
+   Efm_File *archive;
+
+   eo_init();
+   eo_do(EFM_CLASS, efm_init());
+
+   eo_do(EFM_CLASS, archive = efm_archive_get("/home/marcel/git/efm/src/test/archiv.tar", "zip-test/dir1/bla1"));
+
+   ck_assert_ptr_ne(archive, NULL);
+
+   eo_do(EFM_CLASS, efm_shutdown());
+}
+END_TEST
+
+
 Suite * efm_suite(void)
 {
     Suite *s;
@@ -195,9 +211,7 @@ Suite * efm_suite(void)
     tcase_add_test(tc_core, efm_file_invalid_name);
     tcase_add_test(tc_core, efm_valid_file);
     tcase_add_test(tc_core, efm_stresstest);
-
-    tc_core = tcase_create("efm_monitor");
-    tcase_set_timeout(tc_core, 1000);
+    tcase_add_test(tc_core, efm_archive_test);
     tcase_add_test(tc_core, efm_monitor_test);
 
     suite_add_tcase(s, tc_core);
@@ -215,6 +229,7 @@ int main(void)
     sr = srunner_create(s);
 
     srunner_run_all(sr, CK_NORMAL);
+    srunner_set_fork_status(sr, CK_NOFORK);
     number_failed = srunner_ntests_failed(sr);
     srunner_free(sr);
     return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;

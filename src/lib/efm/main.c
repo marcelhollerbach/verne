@@ -42,6 +42,8 @@ _efm_init(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
         return 0;
      }
    efm_file_init();
+
+   archive_init();
 inc:
     sd->counter ++;
     return sd->counter;
@@ -58,6 +60,8 @@ _efm_shutdown(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
    free(sd);
    sd = NULL;
 
+   archive_shutdown();
+
    fm_monitor_shutdown();
 
    efm_file_shutdown();
@@ -69,17 +73,55 @@ _efm_shutdown(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
    eina_shutdown();
 }
 
+static Eina_Bool
+_file_del(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   eina_hash_del_by_data(data, obj);
+   return EO_CALLBACK_CONTINUE;
+}
+
+EO_CALLBACKS_ARRAY_DEFINE(factory_events, {EO_BASE_EVENT_DEL, _file_del});
+
+#define SEARCH_RETURN_IF_FOUND(PATH,FILE) \
+   FILE = eina_hash_find(sd->factory, PATH); \
+   if (FILE) \
+     return FILE; \
+
 EOLIAN static Efm_File*
-_efm_file_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *name)
+_efm_file_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *path)
 {
    Efm_File *file;
 
-   file = eina_hash_find(sd->factory, &name);
+   SEARCH_RETURN_IF_FOUND(&path, file)
 
+   file = eo_add(EFM_FS_FILE_CLASS, NULL, efm_fs_file_generate(path));
    if (file)
-     return file;
+     {
+        eo_do(file, eo_event_callback_array_add(factory_events(), sd->factory));
+        eina_hash_add(sd->factory, &path, file);
+     }
 
-   return eo_add(EFM_FS_FILE_CLASS, NULL, efm_fs_file_generate(name));
+   return file;
+}
+
+EOLIAN static Efm_File*
+_efm_archive_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *archive_path, const char *path)
+{
+   char compose_path[PATH_MAX];
+   Efm_File *file;
+
+   snprintf(compose_path, sizeof(compose_path), "%s/%s", archive_path, path);
+
+   SEARCH_RETURN_IF_FOUND(&compose_path, file);
+
+   file = eo_add(EFM_ARCHIVE_FILE_CLASS, NULL, efm_archive_file_generate(archive_path, path));
+   if (file)
+     {
+        eo_do(file, eo_event_callback_array_add(factory_events(), sd->factory));
+        eina_hash_add(sd->factory, &compose_path, file);
+     }
+
+   return file;
 }
 
 #include "efm.eo.x"
