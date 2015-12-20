@@ -14,7 +14,6 @@ typedef struct
 
    Eina_Hash *file_icons; // < Hash table of all listed FM_Monitor_Files
    Efm_Filter *filter;
-   Eina_Bool whitelist;
 
 } Efm_Monitor_Data;
 
@@ -29,21 +28,13 @@ typedef struct {
 static inline Eina_Bool
 _take_filter(Efm_Monitor *mon EINA_UNUSED, Efm_Monitor_Data *pd, Efm_File *file)
 {
-   if (pd->filter)
-     {
-        Eina_Bool match;
+   Eina_Bool match;
 
-        eo_do(pd->filter, match = efm_filter_matches(file));
+   if (!pd->filter) return EINA_TRUE;
 
-        if (pd->whitelist && match)
-          return EINA_TRUE;
-        //populate
-        if (!pd->whitelist && !match)
-          return EINA_TRUE;
-        return EINA_FALSE;
-     }
+   eo_do(pd->filter, match = efm_filter_matches(file));
 
-   return EINA_TRUE;
+   return match;
 }
 
 static Eina_Bool
@@ -178,18 +169,6 @@ _efm_monitor_filter_get(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
    return pd->filter;
 }
 
-EOLIAN static void
-_efm_monitor_whitelist_set(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd, Eina_Bool whitelist)
-{
-   pd->whitelist = whitelist;
-}
-
-EOLIAN static Eina_Bool
-_efm_monitor_whitelist_get(Eo *obj EINA_UNUSED, Efm_Monitor_Data *pd)
-{
-   return pd->whitelist;
-}
-
 static Eina_Bool
 _eio_filter_cb(void *data EINA_UNUSED, Eio_File *handler EINA_UNUSED, const char *file EINA_UNUSED)
 {
@@ -262,8 +241,6 @@ _efm_monitor_eo_base_constructor(Eo *obj, Efm_Monitor_Data *pd)
    eo_do_super(obj, EFM_MONITOR_CLASS, construct = eo_constructor());
 
    pd->file_icons = eina_hash_stringshared_new(NULL);
-
-   pd->whitelist = EINA_TRUE;
 
    return construct;
 }

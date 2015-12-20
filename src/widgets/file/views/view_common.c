@@ -139,7 +139,6 @@ view_path_set(View_Common *common, const char *path)
 
    eo_do(common->obj, eo_event_callback_call(ELM_FILE_VIEW_EVENT_WORKING_START , NULL));
    common->monitor = eo_add(EFM_MONITOR_CLASS, NULL, efm_monitor_install(path, common->f));
-   eo_do(common->monitor, efm_monitor_whitelist_set(EINA_FALSE));
    eo_do(common->monitor, eo_event_callback_array_add(_monitor_event_cbs(), common));
 }
 

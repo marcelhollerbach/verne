@@ -14,13 +14,6 @@ class Efm.Monitor(Eo.Base) {
                 filter : Efm.Filter*;
             }
         }
-        @property whitelist {
-            [[If this is true a file will only be populated if the filter applys on this file.
-              If it is false, a file will always be populated, only not if the filter applys.]]
-            values {
-                whitelist : bool;
-            }
-        }
         install {
             [[constructor to construct to Monitor]]
             params {

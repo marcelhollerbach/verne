@@ -6,6 +6,13 @@ class Efm.Filter(Eo.Base) {
       You can check by a function call if a Efm.File matches the owned rules.
     ]]
     methods {
+        @property whitelist {
+            [[If whitelist is true, matches returns true if the type and the attributes are matching
+              if it is false, matches returns false if the types and trributes are matching]]
+            values {
+                whitelist : bool;
+            }
+        }
         attribute_add {
             [[Add a regex which needs to be matched by a file to match]]
             params {
@@ -42,5 +49,8 @@ class Efm.Filter(Eo.Base) {
     }
     events {
         filter,changed; [[Called if a rule got added or removed]]
+    }
+    implements {
+        Eo.Base.constructor;
     }
 }
