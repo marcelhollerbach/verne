@@ -1,13 +1,23 @@
 #ifndef EIO_FM_PRIV_H
 #define EIO_FM_PRIV_H
 
+#define EFL_BETA_API_SUPPORT
+#define EFL_EO_API_SUPPORT
+
 #include <Eio.h>
 #include <Ecore.h>
 #include <Ecore_File.h>
 #include <Efreet_Mime.h>
+
+#include "efm.eot.h"
+#include "efm_file.eo.h"
+#include "efm_filter.eo.h"
+
 #include "efm_fs_file.eo.h"
 #include "efm_archive_file.eo.h"
 #include "archive.h"
+#include "efm_fs_monitor.eo.h"
+
 #include "Efm.h"
 
 #ifdef EAPI

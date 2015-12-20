@@ -13,6 +13,10 @@ LIST(APPEND FM_MONITOR
    efm.eot
    efm.eot.h
    fm_monitor.c
+   efm_fs_monitor.c
+   efm_fs_monitor.eo
+   efm_fs_monitor.eo.x
+   efm_fs_monitor.eo.h
    efm_monitor.c
    efm_monitor.eo
    efm_monitor.eo.x

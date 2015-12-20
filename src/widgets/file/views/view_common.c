@@ -138,7 +138,7 @@ view_path_set(View_Common *common, const char *path)
    common->files = eina_hash_pointer_new(NULL);
 
    eo_do(common->obj, eo_event_callback_call(ELM_FILE_VIEW_EVENT_WORKING_START , NULL));
-   common->monitor = eo_add(EFM_MONITOR_CLASS, NULL, efm_monitor_install(path, common->f));
+   eo_do(EFM_CLASS, common->monitor = efm_monitor_get(path, common->f));
    eo_do(common->monitor, eo_event_callback_array_add(_monitor_event_cbs(), common));
 }
 

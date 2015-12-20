@@ -23,5 +23,13 @@ class Efm (Eo.Base) {
               }
               return : Efm.File*;
         }
+        monitor_get @class {
+              [[ Get a monitor for the given directory]]
+              params {
+                path : const(char)*;
+                filter : Efm.Filter*;
+              }
+              return : Efm.Monitor*;
+        }
     }
 }

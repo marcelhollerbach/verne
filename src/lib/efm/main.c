@@ -133,4 +133,14 @@ _efm_archive_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *archive_
    return file;
 }
 
+EOLIAN static Efm_Monitor*
+_efm_monitor_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *path, Efm_Filter *filter)
+{
+   Efm_Monitor *mon;
+
+   mon = eo_add(EFM_FS_MONITOR_CLASS, NULL, efm_fs_monitor_install(path, filter));
+
+   return mon;
+}
+
 #include "efm.eo.x"

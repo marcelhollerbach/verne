@@ -163,7 +163,8 @@ START_TEST(efm_monitor_test)
    eo_init();
    eo_do(EFM_CLASS, efm_init());
 
-   mon = eo_add(EFM_MONITOR_CLASS, NULL, efm_monitor_install(TEST_DIRECTORY, NULL));
+   eo_do(EFM_CLASS, mon = efm_monitor_get(TEST_DIRECTORY, NULL));
+
    eo_do (mon,
 //      eo_event_callback_add(EFM_MONITOR_EVENT_FILE_DEL, _del, NULL);
       eo_event_callback_add(EFM_MONITOR_EVENT_FILE_ADD, _add, NULL);

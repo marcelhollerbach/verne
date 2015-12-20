@@ -1,0 +1,21 @@
+class Efm.Fs.Monitor (Eo.Base, Efm.Monitor) {
+    methods {
+        install {
+            [[constructor to construct to Monitor]]
+            params {
+                path : const(char)*;
+                filter : Efm.Filter*;
+            }
+        }
+    }
+    constructors {
+        .install;
+    }
+    implements {
+        Efm.Monitor.path.get;
+        Efm.Monitor.filter;
+        Eo.Base.destructor;
+        Eo.Base.constructor;
+        Eo.Base.finalize;
+    }
+}
