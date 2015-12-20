@@ -229,78 +229,8 @@ _key_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EIN
    const Eina_List *selected;
    Eo *grid = data;
    Elm_Object_Item *mover;
-   Elm_Object_Item *next;
-   Evas_Object *track;
-   int x,y,w,h;
 
-   if (!strcmp(ev->key, "Right"))
-     {
-        if (!empty_check(grid))
-          return EO_CALLBACK_STOP;
-
-        selected = elm_gengrid_selected_items_get(grid);
-        mover =  eina_list_data_get(eina_list_last(selected));
-
-        next = elm_gengrid_item_next_get(mover);
-
-        _item_select_swap(grid, selected, next);
-        return EO_CALLBACK_STOP;
-     }
-   else if (!strcmp(ev->key, "Left"))
-     {
-        if (!empty_check(grid))
-          return EO_CALLBACK_STOP;
-
-        selected = elm_gengrid_selected_items_get(grid);
-        mover =  eina_list_data_get(eina_list_last(selected));
-
-        next = elm_gengrid_item_prev_get(mover);
-
-        _item_select_swap(grid, selected, next);
-
-        return EO_CALLBACK_STOP;
-     }
-   else if (!strcmp(ev->key, "Up"))
-     {
-        if (!empty_check(grid))
-          return EO_CALLBACK_STOP;
-
-        selected = elm_gengrid_selected_items_get(grid);
-        mover =  eina_list_data_get((selected));
-        track = elm_object_item_track(mover);
-
-        evas_object_geometry_get(track, &x, &y, &w, &h);
-
-        y -= w/2;
-        x += w/2;
-
-        next = elm_gengrid_at_xy_item_get(grid, x, y, NULL, NULL);
-
-        _item_select_swap(grid, eina_list_clone(selected), next);
-
-        return EO_CALLBACK_STOP;
-     }
-   else if (!strcmp(ev->key, "Down"))
-     {
-        if (!empty_check(grid))
-          return EO_CALLBACK_STOP;
-
-        selected = elm_gengrid_selected_items_get(grid);
-        mover =  eina_list_data_get(eina_list_last(selected));
-        track = elm_object_item_track(mover);
-
-        evas_object_geometry_get(track, &x, &y, &w, &h);
-
-        y += w+w/2;
-        x += w/2;
-
-        next = elm_gengrid_at_xy_item_get(grid, x, y, NULL, NULL);
-
-        _item_select_swap(grid, eina_list_clone(selected), next);
-
-        return EO_CALLBACK_STOP;
-     }
-   else if (!strcmp(ev->key, "Return"))
+   if (!strcmp(ev->key, "Return"))
      {
         Efm_File *fmm_file;
         selected = elm_gengrid_selected_items_get(grid);
@@ -313,36 +243,6 @@ _key_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EIN
         fmm_file = elm_object_item_data_get(mover);
         eo_do(grid, eo_event_callback_call(ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHOOSEN, fmm_file));
 
-        return EO_CALLBACK_STOP;
-     }
-   else if (!strcmp(ev->key, "Home"))
-     {
-        // first item
-        eo_do(grid, elm_interface_scrollable_page_bring_in(0, 0));
-        return EO_CALLBACK_STOP;
-     }
-   else if (!strcmp(ev->key, "End"))
-     {
-        // last item
-        int h,v;
-        eo_do(grid, elm_interface_scrollable_last_page_get(&h, &v);
-                    elm_interface_scrollable_page_bring_in(h, v));
-        return EO_CALLBACK_STOP;
-     }
-   else if (!strcmp(ev->key, "Next"))
-     {
-        // next page
-        int h,v;
-        eo_do(grid, elm_interface_scrollable_current_page_get(&h, &v);
-                    elm_interface_scrollable_page_bring_in(h, v+1));
-        return EO_CALLBACK_STOP;
-     }
-   else if (!strcmp(ev->key, "Prior"))
-     {
-        // prior page
-        int h,v;
-        eo_do(grid, elm_interface_scrollable_current_page_get(&h, &v);
-                    elm_interface_scrollable_page_bring_in(h, v-1));
         return EO_CALLBACK_STOP;
      }
 
@@ -361,7 +261,6 @@ _elm_file_display_view_grid_eo_base_constructor(Eo *obj, Elm_File_Display_View_G
 
    eo_do_super(obj, ELM_FILE_DISPLAY_VIEW_GRID_CLASS, eo = eo_constructor());
 
-   eo_do(obj, elm_interface_scrollable_page_relative_set(1.0, 0.9));
    elm_gengrid_align_set(obj, 0.5, 0.0);
    eo_do(obj, parent = eo_parent_get());
 

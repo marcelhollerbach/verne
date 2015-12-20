@@ -225,67 +225,11 @@ static Eina_Bool
 _key_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event)
 {
    Evas_Event_Key_Down *ev = event;
-   const Eina_List *selected, *node;
+   const Eina_List *selected;
    Eo *list = data;
    Elm_Object_Item *mover;
-   Elm_Object_Item *next;
-   Elm_Object_Item *sel;
-   Evas_Object *track;
-   int x,y,w,h;
 
-   selected = elm_genlist_selected_items_get(list);
-   EINA_LIST_FOREACH(selected, node, sel)
-     {
-        Evas_Object *icon;
-        Eina_Bool rename;
-
-        icon = elm_object_item_part_content_get(sel, "elm.swallow.icon");
-        eo_do(icon, rename = elm_obj_file_icon_rename_get());
-        if (rename)
-          return EO_CALLBACK_CONTINUE;
-     }
-
-   if (!strcmp(ev->key, "Up"))
-     {
-        if (!empty_check(list))
-          return EO_CALLBACK_STOP;
-
-        selected = elm_genlist_selected_items_get(list);
-        mover =  eina_list_data_get((selected));
-        track = elm_object_item_track(mover);
-
-        evas_object_geometry_get(track, &x, &y, &w, &h);
-
-        y -= w/2;
-        x += w/2;
-
-        next = elm_genlist_at_xy_item_get(list, x, y, NULL);
-
-        _item_select_swap(list, eina_list_clone(selected), next);
-
-        return EO_CALLBACK_STOP;
-     }
-   else if (!strcmp(ev->key, "Down"))
-     {
-        if (!empty_check(list))
-          return EO_CALLBACK_STOP;
-
-        selected = elm_genlist_selected_items_get(list);
-        mover =  eina_list_data_get(eina_list_last(selected));
-        track = elm_object_item_track(mover);
-
-        evas_object_geometry_get(track, &x, &y, &w, &h);
-
-        y += w+w/2;
-        x += w/2;
-
-        next = elm_genlist_at_xy_item_get(list, x, y, NULL);
-
-        _item_select_swap(list, eina_list_clone(selected), next);
-
-        return EO_CALLBACK_STOP;
-     }
-   else if (!strcmp(ev->key, "Return"))
+   if (!strcmp(ev->key, "Return"))
      {
         Efm_File *fmm_file;
         selected = elm_genlist_selected_items_get(list);
@@ -298,36 +242,6 @@ _key_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EIN
         fmm_file = elm_object_item_data_get(mover);
         eo_do(list, eo_event_callback_call(ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHOOSEN, fmm_file));
 
-        return EO_CALLBACK_STOP;
-     }
-   else if (!strcmp(ev->key, "Home"))
-     {
-        // first item
-        eo_do(list, elm_interface_scrollable_page_bring_in(0, 0));
-        return EO_CALLBACK_STOP;
-     }
-   else if (!strcmp(ev->key, "End"))
-     {
-        // last item
-        int h,v;
-        eo_do(list, elm_interface_scrollable_last_page_get(&h, &v);
-                    elm_interface_scrollable_page_bring_in(h, v));
-        return EO_CALLBACK_STOP;
-     }
-   else if (!strcmp(ev->key, "Next"))
-     {
-        // next page
-        int h,v;
-        eo_do(list, elm_interface_scrollable_current_page_get(&h, &v);
-                    elm_interface_scrollable_page_bring_in(h, v+1));
-        return EO_CALLBACK_STOP;
-     }
-   else if (!strcmp(ev->key, "Prior"))
-     {
-        // prior page
-        int h,v;
-        eo_do(list, elm_interface_scrollable_current_page_get(&h, &v);
-                    elm_interface_scrollable_page_bring_in(h, v-1));
         return EO_CALLBACK_STOP;
      }
 
@@ -347,7 +261,6 @@ _elm_file_display_view_list_eo_base_constructor(Eo *obj, Elm_File_Display_View_L
    eo_do_super(obj, ELM_FILE_DISPLAY_VIEW_LIST_CLASS, eo = eo_constructor());
    elm_genlist_homogeneous_set(obj, EINA_TRUE);
 
-   eo_do(obj, elm_interface_scrollable_page_relative_set(1.0, 0.9));
    eo_do(obj, parent = eo_parent_get());
 
    eo_do(parent, eo_event_callback_add(EVAS_OBJECT_EVENT_KEY_DOWN, _key_down, obj));
