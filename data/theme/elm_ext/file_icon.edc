@@ -53,20 +53,5 @@ group { name: "elm/file_icon/base/default";
                fixed: 1 1;
             }
          }
-         part { name: "drop_indicator";
-            description { state: "default" 0.0;
-               rel1.to: "content";
-               rel2.to: "text";
-               image {
-                  normal: "outline_glow.png";
-                  border: 2 2 2 2;
-               }
-               visible: 0;
-            }
-            description { state: "drop" 0.0;
-               inherit: "default";
-               visible: 1;
-            }
-         }
       }
    }
