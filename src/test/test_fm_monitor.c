@@ -23,7 +23,7 @@ START_TEST(efm_file_invalid_name)
 
    eo_do(EFM_CLASS, file = efm_file_get(filename));
 
-   ck_assert_ptr_ne(file, NULL);
+   ck_assert_ptr_eq(file, NULL);
 
    efm_shutdown();
 
@@ -37,7 +37,6 @@ _done_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description
 {
    done = EINA_TRUE;
    ecore_main_loop_quit();
-   printf("DONE");
    return EINA_TRUE;
 }
 
@@ -90,7 +89,6 @@ START_TEST(efm_stresstest)
      {
         char buf[PATH_MAX];
         snprintf(buf, sizeof(buf), "touch "TEST_FILE_ITER, i);
-        printf("Running %s - %s", buf, TEST_FILE_ITER);
         system(buf);
      }
 
