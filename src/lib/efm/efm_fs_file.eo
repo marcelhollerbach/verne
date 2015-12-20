@@ -1,4 +1,4 @@
-class Efm.Fs.File (Eo.Base, Efm.File) {
+class Efm.Fs.File (Efm.File) {
     methods {
         generate {
             params {

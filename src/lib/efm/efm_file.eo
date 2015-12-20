@@ -9,11 +9,9 @@ struct Efm.File.Stat{
     atime : long;
 }
 
- interface Efm.File {
+abstract Efm.File(Eo.Base) {
     [[A class to abstract files in storage.
       A object can be crated with the generate function.
-
-      If the file gets somehow deleted in memory the object will delete itself.
     ]]
     methods {
         @property filename {
@@ -68,9 +66,28 @@ struct Efm.File.Stat{
             }
             return : bool; [[True if the file is of this type or false if not.]]
         }
+        @property is_invalid {
+            [[returns true if this handle is invalid]]
+            get {
+
+            }
+            values {
+                invalid : bool;
+            }
+        }
     }
     events {
         fsquery,done; [[Query the fs operations is done.]]
         changed; [[The stats of the file have changed]]
+        invalid; [[This object is not valid anymore]]
+    }
+    implements {
+        Eo.Base.constructor;
+        @empty Efm.File.is_type;
+        @empty Efm.File.stat.get;
+        @empty Efm.File.fileending.get;
+        @empty Efm.File.mimetype.get;
+        @empty Efm.File.path.get;
+        @empty Efm.File.filename.get;
     }
 }

@@ -15,6 +15,12 @@ static Efm_Static_Data *sd;
 
 int _efm_domain;
 
+static void
+_free_cb(void *data)
+{
+   eo_del(data);
+}
+
 
 EOLIAN static int
 _efm_init(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
@@ -33,7 +39,7 @@ _efm_init(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
    if (!sd)
      return 0;
 
-   sd->factory = eina_hash_string_small_new(NULL);
+   sd->factory = eina_hash_string_superfast_new(_free_cb);
    if (!fm_monitor_init())
      {
         ERR("Failed to init resolve");
@@ -80,19 +86,21 @@ _file_del(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, vo
    return EO_CALLBACK_CONTINUE;
 }
 
-EO_CALLBACKS_ARRAY_DEFINE(factory_events, {EO_BASE_EVENT_DEL, _file_del});
+EO_CALLBACKS_ARRAY_DEFINE(factory_events, {EFM_FILE_EVENT_INVALID, _file_del});
 
-#define SEARCH_RETURN_IF_FOUND(PATH,FILE) \
+#define SEARCH_IF_FOUND_RETURN_INCED(PATH,FILE) \
    FILE = eina_hash_find(sd->factory, PATH); \
-   if (FILE) \
+   if (FILE) { \
+     eo_ref(FILE); \
      return FILE; \
+   }\
 
 EOLIAN static Efm_File*
 _efm_file_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *path)
 {
    Efm_File *file;
 
-   SEARCH_RETURN_IF_FOUND(&path, file)
+   SEARCH_IF_FOUND_RETURN_INCED(path, file)
 
    file = eo_add(EFM_FS_FILE_CLASS, NULL, efm_fs_file_generate(path));
    if (file)
@@ -112,9 +120,10 @@ _efm_archive_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *archive_
 
    snprintf(compose_path, sizeof(compose_path), "%s/%s", archive_path, path);
 
-   SEARCH_RETURN_IF_FOUND(&compose_path, file);
+   SEARCH_IF_FOUND_RETURN_INCED(compose_path, file);
 
    file = eo_add(EFM_ARCHIVE_FILE_CLASS, NULL, efm_archive_file_generate(archive_path, path));
+
    if (file)
      {
         eo_do(file, eo_event_callback_array_add(factory_events(), sd->factory));

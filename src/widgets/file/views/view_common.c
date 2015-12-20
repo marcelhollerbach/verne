@@ -48,7 +48,7 @@ _file_add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA
    res = common->add(common, file);
 
    eina_hash_add(common->files, &file, res);
-   eo_do(file, eo_event_callback_add(EO_BASE_EVENT_DEL, _file_del, data));
+   eo_do(file, eo_event_callback_add(EFM_FILE_EVENT_INVALID, _file_del, data));
    return EINA_TRUE;
 }
 

@@ -30,7 +30,10 @@ typedef struct
 
 static void _mime_thread_fireup(void);
 static Eina_Hash *watch_files;
-static Ecore_Event_Handler *handler;
+
+static Ecore_Event_Handler *handler_mod;
+static Ecore_Event_Handler *handler_del;
+static Ecore_Event_Handler *handler_err;
 
 static void
 _fs_cb(void *dat EINA_UNUSED, Ecore_Thread *thread)
@@ -296,9 +299,26 @@ _file_del_cb(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 
    if (!f) return EINA_TRUE;
 
-   DBG("File %p(%s) got deleted in storage", f, ev->filename);
+   DBG("File %s got deleted in storage", ev->filename);
 
-   eo_del(f);
+   eo_do(f, eo_event_callback_call(EFM_FILE_EVENT_INVALID, "File Deleted"));
+
+   return EINA_TRUE;
+}
+
+static Eina_Bool
+_error_cb(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
+{
+   Eio_Monitor_Event *ev = event;
+   Efm_File *f;
+
+   f = eina_hash_find(watch_files, &ev->monitor);
+
+   if (!f) return EINA_TRUE;
+
+   DBG("Monitor (%s) error´ed out of the door", ev->filename);
+
+   eo_do(f, eo_event_callback_call(EFM_FILE_EVENT_INVALID, "File Monitor got error"));;
 
    return EINA_TRUE;
 }
@@ -308,14 +328,20 @@ efm_file_init(void)
 {
     eina_lock_new(&readlock);
     watch_files = eina_hash_pointer_new(NULL);
-    handler = ecore_event_handler_add(EIO_MONITOR_FILE_MODIFIED, _mod_cb, NULL);
-    handler = ecore_event_handler_add(EIO_MONITOR_SELF_DELETED, _file_del_cb, NULL);}
+    handler_mod = ecore_event_handler_add(EIO_MONITOR_FILE_MODIFIED, _mod_cb, NULL);
+    handler_del = ecore_event_handler_add(EIO_MONITOR_SELF_DELETED, _file_del_cb, NULL);
+    handler_err = ecore_event_handler_add(EIO_MONITOR_ERROR, _error_cb, NULL);
+}
 
 void
 efm_file_shutdown(void)
 {
-    ecore_event_handler_del(handler);
-    handler = NULL;
+    ecore_event_handler_del(handler_mod);
+    ecore_event_handler_del(handler_err);
+    ecore_event_handler_del(handler_del);
+    handler_mod = NULL;
+    handler_err = NULL;
+    handler_del = NULL;
     eina_lock_free(&readlock);
     eina_hash_free(watch_files);
     watch_files = NULL;
