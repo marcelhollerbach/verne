@@ -1,0 +1,19 @@
+class Efm.Archive.Monitor (Efm.Fs.Monitor) {
+    methods {
+        generate {
+            params {
+                archive : const(char)*;
+                internal : const(char)*;
+                filter: Efm.Filter*;
+            }
+        }
+    }
+    constructors {
+        .generate;
+    }
+    implements {
+        Efm.Monitor.path.get;
+        Eo.Base.destructor;
+        Eo.Base.finalize;
+    }
+}

@@ -17,6 +17,7 @@
 #include "efm_archive_file.eo.h"
 #include "archive.h"
 #include "efm_fs_monitor.eo.h"
+#include "efm_archive_monitor.eo.h"
 
 #include "Efm.h"
 

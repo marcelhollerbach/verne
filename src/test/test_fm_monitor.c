@@ -13,6 +13,8 @@
 #define TEST_DIRECTORY_FILES_MAX 100
 #define TEST_DIRECTORY_FILES "/tmp/test/test_file%d.txt"
 
+#define ARCHIVE_FILE_NUMBER 5
+
 START_TEST(efm_file_invalid_name)
 {
    Efm_File *file;
@@ -163,7 +165,7 @@ START_TEST(efm_monitor_test)
    eo_init();
    eo_do(EFM_CLASS, efm_init());
 
-   eo_do(EFM_CLASS, mon = efm_monitor_get(TEST_DIRECTORY, NULL));
+   eo_do(EFM_CLASS, mon = efm_file_monitor_get(TEST_DIRECTORY, NULL));
 
    eo_do (mon,
 //      eo_event_callback_add(EFM_MONITOR_EVENT_FILE_DEL, _del, NULL);
@@ -179,6 +181,52 @@ START_TEST(efm_monitor_test)
 }
 END_TEST
 
+int mon_files;
+
+static Eina_Bool
+_error_mon(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED,  void *event EINA_UNUSED)
+{
+   mon_files = -1;
+   ecore_mainloop_quit();
+   return EINA_TRUE;
+}
+
+#if 0
+static Eina_Bool
+_del(void *data, Eo *obj, const Eo_Event_Description *desc,  void *event)
+{
+   return EINA_TRUE;
+}
+#endif
+
+static Eina_Bool
+_add_mon(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED,  void *event EINA_UNUSED)
+{
+   mon_files ++;
+   if (mon_files >= ARCHIVE_FILE_NUMBER)
+     ecore_main_loop_quit();
+   return EINA_TRUE;
+}
+
+START_TEST(efm_archive_monitor_test)
+{
+   Efm_Monitor *archive;
+
+   eo_init();
+   eo_do(EFM_CLASS, efm_init());
+
+   eo_do(EFM_CLASS, archive = efm_archive_monitor_get("/home/marcel/git/efm/src/test/archiv.tar", "zip-test/", NULL));
+   ck_assert_ptr_ne(archive, NULL);
+   eo_do (archive,
+      eo_event_callback_add(EFM_MONITOR_EVENT_FILE_ADD, _add_mon, NULL);
+      eo_event_callback_add(EFM_MONITOR_EVENT_ERROR, _error_mon, NULL);
+   );
+   ecore_main_loop_begin();
+   ck_assert_int_eq(mon_files, ARCHIVE_FILE_NUMBER);
+
+   eo_do(EFM_CLASS, efm_shutdown());
+}
+END_TEST
 
 START_TEST(efm_archive_test)
 {
@@ -212,6 +260,7 @@ Suite * efm_suite(void)
     tcase_add_test(tc_core, efm_stresstest);
     tcase_add_test(tc_core, efm_archive_test);
     tcase_add_test(tc_core, efm_monitor_test);
+    tcase_add_test(tc_core, efm_archive_monitor_test);
 
     suite_add_tcase(s, tc_core);
 
