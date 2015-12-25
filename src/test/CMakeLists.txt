@@ -34,7 +34,7 @@ target_link_libraries (filedisplay_test
    ${ECORE_LIBRARIES}
    ${ELEMENTARY_LIBRARIES}
    elm_ext
-   efm_lib
+   efm
 )
 
 add_executable(test_fm_monitor test_fm_monitor.c)
@@ -45,7 +45,7 @@ target_link_libraries (test_fm_monitor
    ${EO_LIBRARIES}
    ${CMAKE_THREAD_LIBS_INIT}
    ${Check_LIBRARIES}
-   efm_lib
+   efm
    m
    rt
 )

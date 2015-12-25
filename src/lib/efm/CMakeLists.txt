@@ -10,6 +10,7 @@ LIST(APPEND FM_MONITOR
    efm.eo
    efm.eo.x
    efm.eo.h
+   main.c
    efm.eot
    efm.eot.h
    fm_monitor.c
@@ -41,7 +42,7 @@ LIST(APPEND FM_MONITOR
    efm_filter.eo
    efm_filter.eo.x
    efm_filter.eo.h
-   main.c
+
    Efm.h
    efm_priv.h
    archive_libarchive.c
@@ -54,9 +55,9 @@ list(APPEND FM_DEPS
 
 eo_rule_create("${FM_MONITOR}" "${FM_DEPS}")
 
-add_library(efm_lib SHARED ${FM_MONITOR})
+add_library(efm SHARED ${FM_MONITOR})
 
-target_link_libraries(efm_lib
+target_link_libraries(efm
   ${EINA_LIBRARIES}
   ${EO_LIBRARIES}
   ${EIO_LIBRARIES}
@@ -69,7 +70,7 @@ target_link_libraries(efm_lib
   ${CMAKE_THREAD_LIBS_INIT}
 )
 
-INSTALL(TARGETS efm_lib
+INSTALL(TARGETS efm
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 INSTALL(FILES Efm.h efm_file.eo.h efm_monitor.eo.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/efm-1/)

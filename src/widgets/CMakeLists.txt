@@ -86,7 +86,7 @@ target_link_libraries(elm_ext
   ${ELEMENTARY_LIBRARIES}
   ${EFREET_TRASH_LIBRARIES}
   ${CMAKE_THREAD_LIBS_INIT}
-  efm_lib
+  efm
   emous
 )
 

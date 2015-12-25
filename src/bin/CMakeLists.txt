@@ -48,7 +48,7 @@ target_link_libraries (jesus
    ${EET_LIBRARIES}
    ${ELEMENTARY_LIBRARIES}
    elm_ext
-   efm_lib)
+   efm)
 
 set_property(TARGET jesus PROPERTY COMPILE_DEFINITIONS THEME_PATH="${THEME_INSTALL_PATH}"
 PACKAGE_DATA_DIR="${CMAKE_INSTALL_DATADIR}/efm/"

@@ -9,18 +9,6 @@
 #include <Ecore_File.h>
 #include <Efreet_Mime.h>
 
-#include "efm.eot.h"
-#include "efm_file.eo.h"
-#include "efm_filter.eo.h"
-
-#include "efm_fs_file.eo.h"
-#include "efm_archive_file.eo.h"
-#include "archive.h"
-#include "efm_fs_monitor.eo.h"
-#include "efm_archive_monitor.eo.h"
-
-#include "Efm.h"
-
 #ifdef EAPI
 # undef EAPI
 #endif
@@ -46,6 +34,20 @@
 #  define EAPI
 # endif
 #endif /* ! _WIN32 */
+
+#define EOAPI EAPI
+
+#include "efm.eot.h"
+#include "efm_file.eo.h"
+#include "efm_filter.eo.h"
+#include "efm_monitor.eo.h"
+#include "efm.eo.h"
+
+#include "efm_fs_file.eo.h"
+#include "efm_archive_file.eo.h"
+#include "archive.h"
+#include "efm_fs_monitor.eo.h"
+#include "efm_archive_monitor.eo.h"
 
 typedef enum {
     ADD,ERROR,SELFDEL
