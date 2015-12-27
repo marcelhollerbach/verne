@@ -353,6 +353,21 @@ _efm_fs_file_efm_file_monitor(Eo *obj, Efm_Fs_File_Data *pd EINA_UNUSED, void *f
    return eo_add(EFM_FS_MONITOR_CLASS, NULL, efm_fs_monitor_install(obj, filter));
 }
 
+EOLIAN static Efm_File*
+_efm_fs_file_efm_file_child_get(Eo *obj EINA_UNUSED, Efm_Fs_File_Data *pd, const char *name)
+{
+   char buf[PATH_MAX];
+   Efm_File *file;
+
+   if (!S_ISDIR(pd->st.st_mode)) return NULL;
+
+   snprintf(buf, sizeof(buf), "%s/%s", pd->path, name);
+   eo_do(EFM_CLASS, file = efm_file_get(buf));
+
+   return file;
+}
+
+
 
 
 #include "efm_fs_file.eo.x"

@@ -82,6 +82,13 @@ abstract Efm.File(Eo.Base) {
             }
             return : void*; [[Trololol its a Monitor!]]
         }
+        child_get {
+            [[get a child of this file (for the case its a directory)]]
+            params {
+                name : const(char)*;
+            }
+            return : Efm.File*;
+        }
     }
     events {
         fsquery,done; [[Query the fs operations is done.]]
@@ -97,5 +104,6 @@ abstract Efm.File(Eo.Base) {
         @empty Efm.File.path.get;
         @empty Efm.File.filename.get;
         @empty Efm.File.monitor;
+        @empty Efm.File.child_get;
     }
 }

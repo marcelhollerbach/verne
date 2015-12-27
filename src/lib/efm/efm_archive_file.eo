@@ -21,6 +21,7 @@ class Efm.Archive.File (Efm.Fs.File) {
     implements {
         Efm.File.path.get;
         Efm.File.monitor;
+        Efm.File.child_get;
         Eo.Base.destructor;
         Eo.Base.finalize;
     }

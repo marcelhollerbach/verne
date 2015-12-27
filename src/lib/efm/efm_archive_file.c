@@ -12,6 +12,7 @@ typedef struct {
     const char *file; //the file in the archive
     const char *real_path;//< the file which _really_ exists its archive.find_path+file
     const char *fake_path;
+    const char *internal;
 } Efm_Archive_File_Data;
 
 
@@ -29,6 +30,7 @@ _efm_archive_file_generate(Eo *obj, Efm_Archive_File_Data *pd, const char *archi
 
    pd->fake_path = strdup(fakepath_buf);
    pd->real_path = strdup(realpath_buf);
+   pd->internal = strdup(internal);
 
    printf("%s\n", pd->real_path);
 
@@ -70,9 +72,22 @@ _efm_archive_file_real_path_get(Eo *obj, Efm_Archive_File_Data *pd EINA_UNUSED)
 }
 
 EOLIAN static void *
-_efm_archive_file_efm_file_monitor(Eo *obj, Efm_Archive_File_Data *pd, void *filter)
+_efm_archive_file_efm_file_monitor(Eo *obj EINA_UNUSED, Efm_Archive_File_Data *pd EINA_UNUSED, void *filter)
 {
    return eo_add(EFM_ARCHIVE_MONITOR_CLASS, NULL, efm_archive_monitor_generate(obj, filter));
+}
+
+EOLIAN static Efm_File *
+_efm_archive_file_efm_file_child_get(Eo *obj EINA_UNUSED, Efm_Archive_File_Data *pd, const char *name)
+{
+   char buf[PATH_MAX];
+   Efm_File *file;
+
+   //TODO check if I am a dir
+
+   snprintf(buf, sizeof(buf), "%s/%s", pd->internal, name);
+   eo_do(EFM_CLASS, file = efm_archive_get(pd->archive.path, buf));
+   return file;
 }
 
 #include "efm_archive_file.eo.x"
