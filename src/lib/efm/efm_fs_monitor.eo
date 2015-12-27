@@ -3,7 +3,7 @@ class Efm.Fs.Monitor (Eo.Base, Efm.Monitor) {
         install {
             [[constructor to construct to Monitor]]
             params {
-                path : const(char)*;
+                file : Efm.Fs.File*;
                 filter : Efm.Filter*;
             }
         }
@@ -12,7 +12,7 @@ class Efm.Fs.Monitor (Eo.Base, Efm.Monitor) {
         .install;
     }
     implements {
-        Efm.Monitor.path.get;
+        Efm.Monitor.file.get;
         Efm.Monitor.filter;
         Eo.Base.destructor;
         Eo.Base.constructor;

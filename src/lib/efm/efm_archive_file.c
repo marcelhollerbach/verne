@@ -59,4 +59,20 @@ _efm_archive_file_eo_base_finalize(Eo *obj, Efm_Archive_File_Data *pd)
     return ret;
 }
 
+EOLIAN static const char *
+_efm_archive_file_real_path_get(Eo *obj, Efm_Archive_File_Data *pd EINA_UNUSED)
+{
+    const char *path;
+
+    eo_do_super_ret(obj, EFM_ARCHIVE_FILE_CLASS, path, efm_file_path_get());
+
+    return path;
+}
+
+EOLIAN static void *
+_efm_archive_file_efm_file_monitor(Eo *obj, Efm_Archive_File_Data *pd, void *filter)
+{
+   return eo_add(EFM_ARCHIVE_MONITOR_CLASS, NULL, efm_archive_monitor_generate(obj, filter));
+}
+
 #include "efm_archive_file.eo.x"

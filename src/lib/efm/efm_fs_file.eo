@@ -13,6 +13,7 @@ class Efm.Fs.File (Efm.File) {
         Efm.File.mimetype.get;
         Efm.File.stat.get;
         Efm.File.is_type;
+        Efm.File.monitor;
         Eo.Base.finalize;
         Eo.Base.destructor;
     }

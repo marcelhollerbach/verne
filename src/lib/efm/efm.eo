@@ -23,22 +23,5 @@ class Efm (Eo.Base) {
               }
               return : Efm.File*;
         }
-        file_monitor_get @class {
-              [[ Get a monitor for the given directory]]
-              params {
-                path : const(char)*;
-                filter : Efm.Filter*;
-              }
-              return : Efm.Monitor*;
-        }
-        archive_monitor_get @class {
-              [[Get a monitor over a archive directory]]
-              params {
-                archive : const(char)*;
-                inner_file : const(char)*;
-                filter : Efm.Filter*;
-              }
-              return : Efm.Monitor*;
-        }
     }
 }

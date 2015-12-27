@@ -6,12 +6,21 @@ class Efm.Archive.File (Efm.Fs.File) {
                 internal : const(char)*;
             }
         }
+        @property real_path {
+            get {
+
+            }
+            values {
+                path : const(char)*;
+            }
+        }
     }
     constructors {
         .generate;
     }
     implements {
         Efm.File.path.get;
+        Efm.File.monitor;
         Eo.Base.destructor;
         Eo.Base.finalize;
     }

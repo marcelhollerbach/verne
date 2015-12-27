@@ -75,6 +75,13 @@ abstract Efm.File(Eo.Base) {
                 invalid : bool;
             }
         }
+        monitor {
+            [[This will start a monitor, which will monitor new files, from this point on]]
+            params {
+                filter : void*; [[Trollololol give me a filter]]
+            }
+            return : void*; [[Trololol its a Monitor!]]
+        }
     }
     events {
         fsquery,done; [[Query the fs operations is done.]]
@@ -89,5 +96,6 @@ abstract Efm.File(Eo.Base) {
         @empty Efm.File.mimetype.get;
         @empty Efm.File.path.get;
         @empty Efm.File.filename.get;
+        @empty Efm.File.monitor;
     }
 }

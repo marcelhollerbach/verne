@@ -347,4 +347,12 @@ efm_file_shutdown(void)
     watch_files = NULL;
 }
 
+EOLIAN static void *
+_efm_fs_file_efm_file_monitor(Eo *obj, Efm_Fs_File_Data *pd EINA_UNUSED, void *filter)
+{
+   return eo_add(EFM_FS_MONITOR_CLASS, NULL, efm_fs_monitor_install(obj, filter));
+}
+
+
+
 #include "efm_fs_file.eo.x"

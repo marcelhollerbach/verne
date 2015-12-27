@@ -2,9 +2,8 @@ class Efm.Archive.Monitor (Efm.Fs.Monitor) {
     methods {
         generate {
             params {
-                archive : const(char)*;
-                internal : const(char)*;
-                filter: Efm.Filter*;
+                file : Efm.Archive.File*;
+                filter : Efm.Filter*;
             }
         }
     }
@@ -12,8 +11,6 @@ class Efm.Archive.Monitor (Efm.Fs.Monitor) {
         .generate;
     }
     implements {
-        Efm.Monitor.path.get;
-        Eo.Base.destructor;
-        Eo.Base.finalize;
+        Efm.Monitor.file.get;
     }
 }

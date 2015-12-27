@@ -14,12 +14,12 @@ interface Efm.Monitor {
                 filter : Efm.Filter*;
             }
         }
-        @property path {
+        @property file {
             get {
                 [[returns the path this monitor is running on]]
             }
             values {
-                path : const(char)*;
+                path : Efm.File*;
             }
         }
     }

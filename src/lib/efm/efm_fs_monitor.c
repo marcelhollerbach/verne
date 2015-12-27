@@ -8,7 +8,7 @@
 
 typedef struct
 {
-   const char *directory; //< The directory this monitor listens to
+   Efm_Fs_File *origin;
    Eio_Monitor *mon; //< The eio monitor which is started in the directory
    Eio_File *file; //< The eio file as long as the ls is running
 
@@ -195,6 +195,7 @@ _eio_done_cb(void *data, Eio_File *handler EINA_UNUSED)
    Efm_Monitor_Eio_Job *job;
    Efm_Fs_Monitor_Data *pd;
    Efm_Monitor *mon;
+   const char *dir;
    job = data;
 
    if (!job->monitor)
@@ -213,8 +214,10 @@ _eio_done_cb(void *data, Eio_File *handler EINA_UNUSED)
    eo_do(mon, eo_event_callback_call(EFM_MONITOR_EVENT_LISTING_DONE, NULL));
 
    //start monitoring
-   pd->mon = eio_monitor_stringshared_add(pd->directory);
+   eo_do_ret(pd->origin, dir, efm_file_path_get());
+   pd->mon = eio_monitor_stringshared_add(dir);
    fm_monitor_add(mon, pd->mon, _fm_action);
+
 }
 
 static void
@@ -250,11 +253,16 @@ _efm_fs_monitor_eo_base_finalize(Eo *obj, Efm_Fs_Monitor_Data *pd)
 {
    Eo_Base *base;
    Efm_Monitor_Eio_Job *job;
+   const char *dir;
 
    eo_do_super(obj, EFM_FS_MONITOR_CLASS, base = eo_finalize());
 
-   if (!pd->directory)
+   if (!pd->origin) {
      ERR("monitor does not have a set path");
+     return NULL;
+   }
+
+   eo_do_ret(pd->origin, dir, efm_file_path_get());
 
    //prepare the listing
    job = calloc(1, sizeof(Efm_Monitor_Eio_Job));
@@ -262,23 +270,23 @@ _efm_fs_monitor_eo_base_finalize(Eo *obj, Efm_Fs_Monitor_Data *pd)
    eo_do(obj, eo_wref_add(&job->monitor));
 
    //start the listing
-   pd->file = eio_file_ls(pd->directory, _eio_filter_cb, _eio_main_cb,
+   pd->file = eio_file_ls(dir, _eio_filter_cb, _eio_main_cb,
                            _eio_done_cb, _eio_error_cb, job);
    return base;
 }
 
 EOLIAN static void
-_efm_fs_monitor_install(Eo *obj, Efm_Fs_Monitor_Data *pd, const char *path, Efm_Filter *filter)
+_efm_fs_monitor_install(Eo *obj, Efm_Fs_Monitor_Data *pd, Efm_Fs_File *file, Efm_Filter *filter)
 {
-   eina_stringshare_replace(&pd->directory, path);
-
+  //TODO delete monitor for the case the file object moves away
+   pd->origin = file;
    eo_do(obj, efm_monitor_filter_set(filter));
 }
 
-EOLIAN static const char *
-_efm_fs_monitor_efm_monitor_path_get(Eo *obj EINA_UNUSED, Efm_Fs_Monitor_Data *pd)
+EOLIAN static Efm_File*
+_efm_fs_monitor_efm_monitor_file_get(Eo *obj EINA_UNUSED, Efm_Fs_Monitor_Data *pd)
 {
-   return pd->directory;
+   return pd->origin;
 }
 
 EOLIAN static void
@@ -297,7 +305,6 @@ _efm_fs_monitor_eo_base_destructor(Eo *obj, Efm_Fs_Monitor_Data *pd)
 
    fm_monitor_del(obj, pd->mon);
    eio_monitor_del(pd->mon);
-   eina_stringshare_del(pd->directory);
 
    EINA_ITERATOR_FOREACH(eina_hash_iterator_data_new(pd->file_icons), file)
      {

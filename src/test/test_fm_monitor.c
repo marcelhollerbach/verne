@@ -148,6 +148,7 @@ _add(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *de
 START_TEST(efm_monitor_test)
 {
    Efm_Monitor *mon;
+   Efm_File *f;
    int i;
 
    system("mkdir -p "TEST_DIRECTORY);
@@ -165,7 +166,9 @@ START_TEST(efm_monitor_test)
    eo_init();
    eo_do(EFM_CLASS, efm_init());
 
-   eo_do(EFM_CLASS, mon = efm_file_monitor_get(TEST_DIRECTORY, NULL));
+   eo_do(EFM_CLASS, f = efm_file_get(TEST_DIRECTORY));
+
+   eo_do(f, mon = efm_file_monitor(NULL));
 
    eo_do (mon,
 //      eo_event_callback_add(EFM_MONITOR_EVENT_FILE_DEL, _del, NULL);
@@ -211,11 +214,13 @@ _add_mon(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description
 START_TEST(efm_archive_monitor_test)
 {
    Efm_Monitor *archive;
+   Efm_File *f;
 
    eo_init();
    eo_do(EFM_CLASS, efm_init());
+   eo_do(EFM_CLASS, f = efm_archive_get("/home/marcel/git/efm/src/test/archiv.tar", "zip-test/"));
 
-   eo_do(EFM_CLASS, archive = efm_archive_monitor_get("/home/marcel/git/efm/src/test/archiv.tar", "zip-test/", NULL));
+   eo_do(f, archive = efm_file_monitor(NULL));
    ck_assert_ptr_ne(archive, NULL);
    eo_do (archive,
       eo_event_callback_add(EFM_MONITOR_EVENT_FILE_ADD, _add_mon, NULL);
