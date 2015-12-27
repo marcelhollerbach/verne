@@ -35,8 +35,6 @@
 # endif
 #endif /* ! _WIN32 */
 
-#define EOAPI EAPI
-
 #include "efm.eot.h"
 #include "efm_file.eo.h"
 #include "efm_filter.eo.h"
