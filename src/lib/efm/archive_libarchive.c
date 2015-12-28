@@ -165,3 +165,26 @@ archive_shutdown(void)
    //TODO delete hash
    return 1;
 }
+
+int
+archive_support(const char *fileending)
+{
+
+   printf("FILE ENDING: %s\n", fileending);
+#define MATCH(v) !strcmp(fileending, v)
+   if (!strncmp(fileending, "tar", 3) ||
+       MATCH("cpio") ||
+       MATCH("zip") ||
+       MATCH("shar") ||
+       MATCH("iso") ||
+       MATCH("ar") || MATCH("a") ||
+       MATCH("xar") ||
+       MATCH("lzh") || MATCH("lha") ||
+       MATCH("rar") ||
+       MATCH("cab") ||
+       MATCH("lzma") || MATCH(".7z")
+       )
+     return EINA_TRUE;
+   return EINA_FALSE;
+#undef MATCH
+}

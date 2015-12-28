@@ -11,8 +11,10 @@ int archive_shutdown(void);
  */
 const char* archive_access(const char* archive, int directly);
 
-//call if you dont need the archive anymore
+/*
+ * Call this when you are done with this archive
+ */
 int archive_unref(const char *archive);
 
-
+int archive_support(const char *fileending);
 #endif

@@ -5,11 +5,21 @@ _open_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description
 {
     Efm_File *select;
     Eina_Bool b;
+    const char *fileending, *path;
 
     select = event;
+    eo_do(select, fileending = efm_file_fileending_get();
+                  path = efm_file_path_get());
+
     if (eo_do_ret(select, b, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
       {
          eo_do(selector, elm_file_selector_file_set(select));
+      }
+    else if (eo_do_ret(EFM_CLASS, b, efm_archive_supported(fileending)))
+      {
+         eo_do(EFM_CLASS, select = efm_archive_get(path, "/"));
+         eo_do(selector, elm_file_selector_file_set(select));
+         return EO_CALLBACK_CONTINUE;
       }
     else
       {

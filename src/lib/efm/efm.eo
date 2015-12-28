@@ -23,5 +23,11 @@ class Efm (Eo.Base) {
               }
               return : Efm.File*;
         }
+        archive_supported @class {
+              params {
+                 fileending : const(char)*;
+              }
+              return : bool;
+        }
     }
 }
