@@ -21,8 +21,13 @@ _efm_archive_file_generate(Eo *obj, Efm_Archive_File_Data *pd, const char *archi
 {
    char fakepath_buf[PATH_MAX];
    char realpath_buf[PATH_MAX];
+   Eina_Bool root = EINA_FALSE;
 
-   pd->archive.find_path = archive_access(archive, EINA_TRUE);
+   if (!internal ||
+        (internal && !strcmp(internal, "/"))
+      )
+     root = EINA_TRUE;
+   pd->archive.find_path = archive_access(archive, !internal);
    if (!pd->archive.find_path) return;
 
    snprintf(fakepath_buf, sizeof(fakepath_buf), "%s/%s", archive, internal);
