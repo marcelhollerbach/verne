@@ -118,18 +118,11 @@ _file_select(View_Common *common EINA_UNUSED, Elm_Object_Item *it, Eina_Bool sel
    elm_gengrid_item_selected_set(it, sel);
 }
 
-EOLIAN static Eina_Bool
-_elm_file_display_view_grid_efl_file_file_set(Eo *obj, Elm_File_Display_View_Grid_Data *pd EINA_UNUSED, const char *dir, const char *key EINA_UNUSED)
-{
-   view_path_set(&pd->common, dir);
-   elm_gengrid_clear(obj);
-   return EINA_TRUE;
-}
-
 EOLIAN static void
-_elm_file_display_view_grid_efl_file_file_get(Eo *obj EINA_UNUSED, Elm_File_Display_View_Grid_Data *pd EINA_UNUSED, const char **dir, const char **key)
+_elm_file_display_view_grid_elm_file_view_file_set(Eo *obj, Elm_File_Display_View_Grid_Data *pd, Efm_File *file)
 {
-   eo_do(pd->common.monitor, efl_file_get(dir, key));
+  view_file_set(&pd->common, file);
+  elm_gengrid_clear(obj);
 }
 
 EOLIAN static void

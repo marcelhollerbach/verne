@@ -31,7 +31,7 @@ typedef struct
 
    Evas_Object *work_indicator;
 
-   const char *path;
+   Efm_File *file;
    Elm_File_MimeType_Cache *cache;
    Eina_List *selection;
 
@@ -209,8 +209,7 @@ _elm_file_selector_view_set(Eo *obj, Elm_File_Selector_Data *pd, const Eo_Class 
    );
    _filter_update_hidden(obj, pd);
    _filter_update_only_folder(obj, pd);
-   if (pd->path)
-     eo_do(pd->view.obj, efl_file_set(pd->path, NULL));
+   eo_do(pd->view.obj, elm_file_view_file_set(pd->file));
 }
 
 EOLIAN static const Eo_Class *
@@ -278,29 +277,29 @@ _elm_file_selector_evas_object_smart_add(Eo *obj, Elm_File_Selector_Data *pd EIN
    eo_do(obj, elm_file_selector_view_set(view));
 }
 
-EOLIAN static Eina_Bool
-_elm_file_selector_efl_file_file_set(Eo *obj, Elm_File_Selector_Data *pd, const char *file, const char *key EINA_UNUSED)
+EOLIAN static void
+_elm_file_selector_file_set(Eo *obj, Elm_File_Selector_Data *pd, Efm_File *file)
 {
-   if (!ecore_file_exists(file)) return EINA_FALSE;
-   if (pd->path && !strcmp(pd->path, file)) return EINA_TRUE;
-   eina_stringshare_replace(&pd->path, file);
+   if (pd->file == file) return;
 
-   eo_do(pd->view.obj, efl_file_set(pd->path, NULL));
-   eo_do(obj, eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED_USER, (void*)pd->path));
+   if (pd->file) eo_unref(pd->file);
+   pd->file = file;
+   if (pd->file) eo_ref(pd->file);
+
+   eo_do(pd->view.obj, elm_file_view_file_set(pd->file));
+   eo_do(obj, eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, pd->file));
 
    eina_strbuf_free(pd->search.buffer);
    pd->search.buffer = NULL;
    _search_update(obj, pd);
-
-   return EINA_TRUE;
 }
 
-EOLIAN static void
-_elm_file_selector_efl_file_file_get(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd, const char **file, const char **key EINA_UNUSED)
+EOLIAN static Efm_File *
+_elm_file_selector_file_get(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd)
 {
-   if (file)
-     *file = pd->path;
+   return pd->file;
 }
+
 /*
  *======================================
  * Event Rect mouse events
@@ -1129,7 +1128,7 @@ _elm_file_selector_sort_type_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd
 {
    config->sort.type = t;
    config_save();
-   eo_do(pd->view.obj, efl_file_set(pd->path, NULL));
+   eo_do(pd->view.obj, elm_file_view_file_set(pd->file));
 }
 
 EOLIAN static Elm_File_Selector_Sort_Type
@@ -1143,7 +1142,7 @@ _elm_file_selector_folder_placement_set(Eo *obj EINA_UNUSED, Elm_File_Selector_D
 {
    config->sort.folder_placement = t;
    config_save();
-   eo_do(pd->view.obj, efl_file_set(pd->path, NULL));
+   eo_do(pd->view.obj, elm_file_view_file_set(pd->file));
 }
 
 EOLIAN static Elm_File_Selector_Folder_Placement
@@ -1157,7 +1156,7 @@ _elm_file_selector_reverse_sort_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data 
 {
    config->sort.reverse = b;
    config_save();
-   eo_do(pd->view.obj, efl_file_set(pd->path, NULL));
+   eo_do(pd->view.obj, elm_file_view_file_set(pd->file));
 }
 
 EOLIAN static Eina_Bool
@@ -1171,7 +1170,7 @@ _elm_file_selector_case_sensetive_sort_set(Eo *obj EINA_UNUSED, Elm_File_Selecto
 {
    config->sort.casesensetive = b;
    config_save();
-   eo_do(pd->view.obj, efl_file_set(pd->path, NULL));
+   eo_do(pd->view.obj, elm_file_view_file_set(pd->file));
 }
 
 EOLIAN static Eina_Bool
@@ -1185,7 +1184,7 @@ _elm_file_selector_image_preview_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data
 {
    config->image_preview = b;
    config_save();
-   eo_do(pd->view.obj, efl_file_set(pd->path, NULL));
+   eo_do(pd->view.obj, elm_file_view_file_set(pd->file));
 }
 
 EOLIAN static Eina_Bool

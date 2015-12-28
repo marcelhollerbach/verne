@@ -75,8 +75,8 @@ _hover(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description2 
    const char *path;
 
    eo_do(icon, file = elm_obj_file_icon_file_get());
+   eo_do(selector, elm_file_selector_file_set(file));
    eo_do(file, path = efm_file_path_get());
-   eo_do(selector, efl_file_set(path, NULL));
    titlebar_path_set(path);
 
    return EO_CALLBACK_CONTINUE;

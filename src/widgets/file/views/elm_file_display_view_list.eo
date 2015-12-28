@@ -9,8 +9,7 @@ class Elm.File.Display.View.List(Elm.Genlist, Elm.File.View)
         Elm.File.View.filter.set;
         Elm.File.View.size_get;
         Elm.File.View.search;
-        Efl.File.file.set;
-        Efl.File.file.get;
+        Elm.File.View.file.set;
         Eo.Base.constructor;
         Eo.Base.destructor;
     }

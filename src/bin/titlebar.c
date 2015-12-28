@@ -110,6 +110,7 @@ static void
 _trigger_change(const char *text) {
     char **parts;
     char path[PATH_MAX];
+    Efm_File *file;
 
     parts = eina_str_split(text, SEP, 0);
 
@@ -119,8 +120,8 @@ _trigger_change(const char *text) {
       strcat(path, "/");
       strcat(path, parts[i]);
     }
-
-    eo_do(selector, efl_file_set(path, NULL));
+    eo_do(EFM_CLASS, file = efm_file_get(path));
+    eo_do(selector, elm_file_selector_file_set(file));
 }
 
 static Eina_Bool
@@ -205,14 +206,18 @@ static void
 _anchor_clicked_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event)
 {
    Elm_Entry_Anchor_Info *info = event;
+   Efm_File *file;
 
    if (focus_idler)
      ecore_idler_del(focus_idler);
 
+
+
    elm_object_focus_set(obj, EINA_FALSE);
    elm_object_text_set(obj, NULL);
    elm_entry_entry_append(obj, info->name);
-   eo_do(selector, efl_file_set(info->name, NULL));
+   eo_do(EFM_CLASS, file = efm_file_get(info->name));
+   eo_do(selector, elm_file_selector_file_set(file));
 }
 
 void

@@ -8,6 +8,7 @@ static void
 _back_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
     const char *path;
+    Efm_File *file;
 
     if (pointer < 1)
       return;
@@ -16,7 +17,8 @@ _back_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, const char *emiss
 
     path = eina_list_nth(list, pointer);
     barrier = EINA_TRUE;
-    eo_do(selector, efl_file_set(path, NULL));
+    eo_do(EFM_CLASS, file = efm_file_get(path));
+    eo_do(selector, elm_file_selector_file_set(file));
     barrier = EINA_FALSE;
 }
 
@@ -24,6 +26,7 @@ static void
 _forward_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
    const char *pointed;
+   Efm_File *file;
 
    if (pointer == eina_list_count(list) + 1)
      return;
@@ -32,7 +35,8 @@ _forward_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, const char *em
 
    pointed = eina_list_nth(list, pointer);
 
-   eo_do(selector, efl_file_set(pointed, NULL));
+   eo_do(EFM_CLASS, file = efm_file_get(pointed));
+   eo_do(selector, elm_file_selector_file_set(file));
 }
 
 static Eina_Bool
@@ -40,6 +44,9 @@ _path_changed_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Des
 {
    const char *pointed;
    const char *share;
+   const char *path;
+
+   eo_do(event, path = efm_file_path_get());
 
    if (barrier)
      return EINA_TRUE;
@@ -48,7 +55,7 @@ _path_changed_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Des
      {
         pointed = eina_list_nth(list, pointer + 1);
 
-        if (pointed && !strcmp(pointed , event))
+        if (pointed && !strcmp(pointed , path))
           {
              //
              pointer ++;
@@ -65,7 +72,7 @@ _path_changed_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Des
           }
      }
 
-   share = eina_stringshare_add(event);
+   share = eina_stringshare_add(path);
    list = eina_list_append(list, share);
 
    pointer = eina_list_count(list) - 1;
@@ -78,5 +85,5 @@ history_init(void)
 {
    elm_layout_signal_callback_add(layout, "jesus.history.back", "theme", _back_cb, NULL);
    elm_layout_signal_callback_add(layout, "jesus.history.forward", "theme", _forward_cb, NULL);
-   eo_do(selector, eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED_USER, _path_changed_cb, NULL));
+   eo_do(selector, eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _path_changed_cb, NULL));
 }

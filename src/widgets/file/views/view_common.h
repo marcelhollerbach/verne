@@ -23,7 +23,7 @@ struct _View_Common{
 };
 
 void view_common_init(View_Common *common, Eo *obj, Item_Add_Cb add, Item_Del_Cb del, Error_Cb error, Item_Select_Cb sel);
-void view_path_set(View_Common *common, const char *path);
+void view_file_set(View_Common *common, Efm_File *file);
 void view_filter_set(View_Common *common, Efm_Filter *filter);
 void view_file_select(View_Common *common, Efm_File *f);
 void view_file_unselect(View_Common *common, Efm_File *f);

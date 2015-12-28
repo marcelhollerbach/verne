@@ -25,9 +25,8 @@ _dir_changed(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Descrip
    const char *filename;
 
    buf = eina_strbuf_new();
-   titlebar_path_set(event);
-
-   filename = ecore_file_file_get(event);
+   eo_do(event, filename = efm_file_filename_get();
+                titlebar_path_set(efm_file_path_get()));
 
    eina_strbuf_append_printf(buf, "elm - Jesus | %s", filename);
    elm_win_title_set(win, eina_strbuf_string_get(buf));
@@ -75,7 +74,7 @@ ui_init()
    evas_object_size_hint_weight_set(preview, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    elm_box_pack_end(box, preview);
    eo_do(preview, selector = elm_file_display_selector_get());
-   eo_do(selector, eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED_USER,
+   eo_do(selector, eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED,
                                  _dir_changed, NULL););
    evas_object_show(preview);
 
@@ -95,7 +94,7 @@ EAPI_MAIN int
 elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 {
    char *path = NULL;
-
+   Efm_File *file;
    // check if someone gave us a path
    if (argc > 2)
      {
@@ -117,6 +116,13 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
      {
         path = "/";
      }
+   eo_do(EFM_CLASS, efm_init());
+   eo_do(EFM_CLASS, file = efm_file_get(path));
+
+   if (!file)
+     eo_do(EFM_CLASS, file = efm_file_get("/"));
+   if (!file)
+     printf("WAD\n");
 
    // set app informations
    elm_app_name_set("Jesus");
@@ -151,7 +157,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    fs_operations_init();
 
    // set the correct path
-   eo_do(selector, efl_file_set(path, NULL));
+   eo_do(selector, elm_file_selector_file_set(file));
    titlebar_path_set(path);
 
    elm_run();
@@ -159,6 +165,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    clipboard_shutdown();
    config_shutdown();
 
+   eo_do(EFM_CLASS, efm_shutdown());
    return 0;
 }
 ELM_MAIN()

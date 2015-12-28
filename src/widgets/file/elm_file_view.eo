@@ -1,4 +1,4 @@
-interface Elm.File.View(Efl.File) {
+interface Elm.File.View {
    [[ Interface to abstract communication between the elm.file.selector and the displaying view]]
    methods {
       @property name @class {
@@ -46,6 +46,11 @@ interface Elm.File.View(Efl.File) {
             needle : const(char)*;
          }
          return : bool; [[say if the search found a item]]
+      }
+      @property file {
+         values {
+            file : Efm.File*;
+         }
       }
    }
    events {

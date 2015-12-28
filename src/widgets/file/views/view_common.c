@@ -130,16 +130,15 @@ view_file_unselect(View_Common *common, Efm_File *f)
 }
 
 void
-view_path_set(View_Common *common, const char *path)
+view_file_set(View_Common *common, Efm_File *file)
 {
-   Efm_File *file;
    _view_free(common);
 
-   eo_do(EFM_CLASS, file = efm_file_get(path));
    eo_do(common->obj, eo_event_callback_call(ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection));
    common->files = eina_hash_pointer_new(NULL);
 
    eo_do(common->obj, eo_event_callback_call(ELM_FILE_VIEW_EVENT_WORKING_START , NULL));
+   eo_del(common->monitor);
    eo_do(file, common->monitor = efm_file_monitor(common->f));
    eo_do(common->monitor, eo_event_callback_array_add(_monitor_event_cbs(), common));
 }

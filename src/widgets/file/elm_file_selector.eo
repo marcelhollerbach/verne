@@ -20,7 +20,7 @@ struct Elm.File.Selector.Menu_Hook {
    file : Efm.File*;
 }
 
-class Elm.File.Selector (Elm.Layout, Efl.File) {
+class Elm.File.Selector (Elm.Layout) {
    [[ The file display widget class used to display the files and dirs of a specific path]]
    methods {
       view_pool_add @class {
@@ -114,6 +114,11 @@ class Elm.File.Selector (Elm.Layout, Efl.File) {
             cache : Elm.File.MimeType.Cache*;
          }
       }
+      @property file {
+         values {
+            file : Efm.File*;
+         }
+      }
       icon_generate {
          [[Factory to get a new icon which has the settings of the selector]]
          params {
@@ -127,14 +132,11 @@ class Elm.File.Selector (Elm.Layout, Efl.File) {
       Eo.Base.constructor;
       Eo.Base.destructor;
       Evas.Object_Smart.add;
-      Efl.File.file.set;
-      Efl.File.file.get;
       Elm.Widget.event;
    }
 
    events {
-      path,changed : const(char)*; [[Called if the path has changed because of a user interaction]]
-      path,changed,user : const(char)*; [[Called if the path was changed by user or by api]]
+      path,changed : Efm.File*; [[Called if the path has changed]]
       item,selection,changed : list<Efm.File*>*; [[The selection of the view has changed]]
       item,choosen : Efm.File*; [[A item is selected, this means its _not_ a directry and the view decived to *click* this file]]
       item,selected : Efm.File*; [[A item got selected, _not_ chossen]]

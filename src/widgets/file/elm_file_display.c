@@ -14,12 +14,12 @@ typedef struct
 } Elm_File_Display_Data;
 
 static Eina_Bool
-_selector_path_changed(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event_info EINA_UNUSED)
+_selector_path_changed(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event_info)
 {
    const char *file;
    PRIV_DATA(data)
 
-   eo_do(obj, efl_file_get(&file, NULL));
+   eo_do(event_info, file = efm_file_path_get());
    eo_do(pd->bookmark, efl_file_set(file, NULL));
 
    return EO_CALLBACK_CONTINUE;
@@ -31,10 +31,7 @@ _update_preview(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *de
    Efm_File *f;
    PRIV_DATA(data)
 
-   if (desc == ELM_FILE_SELECTOR_EVENT_ITEM_SELECTED)
-     f = event_info;
-   else
-     eo_do(EFM_CLASS, f = efm_file_get(event_info));
+   f = event_info;
 
    eo_do(pd->preview, elm_file_preview_file_set(f));
    return EO_CALLBACK_CONTINUE;
@@ -44,10 +41,12 @@ static Eina_Bool
 _bookmark_path_changed(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event_info EINA_UNUSED)
 {
    const char *file;
+   Efm_File *f;
    PRIV_DATA(data)
 
    eo_do(obj, efl_file_get(&file, NULL));
-   eo_do(pd->selector, efl_file_set(file, NULL));
+   eo_do(EFM_CLASS, f = efm_file_get(file));
+   eo_do(pd->selector, elm_file_selector_file_set(f));
 
    return EO_CALLBACK_CONTINUE;
 }
@@ -135,8 +134,8 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
    eo_do(o,
     cache = elm_file_selector_cache_get();
     eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, _menu_cb, obj);
-    eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED_USER, _selector_path_changed, obj);
-    eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED_USER, _update_preview, obj);
+    eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _selector_path_changed, obj);
+    eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _update_preview, obj);
     eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_ITEM_SELECTED, _update_preview, obj);
     );
    elm_object_part_content_set(obj, "content", o);
