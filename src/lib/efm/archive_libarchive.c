@@ -15,7 +15,7 @@ static void
 _extract(void *data, Ecore_Thread *thread EINA_UNUSED)
 {
    Archive_File *f;
-
+   Eina_List *files = NULL;
    f = data;
 
    struct archive *a;
@@ -25,8 +25,9 @@ _extract(void *data, Ecore_Thread *thread EINA_UNUSED)
    a = archive_read_new();
    out = archive_write_disk_new();
 
-   if (!a)
+   if (!a) {
      return;
+   }
 
    archive_read_support_filter_all(a);
    archive_read_support_format_all(a);
@@ -73,11 +74,20 @@ _extract(void *data, Ecore_Thread *thread EINA_UNUSED)
                  }
             }
          archive_write_finish_entry(out);
+         files = eina_list_append(files, strdup(path));
      }
 
    archive_read_close(a);
    archive_read_free(a);
    f->ref --;
+
+   char *path;
+
+   EINA_LIST_FREE(files, path)
+     {
+        chmod(path, S_IRUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+        free(path);
+     }
 }
 
 static char*
