@@ -94,15 +94,6 @@ _menu_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA
    return EO_CALLBACK_CONTINUE;
 }
 
-EOLIAN static void
-_elm_file_display_eo_base_destructor(Eo *obj, Elm_File_Display_Data *pd)
-{
-   eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, eo_destructor());
-   eo_del(pd->preview);
-   eo_del(pd->selector);
-   eo_del(pd->bookmark);
-}
-
 EOLIAN static Eo_Base *
 _elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd EINA_UNUSED)
 {

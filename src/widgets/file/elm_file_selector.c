@@ -248,11 +248,9 @@ EOLIAN static void
 _elm_file_selector_eo_base_destructor(Eo *obj, Elm_File_Selector_Data *pd)
 {
    eo_del(pd->cache);
-   if (pd->view.obj)
-     eo_del(pd->view.obj);
    config_shutdown();
    eo_do_super(obj, ELM_FILE_SELECTOR_CLASS, eo_destructor());
-   efm_shutdown();
+   eo_do(EFM_CLASS, efm_shutdown());
 }
 
 EOLIAN static void

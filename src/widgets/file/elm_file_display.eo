@@ -40,7 +40,6 @@ class Elm_File_Display (Elm.Layout) {
    }
 
    implements {
-      Eo.Base.destructor;
       Eo.Base.constructor;
       Evas.Object_Smart.add;
    }
