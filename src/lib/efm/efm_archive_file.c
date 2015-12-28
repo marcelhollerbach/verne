@@ -33,9 +33,9 @@ _efm_archive_file_generate(Eo *obj, Efm_Archive_File_Data *pd, const char *archi
    snprintf(fakepath_buf, sizeof(fakepath_buf), "%s/%s", archive, internal);
    snprintf(realpath_buf, sizeof(realpath_buf), "%s/%s", pd->archive.find_path, internal);
 
-   pd->fake_path = strdup(fakepath_buf);
-   pd->real_path = strdup(realpath_buf);
-   pd->internal = strdup(internal);
+   pd->fake_path = eina_stringshare_add(fakepath_buf);
+   pd->real_path = eina_stringshare_add(realpath_buf);
+   pd->internal = eina_stringshare_add(internal);
 
    printf("%s\n", pd->real_path);
 
@@ -52,6 +52,9 @@ EOLIAN static void
 _efm_archive_file_eo_base_destructor(Eo *obj, Efm_Archive_File_Data *pd)
 {
    if (!pd->archive.find_path) archive_unref(pd->archive.find_path);
+   eina_stringshare_del(pd->fake_path);
+   eina_stringshare_del(pd->real_path);
+   eina_stringshare_del(pd->internal);
    eo_do_super(obj, EFM_ARCHIVE_FILE_CLASS, eo_destructor());
 }
 
