@@ -50,11 +50,14 @@ _file_del(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, vo
 static void
 _add(Efm_Monitor *mon, const char *file)
 {
-   const char *path;
+   const char *path, *filename;
    Efm_File *ef;
    Efm_Fs_Monitor_Data *pd;
+   pd = eo_data_scope_get(mon, EFM_FS_MONITOR_CLASS);
 
-   eo_do(EFM_CLASS, ef = efm_file_get(file));
+   filename = ecore_file_file_get(file);
+
+   eo_do(pd->origin, ef = efm_file_child_get(filename));
 
    if (!ef)
      {
