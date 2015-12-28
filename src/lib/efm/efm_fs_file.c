@@ -201,7 +201,6 @@ _attributes_update(Eo *obj EINA_UNUSED, Efm_Fs_File_Data *pd)
 EOLIAN static void
 _efm_fs_file_generate(Eo *obj, Efm_Fs_File_Data *pd EINA_UNUSED, const char *filename)
 {
-    int end;
 
     EINA_SAFETY_ON_NULL_RETURN(watch_files);
 
@@ -215,18 +214,20 @@ _efm_fs_file_generate(Eo *obj, Efm_Fs_File_Data *pd EINA_UNUSED, const char *fil
     pd->path = eina_stringshare_add(filename);
 
     // get the filename
-    pd->filename = ecore_file_file_get(pd->path);
+    pd->fileending = pd->filename = ecore_file_file_get(pd->path);
 
     // parse the fileending
-    end = strlen(pd->path);
     do {
-        if (pd->path[end] == '.')
+        //check if we are at the end
+        if (pd->fileending[0] == '\0')
           {
-             pd->fileending = pd->path + end + 1;
+             pd->fileending = NULL;
              break;
           }
-        end --;
-    } while(end > 0);
+        pd->fileending ++;
+    } while(pd->fileending[0] != '.');
+
+    if (pd->fileending) pd->fileending ++; //skip the .
 
     if (!S_ISREG(pd->st.st_mode))
       pd->mimetype = efreet_mime_special_type_get(pd->path);
