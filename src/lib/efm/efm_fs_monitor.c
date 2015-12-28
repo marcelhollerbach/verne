@@ -63,7 +63,7 @@ _add(Efm_Monitor *mon, const char *file)
      }
 
    eo_do(ef,  path = efm_file_path_get();
-              eo_event_callback_add(EO_BASE_EVENT_DEL, _file_del, mon));
+              eo_event_callback_add(EFM_FILE_EVENT_INVALID, _file_del, mon));
    pd = eo_data_scope_get(mon, EFM_FS_MONITOR_CLASS);
 
    eina_hash_add(pd->file_icons, path, ef);
@@ -143,6 +143,7 @@ _filter_changed_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 
 EOLIAN static void
 _efm_fs_monitor_efm_monitor_filter_set(Eo *obj, Efm_Fs_Monitor_Data *pd, Efm_Filter *filter)
 {
+
    if (filter != pd->filter)
      {
         if (pd->filter)
@@ -152,7 +153,6 @@ _efm_fs_monitor_efm_monitor_filter_set(Eo *obj, Efm_Fs_Monitor_Data *pd, Efm_Fil
           }
 
         pd->filter = filter;
-
         if (pd->filter)
           {
              eo_do(pd->filter, eo_event_callback_add(EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, obj));
@@ -236,6 +236,12 @@ _eio_error_cb(void *data, Eio_File *handler EINA_UNUSED, int error EINA_UNUSED)
    free(job);
 }
 
+static void
+_del_cb(void *data)
+{
+   eo_unref(data);
+}
+
 EOLIAN static Eo_Base*
 _efm_fs_monitor_eo_base_constructor(Eo *obj, Efm_Fs_Monitor_Data *pd)
 {
@@ -243,7 +249,7 @@ _efm_fs_monitor_eo_base_constructor(Eo *obj, Efm_Fs_Monitor_Data *pd)
 
    eo_do_super(obj, EFM_FS_MONITOR_CLASS, construct = eo_constructor());
 
-   pd->file_icons = eina_hash_stringshared_new(NULL);
+   pd->file_icons = eina_hash_stringshared_new(_del_cb);
 
    return construct;
 }
@@ -292,7 +298,6 @@ _efm_fs_monitor_efm_monitor_file_get(Eo *obj EINA_UNUSED, Efm_Fs_Monitor_Data *p
 EOLIAN static void
 _efm_fs_monitor_eo_base_destructor(Eo *obj, Efm_Fs_Monitor_Data *pd)
 {
-   Efm_File *file;
 
    if (pd->file)
      eio_file_cancel(pd->file);
@@ -305,11 +310,6 @@ _efm_fs_monitor_eo_base_destructor(Eo *obj, Efm_Fs_Monitor_Data *pd)
 
    fm_monitor_del(obj, pd->mon);
    eio_monitor_del(pd->mon);
-
-   EINA_ITERATOR_FOREACH(eina_hash_iterator_data_new(pd->file_icons), file)
-     {
-        eo_del(file);
-     }
 
    eina_hash_free(pd->file_icons);
 
