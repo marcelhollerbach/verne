@@ -40,7 +40,7 @@ _efm_archive_file_generate(Eo *obj, Efm_Archive_File_Data *pd, const char *archi
 EOLIAN static const char *
 _efm_archive_file_efm_file_path_get(Eo *obj EINA_UNUSED, Efm_Archive_File_Data *pd)
 {
-   return pd->fake_path;
+   return pd->real_path;
 }
 
 EOLIAN static void
