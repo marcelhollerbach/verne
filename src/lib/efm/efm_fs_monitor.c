@@ -281,11 +281,19 @@ _efm_fs_monitor_eo_base_finalize(Eo *obj, Efm_Fs_Monitor_Data *pd)
    return base;
 }
 
+static Eina_Bool
+_inv_file_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   eo_do(data, eo_event_callback_call(EFM_MONITOR_EVENT_ERROR, NULL));
+   return EO_CALLBACK_CONTINUE;
+}
+
 EOLIAN static void
 _efm_fs_monitor_install(Eo *obj, Efm_Fs_Monitor_Data *pd, Efm_Fs_File *file, Efm_Filter *filter)
 {
-  //TODO delete monitor for the case the file object moves away
    pd->origin = file;
+   eo_ref(pd->origin);
+   eo_do(pd->origin, eo_event_callback_add(EFM_FILE_EVENT_INVALID, _inv_file_cb, obj));
    eo_do(obj, efm_monitor_filter_set(filter));
 }
 
@@ -307,6 +315,8 @@ _efm_fs_monitor_eo_base_destructor(Eo *obj, Efm_Fs_Monitor_Data *pd)
         eo_do(pd->filter, eo_event_callback_del(EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, obj));
         eo_do(pd->filter, eo_wref_del(&pd->filter));
      }
+
+   eo_unref(pd->origin);
 
    fm_monitor_del(obj, pd->mon);
    eio_monitor_del(pd->mon);
