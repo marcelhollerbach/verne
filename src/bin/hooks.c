@@ -79,7 +79,7 @@ _menu_selector_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event
     Elm_Object_Item *item;
 
     // open with entry
-    if (!eo_do_ret(file, dir, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
+    if (file && !eo_do_ret(file, dir, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
       {
          elm_menu_item_add(ev->menu, NULL, NULL, "Open", _open_cb2, ev->file);
          elm_menu_item_add(ev->menu, NULL, NULL, "Open with", _open_with_cb, ev->file);
