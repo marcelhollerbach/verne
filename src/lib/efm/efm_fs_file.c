@@ -193,6 +193,8 @@ _attributes_update(Eo *obj EINA_UNUSED, Efm_Fs_File_Data *pd)
     pd->stat.gid = pd->st.st_gid;
     pd->stat.size = pd->st.st_size;
 
+    pd->stat.mode = pd->st.st_mode;
+
     pd->stat.atime = pd->st.st_atim.tv_sec;
     pd->stat.ctime = pd->st.st_ctim.tv_sec;
     pd->stat.mtime = pd->st.st_mtim.tv_sec;

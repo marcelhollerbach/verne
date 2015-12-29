@@ -4,6 +4,7 @@ struct Efm.File.Stat{
     size : long;
     uid : int;
     gid : int;
+    mode : int; [[the mode of this file]]
     mtime : long;
     ctime : long;
     atime : long;
