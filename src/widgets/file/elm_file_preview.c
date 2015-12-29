@@ -10,6 +10,7 @@ typedef struct {
    Evas_Object *ctime, *ctime_name;
    Evas_Object *mtype, *mtype_name;
    Evas_Object *name, *name_name;
+   Evas_Object *perm, *perm_name;
    Efm_File *file;
    Elm_File_MimeType_Cache *cache;
 } Elm_File_Preview_Data;
@@ -28,6 +29,63 @@ _elm_file_preview_cache_get(Eo *obj EINA_UNUSED, Elm_File_Preview_Data *pd)
    return pd->cache;
 }
 
+static void
+_update_stat(Elm_File_Preview_Data *pd, Efm_File_Stat *st)
+{
+   char buf[PATH_MAX];
+
+   if (!st) return;
+
+   {
+      char *nicestr;
+
+      eo_do(EMOUS_CLASS, nicestr = emous_util_size_convert(EINA_TRUE, st->size));
+      elm_object_text_set(pd->size, nicestr);
+      free(nicestr);
+   }
+   snprintf(buf, sizeof(buf), "%s", ctime(&st->mtime));
+   elm_object_text_set(pd->mtime, buf);
+
+   snprintf(buf, sizeof(buf), "%s", ctime(&st->ctime));
+   elm_object_text_set(pd->ctime, buf);
+
+   {
+     struct passwd *pw;
+     pw = getpwuid(st->uid);
+
+     snprintf(buf, sizeof(buf), "%s", pw->pw_name);
+     elm_object_text_set(pd->user, buf);
+   }
+
+   {
+     struct group *gr;
+
+     gr = getgrgid(st->gid);
+
+     snprintf(buf, sizeof(buf), "%s", gr->gr_name);
+     elm_object_text_set(pd->group, buf);
+   }
+
+   {
+      char d,ur,uw,ux,gr,gw,gx,or,ow,ox;
+      d = ur = uw = ux = gr = gw = gx = or = ow = ox = '-';
+      Eina_Bool dir;
+      if (eo_do_ret(pd->file, dir, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY))) d = 'd';
+      if (st->mode & S_IRUSR) ur = 'r';
+      if (st->mode & S_IWUSR) uw = 'w';
+      if (st->mode & S_IXUSR) ux = 'x';
+      if (st->mode & S_IRGRP) gr = 'r';
+      if (st->mode & S_IWGRP) gw = 'w';
+      if (st->mode & S_IXGRP) gx = 'x';
+      if (st->mode & S_IROTH) or = 'r';
+      if (st->mode & S_IWOTH) ow = 'w';
+      if (st->mode & S_IXOTH) ox = 'x';
+
+      snprintf(buf, sizeof(buf), "%c%c%c%c%c%c%c%c%c%c\n", d, ur, uw, ux, gr, gw, gx, or, ow, ox);
+      elm_object_text_set(pd->perm, buf);
+   }
+}
+
 EOLIAN static void
 _elm_file_preview_file_set(Eo *obj, Elm_File_Preview_Data *pd, Efm_File *filee)
 {
@@ -40,9 +98,10 @@ _elm_file_preview_file_set(Eo *obj, Elm_File_Preview_Data *pd, Efm_File *filee)
 
    eo_weak_unref(&pd->file);
    pd->file = filee;
+   if (!pd->file) return;
    eo_weak_ref(&pd->file);
 
-  eo_do(pd->file, path = efm_file_path_get();
+   eo_do(pd->file, path = efm_file_path_get();
               mime_type = efm_file_mimetype_get();
               filename = efm_file_filename_get();
         );
@@ -107,47 +166,21 @@ _elm_file_preview_file_set(Eo *obj, Elm_File_Preview_Data *pd, Efm_File *filee)
   evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
   evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 
+  //update filepreview
   pd->filepreview = o;
   elm_object_part_content_set(obj, "thumb", o);
   evas_object_show(o);
 
+  //update stats
   eo_do(pd->file, st = efm_file_stat_get());
+  _update_stat(pd, st);
 
-  {
-    char *nicestr;
-
-    eo_do(EMOUS_CLASS, nicestr = emous_util_size_convert(EINA_TRUE, st->size));
-    elm_object_text_set(pd->size, nicestr);
-    free(nicestr);
-  }
-  snprintf(buf, sizeof(buf), "%s", ctime(&st->mtime));
-  elm_object_text_set(pd->mtime, buf);
-
-  snprintf(buf, sizeof(buf), "%s", ctime(&st->ctime));
-  elm_object_text_set(pd->ctime, buf);
-
-  {
-    struct passwd *pw;
-    pw = getpwuid(st->uid);
-
-    snprintf(buf, sizeof(buf), "%s", pw->pw_name);
-    elm_object_text_set(pd->user, buf);
-  }
-
-  {
-    struct group *gr;
-
-    gr = getgrgid(st->gid);
-
-    snprintf(buf, sizeof(buf), "%s", gr->gr_name);
-    elm_object_text_set(pd->group, buf);
-  }
-
+  //update the mimetype
   snprintf(buf, sizeof(buf), "%s", mime_type);
   elm_object_text_set(pd->mtype, buf);
-  {
-    elm_object_text_set(pd->name, filename);
-  }
+
+  //update the name of the preview
+  elm_object_text_set(pd->name, filename);
 }
 
 EOLIAN static Efm_File *
@@ -190,6 +223,9 @@ _elm_file_preview_evas_object_smart_add(Eo *obj, Elm_File_Preview_Data *pd)
    LABEL(pd->group_name, "Group:", 0.0, EINA_FALSE);
    LABEL(pd->group, "", EVAS_HINT_FILL, EINA_TRUE);
 
+   LABEL(pd->perm_name, "Permission:", 0.0, EINA_FALSE);
+   LABEL(pd->perm, "", EVAS_HINT_FILL, EINA_TRUE);
+
    LABEL(pd->mtime_name, "Modification Time:", 0.0, EINA_FALSE);
    LABEL(pd->mtime, "", EVAS_HINT_FILL, EINA_TRUE);
 
@@ -198,6 +234,7 @@ _elm_file_preview_evas_object_smart_add(Eo *obj, Elm_File_Preview_Data *pd)
 
    LABEL(pd->mtype_name, "Mime Type:", 0.0, EINA_FALSE);
    LABEL(pd->mtype, "", EVAS_HINT_FILL, EINA_TRUE);
+
 
    elm_object_part_content_set(obj, "content", bx);
 }
