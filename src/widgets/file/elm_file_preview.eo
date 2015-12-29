@@ -13,5 +13,6 @@ class Elm.File.Preview(Elm.Layout) {
     }
     implements {
         Evas.Object_Smart.add;
+        class.constructor;
     }
 }

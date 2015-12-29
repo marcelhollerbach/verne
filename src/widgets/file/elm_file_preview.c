@@ -15,6 +15,64 @@ typedef struct {
    Elm_File_MimeType_Cache *cache;
 } Elm_File_Preview_Data;
 
+typedef enum {
+  MIME_TYPE_TEXT = 0,
+  MIME_TYPE_IMAGE = 1,
+  MIME_TYPE_VIDEO = 2,
+  MIME_TYPE_AUDIO = 3,
+  MIME_TYPE_APPLICATION = 4,
+  MIME_TYPE_MULTIPART = 5,
+  MIME_TYPE_MESSAGE = 6,
+  MIME_TYPE_FALLBACK = 7,
+  MIME_TYPE_END = 8
+} MIME_TYPES;
+
+typedef Evas_Object* (*Mimetype_Cb)(Evas_Object *parent, Elm_File_MimeType_Cache *cache, Efm_File *file);
+
+static Mimetype_Cb mimetype_cbs[MIME_TYPE_END];
+static char*       mimetype_names[MIME_TYPE_END] = {
+  "text", "image", "video", "audio", "application", "mutlipart", "message", "-"
+};
+static Evas_Object*
+_fallback_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache ,Efm_File *file)
+{
+   const char *ic;
+   const char *mime_type;
+   Evas_Object *o;
+   Eina_Bool is;
+
+   eo_do(file, mime_type = efm_file_mimetype_get());
+
+   // display the mime_type icon
+   o = elm_icon_add(obj);
+   elm_icon_order_lookup_set(o, ELM_ICON_LOOKUP_FDO);
+   if (eo_do_ret(file, is, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
+     ic = "folder";
+   else
+     eo_do(cache, ic = elm_file_mimetype_cache_mimetype_get(mime_type));
+   eo_do(o, elm_obj_icon_standard_set(ic));
+
+   return o;
+}
+
+static Evas_Object*
+_image_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache EINA_UNUSED, Efm_File *file)
+{
+   Evas_Object *o;
+   const char *path;
+
+   o = elm_thumb_add(obj);
+   elm_thumb_file_set(o, eo_do_ret(file, path, efm_file_path_get()), NULL);
+
+   return o;
+}
+
+EOLIAN static void
+_elm_file_preview_class_constructor(Eo_Class *c) {
+   mimetype_cbs[MIME_TYPE_FALLBACK] = _fallback_handler;
+   mimetype_cbs[MIME_TYPE_IMAGE] = _image_handler;
+}
+
 EOLIAN static void
 _elm_file_preview_cache_set(Eo *obj EINA_UNUSED, Elm_File_Preview_Data *pd, Elm_File_MimeType_Cache *cache)
 {
@@ -30,9 +88,15 @@ _elm_file_preview_cache_get(Eo *obj EINA_UNUSED, Elm_File_Preview_Data *pd)
 }
 
 static void
-_update_stat(Elm_File_Preview_Data *pd, Efm_File_Stat *st)
+_update_stat(Elm_File_Preview_Data *pd, Efm_File *file)
 {
    char buf[PATH_MAX];
+   const char *mime_type;
+   Efm_File_Stat *st;
+
+   eo_do(file, mime_type = efm_file_mimetype_get();
+               st = efm_file_stat_get()
+         );
 
    if (!st) return;
 
@@ -84,84 +148,40 @@ _update_stat(Elm_File_Preview_Data *pd, Efm_File_Stat *st)
       snprintf(buf, sizeof(buf), "%c%c%c%c%c%c%c%c%c%c\n", d, ur, uw, ux, gr, gw, gx, or, ow, ox);
       elm_object_text_set(pd->perm, buf);
    }
+   {
+      //update the mimetype
+      snprintf(buf, sizeof(buf), "%s", mime_type);
+      elm_object_text_set(pd->mtype, buf);
+      elm_object_tooltip_text_set(pd->mtype, buf);
+   }
 }
 
 EOLIAN static void
-_elm_file_preview_file_set(Eo *obj, Elm_File_Preview_Data *pd, Efm_File *filee)
+_update_thumbnail(Eo *obj, Elm_File_Preview_Data *pd, Efm_File *file)
 {
-   Evas_Object *o;
-   char buf[PATH_MAX];
-   const char *path;
    const char *mime_type;
-   const char *filename;
-   Efm_File_Stat *st;
+   Evas_Object *o = NULL;
+   //delete existing filepreview
+   if (pd->filepreview)
+     {
+        elm_object_part_content_unset(obj, "thumb");
+        evas_object_del(pd->filepreview);
+     }
+   eo_do(file, mime_type = efm_file_mimetype_get());
+   //there are "group mimetypes" for text/image/video/audio/application/multipart/message and model.
+   //handlers can subsribe to them to provide a good thumbnail
+   for (int i = 0; i < MIME_TYPE_END; i++)
+     {
+        if (!strncmp(mimetype_names[i], mime_type, strlen(mimetype_names[i])))
+          {
+             if (!mimetype_cbs[i]) break;
 
-   eo_weak_unref(&pd->file);
-   pd->file = filee;
-   if (!pd->file) return;
-   eo_weak_ref(&pd->file);
-
-   eo_do(pd->file, path = efm_file_path_get();
-              mime_type = efm_file_mimetype_get();
-              filename = efm_file_filename_get();
-        );
-
-
-  // TODO make a nice thumbnail :)
-  //- text thumbnail
-  //- image file thumbnail
-  //- just the mime type icon
-  if (pd->filepreview)
-    {
-       elm_object_part_content_unset(obj, "thumb");
-       evas_object_del(pd->filepreview);
-    }
-#if 0
-  if (!strncmp("text/", file->mime_type, 5))
-    {
-       Evas_Object *tx;
-
-       const char *content;
-       //text preview
-       o = elm_layout_add(w);
-       if (!elm_layout_theme_set(o, "file_display", "file_text_preview", "default"))
-         {
-            CRI("Failed to set theme file\n");
-         }
-
-       tx = elm_entry_add(o);
-       elm_entry_editable_set(tx, EINA_TRUE);
-       content = _preview_read_file(file);
-       snprintf(buf, sizeof(buf), "<font_size=30><color=BLACK>%s", content);
-       elm_entry_entry_set(tx, buf);
-       elm_object_part_content_set(o, "content", tx);
-       free((char*)content);
-    }
-  else
-    #endif
-    if (evas_object_image_extension_can_load_fast_get(path))
-    {
-       // make a thumb
-       o = elm_thumb_add(obj);
-       eo_do(o, efl_file_set(path, NULL));
-    }
-  else
-    {
-       const char *ic;
-       Eina_Bool is;
-
-       // display the mime_type icon
-       o = elm_icon_add(obj);
-       elm_icon_order_lookup_set(o, ELM_ICON_LOOKUP_FDO);
-       if (eo_do_ret(pd->file, is, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
-         ic = "folder";
-       else
-         {
-            eo_do(pd->cache, ic = elm_file_mimetype_cache_mimetype_get(mime_type));
-         }
-
-       eo_do(o, elm_obj_icon_standard_set(ic));
-    }
+             o = mimetype_cbs[i](obj, pd->cache, file);
+             break;
+          }
+     }
+   if (!o)
+     o = mimetype_cbs[MIME_TYPE_FALLBACK](obj, pd->cache, file);
 
   evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
   evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -170,14 +190,24 @@ _elm_file_preview_file_set(Eo *obj, Elm_File_Preview_Data *pd, Efm_File *filee)
   pd->filepreview = o;
   elm_object_part_content_set(obj, "thumb", o);
   evas_object_show(o);
+}
+
+EOLIAN static void
+_elm_file_preview_file_set(Eo *obj, Elm_File_Preview_Data *pd, Efm_File *filee)
+{
+   const char *filename;
+
+   eo_weak_unref(&pd->file);
+   pd->file = filee;
+   if (!pd->file) return;
+   eo_weak_ref(&pd->file);
+
+   eo_do(pd->file, filename = efm_file_filename_get());
+
+  _update_thumbnail(obj, pd, filee);
 
   //update stats
-  eo_do(pd->file, st = efm_file_stat_get());
-  _update_stat(pd, st);
-
-  //update the mimetype
-  snprintf(buf, sizeof(buf), "%s", mime_type);
-  elm_object_text_set(pd->mtype, buf);
+  _update_stat(pd, pd->file);
 
   //update the name of the preview
   elm_object_text_set(pd->name, filename);
@@ -234,7 +264,6 @@ _elm_file_preview_evas_object_smart_add(Eo *obj, Elm_File_Preview_Data *pd)
 
    LABEL(pd->mtype_name, "Mime Type:", 0.0, EINA_FALSE);
    LABEL(pd->mtype, "", EVAS_HINT_FILL, EINA_TRUE);
-
 
    elm_object_part_content_set(obj, "content", bx);
 }
