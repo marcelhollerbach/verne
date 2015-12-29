@@ -1,0 +1,39 @@
+group { name: "elm/file_preview/base/default";
+    styles {
+        style {
+            name: "text_preview";
+            base: "font=Sans font_size=30 color=#000 wrap=none";
+            tag:  "br" "\n";
+        }
+    }
+    parts {
+        rect { "clip"
+            scale: 1;
+            desc { "default"
+                rel1.to: "background";
+                rel1.relative: 0.0 0.0;
+                rel2.to: "background";
+                rel2.relative: 0.0 0.0;
+                rel2.offset: 200 200;
+            }
+        }
+        rect { "background"
+            desc {
+                color: 255 255 255 255;
+                aspect: 1 1;
+            }
+        }
+        textblock { "visible"
+            clip_to: "clip";
+            desc { "default";
+                rel1.to: "clip";
+                align: 0.5 1.0;
+                text {
+                    style: "text_preview";
+                    align: 0.5 0.0;
+                }
+                fixed: 1 1;
+            }
+        }
+    }
+}

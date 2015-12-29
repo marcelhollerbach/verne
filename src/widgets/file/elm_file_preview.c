@@ -67,10 +67,49 @@ _image_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache EINA_UNUSED, Efm
    return o;
 }
 
+static Evas_Object*
+_text_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache EINA_UNUSED, Efm_File *file)
+{
+   Evas_Object *o;
+   FILE *fd;
+   const char *path;
+   Eina_Strbuf *buffer;
+   char buf[PATH_MAX];
+   int i = 0;
+
+   eo_do(file, path = efm_file_path_get());
+
+   o = elm_layout_add(obj);
+   if (!elm_layout_theme_set(o, "file_preview", "base", "default"))
+     {
+        CRI("Failed to set theme file\n");
+        return NULL;
+     }
+
+   fd = fopen(path, "r");
+
+   buffer = eina_strbuf_new();
+
+   while (fgets(buf, sizeof(buf), fd) != NULL) {
+      eina_strbuf_append(buffer, buf);
+      eina_strbuf_append(buffer, "<br>");
+      i++;
+      if (i > 5) break;
+   }
+
+   elm_object_part_text_set(o, "visible", eina_strbuf_string_get(buffer));
+
+   eina_strbuf_free(buffer);
+
+   fclose(fd);
+
+   return o;
+}
 EOLIAN static void
 _elm_file_preview_class_constructor(Eo_Class *c) {
    mimetype_cbs[MIME_TYPE_FALLBACK] = _fallback_handler;
    mimetype_cbs[MIME_TYPE_IMAGE] = _image_handler;
+   mimetype_cbs[MIME_TYPE_TEXT] = _text_handler;
 }
 
 EOLIAN static void
