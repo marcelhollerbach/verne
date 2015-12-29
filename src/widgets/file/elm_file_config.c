@@ -185,6 +185,7 @@ config_init(void)
    ADD_BASIC("icon_size", icon_size, EET_T_INT);
    ADD_BASIC("only_folder", only_folder, EET_T_CHAR);
    ADD_BASIC("hidden_files", hidden_files, EET_T_CHAR);
+   ADD_BASIC("image_preview", image_preview, EET_T_CHAR);
    ADD_BASIC("sort_type", sort.type, EET_T_INT);
    ADD_BASIC("folder_placement", sort.folder_placement, EET_T_INT);
    ADD_BASIC("reverse", sort.reverse, EET_T_CHAR);
