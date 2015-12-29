@@ -15,13 +15,6 @@ static Efm_Static_Data *sd;
 
 int _efm_domain;
 
-static void
-_free_cb(void *data)
-{
-   eo_del(data);
-}
-
-
 EOLIAN static int
 _efm_init(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 {
@@ -39,7 +32,7 @@ _efm_init(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
    if (!sd)
      return 0;
 
-   sd->factory = eina_hash_string_superfast_new(_free_cb);
+   sd->factory = eina_hash_string_superfast_new(NULL);
    if (!fm_monitor_init())
      {
         ERR("Failed to init resolve");
