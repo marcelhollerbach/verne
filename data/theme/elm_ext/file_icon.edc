@@ -1,39 +1,64 @@
 group { name: "elm/file_icon/base/default";
-      parts {
-         part { name: "base";
-            type: RECT;
-            description { state: "default" 0.0;
-               color: 0 0 0 0;
-               align: 0.5 0.5;
-               //aspect: 1 1;
+      styles {
+            style { name: "fileman_icon_name";
+               base: "font="FN" font_size=10 text_class=fileman_icon align=center color=#ffffffff wrap=mixed style=shadow,bottom shadow_color=#00000080 align=center ellipsis=1.0";
             }
-         }
-         part { name: "content"; type: SWALLOW;
-            description { state: "default" 0.0;
-               rel1.to: "base";
-               rel1.relative: 0.0 0.0;
-               rel2.to: "base";
-               rel2.to_y: "text";
+      }
+      parts {
+         swallow { name: "content";
+            desc { "default";
+               rel2.to_y: "public.text";
                rel2.relative: 1.0 0.0;
                //aspect: 1 1;
                align: 0.5 1.0;
             }
          }
-          part { name: "text"; type: SWALLOW;
-            description { state: "default" 0.0;
-               color: 0 0 0 0;
-               rel1.to: "base";
+         textblock { name: "public.text";
+            scale: 1;
+            desc { "default"
                rel1.relative: 0.0 1.0;
-               //rel1.offset: 0 -10;
-               rel2.to: "base";
-               rel2.relative: 1.0 1.0;
                align: 0.5 1.0;
                fixed: 1 1;
+               text {
+                  min: 0 1;
+                  style: "fileman_icon_name";
+                  align: 0.5 0.0;
+               }
             }
+            desc { "rename_mode"
+               inherit: "default";
+               visible: 0;
+            }
+         }
+         swallow { "public.rename"
+            desc {
+               fixed: 1 1;
+               rel1.to: "public.text";
+               rel2.to: "public.text";
+            }
+         }
+      }
+      programs {
+         program {
+            signal: "public,rename,on";
+            source: "elm";
+            action: STATE_SET rename_mode;
+            target: "public.text";
+         }
+         program {
+            signal: "public,rename,off";
+            source: "elm";
+            action: STATE_SET default;
+            target: "public.text";
          }
       }
    }
    group { name: "elm/file_icon/base/line";
+      styles {
+            style { name: "fileman_icon_name_line";
+               base: "font="FN" font_size=10 text_class=fileman_icon align=left color=#ffffffff wrap=none style=shadow,bottom shadow_color=#00000080";
+            }
+      }
       parts {
          part { name: "content"; type: SWALLOW;
             description { state: "default" 0.0;
@@ -43,30 +68,45 @@ group { name: "elm/file_icon/base/default";
                align: 0.0 0.5;
             }
          }
-          part { name: "text"; type: SWALLOW;
-            description { state: "default" 0.0;
-               color: 0 0 0 0;
+         textblock { "public.text";
+            scale: 1;
+            desc { "default"
                rel1.to: "content";
                rel1.relative: 1.0 0.0;
                rel2.relative: 1.0 1.0;
                align: 0.0 0.5;
                fixed: 1 1;
-            }
-         }
-         part { name: "drop_indicator";
-            description { state: "default" 0.0;
-               rel1.to: "content";
-               rel2.to: "text";
-               image {
-                  normal: "outline_glow.png";
-                  border: 2 2 2 2;
+               text {
+                  min: 1 1;
+                  ellipsis: -1;
+                  style: "fileman_icon_name_line";
+                  align: 0.5 0.0;
                }
+            }
+            desc { "rename_mode"
+               inherit: "default";
                visible: 0;
             }
-            description { state: "drop" 0.0;
-               inherit: "default";
-               visible: 1;
+         }
+         swallow { "public.rename"
+            desc {
+               rel1.to: "public.text";
+               rel2.to: "public.text";
             }
+         }
+      }
+      programs {
+         program {
+            signal: "public,rename,on";
+            source: "elm";
+            action: STATE_SET rename_mode;
+            target: "public.text";
+         }
+         program {
+            signal: "public,rename,off";
+            source: "elm";
+            action: STATE_SET default;
+            target: "public.text";
          }
       }
    }

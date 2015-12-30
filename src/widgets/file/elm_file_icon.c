@@ -12,8 +12,6 @@ typedef struct
 {
    Efm_File *file;
    Evas_Object *icon;
-   Evas_Object *label;
-   Evas_Object *entry;
 
    Eina_Bool preview;
    Ecore_Timer *t;
@@ -97,11 +95,6 @@ _elm_file_icon_evas_object_smart_add(Eo *obj, Elm_File_Icon_Data *pd)
      {
         CRI("Failed to set theme file\n");
      }
-
-   pd->label = elm_label_add(obj);
-   elm_object_text_set(pd->label, "...");
-   evas_object_show(pd->label);
-   elm_object_part_content_set(obj, "text", pd->label);
 }
 
 static Eina_Bool
@@ -130,37 +123,42 @@ _elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode, Eina_
    if (mode)
      {
         const char *filename;
+        Evas_Object *entry;
+
+        elm_layout_signal_emit(obj, "public,rename,on", "elm");
 
         eo_do(pd->file, filename = efm_file_filename_get());
 
-        pd->entry = elm_entry_add(obj);
-        eo_do(pd->entry, eo_event_callback_add(EVAS_OBJECT_EVENT_KEY_DOWN, _key_down_cb, obj));
-        evas_object_propagate_events_set(pd->entry, EINA_FALSE);
-        elm_entry_scrollable_set(pd->entry, EINA_TRUE);
-        elm_scroller_policy_set(pd->entry, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
-        elm_entry_single_line_set(pd->entry, EINA_TRUE);
-        elm_entry_editable_set(pd->entry, EINA_TRUE);
-        elm_entry_entry_set(pd->entry, filename);
+        entry = elm_entry_add(obj);
+        eo_do(entry, eo_event_callback_add(EVAS_OBJECT_EVENT_KEY_DOWN, _key_down_cb, obj));
+        evas_object_propagate_events_set(entry, EINA_FALSE);
+        elm_entry_scrollable_set(entry, EINA_TRUE);
+        elm_scroller_policy_set(entry, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
+        elm_entry_single_line_set(entry, EINA_TRUE);
+        elm_entry_editable_set(entry, EINA_TRUE);
+        elm_entry_entry_set(entry, filename);
         eo_do(obj, eo_event_callback_call(ELM_FILE_ICON_EVENT_RENAME_START, NULL));
-        elm_object_part_content_unset(obj, "text");
-        elm_object_part_content_set(obj, "text", pd->entry);
-        evas_object_hide(pd->label);
-        evas_object_show(pd->entry);
-        elm_object_focus_set(pd->entry, EINA_TRUE);
+        elm_object_part_content_set(obj, "public.rename", entry);
+        evas_object_show(entry);
+        elm_object_focus_set(entry, EINA_TRUE);
      }
    else
      {
+        const char *filename;
+        Evas_Object *entry;
         const char *nname;
 
-        nname = elm_entry_entry_get(pd->entry);
+        elm_layout_signal_emit(obj, "public,rename,off", "elm");
+
+        eo_do(pd->file, filename = efm_file_filename_get());
+
+        entry = elm_object_part_content_unset(obj, "public.rename");
+        nname = elm_object_text_get(entry);
+
         if (take)
           eo_do(obj, eo_event_callback_call(ELM_FILE_ICON_EVENT_RENAME_DONE, (char*)nname));
-        evas_object_del(pd->entry);
-        pd->entry = NULL;
-
-        elm_object_part_content_unset(obj, "text");
-        elm_object_part_content_set(obj, "text", pd->label);
-        evas_object_show(pd->label);
+        elm_object_part_text_set(obj, "public.text", filename);
+        evas_object_del(entry);
      }
 }
 
@@ -296,8 +294,7 @@ _file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
    _content_set(obj, pd->icon);
 
    // set the text of the filename
-   elm_object_text_set(pd->label, filename);
-   elm_object_tooltip_text_set(pd->label, filename);
+   elm_object_part_text_set(obj, "public.text", filename);
 }
 
 EOLIAN static Efm_File *
