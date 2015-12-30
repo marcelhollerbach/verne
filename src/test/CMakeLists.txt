@@ -49,6 +49,8 @@ target_link_libraries (test_fm_monitor
    m
    rt
 )
+set_property(TARGET test_fm_monitor
+   PROPERTY COMPILE_DEFINITIONS TEST_RESSOURCES="${CMAKE_SOURCE_DIR}")
 
 add_test(efm_test test_fm_monitor)
 

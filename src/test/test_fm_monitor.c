@@ -218,7 +218,7 @@ START_TEST(efm_archive_monitor_test)
 
    eo_init();
    eo_do(EFM_CLASS, efm_init());
-   eo_do(EFM_CLASS, f = efm_archive_get("/home/marcel/git/efm/src/test/archiv.tar", "zip-test/"));
+   eo_do(EFM_CLASS, f = efm_archive_get(TEST_RESSOURCES"/src/test/archiv.tar", "zip-test/"));
 
    eo_do(f, archive = efm_file_monitor(NULL));
    ck_assert_ptr_ne(archive, NULL);
@@ -240,7 +240,7 @@ START_TEST(efm_archive_test)
    eo_init();
    eo_do(EFM_CLASS, efm_init());
 
-   eo_do(EFM_CLASS, archive = efm_archive_get("/home/marcel/git/efm/src/test/archiv.tar", "zip-test/dir1/bla1"));
+   eo_do(EFM_CLASS, archive = efm_archive_get(TEST_RESSOURCES"/src/test/archiv.tar", "zip-test/dir1/bla1"));
 
    ck_assert_ptr_ne(archive, NULL);
 
