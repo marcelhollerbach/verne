@@ -5,7 +5,7 @@
 
 typedef struct
 {
-   Evas_Object *preview;
+   Evas_Object *detail;
    Evas_Object *bookmark;
    Evas_Object *selector;
 
@@ -33,7 +33,7 @@ _update_preview(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *de
 
    f = event_info;
 
-   eo_do(pd->preview, elm_file_preview_file_set(f));
+   eo_do(pd->detail, elm_file_detail_file_set(f));
    return EO_CALLBACK_CONTINUE;
 }
 
@@ -137,9 +137,9 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
    elm_object_part_content_set(obj, "bookmark", o);
    evas_object_show(o);
 
-   pd->preview = o = eo_add(ELM_FILE_PREVIEW_CLASS, obj);
+   pd->detail = o = eo_add(ELM_FILE_DETAIL_CLASS, obj);
    eo_do(o,
-    elm_file_preview_cache_set(cache)
+    elm_file_detail_cache_set(cache)
    );
    elm_object_part_content_set(obj, "filepreview", o);
    evas_object_show(o);
@@ -182,7 +182,7 @@ _elm_file_display_filepreview_show_get(Eo *obj EINA_UNUSED, Elm_File_Display_Dat
 EOLIAN static Evas_Object *
 _elm_file_display_filepreview_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd)
 {
-  return pd->preview;
+  return pd->detail;
 }
 
 EOLIAN static Evas_Object *

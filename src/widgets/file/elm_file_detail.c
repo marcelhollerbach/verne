@@ -13,7 +13,7 @@ typedef struct {
    Evas_Object *perm, *perm_name;
    Efm_File *file;
    Elm_File_MimeType_Cache *cache;
-} Elm_File_Preview_Data;
+} Elm_File_Detail_Data;
 
 typedef enum {
   MIME_TYPE_TEXT = 0,
@@ -106,14 +106,14 @@ _text_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache EINA_UNUSED, Efm_
    return o;
 }
 EOLIAN static void
-_elm_file_preview_class_constructor(Eo_Class *c) {
+_elm_file_detail_class_constructor(Eo_Class *c) {
    mimetype_cbs[MIME_TYPE_FALLBACK] = _fallback_handler;
    mimetype_cbs[MIME_TYPE_IMAGE] = _image_handler;
    mimetype_cbs[MIME_TYPE_TEXT] = _text_handler;
 }
 
 EOLIAN static void
-_elm_file_preview_cache_set(Eo *obj EINA_UNUSED, Elm_File_Preview_Data *pd, Elm_File_MimeType_Cache *cache)
+_elm_file_detail_cache_set(Eo *obj EINA_UNUSED, Elm_File_Detail_Data *pd, Elm_File_MimeType_Cache *cache)
 {
    eo_weak_unref(&pd->cache);
     pd->cache = cache;
@@ -121,13 +121,13 @@ _elm_file_preview_cache_set(Eo *obj EINA_UNUSED, Elm_File_Preview_Data *pd, Elm_
 }
 
 EOLIAN static Elm_File_MimeType_Cache *
-_elm_file_preview_cache_get(Eo *obj EINA_UNUSED, Elm_File_Preview_Data *pd)
+_elm_file_detail_cache_get(Eo *obj EINA_UNUSED, Elm_File_Detail_Data *pd)
 {
    return pd->cache;
 }
 
 static void
-_update_stat(Elm_File_Preview_Data *pd, Efm_File *file)
+_update_stat(Elm_File_Detail_Data *pd, Efm_File *file)
 {
    char buf[PATH_MAX];
    const char *mime_type;
@@ -196,7 +196,7 @@ _update_stat(Elm_File_Preview_Data *pd, Efm_File *file)
 }
 
 EOLIAN static void
-_update_thumbnail(Eo *obj, Elm_File_Preview_Data *pd, Efm_File *file)
+_update_thumbnail(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
 {
    const char *mime_type;
    Evas_Object *o = NULL;
@@ -232,7 +232,7 @@ _update_thumbnail(Eo *obj, Elm_File_Preview_Data *pd, Efm_File *file)
 }
 
 EOLIAN static void
-_elm_file_preview_file_set(Eo *obj, Elm_File_Preview_Data *pd, Efm_File *filee)
+_elm_file_detail_file_set(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *filee)
 {
    const char *filename;
 
@@ -253,7 +253,7 @@ _elm_file_preview_file_set(Eo *obj, Elm_File_Preview_Data *pd, Efm_File *filee)
 }
 
 EOLIAN static Efm_File *
-_elm_file_preview_file_get(Eo *obj EINA_UNUSED, Elm_File_Preview_Data *pd)
+_elm_file_detail_file_get(Eo *obj EINA_UNUSED, Elm_File_Detail_Data *pd)
 {
    return pd->file;
 }
@@ -267,11 +267,11 @@ _elm_file_preview_file_get(Eo *obj EINA_UNUSED, Elm_File_Preview_Data *pd)
    evas_object_show(w);
 
 EOLIAN static void
-_elm_file_preview_evas_object_smart_add(Eo *obj, Elm_File_Preview_Data *pd)
+_elm_file_detail_evas_object_smart_add(Eo *obj, Elm_File_Detail_Data *pd)
 {
    Evas_Object *bx;
 
-   eo_do_super(obj, ELM_FILE_PREVIEW_CLASS, evas_obj_smart_add());
+   eo_do_super(obj, ELM_FILE_DETAIL_CLASS, evas_obj_smart_add());
 
    if (!elm_layout_theme_set(obj, "file_display", "file_preview", "default"))
      {
@@ -307,4 +307,4 @@ _elm_file_preview_evas_object_smart_add(Eo *obj, Elm_File_Preview_Data *pd)
    elm_object_part_content_set(obj, "content", bx);
 }
 
-#include "elm_file_preview.eo.x"
+#include "elm_file_detail.eo.x"

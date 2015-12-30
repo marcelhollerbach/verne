@@ -1,4 +1,4 @@
-class Elm.File.Preview(Elm.Layout) {
+class Elm.File.Detail(Elm.Layout) {
     methods {
         @property file {
             values {
