@@ -129,7 +129,7 @@ _efm_archive_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *archive_
 EOLIAN static Eina_Bool
 _efm_archive_supported(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *fileending)
 {
-   return archive_support(fileending);
+   return (fileending) ? archive_support(fileending) : EINA_FALSE;
 }
 
 #include "efm.eo.x"
