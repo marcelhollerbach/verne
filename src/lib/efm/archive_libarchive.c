@@ -201,8 +201,6 @@ archive_shutdown(void)
 int
 archive_support(const char *fileending)
 {
-
-   printf("FILE ENDING: %s\n", fileending);
 #define MATCH(v) !strcmp(fileending, v)
    if (!strncmp(fileending, "tar", 3) ||
        MATCH("cpio") ||
