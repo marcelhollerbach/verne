@@ -28,7 +28,12 @@ _efm_archive_file_generate(Eo *obj, Efm_Archive_File_Data *pd, const char *archi
       )
      root = EINA_TRUE;
    pd->archive.find_path = archive_access(archive, !internal);
-   if (!pd->archive.find_path) return;
+
+   if (!pd->archive.find_path)
+     {
+        ERR("Failed to access %s\n", pd->archive.find_path);
+        return;
+     }
 
    snprintf(fakepath_buf, sizeof(fakepath_buf), "%s/%s", archive, internal);
    snprintf(realpath_buf, sizeof(realpath_buf), "%s/%s", pd->archive.find_path, internal);
@@ -36,8 +41,6 @@ _efm_archive_file_generate(Eo *obj, Efm_Archive_File_Data *pd, const char *archi
    pd->fake_path = eina_stringshare_add(fakepath_buf);
    pd->real_path = eina_stringshare_add(realpath_buf);
    pd->internal = eina_stringshare_add(internal);
-
-   printf("%s\n", pd->real_path);
 
    eo_do_super(obj, EFM_ARCHIVE_FILE_CLASS, efm_fs_file_generate(eina_file_path_sanitize(pd->real_path)));
 }

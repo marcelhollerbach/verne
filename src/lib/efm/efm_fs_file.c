@@ -203,12 +203,14 @@ _attributes_update(Eo *obj EINA_UNUSED, Efm_Fs_File_Data *pd)
 EOLIAN static void
 _efm_fs_file_generate(Eo *obj, Efm_Fs_File_Data *pd EINA_UNUSED, const char *filename)
 {
-
     EINA_SAFETY_ON_NULL_RETURN(watch_files);
 
     // get the stat
     if (stat(filename, &pd->st) < 0)
-      return;
+      {
+         ERR("Failed to access %s\n", filename);
+         return;
+      }
 
     _attributes_update(obj, pd);
 

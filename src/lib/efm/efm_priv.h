@@ -43,7 +43,7 @@
 
 #include "efm_fs_file.eo.h"
 #include "efm_archive_file.eo.h"
-#include "archive.h"
+#include "archive_access.h"
 #include "efm_fs_monitor.eo.h"
 #include "efm_archive_monitor.eo.h"
 

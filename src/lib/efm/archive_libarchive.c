@@ -4,12 +4,12 @@
 
 typedef struct {
     char *goal; //< where the archive is extracted
-    char *original; //< the archive extracted from
+    char *original; //< the archivonst e extracted from
     int ref;
+    const char *error;
 } Archive_File;
 
 static Eina_Hash *files;
-const char *lasterror;
 
 static void
 _extract(void *data, Ecore_Thread *thread EINA_UNUSED)
@@ -34,16 +34,16 @@ _extract(void *data, Ecore_Thread *thread EINA_UNUSED)
 
    if (archive_read_open_filename(a, f->original, 2048) != ARCHIVE_OK)
      {
-        lasterror = archive_error_string(a);
+        f->error = archive_error_string(a);
         return;
      }
 
    while (archive_read_next_header(a, &entry) == ARCHIVE_OK)
      {
          const void *buff;
-         size_t size;
-         int64_t offset;
-         int r;
+         size_t size = 0;
+         int64_t offset = 0;
+         int r = 0;
          char path[PATH_MAX];
 
          snprintf(path, sizeof(path), "%s/%s", f->goal, archive_entry_pathname(entry));
@@ -53,7 +53,7 @@ _extract(void *data, Ecore_Thread *thread EINA_UNUSED)
          if (archive_write_header(out, entry)
               != ARCHIVE_OK)
            {
-              lasterror = archive_error_string(a);
+              f->error =  archive_error_string(a);
               continue;
            }
 
@@ -69,7 +69,7 @@ _extract(void *data, Ecore_Thread *thread EINA_UNUSED)
                if (archive_write_data_block(out, buff, size, offset)
                      != ARCHIVE_OK)
                  {
-                    lasterror = archive_error_string(out);
+                    f->error = archive_error_string(out);
                     return;
                  }
             }
@@ -88,6 +88,16 @@ _extract(void *data, Ecore_Thread *thread EINA_UNUSED)
         chmod(path, S_IRUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
         free(path);
      }
+}
+
+static void
+_end(void *data, Ecore_Thread *th EINA_UNUSED) {
+   Archive_File *f;
+
+   f = data;
+
+   if (f->error)
+     ERR("Extracting %s failed, reason ; %s", f->original, f->error);
 }
 
 static char*
@@ -127,6 +137,13 @@ archive_access(const char *archive, int direct)
 
    f = eina_hash_find(files, archive);
 
+   //if the archive has a error problem delete it and try again
+   if (f && f->error)
+     {
+        eina_hash_del_by_key(files, archive);
+        f = NULL;
+     }
+
    if (!f)
      {
         f = calloc(1, sizeof(Archive_File));
@@ -137,9 +154,14 @@ archive_access(const char *archive, int direct)
 
         eina_hash_add(files, archive, f);
         if (direct)
-           _extract(f, NULL);
+          {
+             _extract(f, NULL);
+             _end(f, NULL);
+          }
         else
-           ecore_thread_run(_extract, NULL, NULL, f);
+          {
+             ecore_thread_run(_extract, _end, NULL, f);
+          }
      }
 
    //increase reference
