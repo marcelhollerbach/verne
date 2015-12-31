@@ -9,6 +9,7 @@
 #include <Elementary.h>
 #include <Elementary_Ext.h>
 #include "ui.h"
+#include "config.h"
 
 typedef enum
 {

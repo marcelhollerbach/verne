@@ -11,6 +11,7 @@ LIST(APPEND JESUS_FILES
   titlebar.c
   ui.c
   config.c
+  config.h
   exec_ui.c
   exec.c
   hooks.c
@@ -50,11 +51,12 @@ target_link_libraries (jesus
    elm_ext
    efm)
 
-set_property(TARGET jesus PROPERTY COMPILE_DEFINITIONS THEME_PATH="${THEME_INSTALL_PATH}"
-PACKAGE_DATA_DIR="${CMAKE_INSTALL_DATADIR}/efm/"
-PACKAGE_LIB_DIR="${CMAKE_INSTALL_LIBDIR}"
-PACKAGE_BIN_DIR="${CMAKE_INSTALL_BINDIR}"
-)
+set(THEME_PATH \"${THEME_INSTALL_PATH}\")
+set(PACKAGE_DATA_DIR \"${CMAKE_INSTALL_FULL_DATADIR}/efm/\")
+set(PACKAGE_LIB_DIR \"${CMAKE_INSTALL_FULL_LIBDIR}\")
+set(PACKAGE_BIN_DIR \"${CMAKE_INSTALL_FULL_BINDIR}\")
+
+configure_file(${CMAKE_SOURCE_DIR}/src/bin/config.h.cmake ${CMAKE_SOURCE_DIR}/src/bin/config.h)
 
 INSTALL(FILES ${CMAKE_BINARY_DIR}/data/theme/jesus.edc.edj
   DESTINATION ${CMAKE_INSTALL_DATADIR}/jesus/)
