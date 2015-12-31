@@ -847,11 +847,14 @@ _ctx_rename(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 static void
 _ctx_new_folder(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
+  Efm_File *file;
   const char *dir;
   char path[PATH_MAX];
   int c;
 
-  eo_do(data, efl_file_get(&dir, NULL));
+  eo_do(data, file = elm_file_selector_file_get());
+  eo_do(file, dir = efm_file_path_get());
+
   snprintf(path, sizeof(path), "%s/new_directory", dir);
   for(c = 0; ecore_file_exists(path); c++)
     snprintf(path, sizeof(path), "%s/new_directory_%d", dir, c);
