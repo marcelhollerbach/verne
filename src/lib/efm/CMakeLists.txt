@@ -46,7 +46,7 @@ LIST(APPEND FM_MONITOR
    Efm.h
    efm_priv.h
    archive_libarchive.c
-   archive.h
+   archive_access.h
    )
 
 list(APPEND FM_DEPS
