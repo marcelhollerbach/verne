@@ -3,5 +3,6 @@
 *.eo.h
 *.eot.h
 *.sublime-*
+*config.h
 Makefile
 build/
