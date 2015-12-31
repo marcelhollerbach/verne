@@ -41,8 +41,8 @@ eo_rule_create("${EMOUS_FILES}" "${include}")
 
 add_library(emous SHARED ${EMOUS_FILES})
 
-set_property(TARGET emous
-             PROPERTY COMPILE_DEFINITIONS EMOUS_MODULE_PATH="${EMOUS_MODULE_PATH}")
+set(EMOUS_MODULE_PATH \"${EMOUS_MODULE_PATH}\")
+configure_file(config.h.cmake ${CMAKE_SOURCE_DIR}/src/lib/emous/config.h)
 
 target_link_libraries(emous
   ${EINA_LIBRARIES}

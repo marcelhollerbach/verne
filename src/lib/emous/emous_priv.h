@@ -6,6 +6,7 @@
 #include <Eio.h>
 #include <Ecore.h>
 #include <Ecore_File.h>
+#include <config.h>
 
 #ifdef EAPI
 # undef EAPI
