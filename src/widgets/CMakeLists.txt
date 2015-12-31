@@ -90,20 +90,15 @@ target_link_libraries(elm_ext
   emous
 )
 
-list(APPEND definitions
-            THEME_PATH="${THEME_INSTALL_PATH}"
-    )
-if (DEBUG)
-list(APPEND definitions
-            DEBUG
-    )
-endif(DEBUG)
+set(THEME_PATH \"${THEME_INSTALL_PATH}\")
 
 
+configure_file(config.h.cmake ${CMAKE_SOURCE_DIR}/src/widgets/config.h)
 set_property(TARGET elm_ext
    PROPERTY COMPILE_DEFINITIONS
    ${definitions}
 )
+
 INSTALL(FILES Elementary_Ext.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/elm_ext-1/)
 INSTALL(TARGETS elm_ext
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
