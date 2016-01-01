@@ -116,7 +116,19 @@ _notify_ui_init(Evas_Object *obj, Notify_Ui *ui, Evas_Smart_Cb _no, Evas_Smart_C
 static void
 _chmod_yes(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
-   //DO IT
+   Elm_File_Detail_Data *pd;
+   const char *path;
+
+   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+   eo_do(pd->file, path = efm_file_path_get());
+
+   if (chmod(path, pd->changes.mode) < 0)
+     {
+        perror("modding file failed");
+     }
+
+
+   pd->changes.mode = 0;
 }
 
 static void
@@ -156,18 +168,62 @@ _request_chmod(Evas_Object *obj, int mode) {
 }
 
 static void
-_chown_user_yes(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+_chown_yes(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
-   //DO IT
+   Elm_File_Detail_Data *pd;
+   Efm_File_Stat *st;
+   const char *path;
+   uid_t user;
+   gid_t group;
+
+   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+
+   if (pd->changes.group)
+     {
+        struct group *grp;
+
+        grp = getgrnam(pd->changes.group);
+
+        group = grp->gr_gid;
+     }
+   else
+     {
+        eo_do(pd->file, st = efm_file_stat_get());
+        group = st->gid;
+     }
+
+   if (pd->changes.user)
+     {
+        struct passwd *usr;
+
+        usr = getpwnam(pd->changes.user);
+
+        user = usr->pw_uid;
+     }
+   else
+     {
+        eo_do(pd->file, st = efm_file_stat_get());
+        user = st->uid;
+     }
+
+   eo_do(pd->file, path = efm_file_path_get());
+   if (chown(path, user, group) < 0)
+     {
+        perror("chown failed");
+     }
+
+   pd->changes.user = NULL;
+   pd->changes.group = NULL;
 }
 
 static void
-_chown_user_no(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+_chown_no(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
    Elm_File_Detail_Data *pd;
 
    pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
    pd->changes.user = NULL;
+   pd->changes.group = NULL;
 }
 static void
 _request_chown_user(Evas_Object *obj, const char *user) {
@@ -192,23 +248,8 @@ _request_chown_user(Evas_Object *obj, const char *user) {
 
    snprintf(buf, sizeof(buf), "Change owner to %s - %s", pd->changes.user, group);
 
-   _notify_ui_init(obj, &pd->changes.chown, _chown_user_no, _chown_user_yes);
+   _notify_ui_init(obj, &pd->changes.chown, _chown_no, _chown_yes);
    elm_object_text_set(pd->changes.chown.label, buf);
-}
-
-static void
-_chown_group_yes(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
-{
-   //DO IT
-}
-
-static void
-_chown_group_no(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
-{
-   Elm_File_Detail_Data *pd;
-
-   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
-   pd->changes.group = NULL;
 }
 
 static void
@@ -234,7 +275,7 @@ _request_chown_group(Evas_Object *obj, const char *group) {
 
    snprintf(buf, sizeof(buf), "Change owner to %s - %s", user, pd->changes.group);
 
-   _notify_ui_init(obj, &pd->changes.chown, _chown_group_no, _chown_group_yes);
+   _notify_ui_init(obj, &pd->changes.chown, _chown_no, _chown_yes);
    elm_object_text_set(pd->changes.chown.label, buf);
 }
 
