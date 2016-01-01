@@ -14,6 +14,11 @@ typedef struct {
 } Detail_Row_Mutable;
 
 typedef struct {
+  Evas_Object *notify;
+  Evas_Object *label;
+} Notify_Ui;
+
+typedef struct {
    Evas_Object *filepreview;
    Detail_Row_Mutable perm, user, group;
    Detail_Row_Immutable size, mtime, ctime, mtype, name;
@@ -26,6 +31,12 @@ typedef struct {
       Elm_Object_Item *items[4];
       int user_type;
    } perm2;
+   struct {
+     const char *user;
+     const char *group;
+     int mode;
+     Notify_Ui chmod, chown;
+   } changes;
    Efm_File *file;
    Elm_File_MimeType_Cache *cache;
 } Elm_File_Detail_Data;
@@ -44,6 +55,7 @@ typedef enum {
 
 static void detail_row_changable_changeable(Detail_Row_Mutable *row, Eina_Bool changeable);
 static void _segment_update(Elm_File_Detail_Data *pd);
+static void _generate_permissions_str(char *buf, size_t s, int mode);
 
 typedef Evas_Object* (*Mimetype_Cb)(Evas_Object *parent, Elm_File_MimeType_Cache *cache, Efm_File *file);
 
@@ -51,15 +63,181 @@ static Mimetype_Cb mimetype_cbs[MIME_TYPE_END];
 static char*       mimetype_names[MIME_TYPE_END] = {
   "text", "image", "video", "audio", "application", "mutlipart", "message", "-"
 };
+
 static void
-_chmod(Efm_File *file, int mode) {
-  printf("Chmod to %d\n", mode);
+_hide(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+  evas_object_hide(data);
 }
 
 static void
-_chown(Efm_File *file, const char *user, const char *group) {
-  printf("chown to %s - %s\n", user, group);
+_notify_ui_init(Evas_Object *obj, Notify_Ui *ui, Evas_Smart_Cb _no, Evas_Smart_Cb _yes) {
+   Evas_Object *box, *yes, *no;
+   if (ui->notify)
+     {
+        elm_notify_timeout_set(ui->notify, 5.0);
+        evas_object_show(ui->notify);
+        return;
+     }
+
+   ui->notify = elm_notify_add(elm_object_top_widget_get(obj));
+   evas_object_smart_callback_add(ui->notify, "timeout", _no, obj);
+   eo_weak_ref(&ui->notify);
+   elm_notify_timeout_set(ui->notify, 5.0);
+   elm_notify_align_set(ui->notify, 1.0, 0.0);
+   evas_object_show(ui->notify);
+
+   ui->label = elm_label_add(ui->notify);
+   eo_weak_ref(&ui->label);
+   evas_object_show(ui->label);
+
+   yes = elm_button_add(ui->notify);
+   evas_object_smart_callback_add(yes, "clicked", _hide, ui->notify);
+   evas_object_smart_callback_add(yes, "clicked", _yes, obj);
+   elm_object_text_set(yes, "Yes");
+   evas_object_show(yes);
+
+   no = elm_button_add(ui->notify);
+   evas_object_smart_callback_add(no, "clicked", _hide, ui->notify);
+   evas_object_smart_callback_add(no, "clicked", _no, obj);
+   elm_object_text_set(no, "no");
+   evas_object_show(no);
+
+   box = elm_box_add(ui->notify);
+   elm_box_horizontal_set(box, EINA_TRUE);
+   elm_box_pack_end(box, ui->label);
+   elm_box_pack_end(box, yes);
+   elm_box_pack_end(box, no);
+   evas_object_show(box);
+
+   elm_object_content_set(ui->notify, box);
 }
+
+static void
+_chmod_yes(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   //DO IT
+}
+
+static void
+_chmod_no(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   Elm_File_Detail_Data *pd;
+
+   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+   pd->changes.mode = 0;
+}
+static void
+_request_chmod(Evas_Object *obj, int mode) {
+   Elm_File_Detail_Data *pd;
+   char buf[PATH_MAX], perm[PATH_MAX];
+   Efm_File_Stat *st;
+
+   pd = eo_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
+   pd->changes.mode = mode;
+   eo_do(pd->file, st = efm_file_stat_get());
+
+   if (pd->changes.mode == st->mode)
+     {
+        pd->changes.mode = 0;
+        evas_object_hide(pd->changes.chmod.notify);
+     }
+   else
+     {
+        //
+        _notify_ui_init(obj, &pd->changes.chmod, _chmod_no, _chmod_yes);
+        _generate_permissions_str(perm, sizeof(perm), pd->changes.mode);
+        snprintf(buf, sizeof(buf), "Change permission to %s", perm);
+
+        elm_object_text_set(pd->changes.chmod.label, buf);
+     }
+
+
+}
+
+static void
+_chown_user_yes(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   //DO IT
+}
+
+static void
+_chown_user_no(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   Elm_File_Detail_Data *pd;
+
+   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+   pd->changes.user = NULL;
+}
+static void
+_request_chown_user(Evas_Object *obj, const char *user) {
+   Elm_File_Detail_Data *pd;
+   Efm_File_Stat *st;
+   char buf[PATH_MAX];
+   const char *group;
+
+   pd = eo_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
+   pd->changes.user = user;
+
+   if (pd->changes.group)
+     group = pd->changes.group;
+   else
+     {
+        struct group *grp;
+
+        eo_do(pd->file, st = efm_file_stat_get());
+        grp = getgrgid(st->gid);
+        group = grp->gr_name;
+     }
+
+   snprintf(buf, sizeof(buf), "Change owner to %s - %s", pd->changes.user, group);
+
+   _notify_ui_init(obj, &pd->changes.chown, _chown_user_no, _chown_user_yes);
+   elm_object_text_set(pd->changes.chown.label, buf);
+}
+
+static void
+_chown_group_yes(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   //DO IT
+}
+
+static void
+_chown_group_no(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   Elm_File_Detail_Data *pd;
+
+   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+   pd->changes.group = NULL;
+}
+
+static void
+_request_chown_group(Evas_Object *obj, const char *group) {
+   Elm_File_Detail_Data *pd;
+   Efm_File_Stat *st;
+   char buf[PATH_MAX];
+   const char *user;
+
+   pd = eo_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
+   pd->changes.group = group;
+
+   if (pd->changes.user)
+     user = pd->changes.user;
+   else
+     {
+        struct passwd *pwd;
+
+        eo_do(pd->file, st = efm_file_stat_get());
+        pwd = getpwuid(st->uid);
+        user = pwd->pw_name;
+     }
+
+   snprintf(buf, sizeof(buf), "Change owner to %s - %s", user, pd->changes.group);
+
+   _notify_ui_init(obj, &pd->changes.chown, _chown_group_no, _chown_group_yes);
+   elm_object_text_set(pd->changes.chown.label, buf);
+}
+
 
 //================================================================
 //Preview creation
@@ -161,24 +339,32 @@ _elm_file_detail_cache_get(Eo *obj EINA_UNUSED, Elm_File_Detail_Data *pd)
 }
 
 static void
-_generate_permissions_str(Efm_File *file, Efm_File_Stat *st, Evas_Object *o)
+_generate_permissions_str(char *buf, size_t s, int mode)
 {
    char d,ur,uw,ux,gr,gw,gx,or,ow,ox;
-   char buf[PATH_MAX];
-   d = ur = uw = ux = gr = gw = gx = or = ow = ox = '-';
-   Eina_Bool dir;
-   if (eo_do_ret(file, dir, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY))) d = 'd';
-   if (st->mode & S_IRUSR) ur = 'r';
-   if (st->mode & S_IWUSR) uw = 'w';
-   if (st->mode & S_IXUSR) ux = 'x';
-   if (st->mode & S_IRGRP) gr = 'r';
-   if (st->mode & S_IWGRP) gw = 'w';
-   if (st->mode & S_IXGRP) gx = 'x';
-   if (st->mode & S_IROTH) or = 'r';
-   if (st->mode & S_IWOTH) ow = 'w';
-   if (st->mode & S_IXOTH) ox = 'x';
 
-   snprintf(buf, sizeof(buf), "%c%c%c%c%c%c%c%c%c%c\n", d, ur, uw, ux, gr, gw, gx, or, ow, ox);
+   d = ur = uw = ux = gr = gw = gx = or = ow = ox = '-';
+
+   if (S_ISDIR(mode)) d = 'd';
+   if (mode & S_IRUSR) ur = 'r';
+   if (mode & S_IWUSR) uw = 'w';
+   if (mode & S_IXUSR) ux = 'x';
+   if (mode & S_IRGRP) gr = 'r';
+   if (mode & S_IWGRP) gw = 'w';
+   if (mode & S_IXGRP) gx = 'x';
+   if (mode & S_IROTH) or = 'r';
+   if (mode & S_IWOTH) ow = 'w';
+   if (mode & S_IXOTH) ox = 'x';
+
+   snprintf(buf, s, "%c%c%c%c%c%c%c%c%c%c\n", d, ur, uw, ux, gr, gw, gx, or, ow, ox);
+}
+
+static void
+_generate_permissions(Efm_File_Stat *st, Evas_Object *o)
+{
+   char buf[PATH_MAX];
+
+   _generate_permissions_str(buf, PATH_MAX, st->mode);
    elm_object_text_set(o, buf);
 }
 
@@ -258,10 +444,10 @@ _update_stat(Elm_File_Detail_Data *pd, Efm_File *file)
    //===========
    detail_row_changable_changeable(&pd->perm, perm_right);
    if (!perm_right)
-     _generate_permissions_str(pd->file, st, pd->perm.display);
+     _generate_permissions(st, pd->perm.display);
    else
      {
-        _generate_permissions_str(pd->file, st, pd->perm2.permstring);
+        _generate_permissions(st, pd->perm2.permstring);
         _segment_update(pd);
      }
 
@@ -322,6 +508,7 @@ EOLIAN static void
 _elm_file_detail_file_set(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
 {
    const char *filename;
+   Efm_File_Stat *st;
 
    if (pd->file)
      {
@@ -333,6 +520,7 @@ _elm_file_detail_file_set(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
    if (!pd->file) return;
 
    eo_weak_ref(&pd->file);
+   eo_do(pd->file, st = efm_file_stat_get());
    eo_do(pd->file, eo_event_callback_add(EFM_FILE_EVENT_CHANGED, _file_changed, obj));
 
    eo_do(pd->file, filename = efm_file_filename_get());
@@ -344,6 +532,10 @@ _elm_file_detail_file_set(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
 
   //update the name of the preview
   elm_object_text_set(pd->name.display, filename);
+
+  pd->changes.user = NULL;
+  pd->changes.group = NULL;
+  pd->changes.mode = 0;
 }
 
 EOLIAN static Efm_File *
@@ -357,7 +549,7 @@ _elm_file_detail_file_get(Eo *obj EINA_UNUSED, Elm_File_Detail_Data *pd)
 //Group/User settings
 //================================================================
 static void
-_standard_fill(Evas_Object *o, const char *name)
+_standard_fill(Evas_Object *obj, Evas_Object *o, Evas_Smart_Cb cb, const char *name)
 {
     FILE *fptr;
     char line[PATH_MAX];
@@ -372,34 +564,40 @@ _standard_fill(Evas_Object *o, const char *name)
     while (fgets(line, sizeof(line), fptr)) {
         char *name;
         name = strtok(line, ":");
-        elm_hoversel_item_add(o, name, NULL, 0, NULL, NULL);
+        elm_hoversel_item_add(o, name, NULL, 0, cb, obj);
     }
 
     fclose(fptr);
 }
 
 static void
-_group_hover_init(Evas_Object *o) {
-   _standard_fill(o, "/etc/group");
-}
-
-static void
-_user_hover_init(Evas_Object *o) {
-   _standard_fill(o, "/etc/passwd");
-}
-static void
-_user_or_group_sel_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+_sel_group(void *data, Evas_Object *obj EINA_UNUSED, void *event_info)
 {
-   Elm_File_Detail_Data *pd;
-   const char *user;
-   const char *group;
+   const char *groupname;
 
-   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
-   user = elm_object_text_get(pd->user.change_display);
-   group = elm_object_text_get(pd->group.change_display);
-
-   _chown(pd->file, user, group);
+   groupname = elm_object_item_text_get(event_info);
+   _request_chown_group(data, groupname);
 }
+
+static void
+_sel_user(void *data, Evas_Object *obj EINA_UNUSED, void *event_info)
+{
+   const char *username;
+
+   username = elm_object_item_text_get(event_info);
+   _request_chown_user(data, username);
+}
+
+static void
+_group_hover_init(Evas_Object *obj, Evas_Object *o) {
+   _standard_fill(obj, o, _sel_group, "/etc/group");
+}
+
+static void
+_user_hover_init(Evas_Object *obj, Evas_Object *o) {
+   _standard_fill(obj, o, _sel_user, "/etc/passwd");
+}
+
 //================================================================
 //Permission settings
 //================================================================
@@ -463,7 +661,10 @@ _flip_cb(void *data, Evas_Object *obj, void *event_info)
 
    pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
    eo_do(pd->file, st = efm_file_stat_get());
-   permission = st->mode;
+   if (!pd->changes.mode)
+     permission = st->mode;
+   else
+     permission = pd->changes.mode;
 
    //search the correct flip
    for(int i = 0; i < 3; i++)
@@ -493,8 +694,7 @@ _flip_cb(void *data, Evas_Object *obj, void *event_info)
           permission = permission | FILE_PERM_MODES[pd->perm2.user_type][flip];
      }
 
-   if ((mode_t)st->mode != permission)
-     _chmod(pd->file, permission);
+   _request_chmod(data, permission);
 }
 
 static void
@@ -617,13 +817,11 @@ _elm_file_detail_evas_object_smart_add(Eo *obj, Elm_File_Detail_Data *pd)
    DETAIL_ROW_UNCHANGABLE(size, "<b>Size:");
    SEPERATOR
    pd->user.change_display = elm_hoversel_add(obj);
-   evas_object_smart_callback_add(pd->user.change_display, "selected", _user_or_group_sel_cb, obj);
-   _user_hover_init(pd->user.change_display);
+   _user_hover_init(obj, pd->user.change_display);
    DETAIL_ROW_CHANGABLE(user, "<b>User:");
    SEPERATOR
    pd->group.change_display = elm_hoversel_add(obj);
-   evas_object_smart_callback_add(pd->group.change_display, "selected", _user_or_group_sel_cb, obj);
-   _group_hover_init(pd->group.change_display);
+   _group_hover_init(obj, pd->group.change_display);
    DETAIL_ROW_CHANGABLE(group, "<b>Group:");
    SEPERATOR
    _permission_init(obj, pd);
