@@ -252,7 +252,7 @@ _efm_fs_monitor_eo_base_constructor(Eo *obj, Efm_Fs_Monitor_Data *pd)
 
    eo_do_super(obj, EFM_FS_MONITOR_CLASS, construct = eo_constructor());
 
-   pd->file_icons = eina_hash_stringshared_new(_del_cb);
+   pd->file_icons = eina_hash_string_superfast_new(_del_cb);
 
    return construct;
 }
