@@ -54,7 +54,7 @@ typedef enum {
 } MIME_TYPES;
 
 static void detail_row_changable_changeable(Detail_Row_Mutable *row, Eina_Bool changeable);
-static void _segment_update(Elm_File_Detail_Data *pd);
+static void _flip_update(Elm_File_Detail_Data *pd);
 static void _generate_permissions_str(char *buf, size_t s, int mode);
 
 typedef Evas_Object* (*Mimetype_Cb)(Evas_Object *parent, Elm_File_MimeType_Cache *cache, Efm_File *file);
@@ -448,7 +448,7 @@ _update_stat(Elm_File_Detail_Data *pd, Efm_File *file)
    else
      {
         _generate_permissions(st, pd->perm2.permstring);
-        _segment_update(pd);
+        _flip_update(pd);
      }
 
 }
@@ -500,7 +500,7 @@ _file_changed(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc
 
    _update_thumbnail(oo, pd, pd->file);
    _update_stat(pd, pd->file);
-   _segment_update(pd);
+   _flip_update(pd);
    return EO_CALLBACK_CONTINUE;
 }
 
@@ -605,7 +605,7 @@ static int FILE_PERM_MODES[3][3] = {{S_IRUSR,S_IWUSR,S_IXUSR},
                                     {S_IRGRP,S_IWGRP,S_IXGRP},
                                     {S_IROTH,S_IWOTH,S_IXOTH}};
 static void
-_segment_update(Elm_File_Detail_Data *pd)
+_flip_update(Elm_File_Detail_Data *pd)
 {
 
    Efm_File_Stat *st;
@@ -624,30 +624,29 @@ static void
 _segment_changed_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_info)
 {
    Elm_File_Detail_Data *pd;
+   Eina_Bool flip_visible;
 
    pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
 
-   if (pd->perm2.items[0] == event_info)
-     {
-        evas_object_show(pd->perm2.permstring);
-        evas_object_hide(pd->perm2.flip[0]);
-        evas_object_hide(pd->perm2.flip[1]);
-        evas_object_hide(pd->perm2.flip[2]);
-     }
-   else
-     {
-       evas_object_hide(pd->perm2.permstring);
-       evas_object_show(pd->perm2.flip[0]);
-       evas_object_show(pd->perm2.flip[1]);
-       evas_object_show(pd->perm2.flip[2]);
+   flip_visible = pd->perm2.items[0] != event_info;
 
+   eo_do(pd->perm2.permstring, efl_gfx_visible_set(!flip_visible));
+   for (int i = 0; i < 3; i++)
+     eo_do(pd->perm2.flip[i], efl_gfx_visible_set(flip_visible));
+
+   if (flip_visible)
+     {
+       //check which part is active, owner, group or other
        for (int part = 1; part < 4; part ++)
          {
-            if (pd->perm2.items[part] == event_info) {
-              pd->perm2.user_type = part - 1;
-            }
+            if (pd->perm2.items[part] == event_info)
+              {
+                 //update the current usertype to the correct part
+                 pd->perm2.user_type = part - 1;
+              }
          }
-       _segment_update(pd);
+       //update flips
+       _flip_update(pd);
      }
 }
 
@@ -700,16 +699,15 @@ _flip_cb(void *data, Evas_Object *obj, void *event_info)
 static void
 _permission_init(Evas_Object *obj, Elm_File_Detail_Data *pd) {
    char *lbl[] = {"r","w","x"};
+   char *segments[] = {"View", "Owner", "Group", "Other", NULL};
 
    pd->perm.change_display = elm_table_add(obj);
 
    pd->perm2.segment = elm_segment_control_add(obj);
    evas_object_smart_callback_add(pd->perm2.segment, "changed", _segment_changed_cb, obj);
-   pd->perm2.items[0] = elm_segment_control_item_add(pd->perm2.segment, NULL, "View");
-   pd->perm2.items[1] = elm_segment_control_item_add(pd->perm2.segment, NULL, "Owner");
-   pd->perm2.items[2] = elm_segment_control_item_add(pd->perm2.segment, NULL, "Group");
-   pd->perm2.items[3] = elm_segment_control_item_add(pd->perm2.segment, NULL, "Other");
-
+   //init elements
+   for (int i = 0; segments[i]; i++)
+     pd->perm2.items[i] = elm_segment_control_item_add(pd->perm2.segment, NULL, segments[i]);
    elm_segment_control_item_selected_set(pd->perm2.items[0], EINA_TRUE);
    elm_table_pack(pd->perm.change_display, pd->perm2.segment, 0, 0, 5, 1);
    evas_object_show(pd->perm2.segment);
@@ -726,6 +724,7 @@ _permission_init(Evas_Object *obj, Elm_File_Detail_Data *pd) {
         elm_table_pack(pd->perm.change_display, pd->perm2.flip[i], i + 1, 1, 1, 1);
         evas_object_show(pd->perm2.flip[i]);
      }
+   //fake selection to select part 0
    _segment_changed_cb(obj, pd->perm2.segment, pd->perm2.items[0]);
 }
 //================================================================
@@ -735,16 +734,8 @@ _permission_init(Evas_Object *obj, Elm_File_Detail_Data *pd) {
 static void
 detail_row_changable_changeable(Detail_Row_Mutable *row, Eina_Bool changeable)
 {
-   if (changeable)
-     {
-        evas_object_show(row->change_display);
-        evas_object_hide(row->display);
-     }
-   else
-     {
-        evas_object_hide(row->change_display);
-        evas_object_show(row->display);
-     }
+   eo_do(row->display, efl_gfx_visible_set(!changeable));
+   eo_do(row->change_display, efl_gfx_visible_set(changeable));
 }
 
 static void
