@@ -92,16 +92,17 @@ _file_del(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, vo
    }\
 
 EOLIAN static Efm_File*
-_efm_file_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *path)
+_efm_file_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *_path)
 {
    Efm_File *file;
+   const char *path;
+   SEARCH_IF_FOUND_RETURN_INCED(_path, file)
 
-   SEARCH_IF_FOUND_RETURN_INCED(path, file)
-
-   file = eo_add(EFM_FS_FILE_CLASS, NULL, efm_fs_file_generate(path));
+   file = eo_add(EFM_FS_FILE_CLASS, NULL, efm_fs_file_generate(_path));
    if (file)
      {
-        eo_do(file, eo_event_callback_array_add(factory_events(), sd->factory));
+        eo_do(file, path = efm_file_path_get();
+                    eo_event_callback_array_add(factory_events(), sd->factory));
         eina_hash_add(sd->factory, &path, file);
      }
 
@@ -109,21 +110,23 @@ _efm_file_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *path)
 }
 
 EOLIAN static Efm_File*
-_efm_archive_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *archive_path, const char *path)
+_efm_archive_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *archive_path, const char *innerpath)
 {
    char compose_path[PATH_MAX];
+   const char *path;
    Efm_File *file;
 
-   snprintf(compose_path, sizeof(compose_path), "%s/%s", archive_path, path);
+   snprintf(compose_path, sizeof(compose_path), "%s/%s", archive_path, innerpath);
 
    SEARCH_IF_FOUND_RETURN_INCED(compose_path, file);
 
-   file = eo_add(EFM_ARCHIVE_FILE_CLASS, NULL, efm_archive_file_generate(archive_path, path));
+   file = eo_add(EFM_ARCHIVE_FILE_CLASS, NULL, efm_archive_file_generate(archive_path, innerpath));
 
    if (file)
      {
-        eo_do(file, eo_event_callback_array_add(factory_events(), sd->factory));
-        eina_hash_add(sd->factory, &compose_path, file);
+        eo_do(file, path = efm_file_path_get();
+                    eo_event_callback_array_add(factory_events(), sd->factory));
+        eina_hash_add(sd->factory, &path, file);
      }
 
    return file;
