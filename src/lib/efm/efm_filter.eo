@@ -52,5 +52,6 @@ class Efm.Filter(Eo.Base) {
     }
     implements {
         Eo.Base.constructor;
+        Eo.Base.destructor;
     }
 }

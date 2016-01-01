@@ -157,5 +157,23 @@ _efm_filter_eo_base_constructor(Eo *obj, Efm_Filter_Data *pd)
    return oobj;
 }
 
+EOLIAN static void
+_efm_filter_eo_base_destructor(Eo *obj, Efm_Filter_Data *pd)
+{
+   for (int i = 0; i < EFM_ATTRIBUTE_END; i++)
+     {
+        Filter *f;
+
+        EINA_LIST_FREE(pd->attribute[i], f)
+          {
+             if (f->init)
+               regfree(&f->reg);
+             free(f);
+          }
+     }
+   eina_list_free(pd->types);
+   eo_do_super(obj, EFM_FILTER_CLASS, eo_destructor());
+}
+
 
 #include "efm_filter.eo.x"
