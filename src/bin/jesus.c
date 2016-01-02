@@ -6,8 +6,9 @@ Evas_Object *selector;
 Evas_Object *layout;
 
 static void
-on_done(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+on_done(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
+   evas_object_del(obj);
    // quit the mainloop (elm_run function will return)
    elm_exit();
 }
