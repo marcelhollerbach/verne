@@ -545,7 +545,7 @@ _dnd_create_icon(void *data, Evas_Object *win, Evas_Coord *xoff, Evas_Coord *yof
         i++;
 
         icon = elm_icon_add(win);
-        elm_icon_order_lookup_set(icon, ELM_ICON_LOOKUP_FDO);
+        elm_icon_order_lookup_set(icon, ELM_ICON_LOOKUP_FDO_THEME);
         elm_image_file_set(icon, file, NULL);
         elm_icon_standard_set(icon, file);
         evas_object_show(icon);
