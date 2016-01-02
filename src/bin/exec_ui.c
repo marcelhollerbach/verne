@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include "jesus.h"
 
 typedef struct  {
@@ -5,6 +6,11 @@ typedef struct  {
   Eina_List *entrys;
   Efm_File *file;
   Cmd_Choosen choosen;
+  Elm_Object_Item *normal;
+  Elm_Object_Item *recommented;
+  Elm_Object_Item *last_recommend;
+  Eina_List *desktops;
+  Elm_Genlist_Item_Class *klass;
 } Open_With_Ui;
 
 static Eina_Bool
@@ -87,55 +93,68 @@ _compare(const void *a, const void *b)
    return 0;
 }
 
+static Eina_Bool
+_transform(void *data)
+{
+   Open_With_Ui *ui;
+   Efreet_Desktop *desk;
+   const char *mime_type;
+   Elm_Object_Item *it;
+
+   ui = data;
+   eo_do(ui->file, mime_type = efm_file_mimetype_get());
+   desk = eina_list_data_get(ui->desktops);
+
+   ui->desktops = eina_list_remove(ui->desktops, desk);
+
+   if (_list_compare(desk->mime_types, mime_type))
+     {
+        // this is a recommended app
+        ui->last_recommend = elm_genlist_item_sorted_insert(ui->wid->elm_genlist1, ui->klass, desk, ui->recommented, 0, _compare, NULL, desk);
+     }
+   it = elm_genlist_item_sorted_insert(ui->wid->elm_genlist1, ui->klass, desk, ui->normal, 0, _compare, NULL, desk);
+   //allways add the normal app
+   ui->entrys = eina_list_append(ui->entrys, it);
+
+   ui->desktops = eina_list_remove(ui->desktops, desk);
+
+   if (!ui->desktops)
+     {
+        elm_genlist_item_class_free(ui->klass);
+        return EINA_FALSE;
+     }
+   return EINA_TRUE;
+}
+
 static void
 _genlist_fill(Open_With_Ui *ui)
 {
-   Eina_List *desktops;
-   Elm_Genlist_Item_Class *klass, *gklass;
-   Efreet_Desktop *desktop;
-   Elm_Object_Item *normal, *recommented, *last_recommend = NULL;
-   const char *mime_type;
+   Elm_Genlist_Item_Class *gklass;
 
-   eo_do(ui->file, mime_type = efm_file_mimetype_get());
-
-   klass = elm_genlist_item_class_new();
-   klass->item_style = "default";
-   klass->func.text_get = _text_get;
-   klass->func.content_get = _content_get;
+   ui->klass = elm_genlist_item_class_new();
+   ui->klass->item_style = "default";
+   ui->klass->func.text_get = _text_get;
+   ui->klass->func.content_get = _content_get;
 
    gklass = elm_genlist_item_class_new();
    gklass->item_style = "group_index";
    gklass->func.text_get = _group_text_get;
 
    // initial headlines for recommented and not recommented apps
-   recommented = last_recommend = elm_genlist_item_append(ui->wid->elm_genlist1, gklass, "Recommended apps", NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
-   normal = elm_genlist_item_append(ui->wid->elm_genlist1, gklass, "Normal apps", NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
-   desktops = efreet_util_desktop_name_glob_list("*");
+   ui->recommented = ui->last_recommend = elm_genlist_item_append(ui->wid->elm_genlist1, gklass, "Recommended apps", NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
+   ui->normal = elm_genlist_item_append(ui->wid->elm_genlist1, gklass, "Normal apps", NULL, ELM_GENLIST_ITEM_GROUP, NULL, NULL);
+   ui->desktops = efreet_util_desktop_name_glob_list("*");
 
-   EINA_LIST_FREE(desktops, desktop)
-     {
-        Elm_Object_Item *it;
-        if (_list_compare(desktop->mime_types, mime_type))
-          {
-             // this is a recommended app
-             last_recommend = elm_genlist_item_sorted_insert(ui->wid->elm_genlist1, klass, desktop, recommented, 0, _compare, NULL, desktop);
-          }
-        it = elm_genlist_item_sorted_insert(ui->wid->elm_genlist1, klass, desktop, normal, 0, _compare, NULL, desktop);
-        //allways add the normal app
-        ui->entrys = eina_list_append(ui->entrys, it);
-     }
-  //remove recommented if there are no apps
-  if (recommented == last_recommend)
-    elm_object_item_del(recommented);
+   ecore_idler_add(_transform, ui);
 
-  elm_genlist_item_class_free(gklass);
-  elm_genlist_item_class_free(klass);
+   //remove recommented if there are no apps
+   elm_genlist_item_class_free(gklass);
 }
 
 static void
 _label_fill(Open_With_Ui *ui)
 {
-    Efreet_Desktop *desk;
+    Efreet_Desktop *desk = NULL;
     const char *mime_type;
     const char *name;
 
@@ -146,7 +165,8 @@ _label_fill(Open_With_Ui *ui)
 
     name = eina_hash_find(config->mime_type_open, mime_type);
 
-    desk = efreet_util_desktop_name_find(name);
+    if (name)
+      desk = efreet_util_desktop_name_find(name);
 
     if (desk)
       elm_object_text_set(ui->wid->current_app, desk->name);
@@ -171,7 +191,7 @@ _search_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
         char *f;
 
         desk = elm_object_item_data_get(it);
-        if ((f = strstr(desk->name, search)))
+        if ((f = strcasestr(desk->name, search)))
           {
              int tmin = f - desk->name;
              if (min == -1)
