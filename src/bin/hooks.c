@@ -70,6 +70,32 @@ _paste_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA
    preview_paste();
 }
 
+#define ARCHIVE_FUNC_NAME(type) _create_##type
+
+#define ARCHIVE_FUNC(type) \
+static void \
+ARCHIVE_FUNC_NAME(type)(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED) \
+{ \
+   const char *path; \
+   eo_do(data, path = efm_file_path_get()); \
+   archive_create(path, type); \
+}
+
+ARCHIVE_FUNC(ARCHIVE_TYPE_ZIP)
+ARCHIVE_FUNC(ARCHIVE_TYPE_TAR_GZ)
+ARCHIVE_FUNC(ARCHIVE_TYPE_TAR_BZIP2)
+ARCHIVE_FUNC(ARCHIVE_TYPE_TAR_XZ)
+ARCHIVE_FUNC(ARCHIVE_TYPE_XZ)
+
+static void
+_extract(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
+{
+   const char *path;
+   eo_do(data, path = efm_file_path_get());
+
+   archive_extract(path);
+}
+
 static Eina_Bool
 _menu_selector_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
 {
@@ -89,6 +115,26 @@ _menu_selector_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event
     elm_menu_item_add(ev->menu, NULL, NULL, "Copy", _copy_cb, ev->file);
     elm_menu_item_add(ev->menu, NULL, NULL, "Move", _move_cb, ev->file);
     elm_menu_item_add(ev->menu, NULL, NULL, "Remove", _remove_cb, ev->file);
+
+    elm_menu_item_separator_add(ev->menu, NULL);
+
+    if (file && !eo_do_ret(file, dir, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
+      {
+         elm_menu_item_add(ev->menu, NULL, NULL, "Extract here ", _extract, ev->file);
+      }
+
+    if (file && eo_do_ret(file, dir, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
+      {
+         item = elm_menu_item_add(ev->menu, NULL, NULL, "Create Archiv", NULL, ev->file);
+         elm_menu_item_add(ev->menu, item, NULL, ".tar.gz", ARCHIVE_FUNC_NAME(ARCHIVE_TYPE_TAR_GZ), ev->file);
+         elm_menu_item_add(ev->menu, item, NULL, ".tar.xz", ARCHIVE_FUNC_NAME(ARCHIVE_TYPE_TAR_XZ), ev->file);
+         elm_menu_item_add(ev->menu, item, NULL, ".tar.bzip2", ARCHIVE_FUNC_NAME(ARCHIVE_TYPE_TAR_BZIP2), ev->file);
+         elm_menu_item_add(ev->menu, item, NULL, ".zip", ARCHIVE_FUNC_NAME(ARCHIVE_TYPE_ZIP), ev->file);
+         elm_menu_item_add(ev->menu, item, NULL, ".xz", ARCHIVE_FUNC_NAME(ARCHIVE_TYPE_XZ), ev->file);
+
+      }
+
+    elm_menu_item_separator_add(ev->menu, NULL);
 
     item = elm_menu_item_add(ev->menu, NULL, NULL, "Paste", _paste_cb, ev->file);
     if (clipboard_something_in())

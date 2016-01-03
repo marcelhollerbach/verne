@@ -10,6 +10,7 @@
 #include <Elementary_Ext.h>
 #include "ui.h"
 #include "config.h"
+#include "jesus_archive.h"
 
 typedef enum
 {

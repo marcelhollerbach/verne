@@ -19,6 +19,8 @@ LIST(APPEND JESUS_FILES
   clipboard.c
   fs_operation.c
   shortcuts.c
+  jesus_archive.h
+  jesus_archive.c
   ${CMAKE_BINARY_DIR}/data/theme/jesus.edc.edj
 )
 
