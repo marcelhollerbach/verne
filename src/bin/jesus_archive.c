@@ -94,22 +94,12 @@ archive_extract(const char *path)
 
 typedef struct {
     char *path;
+    char *basename;
+    char *basename2;
     int offset;
     Eina_List *lst;
     struct archive *archive;
 } Create_Request;
-
-static void
-_create(void *data, Ecore_Thread *thread EINA_UNUSED)
-{
-   Create_Request *req;
-
-   req = data;
-
-
-
-   free(req);
-}
 
 static void
 _main_cb(void *data, Eio_File *f, const Eina_File_Direct_Info *ff)
@@ -119,15 +109,19 @@ _main_cb(void *data, Eio_File *f, const Eina_File_Direct_Info *ff)
     struct stat file;
     int fd, len = 0;
     char buff[8192];
+    char path[PATH_MAX];
 
     stat(ff->path, &file);
 
+    if (S_ISDIR(file.st_mode)) return;
+
     req = data;
 
-    entry = archive_entry_new(); // Note 2
-    printf("Writing in %s\n", req->offset + 1 + ff->path);
-    archive_entry_set_pathname(entry, req->offset + 1 + ff->path);
-    archive_entry_set_size(entry, file.st_size); // Note 3
+    snprintf(path, sizeof(path), "%s/%s", req->basename, req->offset + 1 + ff->path);
+
+    entry = archive_entry_new();
+    archive_entry_set_pathname(entry, path);
+    archive_entry_set_size(entry, file.st_size);
     archive_entry_set_filetype(entry, AE_IFREG);
     archive_entry_set_perm(entry, 0644);
     archive_write_header(req->archive, entry);
@@ -149,6 +143,7 @@ _done_cb(void *data, Eio_File *f)
     req = data;
     archive_write_close(req->archive);
     archive_write_free(req->archive);
+    free(req->basename2);
     free(req->path);
     free(req);
 }
@@ -156,6 +151,17 @@ _done_cb(void *data, Eio_File *f)
 static void
 _error_cb(void *data, Eio_File *f, int reason)
 {
+    Create_Request *req;
+
+    req = data;
+
+    printf("Creating archive %s failed!\n", req->path);
+
+    archive_write_close(req->archive);
+    archive_write_free(req->archive);
+    free(req->basename2);
+    free(req->path);
+    free(req);
 }
 
 void
@@ -169,6 +175,8 @@ archive_create(const char *path, Archive_Type type)
    //create new archive
    req->archive = archive_write_new();
    req->path = strdup(path);
+   req->basename2 = strdup(path);
+   req->basename = basename(req->basename2);
 
    switch(type)
      {
