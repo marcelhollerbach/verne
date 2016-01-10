@@ -235,6 +235,7 @@ collections{
             }
          }
          image { "back_img"
+            scale : 1;
             desc { "default"
                rel1.to: "back";
                rel2.to: "back";
@@ -244,6 +245,7 @@ collections{
             }
          }
          image { "forward_img"
+            scale : 1;
             desc { "default"
                rel1.to: "forward";
                rel2.to: "forward";
