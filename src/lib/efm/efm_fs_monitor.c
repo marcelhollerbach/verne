@@ -69,6 +69,9 @@ _add(Efm_Monitor *mon, const char *file)
               eo_event_callback_add(EFM_FILE_EVENT_INVALID, _file_del, mon));
    pd = eo_data_scope_get(mon, EFM_FS_MONITOR_CLASS);
 
+   //prevent a file from beeing populated twice
+   if (eina_hash_find(pd->file_icons, path)) return;
+
    eina_hash_add(pd->file_icons, path, ef);
 
    if (!_take_filter(mon, pd, ef))
