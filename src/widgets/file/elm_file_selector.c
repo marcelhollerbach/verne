@@ -26,7 +26,6 @@ typedef struct
 
    struct {
      Eina_Strbuf *buffer;
-     const char *string;
    } search;
 
    Evas_Object *work_indicator;
