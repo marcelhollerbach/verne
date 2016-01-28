@@ -458,7 +458,10 @@ _update_stat(Elm_File_Detail_Data *pd, Efm_File *file)
    struct passwd *pw;
 
    pw = getpwuid(st->uid);
-   snprintf(buf, sizeof(buf), "%s", pw->pw_name);
+   if (pw)
+     snprintf(buf, sizeof(buf), "%s", pw->pw_name);
+   else
+     snprintf(buf, sizeof(buf), "User not found");
 
    detail_row_changable_changeable(&pd->user, perm_right);
    if (!perm_right)
@@ -472,7 +475,10 @@ _update_stat(Elm_File_Detail_Data *pd, Efm_File *file)
    struct group *gr;
 
    gr = getgrgid(st->gid);
-   snprintf(buf, sizeof(buf), "%s", gr->gr_name);
+   if (gr)
+     snprintf(buf, sizeof(buf), "%s", gr->gr_name);
+   else
+     snprintf(buf, sizeof(buf), "Group not found");
 
    detail_row_changable_changeable(&pd->group, perm_right);
    if (!perm_right)
