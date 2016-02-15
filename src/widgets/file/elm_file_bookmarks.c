@@ -671,6 +671,8 @@ _elm_file_bookmarks_eo_base_constructor(Eo *obj, Elm_File_Bookmarks_Data *pd)
 
    eo_do_super(obj, ELM_FILE_BOOKMARKS_CLASS, eo = eo_constructor());
 
+   elm_object_focus_allow_set(obj, EINA_FALSE);
+
    // setup drop zone
    elm_drop_target_add(obj, ELM_SEL_FORMAT_TARGETS,
                        _dnd_enter, NULL, _dnd_leave,
