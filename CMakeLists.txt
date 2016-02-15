@@ -23,7 +23,7 @@ find_package(Eio REQUIRED)
 find_package(Evas REQUIRED)
 find_package(Edje REQUIRED)
 find_package(Ecore COMPONENTS file)
-find_package(Elementary 1.13.0 REQUIRED)
+find_package(Elementary 1.17.0 REQUIRED)
 find_package(LibArchive REQUIRED)
 find_package(Threads REQUIRED)
 
