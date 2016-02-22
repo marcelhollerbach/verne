@@ -82,6 +82,11 @@ _drop_cb(void *data EINA_UNUSED, Evas_Object *obj, Elm_Selection_Data *ev)
    PRIV_DATA
 
    eo_do(obj, eo_event_callback_call(ELM_FILE_ICON_EVENT_ITEM_DROP, ev));
+
+   if (pd->t)
+     ecore_timer_del(pd->t);
+   pd->t = NULL;
+
    elm_icon_standard_set(pd->icon, "folder");
    return EINA_FALSE;
 }
