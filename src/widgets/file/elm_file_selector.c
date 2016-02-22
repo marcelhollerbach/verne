@@ -1214,16 +1214,20 @@ _elm_file_selector_search(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd, const
 static Eina_Bool
 _drop_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
 {
- eo_do(data,
+   eo_ref(obj);
+   eo_do(data,
          eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_DND_ITEM_DROPED, NULL));
+   eo_unref(obj);
    return EINA_FALSE;
 }
 
 static Eina_Bool
 _hover_cb(void *data, Eo *obj, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
 {
+   eo_ref(obj);
    eo_do(data,
          eo_event_callback_call(ELM_FILE_SELECTOR_EVENT_DND_ITEM_HOVER, obj));
+   eo_unref(obj);
    return EINA_FALSE;
 }
 
