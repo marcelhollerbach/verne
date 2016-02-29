@@ -537,7 +537,7 @@ _update_thumbnail(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
 }
 
 static Eina_Bool
-_file_changed(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event_info EINA_UNUSED)
+_file_changed(void *data, const Eo_Event *event EINA_UNUSED)
 {
    Elm_File_Detail *oo;
    Elm_File_Detail_Data *pd;

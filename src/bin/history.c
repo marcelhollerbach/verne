@@ -40,13 +40,13 @@ _forward_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, const char *em
 }
 
 static Eina_Bool
-_path_changed_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
+_path_changed_cb(void *data EINA_UNUSED, const Eo_Event *event)
 {
    const char *pointed;
    const char *share;
    const char *path;
 
-   eo_do(event, path = efm_file_path_get());
+   eo_do(event->event_info, path = efm_file_path_get());
 
    if (barrier)
      return EINA_TRUE;

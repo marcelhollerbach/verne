@@ -430,7 +430,7 @@ _device_update(Bookmark_Item *item)
 }
 
 static Eina_Bool
-_state_changed(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_state_changed(void *data, const Eo_Event *event EINA_UNUSED)
 {
    Bookmark_Item *item = data;
    _device_update(item);
@@ -456,9 +456,9 @@ _device_add(Emous_Device *d, Evas_Object *w)
 }
 
 static Eina_Bool
-_device_add_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_device_add_cb(void *data, const Eo_Event *event)
 {
-  Emous_Device *d = event;
+  Emous_Device *d = event->event_info;
 
   _device_add(d, data);
 
@@ -466,7 +466,7 @@ _device_add_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc
 }
 
 static Eina_Bool
-_device_del_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_device_del_cb(void *data, const Eo_Event *event EINA_UNUSED)
 {
    _setup_list(data);
 

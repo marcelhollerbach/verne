@@ -14,14 +14,14 @@ on_done(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info E
 }
 
 static Eina_Bool
-dir_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+dir_cb(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    printf("directory changed to %s\n", (char*)event);
    return EINA_TRUE;
 }
 
 static Eina_Bool
-item_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+item_cb(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    printf("item choosen %s\n", (char*)event);
    return EINA_TRUE;
@@ -29,17 +29,17 @@ item_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description 
 
 
 static Eina_Bool
-_menu_hook_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
+_menu_hook_start(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
-   elm_menu_item_add(event, NULL, NULL, "you can add menu entrys",
+   elm_menu_item_add(event->event_info, NULL, NULL, "you can add menu entrys",
                      NULL, NULL);
    return EINA_TRUE;
 }
 
 static Eina_Bool
-_menu_hook_end(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
+_menu_hook_end(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
-   elm_menu_item_add(event, NULL, NULL, "even on the end!!",
+   elm_menu_item_add(event->event_info, NULL, NULL, "even on the end!!",
                      NULL, NULL);
    return EINA_TRUE;
 }

@@ -14,7 +14,7 @@
 #include "ui.h"
 
 static Eina_Bool
-_pubs_free_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event_info EINA_UNUSED)
+_pubs_free_cb(void *data, const Eo_Event *event EINA_UNUSED)
 {
    free(data);
    return EINA_TRUE;

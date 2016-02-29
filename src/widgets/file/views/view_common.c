@@ -15,10 +15,10 @@ _file_remove(View_Common *common, Efm_File *file)
 }
 
 static Eina_Bool
-_file_del(void *data, Eo *obj, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_file_del(void *data, const Eo_Event *event)
 {
    View_Common *common = data;
-   Efm_File *file = obj;
+   Efm_File *file = event->obj;
 
    _file_remove(common, file);
 
@@ -26,10 +26,10 @@ _file_del(void *data, Eo *obj, const Eo_Event_Description *desc EINA_UNUSED, voi
 }
 
 static Eina_Bool
-_file_hide(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
+_file_hide(void *data, const Eo_Event *event)
 {
    View_Common *common = data;
-   Efm_File *file = event;
+   Efm_File *file = event->event_info;
 
    eo_do(file, eo_event_callback_del(EO_BASE_EVENT_DEL, _file_del, data));
 
@@ -39,10 +39,10 @@ _file_hide(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EIN
 }
 
 static Eina_Bool
-_file_add(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
+_file_add(void *data, const Eo_Event *event)
 {
    View_Common *common = data;
-   Efm_File *file = event;
+   Efm_File *file = event->event_info;
    void *res;
 
    res = common->add(common, file);
@@ -64,7 +64,7 @@ _view_free(View_Common *common)
 }
 
 static Eina_Bool
-_error(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_error(void *data, const Eo_Event *event)
 {
    View_Common *common = data;
 
@@ -78,7 +78,8 @@ _error(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UN
 }
 
 static Eina_Bool
-_listing_done(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_listing_done(void *data, const Eo_Event *event EINA_UNUSED
+  )
 {
    View_Common *common = data;
 

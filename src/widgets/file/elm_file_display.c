@@ -14,37 +14,37 @@ typedef struct
 } Elm_File_Display_Data;
 
 static Eina_Bool
-_selector_path_changed(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event_info)
+_selector_path_changed(void *data, const Eo_Event *event)
 {
    const char *file;
    PRIV_DATA(data)
 
-   eo_do(event_info, file = efm_file_path_get());
+   eo_do(event->event_info, file = efm_file_path_get());
    eo_do(pd->bookmark, efl_file_set(file, NULL));
 
    return EO_CALLBACK_CONTINUE;
 }
 
 static Eina_Bool
-_update_preview(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event_info EINA_UNUSED)
+_update_preview(void *data, const Eo_Event *event)
 {
    Efm_File *f;
    PRIV_DATA(data)
 
-   f = event_info;
+   f = event->event_info;
 
    eo_do(pd->detail, elm_file_detail_file_set(f));
    return EO_CALLBACK_CONTINUE;
 }
 
 static Eina_Bool
-_bookmark_path_changed(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event_info EINA_UNUSED)
+_bookmark_path_changed(void *data,  const Eo_Event *event)
 {
    const char *file;
    Efm_File *f;
    PRIV_DATA(data)
 
-   eo_do(obj, efl_file_get(&file, NULL));
+   eo_do(event->obj, efl_file_get(&file, NULL));
    eo_do(EFM_CLASS, f = efm_file_get(file));
    eo_do(pd->selector, elm_file_selector_file_set(f));
 
@@ -68,10 +68,10 @@ _ctx_preview_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSE
 }
 
 static Eina_Bool
-_menu_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event_info EINA_UNUSED)
+_menu_cb(void *data, const Eo_Event *event)
 {
    PRIV_DATA(data)
-   Elm_File_Selector_Menu_Hook *ev = event_info;
+   Elm_File_Selector_Menu_Hook *ev = event->event_info;
    Evas_Object *it, *ck;
    Evas_Object *menu = ev->menu;
 

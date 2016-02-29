@@ -62,11 +62,11 @@ _elm_file_display_view_debug_elm_file_view_search(Eo *obj EINA_UNUSED, Elm_File_
 }
 
 EOLIAN static Eina_Bool
-_changed(void *data EINA_UNUSED, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+_changed(void *data EINA_UNUSED, const Eo_Event *event)
 {
    Eina_Bool state;
 
-   state = elm_check_state_get(obj);
+   state = elm_check_state_get(event->obj);
 
    if (state)
      eo_do(data, eo_event_callback_call(ELM_FILE_VIEW_EVENT_WORKING_START, NULL));

@@ -11,7 +11,7 @@
 static Eina_Bool mount_added;
 
 static Eina_Bool
-_mount_add(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_mount_add(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
   mount_added = EINA_TRUE;
   return EINA_TRUE;
@@ -55,13 +55,13 @@ static int adddev = 0;
 static int deldev = 0;
 
 static Eina_Bool
-_add_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_add_cb(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
   adddev ++;
   return EINA_TRUE;
 }
 static Eina_Bool
-_del_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_del_cb(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
   deldev ++;
   return EINA_TRUE;

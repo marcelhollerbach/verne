@@ -13,9 +13,9 @@ static Emous_Manager *manager;
 static Emous_Manager_Static_Data *sd;
 
 static Eina_Bool
-_added_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+_added_cb(void *data EINA_UNUSED, const Eo_Event *event)
 {
-    Emous_Device *device = event;
+    Emous_Device *device = event->event_info;
 
     // a device appeared
     if (!sd) return EINA_TRUE;
@@ -27,9 +27,9 @@ _added_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Descriptio
 }
 
 static Eina_Bool
-_deled_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+_deled_cb(void *data EINA_UNUSED, const Eo_Event *event)
 {
-    Emous_Device *device = event;
+    Emous_Device *device = event->event_info;
 
     if (!sd) return EINA_TRUE;
 

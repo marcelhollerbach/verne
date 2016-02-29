@@ -71,16 +71,16 @@ _efm_shutdown(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
    ecore_shutdown();
    eina_shutdown();
 }
-static Eina_Bool _file_del(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event_info EINA_UNUSED);
+static Eina_Bool _file_del(void *data, const Eo_Event *event);
 
 EO_CALLBACKS_ARRAY_DEFINE(factory_events, {EFM_FILE_EVENT_INVALID, _file_del},
                                           {EO_BASE_EVENT_DEL, _file_del});
 
 static Eina_Bool
-_file_del(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event_info EINA_UNUSED)
+_file_del(void *data, const Eo_Event *event)
 {
-   eina_hash_del_by_data(sd->factory, obj);
-   eo_do(obj, eo_event_callback_array_del(factory_events(), sd->factory));
+   eina_hash_del_by_data(sd->factory, event->obj);
+   eo_do(event->obj, eo_event_callback_array_del(factory_events(), sd->factory));
    return EO_CALLBACK_CONTINUE;
 }
 

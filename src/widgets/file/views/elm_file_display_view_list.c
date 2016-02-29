@@ -222,9 +222,9 @@ _selection_del(void *data EINA_UNUSED, Evas_Object *obj, void *event_info)
 }
 
 static Eina_Bool
-_key_down(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event)
+_key_down(void *data, const Eo_Event *event)
 {
-   Evas_Event_Key_Down *ev = event;
+   Evas_Event_Key_Down *ev = event->event_info;
    const Eina_List *selected;
    Eo *list = data;
    Elm_Object_Item *mover;

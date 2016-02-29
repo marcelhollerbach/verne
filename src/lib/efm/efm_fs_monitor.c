@@ -38,12 +38,12 @@ _take_filter(Efm_Monitor *mon EINA_UNUSED, Efm_Fs_Monitor_Data *pd, Efm_File *fi
 }
 
 static Eina_Bool
-_file_del(void *data, Eo *obj, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+_file_del(void *data, const Eo_Event *event)
 {
    Efm_Fs_Monitor_Data *pd;
 
    pd = eo_data_scope_get(data, EFM_FS_MONITOR_CLASS);
-   eina_hash_del_by_data(pd->file_icons, obj);
+   eina_hash_del_by_data(pd->file_icons, event->obj);
    return EO_CALLBACK_CONTINUE;
 }
 
@@ -138,7 +138,7 @@ _fm_action(void *data EINA_UNUSED, Efm_Monitor *mon, const char *file, Fm_Action
 }
 
 static Eina_Bool
-_filter_changed_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+_filter_changed_cb(void *data, const Eo_Event *event EINA_UNUSED)
 {
    Efm_Fs_Monitor_Data *pd = eo_data_scope_get(data, EFM_FS_MONITOR_CLASS);
 
@@ -288,7 +288,7 @@ _efm_fs_monitor_eo_base_finalize(Eo *obj, Efm_Fs_Monitor_Data *pd)
 }
 
 static Eina_Bool
-_inv_file_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event_info EINA_UNUSED)
+_inv_file_cb(void *data, const Eo_Event *event EINA_UNUSED)
 {
    eo_do(data, eo_event_callback_call(EFM_MONITOR_EVENT_ERROR, NULL));
    return EO_CALLBACK_CONTINUE;

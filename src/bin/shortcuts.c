@@ -69,8 +69,8 @@ _search_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj E
 }
 
 static Eina_Bool
-_hover(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event_info) {
-   Elm_File_Icon *icon = event_info;
+_hover(void *data EINA_UNUSED, const Eo_Event *event) {
+   Elm_File_Icon *icon = event->event_info;
    Efm_File *file;
    const char *path;
 

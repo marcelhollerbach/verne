@@ -35,7 +35,7 @@ END_TEST
 Eina_Bool done;
 
 static Eina_Bool
-_done_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_done_cb(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    done = EINA_TRUE;
    ecore_main_loop_quit();
@@ -73,7 +73,7 @@ END_TEST
 int filecounter = 0;
 
 static Eina_Bool
-_done2_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_done2_cb(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    filecounter ++;
    if (filecounter >= TEST_FILE_ITER_MAX)
@@ -121,7 +121,7 @@ Eina_Bool error;
 int files;
 
 static Eina_Bool
-_error(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED,  void *event EINA_UNUSED)
+_error(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    error = EINA_TRUE;
    ecore_mainloop_quit();
@@ -137,7 +137,7 @@ _del(void *data, Eo *obj, const Eo_Event_Description *desc,  void *event)
 #endif
 
 static Eina_Bool
-_add(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED,  void *event EINA_UNUSED)
+_add(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    files ++;
    if (files >= TEST_DIRECTORY_FILES_MAX)
@@ -187,7 +187,7 @@ END_TEST
 int mon_files;
 
 static Eina_Bool
-_error_mon(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED,  void *event EINA_UNUSED)
+_error_mon(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    mon_files = -1;
    ecore_mainloop_quit();
@@ -203,7 +203,7 @@ _del(void *data, Eo *obj, const Eo_Event_Description *desc,  void *event)
 #endif
 
 static Eina_Bool
-_add_mon(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED,  void *event EINA_UNUSED)
+_add_mon(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    mon_files ++;
    if (mon_files >= ARCHIVE_FILE_NUMBER)

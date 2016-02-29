@@ -103,11 +103,11 @@ _elm_file_icon_evas_object_smart_add(Eo *obj, Elm_File_Icon_Data *pd)
 }
 
 static Eina_Bool
-_key_down_cb(void *data, Eo *obj EINA_UNUSED, const Eo_Event_Description2 *desc EINA_UNUSED, void *event EINA_UNUSED)
+_key_down_cb(void *data, const Eo_Event *event)
 {
    Evas_Event_Key_Down *ev;
 
-   ev = event;
+   ev = event->event_info;
 
    if (!strcmp(ev->key, "Escape"))
      eo_do(data, elm_obj_file_icon_rename_set(EINA_FALSE, EINA_FALSE));
@@ -221,7 +221,7 @@ _elm_file_icon_evas_object_smart_resize(Eo *obj, Elm_File_Icon_Data *pd EINA_UNU
 }
 
 static Eina_Bool
-_mime_ready(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_mime_ready(void *data, const Eo_Event *event EINA_UNUSED)
 {
    Eo *icon = data;
    Elm_File_Icon_Data *pd;

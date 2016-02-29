@@ -20,13 +20,13 @@ printHelp()
 }
 
 static Eina_Bool
-_dir_changed(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
+_dir_changed(void *data EINA_UNUSED, const Eo_Event *event)
 {
    Eina_Strbuf *buf;
    const char *filename;
 
    buf = eina_strbuf_new();
-   eo_do(event, filename = efm_file_filename_get();
+   eo_do(event->event_info, filename = efm_file_filename_get();
                 titlebar_path_set(efm_file_path_get()));
 
    eina_strbuf_append_printf(buf, "elm - Jesus | %s", filename);

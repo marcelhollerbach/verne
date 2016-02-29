@@ -1,13 +1,11 @@
 #include "jesus.h"
 
-static Eina_Bool
-_open_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
+static void
+_open(Efm_File *select)
 {
-    Efm_File *select;
     Eina_Bool b;
     const char *fileending, *path;
 
-    select = event;
     eo_do(select, fileending = efm_file_fileending_get();
                   path = efm_file_path_get());
 
@@ -19,19 +17,24 @@ _open_cb(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description
       {
          eo_do(EFM_CLASS, select = efm_archive_get(path, "/"));
          eo_do(selector, elm_file_selector_file_set(select));
-         return EO_CALLBACK_CONTINUE;
       }
     else
       {
          exec_execute(select);
       }
-    return EINA_TRUE;
+}
+
+static Eina_Bool
+_open_cb(void *data EINA_UNUSED, const Eo_Event *event)
+{
+   _open(event->event_info);
+   return EO_CALLBACK_CONTINUE;
 }
 
 static void
 _open_cb2(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
-   _open_cb(NULL, NULL, NULL, data);
+   _open(data);
 }
 
 static void
@@ -97,9 +100,9 @@ _extract(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_
 }
 
 static Eina_Bool
-_menu_selector_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
+_menu_selector_start(void *data EINA_UNUSED, const Eo_Event *event)
 {
-    Elm_File_Selector_Menu_Hook *ev = event;
+    Elm_File_Selector_Menu_Hook *ev = event->event_info;
     Efm_File *file = ev->file;
     Eina_Bool dir;
     Elm_Object_Item *item;
@@ -144,35 +147,35 @@ _menu_selector_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event
 }
 
 static Eina_Bool
-_menu_selector_end(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_menu_selector_end(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
 
     return EINA_TRUE;
 }
 
 static Eina_Bool
-_menu_bookmarks_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_menu_bookmarks_start(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
 
     return EINA_TRUE;
 }
 
 static Eina_Bool
-_menu_bookmarks_end(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_menu_bookmarks_end(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
 
     return EINA_TRUE;
 }
 
 static Eina_Bool
-_menu_device_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_menu_device_start(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
 
     return EINA_TRUE;
 }
 
 static Eina_Bool
-_menu_device_end(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_menu_device_end(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
 
     return EINA_TRUE;
