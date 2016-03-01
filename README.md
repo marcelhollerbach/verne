@@ -4,8 +4,11 @@ Like the header says. A filemanager, written in C using the EFL and elementary
 
 ## Building and installing ##
 
-To build do:
+### Manual build
+
 ```
+git clone <URL>
+
 cd <here is the clonedplace> 
 
 mkdir build 
@@ -24,7 +27,7 @@ sudo make install
 
 * Arch Linux (AUR): https://aur.archlinux.org/packages/jesus-git/
 
-Now you can run efm
+
 ## Bugs ##
 
 Bugs can be reported via github (marcelhollerbach) or phab.enlightenment.org(bu5hm4n).
