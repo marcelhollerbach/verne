@@ -20,6 +20,10 @@ sudo make install
 
 ```
 
+### Distro packages:
+
+* Arch Linux (AUR): https://aur.archlinux.org/packages/jesus-git/
+
 Now you can run efm
 ## Bugs ##
 
