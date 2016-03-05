@@ -67,7 +67,7 @@ _efm_archive_file_eo_base_finalize(Eo *obj, Efm_Archive_File_Data *pd)
 {
     if (!pd->archive.find_path) return NULL;
 
-    return eo_finalize(eo_super(obj, EFM_ARCHIVE_MONITOR_CLASS));
+    return eo_finalize(eo_super(obj, EFM_ARCHIVE_FILE_CLASS));
 }
 
 EOLIAN static const char *
