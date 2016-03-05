@@ -69,9 +69,9 @@ _changed(void *data EINA_UNUSED, const Eo_Event *event)
    state = elm_check_state_get(event->obj);
 
    if (state)
-     eo_do(data, eo_event_callback_call(ELM_FILE_VIEW_EVENT_WORKING_START, NULL));
+     eo_event_callback_call(data, ELM_FILE_VIEW_EVENT_WORKING_START, NULL);
    else
-     eo_do(data, eo_event_callback_call(ELM_FILE_VIEW_EVENT_WORKING_DONE, NULL));
+     eo_event_callback_call(data, ELM_FILE_VIEW_EVENT_WORKING_DONE, NULL);
 
    return EO_CALLBACK_CONTINUE;
 }
@@ -81,7 +81,7 @@ _elm_file_display_view_debug_evas_object_smart_add(Eo *obj, Elm_File_Display_Vie
 {
    Evas_Object *o;
 
-   eo_do_super(obj, ELM_FILE_DISPLAY_VIEW_DEBUG_CLASS, evas_obj_smart_add());
+   evas_obj_smart_add(eo_super(obj, ELM_FILE_DISPLAY_VIEW_DEBUG_CLASS));
 
    evas_object_size_hint_weight_set(obj, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    evas_object_size_hint_align_set(obj, EVAS_HINT_FILL, EVAS_HINT_FILL);

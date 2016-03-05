@@ -24,12 +24,9 @@ _invalid_cb(void *data, const Eo_Event *event EINA_UNUSED)
 EOLIAN static Eo_Base *
 _efm_file_eo_base_constructor(Eo *obj, Efm_File_Data *pd)
 {
-   Eo *oobj;
+   eo_event_callback_add(obj, EFM_FILE_EVENT_INVALID, _invalid_cb, pd);
 
-   eo_do(obj, eo_event_callback_add(EFM_FILE_EVENT_INVALID, _invalid_cb, pd));
-
-   eo_do_super_ret(obj, EFM_FILE_CLASS, oobj, eo_constructor());
-   return oobj;
+   return eo_constructor(eo_super(obj, EFM_FILE_CLASS));
 }
 
 

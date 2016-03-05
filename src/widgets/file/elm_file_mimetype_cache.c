@@ -37,7 +37,7 @@ _elm_file_mimetype_cache_mimetype_get(Eo *obj EINA_UNUSED, Elm_File_MimeType_Cac
       {
          const char *theme;
 
-         eo_do(ELM_FILE_ICON_CLASS, theme = elm_obj_file_icon_util_icon_theme_get());
+         theme = elm_obj_file_icon_util_icon_theme_get(ELM_FILE_ICON_CLASS);
 
          result = efreet_mime_type_icon_get(name, theme, pd->size);
          if (!result)

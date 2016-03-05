@@ -67,7 +67,7 @@ _emous_init(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
    if (mount_ref > 0)
      return ++mount_ref;
    // init the libs
-   eo_do(EMOUS_CLASS, emous_init_lib());
+   emous_init_lib(EMOUS_CLASS);
    // loading modules
    modules = eina_module_list_get(modules, EMOUS_MODULE_PATH, EINA_FALSE, _module_load_cb, NULL);
    // load all found modules
@@ -93,7 +93,7 @@ _emous_shutdown(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
    // shutdown mountpointslistening
    _emous_mm_shutdown();
    // shutdown the libs
-   eo_do(EMOUS_CLASS, emous_shutdown_lib());
+   emous_shutdown_lib(EMOUS_CLASS);
 
 }
 EOLIAN static void
@@ -139,14 +139,13 @@ _emous_util_device_name_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, Emous_Dev
    Emous_Device_Type type;
    long size;
 
-   eo_do(dev, name = emous_device_displayname_get());
+   name = emous_device_displayname_get(dev);
 
    if (name)
      return strdup(name);
 
-   eo_do(dev, type = emous_device_type_get();
-              size = emous_device_size_get();
-              );
+   type = emous_device_type_get(dev);
+   size = emous_device_size_get(dev);
 
    switch(type){
       case EMOUS_DEVICE_TYPE_DISK:
@@ -169,7 +168,7 @@ _emous_util_device_name_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, Emous_Dev
       break;
    }
 
-   eo_do(EMOUS_CLASS, name = emous_util_size_convert(EINA_FALSE, size));
+   name = emous_util_size_convert(EMOUS_CLASS, EINA_FALSE, size);
 
    snprintf(buf, sizeof(buf), " %s %s ", name, typename );
 

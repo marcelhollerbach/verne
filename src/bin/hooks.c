@@ -3,20 +3,19 @@
 static void
 _open(Efm_File *select)
 {
-    Eina_Bool b;
     const char *fileending, *path;
 
-    eo_do(select, fileending = efm_file_fileending_get();
-                  path = efm_file_path_get());
+    fileending = efm_file_fileending_get(select);
+    path = efm_file_path_get(select);
 
-    if (eo_do_ret(select, b, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
+    if (efm_file_is_type(select, EFM_FILE_TYPE_DIRECTORY))
       {
-         eo_do(selector, elm_file_selector_file_set(select));
+         elm_file_selector_file_set(selector, select);
       }
-    else if (eo_do_ret(EFM_CLASS, b, efm_archive_supported(fileending)))
+    else if (efm_archive_supported(EFM_CLASS, fileending))
       {
-         eo_do(EFM_CLASS, select = efm_archive_get(path, "/"));
-         eo_do(selector, elm_file_selector_file_set(select));
+         select = efm_archive_get(EFM_CLASS, path, "/");
+         elm_file_selector_file_set(selector, select);
       }
     else
       {
@@ -80,7 +79,7 @@ static void \
 ARCHIVE_FUNC_NAME(type)(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED) \
 { \
    const char *path; \
-   eo_do(data, path = efm_file_path_get()); \
+   path = efm_file_path_get(data); \
    archive_create(path, type); \
 }
 
@@ -94,7 +93,7 @@ static void
 _extract(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
    const char *path;
-   eo_do(data, path = efm_file_path_get());
+   path = efm_file_path_get(data);
 
    archive_extract(path);
 }
@@ -104,11 +103,10 @@ _menu_selector_start(void *data EINA_UNUSED, const Eo_Event *event)
 {
     Elm_File_Selector_Menu_Hook *ev = event->event_info;
     Efm_File *file = ev->file;
-    Eina_Bool dir;
     Elm_Object_Item *item;
 
     // open with entry
-    if (file && !eo_do_ret(file, dir, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
+    if (file && !efm_file_is_type(file, EFM_FILE_TYPE_DIRECTORY))
       {
          elm_menu_item_add(ev->menu, NULL, NULL, "Open", _open_cb2, ev->file);
          elm_menu_item_add(ev->menu, NULL, NULL, "Open with", _open_with_cb, ev->file);
@@ -121,12 +119,12 @@ _menu_selector_start(void *data EINA_UNUSED, const Eo_Event *event)
 
     elm_menu_item_separator_add(ev->menu, NULL);
 
-    if (file && !eo_do_ret(file, dir, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
+    if (file && !efm_file_is_type(file, EFM_FILE_TYPE_DIRECTORY))
       {
          elm_menu_item_add(ev->menu, NULL, NULL, "Extract here ", _extract, ev->file);
       }
 
-    if (file && eo_do_ret(file, dir, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
+    if (file && efm_file_is_type(file, EFM_FILE_TYPE_DIRECTORY))
       {
          item = elm_menu_item_add(ev->menu, NULL, NULL, "Create Archiv", NULL, ev->file);
          elm_menu_item_add(ev->menu, item, NULL, ".tar.gz", ARCHIVE_FUNC_NAME(ARCHIVE_TYPE_TAR_GZ), ev->file);
@@ -186,15 +184,14 @@ hooks_init(void)
 {
    Evas_Object *bookmarks;
 
-   eo_do(preview, bookmarks = elm_file_display_bookmarks_get());
-   eo_do(selector,
-        eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_START, _menu_selector_start, NULL);
-        eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, _menu_selector_end, NULL);
-        eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_ITEM_CHOOSEN, _open_cb, NULL););
+   bookmarks = elm_file_display_bookmarks_get(preview);
 
-   eo_do(bookmarks,
-        eo_event_callback_add(ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_START, _menu_bookmarks_start, NULL);
-        eo_event_callback_add(ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_END, _menu_bookmarks_end, NULL);
-        eo_event_callback_add(ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_DEVICE_START, _menu_device_start, NULL);
-        eo_event_callback_add(ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_DEVICE_END, _menu_device_end, NULL););
+   eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_START, _menu_selector_start, NULL);
+   eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, _menu_selector_end, NULL);
+   eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_ITEM_CHOOSEN, _open_cb, NULL);
+
+   eo_event_callback_add(bookmarks, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_START, _menu_bookmarks_start, NULL);
+   eo_event_callback_add(bookmarks, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_END, _menu_bookmarks_end, NULL);
+   eo_event_callback_add(bookmarks, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_DEVICE_START, _menu_device_start, NULL);
+   eo_event_callback_add(bookmarks, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_DEVICE_END, _menu_device_end, NULL);
 }

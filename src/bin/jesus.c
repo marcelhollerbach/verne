@@ -26,8 +26,8 @@ _dir_changed(void *data EINA_UNUSED, const Eo_Event *event)
    const char *filename;
 
    buf = eina_strbuf_new();
-   eo_do(event->event_info, filename = efm_file_filename_get();
-                titlebar_path_set(efm_file_path_get()));
+   filename = efm_file_filename_get(event->event_info);
+   titlebar_path_set(efm_file_path_get(event->event_info));
 
    eina_strbuf_append_printf(buf, "elm - Jesus | %s", filename);
    elm_win_title_set(win, eina_strbuf_string_get(buf));
@@ -57,7 +57,7 @@ ui_init()
    evas_object_show(box);
 
    layout = elm_layout_add(win);
-   eo_do(layout, efl_file_set(THEME_PATH"/jesus.edc.edj", "headbar"));
+   efl_file_set(layout, THEME_PATH"/jesus.edc.edj", "headbar");
    evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, 0.0);
    evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, 0.0);
    elm_box_pack_end(box, layout);
@@ -74,9 +74,10 @@ ui_init()
    evas_object_size_hint_align_set(preview, EVAS_HINT_FILL, EVAS_HINT_FILL);
    evas_object_size_hint_weight_set(preview, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    elm_box_pack_end(box, preview);
-   eo_do(preview, selector = elm_file_display_selector_get());
-   eo_do(selector, eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED,
-                                 _dir_changed, NULL););
+
+   selector = elm_file_display_selector_get(preview);
+   eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED,
+                                 _dir_changed, NULL);
    evas_object_show(preview);
 
 
@@ -117,11 +118,11 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
      {
         path = "/";
      }
-   eo_do(EFM_CLASS, efm_init());
-   eo_do(EFM_CLASS, file = efm_file_get(path));
+   efm_init(EFM_CLASS);
+   file = efm_file_get(EFM_CLASS, path);
 
    if (!file)
-     eo_do(EFM_CLASS, file = efm_file_get("/"));
+     file = efm_file_get(EFM_CLASS, "/");
    if (!file)
      printf("WAD\n");
 
@@ -158,7 +159,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    fs_operations_init();
 
    // set the correct path
-   eo_do(selector, elm_file_selector_file_set(file));
+   elm_file_selector_file_set(selector, file);
    titlebar_path_set(path);
 
    elm_run();
@@ -166,7 +167,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    clipboard_shutdown();
    config_shutdown();
 
-   eo_do(EFM_CLASS, efm_shutdown());
+   efm_shutdown(EFM_CLASS);
    return 0;
 }
 ELM_MAIN()

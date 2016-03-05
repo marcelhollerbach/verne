@@ -28,7 +28,7 @@ _device_state_change(Emous_Device *dev, Emous_Device_State state)
     ev.current = state;
 
     pd->state = state;
-    eo_do(dev, eo_event_callback_call(EMOUS_DEVICE_EVENT_STATE_CHANGED, &ev));
+    eo_event_callback_call(dev, EMOUS_DEVICE_EVENT_STATE_CHANGED, &ev);
 }
 
 static void

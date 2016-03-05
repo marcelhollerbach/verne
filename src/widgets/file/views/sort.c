@@ -33,8 +33,8 @@ _file_name_sort(Efm_File *f1, Efm_File *f2)
 {
    const char *n1;
    const char *n2;
-   eo_do(f1, n1 = efm_file_filename_get());
-   eo_do(f2, n2 = efm_file_filename_get());
+   n1 = efm_file_filename_get(f1);
+   n2 = efm_file_filename_get(f2);
 
    if (n1[0] == '.')
      n1 ++;
@@ -55,8 +55,8 @@ sort_name_func(const void *data1, const void *data2)
      {
        Efm_File_Stat *st1, *st2;
 
-        eo_do(f1, st1 = efm_file_stat_get());
-        eo_do(f2, st2 = efm_file_stat_get());
+        st1 = efm_file_stat_get(f1);
+        st2 = efm_file_stat_get(f2);
 
         if (st1->size > st2->size)
           return 1;
@@ -67,8 +67,8 @@ sort_name_func(const void *data1, const void *data2)
      {
         Efm_File_Stat *st1, *st2;
 
-        eo_do(f1, st1 = efm_file_stat_get());
-        eo_do(f2, st2 = efm_file_stat_get());
+        st1 = efm_file_stat_get(f1);
+        st2 = efm_file_stat_get(f2);
 
         if (st1->mtime > st2->mtime)
           return 1;
@@ -80,8 +80,8 @@ sort_name_func(const void *data1, const void *data2)
         const char *ext1;
         const char *ext2;
 
-        eo_do(f1, ext1 = efm_file_fileending_get());
-        eo_do(f2, ext2 = efm_file_fileending_get());
+        ext1 = efm_file_fileending_get(f1);
+        ext2 = efm_file_fileending_get(f2);
         if (!ext1 && !ext2)
           return _file_name_sort(f1, f2);
         else if (!ext1 && ext2)
@@ -100,7 +100,6 @@ sort_name_func(const void *data1, const void *data2)
 int
 sort_func(const void *data1, const void *data2)
 {
-   Eina_Bool is;
    Efm_File *f1, *f2;
    int mul;
 
@@ -112,13 +111,13 @@ sort_func(const void *data1, const void *data2)
    else
      mul = 1;
 
-   if (eo_do_ret(f1, is, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)) &&
-       eo_do_ret(f2, is, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
+   if (efm_file_is_type(f1, EFM_FILE_TYPE_DIRECTORY) &&
+       efm_file_is_type(f2, EFM_FILE_TYPE_DIRECTORY))
      {
        return sort_name_func(f1, f2) * mul;
      }
-   else if (eo_do_ret(f1, is, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)) &&
-            !eo_do_ret(f2, is, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
+   else if (efm_file_is_type(f1, EFM_FILE_TYPE_DIRECTORY) &&
+            !efm_file_is_type(f2, EFM_FILE_TYPE_DIRECTORY))
      {
         if (config->sort.folder_placement == ELM_FILE_SELECTOR_FOLDER_PLACEMENT_FIRST)
           return -1;
@@ -127,8 +126,8 @@ sort_func(const void *data1, const void *data2)
         else
           return sort_name_func(f1, f2) * mul;
      }
-   else if (!eo_do_ret(f1, is, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)) &&
-            eo_do_ret(f2, is, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
+   else if (!efm_file_is_type(f1, EFM_FILE_TYPE_DIRECTORY) &&
+            efm_file_is_type(f1, EFM_FILE_TYPE_DIRECTORY))
      {
         if (config->sort.folder_placement == ELM_FILE_SELECTOR_FOLDER_PLACEMENT_FIRST)
           return 1;

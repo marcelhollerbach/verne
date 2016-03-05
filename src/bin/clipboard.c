@@ -53,7 +53,7 @@ clipboard_set(Clipboard_Mode m, Eina_List *list)
          if (!item)
            item = malloc(sizeof(Clipboard_Item));
 
-         eo_do(file, path = efm_file_path_get());
+         path = efm_file_path_get(file);
 
          item->file = eina_stringshare_add(path);
 

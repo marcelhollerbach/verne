@@ -120,7 +120,7 @@ _chmod_yes(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSE
    const char *path;
 
    pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
-   eo_do(pd->file, path = efm_file_path_get());
+   path = efm_file_path_get(pd->file);
 
    if (chmod(path, pd->changes.mode) < 0)
      {
@@ -147,7 +147,7 @@ _request_chmod(Evas_Object *obj, int mode) {
 
    pd = eo_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
    pd->changes.mode = mode;
-   eo_do(pd->file, st = efm_file_stat_get());
+   st = efm_file_stat_get(pd->file);
 
    if (pd->changes.mode == st->mode)
      {
@@ -188,7 +188,7 @@ _chown_yes(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSE
      }
    else
      {
-        eo_do(pd->file, st = efm_file_stat_get());
+        st = efm_file_stat_get(pd->file);
         group = st->gid;
      }
 
@@ -202,11 +202,11 @@ _chown_yes(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSE
      }
    else
      {
-        eo_do(pd->file, st = efm_file_stat_get());
+        st = efm_file_stat_get(pd->file);
         user = st->uid;
      }
 
-   eo_do(pd->file, path = efm_file_path_get());
+   path = efm_file_path_get(pd->file);
    if (chown(path, user, group) < 0)
      {
         perror("chown failed");
@@ -241,7 +241,7 @@ _request_chown_user(Evas_Object *obj, const char *user) {
      {
         struct group *grp;
 
-        eo_do(pd->file, st = efm_file_stat_get());
+        st = efm_file_stat_get(pd->file);
         grp = getgrgid(st->gid);
         group = grp->gr_name;
      }
@@ -268,7 +268,7 @@ _request_chown_group(Evas_Object *obj, const char *group) {
      {
         struct passwd *pwd;
 
-        eo_do(pd->file, st = efm_file_stat_get());
+        st = efm_file_stat_get(pd->file);
         pwd = getpwuid(st->uid);
         user = pwd->pw_name;
      }
@@ -289,18 +289,17 @@ _fallback_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache ,Efm_File *fi
    const char *ic;
    const char *mime_type;
    Evas_Object *o;
-   Eina_Bool is;
 
-   eo_do(file, mime_type = efm_file_mimetype_get());
+   mime_type = efm_file_mimetype_get(file);
 
    // display the mime_type icon
    o = elm_icon_add(obj);
    elm_icon_order_lookup_set(o, ELM_ICON_LOOKUP_FDO_THEME);
-   if (eo_do_ret(file, is, efm_file_is_type(EFM_FILE_TYPE_DIRECTORY)))
+   if (efm_file_is_type(file, EFM_FILE_TYPE_DIRECTORY))
      ic = "folder";
    else
-     eo_do(cache, ic = elm_file_mimetype_cache_mimetype_get(mime_type));
-   eo_do(o, elm_obj_icon_standard_set(ic));
+     ic = elm_file_mimetype_cache_mimetype_get(cache, mime_type);
+   elm_obj_icon_standard_set(o, ic);
 
    return o;
 }
@@ -309,10 +308,9 @@ static Evas_Object*
 _image_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache EINA_UNUSED, Efm_File *file)
 {
    Evas_Object *o;
-   const char *path;
 
    o = elm_thumb_add(obj);
-   elm_thumb_file_set(o, eo_do_ret(file, path, efm_file_path_get()), NULL);
+   elm_thumb_file_set(o, efm_file_path_get(file), NULL);
 
    return o;
 }
@@ -327,7 +325,7 @@ _text_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache EINA_UNUSED, Efm_
    char buf[PATH_MAX];
    int i = 0;
 
-   eo_do(file, path = efm_file_path_get());
+   path = efm_file_path_get(file);
 
    o = elm_layout_add(obj);
    if (!elm_layout_theme_set(o, "file_preview", "base", "default"))
@@ -355,6 +353,7 @@ _text_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache EINA_UNUSED, Efm_
 
    return o;
 }
+
 EOLIAN static void
 _elm_file_detail_class_constructor(Eo_Class *c EINA_UNUSED) {
    mimetype_cbs[MIME_TYPE_FALLBACK] = _fallback_handler;
@@ -418,9 +417,8 @@ _update_stat(Elm_File_Detail_Data *pd, Efm_File *file)
    Eina_Bool perm_right = EINA_FALSE;
 
 
-   eo_do(file, mime_type = efm_file_mimetype_get();
-               st = efm_file_stat_get()
-         );
+   mime_type = efm_file_mimetype_get(file);
+   st = efm_file_stat_get(file);
 
 
    if (!st) return;
@@ -435,7 +433,7 @@ _update_stat(Elm_File_Detail_Data *pd, Efm_File *file)
    {
       char *nicestr;
 
-      eo_do(EMOUS_CLASS, nicestr = emous_util_size_convert(EINA_TRUE, st->size));
+      nicestr = emous_util_size_convert(EMOUS_CLASS, EINA_TRUE, st->size);
       elm_object_text_set(pd->size.display, nicestr);
       free(nicestr);
    }
@@ -511,7 +509,7 @@ _update_thumbnail(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
         elm_object_part_content_unset(obj, "thumb");
         evas_object_del(pd->filepreview);
      }
-   eo_do(file, mime_type = efm_file_mimetype_get());
+   mime_type = efm_file_mimetype_get(file);
    //there are "group mimetypes" for text/image/video/audio/application/multipart/message and model.
    //handlers can subsribe to them to provide a good thumbnail
    for (int i = 0; i < MIME_TYPE_END; i++)
@@ -559,7 +557,7 @@ _elm_file_detail_file_set(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
 
    if (pd->file)
      {
-        eo_do(file, eo_event_callback_del(EFM_FILE_EVENT_CHANGED, _file_changed, obj));
+        eo_event_callback_del(file, EFM_FILE_EVENT_CHANGED, _file_changed, obj);
         eo_weak_unref(&pd->file);
      }
 
@@ -567,10 +565,10 @@ _elm_file_detail_file_set(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
    if (!pd->file) return;
 
    eo_weak_ref(&pd->file);
-   eo_do(pd->file, st = efm_file_stat_get());
-   eo_do(pd->file, eo_event_callback_add(EFM_FILE_EVENT_CHANGED, _file_changed, obj));
+   st = efm_file_stat_get(pd->file);
+   eo_event_callback_add(pd->file, EFM_FILE_EVENT_CHANGED, _file_changed, obj);
 
-   eo_do(pd->file, filename = efm_file_filename_get());
+   filename = efm_file_filename_get(pd->file);
 
   _update_thumbnail(obj, pd, pd->file);
 
@@ -657,7 +655,7 @@ _flip_update(Elm_File_Detail_Data *pd)
 
    Efm_File_Stat *st;
 
-   eo_do(pd->file, st = efm_file_stat_get());
+   st = efm_file_stat_get(pd->file);
    for (int i = 0; i < 3; i++)
      {
         if (st->mode & FILE_PERM_MODES[pd->perm2.user_type][i])
@@ -677,9 +675,9 @@ _segment_changed_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_info)
 
    flip_visible = pd->perm2.items[0] != event_info;
 
-   eo_do(pd->perm2.permstring, efl_gfx_visible_set(!flip_visible));
+   efl_gfx_visible_set(pd->perm2.permstring, !flip_visible);
    for (int i = 0; i < 3; i++)
-     eo_do(pd->perm2.flip[i], efl_gfx_visible_set(flip_visible));
+     efl_gfx_visible_set(pd->perm2.flip[i], flip_visible);
 
    if (flip_visible)
      {
@@ -706,7 +704,7 @@ _flip_cb(void *data, Evas_Object *obj, void *event_info)
    mode_t permission;
 
    pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
-   eo_do(pd->file, st = efm_file_stat_get());
+   st = efm_file_stat_get(pd->file);
    if (!pd->changes.mode)
      permission = st->mode;
    else
@@ -781,8 +779,8 @@ _permission_init(Evas_Object *obj, Elm_File_Detail_Data *pd) {
 static void
 detail_row_changable_changeable(Detail_Row_Mutable *row, Eina_Bool changeable)
 {
-   eo_do(row->display, efl_gfx_visible_set(!changeable));
-   eo_do(row->change_display, efl_gfx_visible_set(changeable));
+   efl_gfx_visible_set(row->display, !changeable);
+   efl_gfx_visible_set(row->change_display, changeable);
 }
 
 static void
@@ -841,7 +839,7 @@ _elm_file_detail_evas_object_smart_add(Eo *obj, Elm_File_Detail_Data *pd)
 {
    Evas_Object *bx;
 
-   eo_do_super(obj, ELM_FILE_DETAIL_CLASS, evas_obj_smart_add());
+   evas_obj_smart_add(eo_super(obj, ELM_FILE_DETAIL_CLASS));
 
    if (!elm_layout_theme_set(obj, "file_display", "file_preview", "default"))
      {

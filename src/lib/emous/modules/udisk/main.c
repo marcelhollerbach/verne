@@ -27,7 +27,7 @@ _interface_add_cb(void *data EINA_UNUSED, const Eldbus_Message *msg)
         eina_hash_add(devices, opath, obj);
         devices_list = eina_list_append(devices_list, obj);
         DBG("Added device %s %p", opath, obj);
-        eo_do(type, eo_event_callback_call(EMOUS_TYPE_EVENT_DEVICE_ADDED, obj));
+        eo_event_callback_call(type, EMOUS_TYPE_EVENT_DEVICE_ADDED, obj);
      }
 }
 
@@ -50,7 +50,7 @@ _interface_del_cb(void *data EINA_UNUSED, const Eldbus_Message *msg)
 
    eina_hash_del(devices, opath, obj);
    devices_list = eina_list_remove(devices_list, obj);
-   eo_do(type, eo_event_callback_call(EMOUS_TYPE_EVENT_DEVICE_DELETED, obj));
+   eo_event_callback_call(type, EMOUS_TYPE_EVENT_DEVICE_DELETED, obj);
 }
 
 static void
@@ -87,7 +87,7 @@ _managed_obj_cb(void *data EINA_UNUSED, const Eldbus_Message *msg, Eldbus_Pendin
    Emous_Device *dev;
    EINA_LIST_FOREACH(devices_list, node, dev)
      {
-        eo_do(type, eo_event_callback_call(EMOUS_TYPE_EVENT_DEVICE_ADDED, dev));
+        eo_event_callback_call(type, EMOUS_TYPE_EVENT_DEVICE_ADDED, dev);
      }
 }
 
@@ -154,7 +154,7 @@ _module_init(void)
    drives = eina_hash_string_small_new(_free2_cb);
 
    type = eo_add(EMOUS_TYPE_UDISKS_CLASS, NULL);
-   eo_do(EMOUS_MANAGER_CLASS, emous_manager_device_type_add(EMOUS_TYPE_UDISKS_CLASS));
+   emous_manager_device_type_add(EMOUS_MANAGER_CLASS, EMOUS_TYPE_UDISKS_CLASS);
 
    //init dbus
    eldbus_init();

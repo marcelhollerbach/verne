@@ -21,7 +21,7 @@ _added_cb(void *data EINA_UNUSED, const Eo_Event *event)
     if (!sd) return EINA_TRUE;
 
     sd->devices = eina_list_append(sd->devices, device);
-    eo_do(manager, eo_event_callback_call(EMOUS_MANAGER_EVENT_DEVICE_ADD, device));
+    eo_event_callback_call(manager, EMOUS_MANAGER_EVENT_DEVICE_ADD, device);
 
     return EINA_TRUE;
 }
@@ -34,7 +34,7 @@ _deled_cb(void *data EINA_UNUSED, const Eo_Event *event)
     if (!sd) return EINA_TRUE;
 
     sd->devices = eina_list_remove(sd->devices, device);
-    eo_do(manager, eo_event_callback_call(EMOUS_MANAGER_EVENT_DEVICE_DEL, device));
+    eo_event_callback_call(manager, EMOUS_MANAGER_EVENT_DEVICE_DEL, device);
 
     return EINA_TRUE;
 }
@@ -53,9 +53,9 @@ _emous_manager_device_type_add(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const 
 {
     Emous_Type *device_type;
 
-    if (!sd) eo_do(EMOUS_MANAGER_CLASS, emous_manager_object_get());
+    if (!sd) emous_manager_object_get(EMOUS_MANAGER_CLASS);
 
-    eo_do(type, device_type = emous_type_object_get());
+    device_type = emous_type_object_get(type);
 
     if (!device_type)
       {
@@ -64,10 +64,8 @@ _emous_manager_device_type_add(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const 
 
     sd->device_types = eina_list_append(sd->device_types, type);
 
-    eo_do(device_type,
-            eo_event_callback_add(EMOUS_TYPE_EVENT_DEVICE_ADDED, _added_cb, NULL);
-            eo_event_callback_add(EMOUS_TYPE_EVENT_DEVICE_DELETED, _deled_cb, NULL);
-            );
+    eo_event_callback_add(device_type, EMOUS_TYPE_EVENT_DEVICE_ADDED, _added_cb, NULL);
+    eo_event_callback_add(device_type, EMOUS_TYPE_EVENT_DEVICE_DELETED, _deled_cb, NULL);
 }
 
 EOLIAN static void
@@ -77,7 +75,7 @@ _emous_manager_device_type_del(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const 
     if (!sd) // there cannot be a type
       return;
 
-    eo_do(type, device_type = emous_type_object_get());
+    device_type = emous_type_object_get(type);
 
     // check if this device type is valid
     if (!device_type)
@@ -89,9 +87,9 @@ _emous_manager_device_type_del(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const 
     sd->device_types = eina_list_remove(sd->device_types, type);
 
     // do not monitor them anymore
-    eo_do(device_type, eo_event_callback_del(EMOUS_TYPE_EVENT_DEVICE_ADDED, _added_cb, NULL);
-                eo_event_callback_del(EMOUS_TYPE_EVENT_DEVICE_DELETED, _deled_cb, NULL);
-                );
+    eo_event_callback_del(device_type, EMOUS_TYPE_EVENT_DEVICE_ADDED, _added_cb, NULL);
+    eo_event_callback_del(device_type, EMOUS_TYPE_EVENT_DEVICE_DELETED, _deled_cb, NULL);
+
 }
 
 EOLIAN static Emous_Manager*

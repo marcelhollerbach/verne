@@ -86,11 +86,11 @@ _notify_cb(void *data EINA_UNUSED, Ecore_Thread *et EINA_UNUSED, void *pass)
     pd->mimetype = job->mimetype;
 
     // Remove weak reference
-    eo_do(job->obj, eo_wref_del(&job->obj));
+    eo_wref_del(job->obj, &job->obj);
     //unref stringshare
     eina_stringshare_del(job->path);
     // notify that this efm_file is ready for the world
-    eo_do(file, eo_event_callback_call(EFM_FILE_EVENT_FSQUERY_DONE, NULL));
+    eo_event_callback_call(file, EFM_FILE_EVENT_FSQUERY_DONE, NULL);
     free(job);
 }
 
@@ -125,7 +125,7 @@ _scheudle(Eo *obj, Efm_Fs_File_Data *pd)
 
     job = calloc(1, sizeof(Thread_Job));
 
-    eo_do(obj, eo_wref_add(&job->obj));
+    eo_wref_add(obj, &job->obj);
     job->path = eina_stringshare_ref(pd->path);
     eina_lock_take(&readlock);
     query_stuff = eina_list_append(query_stuff, job);
@@ -252,7 +252,7 @@ _efm_fs_file_eo_base_destructor(Eo *obj, Efm_Fs_File_Data *pd)
     //if this file lives longer than the lib XXX this should never happen
     if (watch_files)
       eina_hash_del(watch_files, &pd->file_mon, obj);
-    eo_do_super(obj, EFM_FS_FILE_CLASS, eo_destructor());
+    eo_destructor(eo_super(obj, EFM_FS_FILE_CLASS));
 }
 
 EOLIAN static Eo_Base *
@@ -262,7 +262,7 @@ _efm_fs_file_eo_base_finalize(Eo *obj, Efm_Fs_File_Data *pd)
 
     if (!pd->filename) return NULL;
 
-    eo_do_super(obj, EFM_FS_FILE_CLASS, finalize = eo_finalize());
+    finalize = eo_finalize(eo_super(obj, EFM_FS_FILE_CLASS));
 
     return finalize;
 }
@@ -289,7 +289,7 @@ _mod_cb(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 
     DBG("File %p got modified", f);
 
-    eo_do(f, eo_event_callback_call(EFM_FILE_EVENT_CHANGED, NULL));
+    eo_event_callback_call(f, EFM_FILE_EVENT_CHANGED, NULL);
 
     return EINA_TRUE;
 }
@@ -306,7 +306,7 @@ _file_del_cb(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 
    DBG("File %s got deleted in storage", ev->filename);
 
-   eo_do(f, eo_event_callback_call(EFM_FILE_EVENT_INVALID, "File Deleted"));
+   eo_event_callback_call(f, EFM_FILE_EVENT_INVALID, "File Deleted");
 
    return EINA_TRUE;
 }
@@ -323,7 +323,7 @@ _error_cb(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 
    DBG("Monitor (%s) error´ed out of the door", ev->filename);
 
-   eo_do(f, eo_event_callback_call(EFM_FILE_EVENT_INVALID, "File Monitor got error"));;
+   eo_event_callback_call(f, EFM_FILE_EVENT_INVALID, "File Monitor got error");
 
    return EINA_TRUE;
 }
@@ -355,7 +355,7 @@ efm_file_shutdown(void)
 EOLIAN static void *
 _efm_fs_file_efm_file_monitor(Eo *obj, Efm_Fs_File_Data *pd EINA_UNUSED, void *filter)
 {
-   return eo_add(EFM_FS_MONITOR_CLASS, NULL, efm_fs_monitor_install(obj, filter));
+   return eo_add(EFM_FS_MONITOR_CLASS, NULL, efm_fs_monitor_install(eoid, obj, filter));
 }
 
 EOLIAN static Efm_File*
@@ -367,7 +367,7 @@ _efm_fs_file_efm_file_child_get(Eo *obj EINA_UNUSED, Efm_Fs_File_Data *pd, const
    if (!S_ISDIR(pd->st.st_mode)) return NULL;
 
    snprintf(buf, sizeof(buf), "%s/%s", pd->path, name);
-   eo_do(EFM_CLASS, file = efm_file_get(buf));
+   file = efm_file_get(EFM_CLASS, buf);
 
    return file;
 }

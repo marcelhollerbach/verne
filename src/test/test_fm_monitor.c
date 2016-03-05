@@ -21,13 +21,13 @@ START_TEST(efm_file_invalid_name)
    const char *filename = "I-Am-Invalid";
 
    eo_init();
-   eo_do(EFM_CLASS, efm_init());
+   efm_init(EFM_CLASS);
 
-   eo_do(EFM_CLASS, file = efm_file_get(filename));
+   file = efm_file_get(EFM_CLASS, filename);
 
    ck_assert_ptr_eq(file, NULL);
 
-   efm_shutdown();
+   efm_shutdown(EFM_CLASS);
 
 }
 END_TEST
@@ -50,21 +50,21 @@ START_TEST(efm_valid_file)
    system("touch "TEST_FILE);
 
    eo_init();
-   eo_do(EFM_CLASS, efm_init());
+   efm_init(EFM_CLASS);
 
    done = EINA_FALSE;
 
-   eo_do(EFM_CLASS, file = efm_file_get(filename));
+   file = efm_file_get(EFM_CLASS, filename);
 
    ck_assert_ptr_ne(file, NULL);
 
-   eo_do(file, eo_event_callback_add(EFM_FILE_EVENT_FSQUERY_DONE, _done_cb, NULL));
+   eo_event_callback_add(file, EFM_FILE_EVENT_FSQUERY_DONE, _done_cb, NULL);
 
    ecore_main_loop_begin();
 
    ck_assert_int_eq(done, 1);
 
-   eo_do(EFM_CLASS, efm_shutdown());
+   efm_shutdown(EFM_CLASS);
    ecore_shutdown();
    eina_shutdown();
 }
@@ -96,22 +96,22 @@ START_TEST(efm_stresstest)
 
    eina_init();
    ecore_init();
-   eo_do(EFM_CLASS, efm_init());
+   efm_init(EFM_CLASS);
 
    done = EINA_FALSE;
    for (i = 0; i < TEST_FILE_ITER_MAX; i++)
      {
-        eo_do(EFM_CLASS, file = efm_file_get(filename));
+        file = efm_file_get(EFM_CLASS, filename);
 
         ck_assert_ptr_ne(file, NULL);
 
-        eo_do(file, eo_event_callback_add(EFM_FILE_EVENT_FSQUERY_DONE, _done2_cb, NULL));
+        eo_event_callback_add(file, EFM_FILE_EVENT_FSQUERY_DONE, _done2_cb, NULL);
      }
    ecore_main_loop_begin();
 
    ck_assert_int_eq(filecounter, TEST_FILE_ITER_MAX);
 
-   efm_shutdown();
+   efm_shutdown(EFM_CLASS);
    ecore_shutdown();
    eina_shutdown();
 }
@@ -124,7 +124,7 @@ static Eina_Bool
 _error(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    error = EINA_TRUE;
-   ecore_mainloop_quit();
+   ecore_main_loop_quit();
    return EINA_TRUE;
 }
 
@@ -164,23 +164,22 @@ START_TEST(efm_monitor_test)
    files = 0;
 
    eo_init();
-   eo_do(EFM_CLASS, efm_init());
+   efm_init(EFM_CLASS);
 
-   eo_do(EFM_CLASS, f = efm_file_get(TEST_DIRECTORY));
+   f = efm_file_get(EFM_CLASS, TEST_DIRECTORY);
 
-   eo_do(f, mon = efm_file_monitor(NULL));
+   mon = efm_file_monitor(f, NULL);
 
-   eo_do (mon,
 //      eo_event_callback_add(EFM_MONITOR_EVENT_FILE_DEL, _del, NULL);
-      eo_event_callback_add(EFM_MONITOR_EVENT_FILE_ADD, _add, NULL);
-      eo_event_callback_add(EFM_MONITOR_EVENT_ERROR, _error, NULL);
-   );
+   eo_event_callback_add(mon, EFM_MONITOR_EVENT_FILE_ADD, _add, NULL);
+   eo_event_callback_add(mon, EFM_MONITOR_EVENT_ERROR, _error, NULL);
+
 
    ecore_main_loop_begin();
 
    ck_assert_int_eq(error, 0);
    ck_assert_int_eq(files, TEST_DIRECTORY_FILES_MAX);
-   eo_do(EFM_CLASS, efm_shutdown());
+   efm_shutdown(EFM_CLASS);
 }
 END_TEST
 
@@ -190,7 +189,7 @@ static Eina_Bool
 _error_mon(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    mon_files = -1;
-   ecore_mainloop_quit();
+   ecore_main_loop_quit();
    return EINA_TRUE;
 }
 
@@ -217,19 +216,17 @@ START_TEST(efm_archive_monitor_test)
    Efm_File *f;
 
    eo_init();
-   eo_do(EFM_CLASS, efm_init());
-   eo_do(EFM_CLASS, f = efm_archive_get(TEST_RESSOURCES"/src/test/archiv.tar", "zip-test/"));
+   efm_init(EFM_CLASS);
+   f = efm_archive_get(EFM_CLASS, TEST_RESSOURCES"/src/test/archiv.tar", "zip-test/");
 
-   eo_do(f, archive = efm_file_monitor(NULL));
+   archive = efm_file_monitor(f, NULL);
    ck_assert_ptr_ne(archive, NULL);
-   eo_do (archive,
-      eo_event_callback_add(EFM_MONITOR_EVENT_FILE_ADD, _add_mon, NULL);
-      eo_event_callback_add(EFM_MONITOR_EVENT_ERROR, _error_mon, NULL);
-   );
+   eo_event_callback_add(archive, EFM_MONITOR_EVENT_FILE_ADD, _add_mon, NULL);
+   eo_event_callback_add(archive, EFM_MONITOR_EVENT_ERROR, _error_mon, NULL);
    ecore_main_loop_begin();
    ck_assert_int_eq(mon_files, ARCHIVE_FILE_NUMBER);
 
-   eo_do(EFM_CLASS, efm_shutdown());
+   efm_shutdown(EFM_CLASS);
 }
 END_TEST
 
@@ -238,13 +235,13 @@ START_TEST(efm_archive_test)
    Efm_File *archive;
 
    eo_init();
-   eo_do(EFM_CLASS, efm_init());
+   efm_init(EFM_CLASS);
 
-   eo_do(EFM_CLASS, archive = efm_archive_get(TEST_RESSOURCES"/src/test/archiv.tar", "zip-test/dir1/bla1"));
+   archive = efm_archive_get(EFM_CLASS, TEST_RESSOURCES"/src/test/archiv.tar", "zip-test/dir1/bla1");
 
    ck_assert_ptr_ne(archive, NULL);
 
-   eo_do(EFM_CLASS, efm_shutdown());
+   efm_shutdown(EFM_CLASS);
 }
 END_TEST
 

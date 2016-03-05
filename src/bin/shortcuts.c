@@ -74,9 +74,9 @@ _hover(void *data EINA_UNUSED, const Eo_Event *event) {
    Efm_File *file;
    const char *path;
 
-   eo_do(icon, file = elm_obj_file_icon_file_get());
-   eo_do(selector, elm_file_selector_file_set(file));
-   eo_do(file, path = efm_file_path_get());
+   file = elm_obj_file_icon_file_get(icon);
+   elm_file_selector_file_set(selector, file);
+   path = efm_file_path_get(file);
    titlebar_path_set(path);
 
    return EO_CALLBACK_CONTINUE;
@@ -89,8 +89,7 @@ shortcuts_init()
    evas_object_event_callback_add(selector, EVAS_CALLBACK_KEY_DOWN, _search_key_down, NULL);
 
    //add dnd shortcut
-   eo_do(selector,
-    eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_DND_ITEM_HOVER, _hover, NULL));
+   eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_DND_ITEM_HOVER, _hover, NULL);
 }
 
 static void

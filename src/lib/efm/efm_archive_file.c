@@ -42,7 +42,8 @@ _efm_archive_file_generate(Eo *obj, Efm_Archive_File_Data *pd, const char *archi
    pd->real_path = eina_stringshare_add(realpath_buf);
    pd->internal = eina_stringshare_add(internal);
 
-   eo_do_super(obj, EFM_ARCHIVE_FILE_CLASS, efm_fs_file_generate(eina_file_path_sanitize(pd->real_path)));
+
+   efm_fs_file_generate(eo_super(obj, EFM_ARCHIVE_FILE_CLASS), eina_file_path_sanitize(pd->real_path));
 }
 
 EOLIAN static const char *
@@ -58,34 +59,27 @@ _efm_archive_file_eo_base_destructor(Eo *obj, Efm_Archive_File_Data *pd)
    eina_stringshare_del(pd->fake_path);
    eina_stringshare_del(pd->real_path);
    eina_stringshare_del(pd->internal);
-   eo_do_super(obj, EFM_ARCHIVE_FILE_CLASS, eo_destructor());
+   eo_destructor(eo_super(obj, EFM_ARCHIVE_FILE_CLASS));
 }
 
 EOLIAN static Eo_Base *
 _efm_archive_file_eo_base_finalize(Eo *obj, Efm_Archive_File_Data *pd)
 {
-    Eo_Base *ret;
-
     if (!pd->archive.find_path) return NULL;
 
-    eo_do_super_ret(obj, EFM_ARCHIVE_FILE_CLASS, ret, eo_finalize());
-    return ret;
+    return eo_finalize(eo_super(obj, EFM_ARCHIVE_MONITOR_CLASS));
 }
 
 EOLIAN static const char *
 _efm_archive_file_real_path_get(Eo *obj, Efm_Archive_File_Data *pd EINA_UNUSED)
 {
-    const char *path;
-
-    eo_do_super_ret(obj, EFM_ARCHIVE_FILE_CLASS, path, efm_file_path_get());
-
-    return path;
+    return efm_file_path_get(eo_super(obj, EFM_ARCHIVE_FILE_CLASS));
 }
 
 EOLIAN static void *
 _efm_archive_file_efm_file_monitor(Eo *obj EINA_UNUSED, Efm_Archive_File_Data *pd EINA_UNUSED, void *filter)
 {
-   return eo_add(EFM_ARCHIVE_MONITOR_CLASS, NULL, efm_archive_monitor_generate(obj, filter));
+   return eo_add(EFM_ARCHIVE_MONITOR_CLASS, NULL, efm_archive_monitor_generate(eoid, obj, filter));
 }
 
 EOLIAN static Efm_File *
@@ -97,7 +91,7 @@ _efm_archive_file_efm_file_child_get(Eo *obj EINA_UNUSED, Efm_Archive_File_Data 
    //TODO check if I am a dir
 
    snprintf(buf, sizeof(buf), "%s/%s", pd->internal, name);
-   eo_do(EFM_CLASS, file = efm_archive_get(pd->archive.path, buf));
+   file = efm_archive_get(EFM_CLASS, pd->archive.path, buf);
    return file;
 }
 

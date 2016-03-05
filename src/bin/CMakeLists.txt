@@ -9,7 +9,7 @@ add_custom_command(
 LIST(APPEND JESUS_FILES
   jesus.c
   titlebar.c
-  ui.c
+  #ui.c
   config.c
   config.h
   exec_ui.c

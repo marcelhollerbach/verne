@@ -49,7 +49,7 @@ _gen_icon(Efreet_Desktop *desk, Evas_Object *obj)
   result = elm_icon_add(obj);
 
   if (ecore_file_exists(desk->icon))
-    eo_do(result, efl_file_set(desk->icon, NULL));
+    efl_file_set(result, desk->icon, NULL);
   else
     elm_icon_standard_set(result, desk->icon); // FIXME this is slowing everything down ... find a better solution
 
@@ -102,7 +102,7 @@ _transform(void *data)
    Elm_Object_Item *it;
 
    ui = data;
-   eo_do(ui->file, mime_type = efm_file_mimetype_get());
+   mime_type = efm_file_mimetype_get(ui->file);
    desk = eina_list_data_get(ui->desktops);
 
    ui->desktops = eina_list_remove(ui->desktops, desk);
@@ -158,7 +158,7 @@ _label_fill(Open_With_Ui *ui)
     const char *mime_type;
     const char *name;
 
-    eo_do(ui->file, mime_type = efm_file_mimetype_get());
+    mime_type = efm_file_mimetype_get(ui->file);
 
     if (!mime_type)
       return;
@@ -243,7 +243,7 @@ _as_default_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED
 
    if (!desk) return;
 
-   eo_do(req->file, mime_type = efm_file_mimetype_get());
+   mime_type = efm_file_mimetype_get(req->file);
 
    if (eina_hash_find(config->mime_type_open, mime_type))
      eina_hash_del(config->mime_type_open, mime_type, NULL);
@@ -263,7 +263,7 @@ _as_default_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED
 void
 exec_ui_open_with(Efm_File *file, Cmd_Choosen choosen)
 {
-
+#if 0
     Open_With2_Main_Win_Widgets *wid;
     Open_With_Ui *ui;
 
@@ -288,4 +288,5 @@ exec_ui_open_with(Efm_File *file, Cmd_Choosen choosen)
 
     //listen for changes in the entry
     evas_object_smart_callback_add(wid->search, "changed", _search_cb, ui);
+#endif
 }

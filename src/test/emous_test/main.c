@@ -92,17 +92,17 @@ _emous_type_debug_emous_type_object_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSE
 Eina_Bool
 emous_debug_device_start(void)
 {
-   eo_do(EMOUS_MANAGER_CLASS, emous_manager_device_type_add(EMOUS_TYPE_DEBUG_CLASS));
+   emous_manager_device_type_add(EMOUS_MANAGER_CLASS, EMOUS_TYPE_DEBUG_CLASS);
    // add this one
    Emous_Device_Debug *db = eo_add(EMOUS_DEVICE_DEBUG_CLASS, NULL);
    devices = eina_list_append(devices, db);
-   eo_do(sd, eo_event_callback_call(EMOUS_TYPE_EVENT_DEVICE_ADDED, db));
+   eo_event_callback_call(sd, EMOUS_TYPE_EVENT_DEVICE_ADDED, db);
    // Add a second one
    db = eo_add(EMOUS_DEVICE_DEBUG_CLASS, NULL);
    devices = eina_list_append(devices, db);
-   eo_do(sd, eo_event_callback_call(EMOUS_TYPE_EVENT_DEVICE_ADDED, db));
+   eo_event_callback_call(sd, EMOUS_TYPE_EVENT_DEVICE_ADDED, db);
    // remove the first one
-   eo_do(sd, eo_event_callback_call(EMOUS_TYPE_EVENT_DEVICE_DELETED, db));
+   eo_event_callback_call(sd, EMOUS_TYPE_EVENT_DEVICE_DELETED, db);
 
    return EINA_TRUE;
 }

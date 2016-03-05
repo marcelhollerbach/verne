@@ -96,7 +96,7 @@ _elm_file_display_view_list_elm_file_view_selection_set(Eo *obj EINA_UNUSED, Elm
      {
         Efm_File *file;
 
-        eo_do(icon, file = elm_obj_file_icon_file_get());
+        file = elm_obj_file_icon_file_get(icon);
 
         view_file_select(&pd->common, file);
      }
@@ -106,7 +106,7 @@ _elm_file_display_view_list_elm_file_view_selection_set(Eo *obj EINA_UNUSED, Elm
 static void
 _sel(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
-   eo_do(obj, eo_event_callback_call(ELM_FILE_VIEW_EVENT_ITEM_SELECT_SIMPLE, data));
+   eo_event_callback_call(obj, ELM_FILE_VIEW_EVENT_ITEM_SELECT_SIMPLE, data);
 }
 
 static void
@@ -145,7 +145,7 @@ _elm_file_display_view_list_elm_file_view_file_set(Eo *obj, Elm_File_Display_Vie
 EOLIAN static void
 _elm_file_display_view_list_elm_file_view_size_get(Eo *obj EINA_UNUSED, Elm_File_Display_View_List_Data *pd EINA_UNUSED, Eina_Rectangle *size)
 {
-   eo_do(obj, elm_interface_scrollable_content_viewport_geometry_get(&size->x, &size->y, &size->w, &size->h));
+   elm_interface_scrollable_content_viewport_geometry_get(obj, &size->x, &size->y, &size->w, &size->h);
 }
 
 EOLIAN static void
@@ -178,13 +178,13 @@ _grid_content_get(void *data, Evas_Object *obj, const char *part)
    Evas_Object *parent;
    Efm_File *file;
 
-   eo_do(obj, parent = eo_parent_get());
+   parent = eo_parent_get(obj);
 
    if (!!strcmp(part, "elm.swallow.icon")) return NULL;
 
    file = data;
 
-   eo_do(parent, ic = elm_file_selector_icon_generate(file));
+   ic = elm_file_selector_icon_generate(parent, file);
    elm_object_style_set(ic, "line");
 
    return ic;
@@ -196,7 +196,7 @@ _double_click(void *data EINA_UNUSED, Evas_Object *obj, void *event_info)
    Elm_Object_Item *it = event_info;
    Efm_File *fmm_file = elm_object_item_data_get(it);
 
-   eo_do(obj, eo_event_callback_call(ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHOOSEN, fmm_file));
+   eo_event_callback_call(obj, ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHOOSEN, fmm_file);
 }
 
 static void
@@ -240,7 +240,7 @@ _key_down(void *data, const Eo_Event *event)
         mover =  eina_list_data_get(eina_list_last(selected));
 
         fmm_file = elm_object_item_data_get(mover);
-        eo_do(list, eo_event_callback_call(ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHOOSEN, fmm_file));
+        eo_event_callback_call(list, ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHOOSEN, fmm_file);
 
         return EO_CALLBACK_STOP;
      }
@@ -258,12 +258,12 @@ _elm_file_display_view_list_eo_base_constructor(Eo *obj, Elm_File_Display_View_L
    pd->gic->item_style = "default";
    pd->gic->func.content_get = _grid_content_get;
 
-   eo_do_super(obj, ELM_FILE_DISPLAY_VIEW_LIST_CLASS, eo = eo_constructor());
+   eo = eo_constructor(eo_super(obj, ELM_FILE_DISPLAY_VIEW_LIST_CLASS));
    elm_genlist_homogeneous_set(obj, EINA_TRUE);
 
-   eo_do(obj, parent = eo_parent_get());
+   parent = eo_parent_get(obj);
 
-   eo_do(parent, eo_event_callback_add(EVAS_OBJECT_EVENT_KEY_DOWN, _key_down, obj));
+   eo_event_callback_add(parent, EVAS_OBJECT_EVENT_KEY_DOWN, _key_down, obj);
    evas_object_smart_callback_add(obj, "selected", _selection_add, NULL);
    evas_object_smart_callback_add(obj, "unselected", _selection_del, NULL);
 
@@ -277,7 +277,7 @@ _elm_file_display_view_list_eo_base_constructor(Eo *obj, Elm_File_Display_View_L
 EOLIAN static void
 _elm_file_display_view_list_eo_base_destructor(Eo *obj, Elm_File_Display_View_List_Data *pd)
 {
-   eo_do_super(obj, ELM_FILE_DISPLAY_VIEW_LIST_CLASS, eo_destructor());
+   eo_destructor(eo_super(obj, ELM_FILE_DISPLAY_VIEW_LIST_CLASS));
    elm_genlist_item_class_free(pd->gic);
 }
 

@@ -2,7 +2,7 @@
 
 #include "efm_priv.h"
 
-#define POPULATE_CHANGE(obj) eo_do(obj, eo_event_callback_call(EFM_FILTER_EVENT_FILTER_CHANGED, NULL))
+#define POPULATE_CHANGE(obj) eo_event_callback_call(obj, EFM_FILTER_EVENT_FILTER_CHANGED, NULL)
 
 typedef struct {
     Eina_Bool init;
@@ -85,10 +85,10 @@ _type_match(Efm_Filter_Data *pd, Efm_File *file)
    Eina_List *node;
    EINA_LIST_FOREACH(pd->types, node, type_raw)
      {
-         Eina_Bool istype;
+
          type = (uintptr_t)(void*) type_raw;
-         eo_do(file, istype = efm_file_is_type(type));
-         if (!istype)
+
+         if (!efm_file_is_type(file, type))
            return EINA_FALSE;
      }
    return EINA_TRUE;
@@ -106,13 +106,13 @@ _attr_match(Efm_Filter_Data *pd, Efm_File *file)
 
         switch(i){
           case EFM_ATTRIBUTE_FILEENDING:
-            eo_do(file, checker = efm_file_fileending_get());
+            checker = efm_file_fileending_get(file);
           break;
           case EFM_ATTRIBUTE_FILENAME:
-            eo_do(file, checker = efm_file_filename_get());
+            checker = efm_file_filename_get(file);
           break;
           case EFM_ATTRIBUTE_MIMETYPE:
-            eo_do(file, checker = efm_file_mimetype_get());
+            checker = efm_file_mimetype_get(file);
           break;
         }
         EINA_LIST_FOREACH(pd->attribute[i], node, f)
@@ -150,11 +150,8 @@ _efm_filter_matches(Eo *obj EINA_UNUSED, Efm_Filter_Data *pd, Efm_File *file)
 EOLIAN static Eo_Base *
 _efm_filter_eo_base_constructor(Eo *obj, Efm_Filter_Data *pd)
 {
-   Eo *oobj;
-
    pd->whitelist = EINA_TRUE;
-   eo_do_super_ret(obj, EFM_FILTER_CLASS, oobj, eo_constructor());
-   return oobj;
+   return eo_constructor(eo_super(obj, EFM_FILTER_CLASS));
 }
 
 EOLIAN static void
@@ -172,7 +169,7 @@ _efm_filter_eo_base_destructor(Eo *obj, Efm_Filter_Data *pd)
           }
      }
    eina_list_free(pd->types);
-   eo_do_super(obj, EFM_FILTER_CLASS, eo_destructor());
+   eo_destructor(eo_super(obj, EFM_FILTER_CLASS));
 }
 
 

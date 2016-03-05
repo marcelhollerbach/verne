@@ -80,8 +80,8 @@ _elm_file_bookmarks_efl_file_file_get(Eo *obj EINA_UNUSED, Elm_File_Bookmarks_Da
 static void
 _file_change(Evas_Object *obj, const char *dir)
 {
-   eo_do(obj, efl_file_set(dir, NULL);
-              eo_event_callback_call(ELM_FILE_BOOKMARKS_EVENT_PATH_SELECTED, NULL));
+   efl_file_set(obj, dir, NULL);
+   eo_event_callback_call(obj, ELM_FILE_BOOKMARKS_EVENT_PATH_SELECTED, NULL);
 
 }
 
@@ -171,7 +171,7 @@ device:
       Eina_List *list, *node;
       Emous_Device *device;
 
-      eo_do(EMOUS_MANAGER_CLASS, list = emous_manager_devices_get());
+      list = emous_manager_devices_get(EMOUS_MANAGER_CLASS);
 
       EINA_LIST_FOREACH(list, node, device)
         {
@@ -193,8 +193,7 @@ _device_item_sel(void *data, Evas_Object *obj, void *event EINA_UNUSED)
    Device *d = data;
    Eina_List *mountpoints;
 
-
-   eo_do(d->d, mountpoints = emous_device_mountpoints_get());
+   mountpoints = emous_device_mountpoints_get(d->d);
 
    if (mountpoints)
      {
@@ -211,10 +210,8 @@ static char *
 _device_item_text_get(void *data, Evas_Object *obj EINA_UNUSED, const char *part EINA_UNUSED)
 {
    Bookmark_Item *it = data;
-   Emous_Device *d = it->pd.dev.d;
-   char *displayname;
 
-   return eo_do_ret(EMOUS_CLASS, displayname, emous_util_device_name_get(d));
+   return emous_util_device_name_get(EMOUS_CLASS, it->pd.dev.d);
 }
 
 static Evas_Object *
@@ -228,7 +225,7 @@ _device_item_content_get(void *data, Evas_Object *obj, const char *part EINA_UNU
 
    if (!!strcmp(part, "elm.swallow.icon")) return NULL;
 
-   eo_do(d->d, type = emous_device_type_get());
+   type = emous_device_type_get(d->d);
 
    switch(type)
      {
@@ -253,7 +250,7 @@ _device_item_content_get(void *data, Evas_Object *obj, const char *part EINA_UNU
      }
 
    indicator = elm_layout_add(obj);
-   eo_do(indicator, eo_wref_add(&d->indicator));
+   eo_wref_add(indicator, &d->indicator);
 
    icon = elm_icon_add(indicator);
    elm_icon_order_lookup_set(icon, ELM_ICON_LOOKUP_FDO_THEME);
@@ -407,7 +404,7 @@ _device_update(Bookmark_Item *item)
    Emous_Device_State state;
    const char *signal;
 
-   eo_do(item->pd.dev.d, state = emous_device_state_get());
+   state = emous_device_state_get(item->pd.dev.d);
 
    switch(state)
      {
@@ -448,7 +445,7 @@ _device_add(Emous_Device *d, Evas_Object *w)
   it->type = BOOKMARK_TYPE_DEVICE;
   it->pd.dev.d = d;
 
-  eo_do(d, eo_event_callback_add(EMOUS_DEVICE_EVENT_STATE_CHANGED, _state_changed, it););
+  eo_event_callback_add(d, EMOUS_DEVICE_EVENT_STATE_CHANGED, _state_changed, it);
 
   elm_genlist_item_append(w, sd->device_item_class, it, pd->device_group_it, 0, _device_item_sel, &it->pd.dev.d);
 
@@ -514,7 +511,7 @@ _ctx_menu_directory(Evas_Object *w, int x, int y, Directory *b)
   // save the widget
   evas_object_data_set(menu, "_genlist", w);
 
-  eo_do(w, eo_event_callback_call(ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_START , menu));
+  eo_event_callback_call(w, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_START , menu);
 
   // if we are removable remove it
   if (b->removable)
@@ -529,7 +526,7 @@ _ctx_menu_directory(Evas_Object *w, int x, int y, Directory *b)
   it = elm_menu_item_add(menu, NULL, NULL, NULL, _ctx_gtk, w);
   elm_object_item_content_set(it, o);
 
-  eo_do(w, eo_event_callback_call(ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_END, menu));
+  eo_event_callback_call(w, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_END, menu);
 
   // move and show
   elm_menu_move(menu, x, y);
@@ -542,12 +539,12 @@ _ctx_menu_directory(Evas_Object *w, int x, int y, Directory *b)
 static void
 _unmount_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_data EINA_UNUSED)
 {
-   eo_do(data, emous_device_umount());
+   emous_device_umount(data);
 }
   static void
 _mount_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_data EINA_UNUSED)
 {
-   eo_do(data, emous_device_mount());
+   emous_device_mount(data);
 }
 
 static void
@@ -560,7 +557,7 @@ _ctx_menu_device(Evas_Object *w, int x, int y, Device *b)
    // save the widget
    evas_object_data_set(menu, "_genlist", w);
 
-   eo_do(b->d, mounted = !!emous_device_mountpoints_get());
+   mounted = !!emous_device_mountpoints_get(b->d);
 
    //eo_do(w, eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_HOOK_MENU_DEVICE_START, menu));
 
@@ -658,18 +655,18 @@ _elm_file_bookmarks_eo_base_constructor(Eo *obj, Elm_File_Bookmarks_Data *pd)
    Emous_Manager *m;
 
    config_init();
-   eo_do(EMOUS_CLASS, emous_init());
+   emous_init(EMOUS_CLASS);
 
    _static_data_ref();
    pd->icons = eina_hash_stringshared_new(NULL);
 
 
-   eo_do(EMOUS_MANAGER_CLASS, m = emous_manager_object_get());
-   eo_do(m, eo_event_callback_add(EMOUS_MANAGER_EVENT_DEVICE_ADD, _device_add_cb, obj);
-            eo_event_callback_add(EMOUS_MANAGER_EVENT_DEVICE_DEL, _device_del_cb, obj);
-        );
+   m = emous_manager_object_get(EMOUS_MANAGER_CLASS);
+   eo_event_callback_add(m, EMOUS_MANAGER_EVENT_DEVICE_ADD, _device_add_cb, obj);
+   eo_event_callback_add(m, EMOUS_MANAGER_EVENT_DEVICE_DEL, _device_del_cb, obj);
 
-   eo_do_super(obj, ELM_FILE_BOOKMARKS_CLASS, eo = eo_constructor());
+
+   eo = eo_constructor(eo_super(obj, ELM_FILE_BOOKMARKS_CLASS));
 
    elm_object_focus_allow_set(obj, EINA_FALSE);
 
@@ -694,9 +691,9 @@ _elm_file_bookmarks_eo_base_destructor(Eo *obj, Elm_File_Bookmarks_Data *pd EINA
 {
     config_shutdown();
     _static_data_unref();
-    eo_do(EMOUS_CLASS, emous_shutdown());
+    emous_shutdown(EMOUS_CLASS);
 
-    eo_do_super(obj, ELM_FILE_BOOKMARKS_CLASS, eo_destructor());
+    eo_destructor(eo_super(obj, ELM_FILE_BOOKMARKS_CLASS));
 }
 
 #include "elm_file_bookmarks.eo.x"

@@ -17,8 +17,8 @@ _back_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, const char *emiss
 
     path = eina_list_nth(list, pointer);
     barrier = EINA_TRUE;
-    eo_do(EFM_CLASS, file = efm_file_get(path));
-    eo_do(selector, elm_file_selector_file_set(file));
+    file = efm_file_get(EFM_CLASS, path);
+    elm_file_selector_file_set(selector, file);
     barrier = EINA_FALSE;
 }
 
@@ -35,8 +35,8 @@ _forward_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, const char *em
 
    pointed = eina_list_nth(list, pointer);
 
-   eo_do(EFM_CLASS, file = efm_file_get(pointed));
-   eo_do(selector, elm_file_selector_file_set(file));
+   file = efm_file_get(EFM_CLASS, pointed);
+   elm_file_selector_file_set(selector, file);
 }
 
 static Eina_Bool
@@ -46,7 +46,7 @@ _path_changed_cb(void *data EINA_UNUSED, const Eo_Event *event)
    const char *share;
    const char *path;
 
-   eo_do(event->event_info, path = efm_file_path_get());
+   path = efm_file_path_get(event->event_info);
 
    if (barrier)
      return EINA_TRUE;
@@ -85,5 +85,5 @@ history_init(void)
 {
    elm_layout_signal_callback_add(layout, "jesus.history.back", "theme", _back_cb, NULL);
    elm_layout_signal_callback_add(layout, "jesus.history.forward", "theme", _forward_cb, NULL);
-   eo_do(selector, eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _path_changed_cb, NULL));
+   eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _path_changed_cb, NULL);
 }

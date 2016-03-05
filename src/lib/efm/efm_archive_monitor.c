@@ -16,10 +16,10 @@ _efm_archive_monitor_generate(Eo *obj, Efm_Archive_Monitor_Data *pd, Efm_Archive
 
     pd->file = file;
 
-    eo_do_ret(file, path, efm_archive_file_real_path_get());
-    eo_do(EFM_CLASS, fs_file = efm_file_get(path));
+    path = efm_archive_file_real_path_get(file);
+    fs_file = efm_file_get(EFM_CLASS, path);
 
-    eo_do(obj, efm_fs_monitor_install(fs_file, filter));
+    efm_fs_monitor_install(obj, fs_file, filter);
 }
 
 

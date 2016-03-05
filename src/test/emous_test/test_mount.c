@@ -23,16 +23,16 @@ START_TEST(emous_mount_point_listening)
 
    eo_init();
 
-   eo_do(EMOUS_CLASS, emous_init_lib());
+   emous_init_lib(EMOUS_CLASS);
    mount_added = EINA_FALSE;
-   eo_do(EMOUS_MANAGER_CLASS, manager = emous_manager_object_get());
-   eo_do(manager, eo_event_callback_add(EMOUS_MANAGER_EVENT_MOUNT_ADD, _mount_add, NULL));
-   eo_do(EMOUS_CLASS, emous_init());
+   manager = emous_manager_object_get(EMOUS_MANAGER_CLASS);
+   eo_event_callback_add(manager, EMOUS_MANAGER_EVENT_MOUNT_ADD, _mount_add, NULL);
+   emous_init(EMOUS_CLASS);
 
    ck_assert_int_eq(mount_added, EINA_TRUE);
 
-   eo_do(EMOUS_CLASS, emous_shutdown());
-   eo_do(EMOUS_CLASS, emous_shutdown_lib());
+   emous_shutdown(EMOUS_CLASS);
+   emous_shutdown_lib(EMOUS_CLASS);
 }
 END_TEST
 
@@ -42,10 +42,8 @@ START_TEST(normal_init)
 {
    eo_init();
 
-   eo_do(EMOUS_CLASS,
-      ck_assert_int_eq(emous_init(), 1);
-      emous_shutdown();
-   );
+   ck_assert_int_eq(emous_init(EMOUS_CLASS), 1);
+   emous_shutdown(EMOUS_CLASS);
 }
 END_TEST
 
@@ -73,22 +71,21 @@ START_TEST(debug_devices_appear)
    Eina_List *list;
 
    eo_init();
-   eo_do(EMOUS_CLASS, emous_init_lib());
-   eo_do(EMOUS_MANAGER_CLASS, manager = emous_manager_object_get());
-   eo_do(manager,
-                  eo_event_callback_add(EMOUS_MANAGER_EVENT_DEVICE_ADD, _add_cb, NULL);
-                  eo_event_callback_add(EMOUS_MANAGER_EVENT_DEVICE_DEL, _del_cb, NULL));
+   emous_init_lib(EMOUS_CLASS);
+   manager = emous_manager_object_get(EMOUS_MANAGER_CLASS);
+                  eo_event_callback_add(manager, EMOUS_MANAGER_EVENT_DEVICE_ADD, _add_cb, NULL);
+                  eo_event_callback_add(manager, EMOUS_MANAGER_EVENT_DEVICE_DEL, _del_cb, NULL);
 
    emous_debug_device_start();
 
-   eo_do(EMOUS_MANAGER_CLASS, list = emous_manager_devices_get());
+   list = emous_manager_devices_get(EMOUS_MANAGER_CLASS);
 
    ck_assert_int_eq(eina_list_count(list), 1);
 
    ck_assert_int_eq(adddev, 2);
    ck_assert_int_eq(deldev, 1);
 
-   eo_do(EMOUS_CLASS, emous_shutdown_lib());
+   emous_shutdown_lib(EMOUS_CLASS);
 }
 END_TEST
 

@@ -120,8 +120,8 @@ _trigger_change(const char *text) {
       strcat(path, "/");
       strcat(path, parts[i]);
     }
-    eo_do(EFM_CLASS, file = efm_file_get(path));
-    eo_do(selector, elm_file_selector_file_set(file));
+    file = efm_file_get(EFM_CLASS, path);
+    elm_file_selector_file_set(selector, file);
 }
 
 static Eina_Bool
@@ -216,8 +216,8 @@ _anchor_clicked_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *e
    elm_object_focus_set(obj, EINA_FALSE);
    elm_object_text_set(obj, NULL);
    elm_entry_entry_append(obj, info->name);
-   eo_do(EFM_CLASS, file = efm_file_get(info->name));
-   eo_do(selector, elm_file_selector_file_set(file));
+   file = efm_file_get(EFM_CLASS, info->name);
+   elm_file_selector_file_set(selector, file);
 }
 
 void

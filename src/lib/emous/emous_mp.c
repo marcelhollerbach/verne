@@ -14,8 +14,8 @@ _emous_mount_add(const char *type, const char *mount_point, const char *source)
    mp->mount_point = mount_point;
    mp->fs_type = type;
 
-   eo_do(EMOUS_MANAGER_CLASS, manager = emous_manager_object_get());
-   eo_do(manager, eo_event_callback_call(EMOUS_MANAGER_EVENT_MOUNT_ADD, mp));//FIXME
+   manager = emous_manager_object_get(EMOUS_MANAGER_CLASS);
+   eo_event_callback_call(manager, EMOUS_MANAGER_EVENT_MOUNT_ADD, mp);
 
    free(mp);
 }
@@ -25,7 +25,7 @@ _emous_mount_del(const char *mount_point)
 {
    Emous_Manager *manager;
 
-   eo_do(EMOUS_MANAGER_CLASS, manager = emous_manager_object_get());
+   manager = emous_manager_object_get(EMOUS_MANAGER_CLASS);
 
-   eo_do(manager, eo_event_callback_call(EMOUS_MANAGER_EVENT_DEVICE_DEL, (void*)mount_point));
+   eo_event_callback_call(manager, EMOUS_MANAGER_EVENT_DEVICE_DEL, (void*)mount_point);
 }

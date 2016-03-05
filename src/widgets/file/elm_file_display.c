@@ -19,8 +19,8 @@ _selector_path_changed(void *data, const Eo_Event *event)
    const char *file;
    PRIV_DATA(data)
 
-   eo_do(event->event_info, file = efm_file_path_get());
-   eo_do(pd->bookmark, efl_file_set(file, NULL));
+   file = efm_file_path_get(event->event_info);
+   efl_file_set(pd->bookmark, file, NULL);
 
    return EO_CALLBACK_CONTINUE;
 }
@@ -33,7 +33,7 @@ _update_preview(void *data, const Eo_Event *event)
 
    f = event->event_info;
 
-   eo_do(pd->detail, elm_file_detail_file_set(f));
+   elm_file_detail_file_set(pd->detail, f);
    return EO_CALLBACK_CONTINUE;
 }
 
@@ -44,9 +44,9 @@ _bookmark_path_changed(void *data,  const Eo_Event *event)
    Efm_File *f;
    PRIV_DATA(data)
 
-   eo_do(event->obj, efl_file_get(&file, NULL));
-   eo_do(EFM_CLASS, f = efm_file_get(file));
-   eo_do(pd->selector, elm_file_selector_file_set(f));
+   efl_file_get(event->obj, &file, NULL);
+   f = efm_file_get(EFM_CLASS, file);
+   elm_file_selector_file_set(pd->selector, f);
 
    return EO_CALLBACK_CONTINUE;
 }
@@ -56,7 +56,7 @@ _ctx_bookmarks_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNU
 {
    PRIV_DATA(data)
 
-   eo_do(data, elm_file_display_bookmarks_show_set(!pd->bookmarks_show));
+   elm_file_display_bookmarks_show_set(data, !pd->bookmarks_show);
 }
 
 static void
@@ -64,7 +64,7 @@ _ctx_preview_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSE
 {
    PRIV_DATA(data)
 
-   eo_do(data, elm_file_display_filepreview_show_set(!pd->preview_show));
+   elm_file_display_filepreview_show_set(data, !pd->preview_show);
 }
 
 static Eina_Bool
@@ -99,11 +99,10 @@ _elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd EINA_UN
 {
    Eo *eo;
 
-   eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, eo = eo_constructor());
-
+   eo = eo_constructor(eo_super(obj, ELM_FILE_DISPLAY_CLASS));
    // XXX: take a config ?
-   eo_do(obj, elm_file_display_bookmarks_show_set(EINA_TRUE));
-   eo_do(obj, elm_file_display_filepreview_show_set(EINA_TRUE));
+   elm_file_display_bookmarks_show_set(obj, EINA_TRUE);
+   elm_file_display_filepreview_show_set(obj, EINA_TRUE);
 
    return eo;
 }
@@ -114,7 +113,7 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
    Evas_Object *o;
    Eo *cache;
 
-   eo_do_super(obj, ELM_FILE_DISPLAY_CLASS, evas_obj_smart_add());
+   evas_obj_smart_add(eo_super(obj, ELM_FILE_DISPLAY_CLASS));
 
    if (!elm_layout_theme_set(obj, "file_display", "base", "default"))
      {
@@ -122,25 +121,23 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
      }
 
    pd->selector = o = eo_add(ELM_FILE_SELECTOR_CLASS, obj);
-   eo_do(o,
-    cache = elm_file_selector_cache_get();
-    eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, _menu_cb, obj);
-    eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _selector_path_changed, obj);
-    eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _update_preview, obj);
-    eo_event_callback_add(ELM_FILE_SELECTOR_EVENT_ITEM_SELECTED, _update_preview, obj);
-    );
+
+   cache = elm_file_selector_cache_get(o);
+   eo_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, _menu_cb, obj);
+   eo_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _selector_path_changed, obj);
+   eo_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _update_preview, obj);
+   eo_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_ITEM_SELECTED, _update_preview, obj);
+
    elm_object_part_content_set(obj, "content", o);
    evas_object_show(o);
 
    pd->bookmark = o = eo_add(ELM_FILE_BOOKMARKS_CLASS, obj);
-   eo_do(o, eo_event_callback_add(ELM_FILE_BOOKMARKS_EVENT_PATH_SELECTED, _bookmark_path_changed, obj));
+   eo_event_callback_add(o, ELM_FILE_BOOKMARKS_EVENT_PATH_SELECTED, _bookmark_path_changed, obj);
    elm_object_part_content_set(obj, "bookmark", o);
    evas_object_show(o);
 
    pd->detail = o = eo_add(ELM_FILE_DETAIL_CLASS, obj);
-   eo_do(o,
-    elm_file_detail_cache_set(cache)
-   );
+   elm_file_detail_cache_set(o, cache);
    elm_object_part_content_set(obj, "filepreview", o);
    evas_object_show(o);
 

@@ -7,7 +7,7 @@ exec_execute(Efm_File *f)
     Eina_List *mime_types;
     Efreet_Desktop *icon;
 
-    eo_do(f, mime_type = efm_file_mimetype_get());
+    mime_type = efm_file_mimetype_get(f);
 
     // first check in config for a "special" open wish
     name = eina_hash_find(config->mime_type_open, mime_type);
@@ -31,7 +31,7 @@ exec_run(Efreet_Desktop *desk, Efm_File *f)
   Eina_List *lst = NULL;
   const char *file;
 
-  eo_do(f, file = efm_file_path_get());
+  file = efm_file_path_get(f);
   lst = eina_list_append(lst, file);
 
   efreet_desktop_exec(desk, lst, NULL);

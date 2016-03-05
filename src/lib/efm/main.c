@@ -80,7 +80,7 @@ static Eina_Bool
 _file_del(void *data, const Eo_Event *event)
 {
    eina_hash_del_by_data(sd->factory, event->obj);
-   eo_do(event->obj, eo_event_callback_array_del(factory_events(), sd->factory));
+   eo_event_callback_array_del(event->obj, factory_events(), sd->factory);
    return EO_CALLBACK_CONTINUE;
 }
 
@@ -98,11 +98,11 @@ _efm_file_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *_path)
    const char *path;
    SEARCH_IF_FOUND_RETURN_INCED(_path, file)
 
-   file = eo_add(EFM_FS_FILE_CLASS, NULL, efm_fs_file_generate(_path));
+   file = eo_add(EFM_FS_FILE_CLASS, NULL, efm_fs_file_generate(eoid, _path));
    if (file)
      {
-        eo_do(file, path = efm_file_path_get();
-                    eo_event_callback_array_add(factory_events(), sd->factory));
+        path = efm_file_path_get(file);
+        eo_event_callback_array_add(file, factory_events(), sd->factory);
         eina_hash_add(sd->factory, &path, file);
      }
 
@@ -120,12 +120,12 @@ _efm_archive_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *archive_
 
    SEARCH_IF_FOUND_RETURN_INCED(compose_path, file);
 
-   file = eo_add(EFM_ARCHIVE_FILE_CLASS, NULL, efm_archive_file_generate(archive_path, innerpath));
+   file = eo_add(EFM_ARCHIVE_FILE_CLASS, NULL, efm_archive_file_generate(eoid, archive_path, innerpath));
 
    if (file)
      {
-        eo_do(file, path = efm_file_path_get();
-                    eo_event_callback_array_add(factory_events(), sd->factory));
+        path = efm_file_path_get(file);
+        eo_event_callback_array_add(file, factory_events(), sd->factory);
         eina_hash_add(sd->factory, &path, file);
      }
 

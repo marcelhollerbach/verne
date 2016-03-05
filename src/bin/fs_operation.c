@@ -240,13 +240,13 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
             case OP_MOVE:
               // set correct file
               if (operation->type == OP_MOVE)
-                eo_do(layout, efl_file_set(THEME_PATH"/efm.edc.edj", "jesus.fs_op.move"));
+                efl_file_set(layout, THEME_PATH"/efm.edc.edj", "jesus.fs_op.move");
               else
-                eo_do(layout, efl_file_set(THEME_PATH"/efm.edc.edj", "jesus.fs_op.copy"));
+                efl_file_set(layout, THEME_PATH"/efm.edc.edj", "jesus.fs_op.copy");
 
               // add progressbar
               progress = eo_add(ELM_PROGRESSBAR_CLASS, obj);
-              eo_do(progress, eo_wref_add(&operation->ui.progress));
+              eo_wref_add(progress, &operation->ui.progress);
               // set part and text
               elm_object_part_content_set(layout, "jesus.progress", progress);
               elm_object_part_text_set(layout, "jesus.to", operation->goal);
@@ -255,7 +255,7 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
               elm_progressbar_value_set(progress, operation->ui.progress_value);
             break;
             case OP_REMOVE:
-              eo_do(layout, efl_file_set(THEME_PATH"/efm.edc.edj", "jesus.fs_op.remove"));
+              efl_file_set(layout, THEME_PATH"/efm.edc.edj", "jesus.fs_op.remove");
               elm_object_part_text_set(layout, "jesus.from", operation->from);
             break;
          }
@@ -263,7 +263,7 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
          elm_layout_sizing_eval(layout);
          elm_box_pack_end(box, layout);
 
-         eo_do(obj, eo_wref_add(&operation->ui.layout));
+         eo_wref_add(obj, &operation->ui.layout);
       }
 
     scroller = elm_scroller_add(popup);
@@ -326,7 +326,7 @@ preview_copy(void)
 {
    Eina_List *selection;
 
-   eo_do(selector, selection = elm_file_selector_selection_get());
+   selection = elm_file_selector_selection_get(selector);
    clipboard_set(COPY, selection);
 }
 
@@ -335,7 +335,7 @@ preview_move(void)
 {
    Eina_List *selection;
 
-   eo_do(selector, selection = elm_file_selector_selection_get());
+   selection = elm_file_selector_selection_get(selector);
    clipboard_set(MOVE, selection);
 }
 
@@ -346,13 +346,13 @@ preview_remove(void)
    Eina_List *pass = NULL, *node;
    Efm_File *file;
 
-   eo_do(selector, selection = elm_file_selector_selection_get());
+   selection = elm_file_selector_selection_get(selector);
 
    EINA_LIST_FOREACH(selection, node, file)
      {
         const char *path;
 
-        eo_do(file, path = efm_file_path_get());
+        path = efm_file_path_get(file);
 
         pass = eina_list_append(pass, path);
      }
@@ -365,7 +365,7 @@ preview_paste(void)
 {
    const char *goal;
 
-   eo_do(selector, efl_file_get(&goal, NULL));
+   efl_file_get(selector, &goal, NULL);
 
    clipboard_paste(goal);
 }
