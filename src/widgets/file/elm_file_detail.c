@@ -577,6 +577,7 @@ _elm_file_detail_file_set(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
 
   //update the name of the preview
   elm_object_text_set(pd->name.display, filename);
+  elm_object_tooltip_text_set(pd->name.display, filename);
 
   pd->changes.user = NULL;
   pd->changes.group = NULL;
