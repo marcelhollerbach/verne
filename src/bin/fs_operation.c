@@ -364,8 +364,10 @@ void
 preview_paste(void)
 {
    const char *goal;
+   Efm_File *file;
 
-   efl_file_get(selector, &goal, NULL);
+   file = elm_file_selector_file_get(selector);
+   goal = efm_file_path_get(file);
 
    clipboard_paste(goal);
 }
