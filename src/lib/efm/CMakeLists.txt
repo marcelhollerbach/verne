@@ -70,6 +70,8 @@ target_link_libraries(efm
   ${CMAKE_THREAD_LIBS_INIT}
 )
 
+configure_file(config.h.cmake ${CMAKE_SOURCE_DIR}/src/lib/efm/config.h)
+
 INSTALL(TARGETS efm
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )

@@ -1,7 +1,3 @@
-#define EFL_BETA_API_SUPPORT
-#include <Eo.h>
-#include <Ecore.h>
-
 #include "efm_priv.h"
 
 static Ecore_Thread *fs_query;
