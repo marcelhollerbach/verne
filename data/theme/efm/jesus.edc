@@ -222,6 +222,7 @@ collections{
                rel2.to_y: "jesus.textbar";
                rel2.relative: 0.0 1.0;
                align: 0.0 0.0;
+               fixed: 1 0;
             }
          }
          spacer { "forward"
@@ -232,6 +233,7 @@ collections{
                rel2.to: "back";
                rel2.relative: 1.0 1.0;
                align: 0.0 0.0;
+               fixed: 1 0;
             }
          }
          image { "back_img"
@@ -270,6 +272,7 @@ collections{
                rel2.relative: 1.0 1.0;
                aspect: 1 1;
                align: 1.0 0.0;
+               fixed: 1 0;
                params {
                   string: icon edit-paste;
                }

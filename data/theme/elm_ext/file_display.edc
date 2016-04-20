@@ -22,6 +22,7 @@
                rel2.relative: 1.0 1.0;
                rel1.offset: -10 -10;
                image.normal: "led_dark.png";
+               fixed: 1 1;
             }
             description { state: "mounted" 0.0;
                inherit: "default";
@@ -120,6 +121,7 @@
                rel2.relative: 0.0 1.0;
                rel2.offset: 200 0.0;
                color: 0 0 0 0;
+               fixed: 1 0;
             }
             description { state: "hidden" 0.0;
                inherit: "default";
@@ -144,6 +146,7 @@
                rel2.to: "bookmark_holder";
                rel2.relative: 1.0 0.5;
                rel2.offset: 0 10;
+               fixed: 1 1;
                map {
                   on: 1;
                   perspective_on: 1;
@@ -188,6 +191,7 @@
                rel1.relative: 1.0 0.0;
                rel1.offset: -200 0;
                color: 0 0 0 0;
+               fixed: 1 0;
             }
             description { state: "hidden" 0.0;
                inherit: "default" 0.0;
@@ -212,7 +216,8 @@
                rel2.offset: 20 10;
                rel2.relative: 0.0 0.5;
                image.normal: "icon_arrow_right.png";
-	       map {
+               fixed: 1 1;
+	            map {
                   on: 1;
                   perspective_on: 1;
                   rotation {

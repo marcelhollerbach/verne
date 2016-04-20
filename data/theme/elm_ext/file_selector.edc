@@ -15,6 +15,7 @@ group { name: "elm/file_selector/base/default";
                 rel1.relative: 1.0 1.0;
                 rel2.to: "content";
                 align: 0.0 0.0;
+                fixed: 1 1;
             }
         }
         rect { "search_clip"
@@ -82,6 +83,7 @@ group { name: "elm/file_selector/base/default";
                 rel2.to: "search";
                 rel2.relative: 0.0 0.0;
                 image.normal: "bg_led.png";
+                fixed: 1 1;
             }
             desc { "on";
                 inherit: "default";

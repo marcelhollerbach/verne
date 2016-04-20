@@ -4,9 +4,6 @@
 group {
     name: "elm/genlist/base/file_display";
     inherit: "elm/scroller/base/popup/no_inset_shadow";
-    parts {
-
-    }
 }
 
 group { "elm/genlist/item/group_index/file_display"; nomouse; program_source: "elm";
@@ -93,7 +90,7 @@ group {
    images.image: "horizontal_separated_bar_small_glow.png" COMP;
 
    parts {
-      rect {
+      rect { "rectangle"
          desc {
             color: 0 0 0 0;
          }
@@ -135,6 +132,7 @@ group {
             color_class: "list_item";
             align: 0.0 0.5;
             color2: 51 153 255 0;
+            fixed: 1 0;
             text { font: FN; size: 10;
                min: 1 1;
                ellipsis: -1;
@@ -170,7 +168,7 @@ group {
       program {
          source: "elm";
          signal: "elm,state,unselected";
-         action: STATE_SET "unselected";
+         action: STATE_SET "default";
          target: "elm.text";
       }
    }
