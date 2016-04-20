@@ -107,7 +107,7 @@ _key_down_cb(void *data, const Eo_Event *event)
 {
    Evas_Event_Key_Down *ev;
 
-   ev = event->event_info;
+   ev = event->info;
 
    if (!strcmp(ev->key, "Escape"))
      elm_obj_file_icon_rename_set(data, EINA_FALSE, EINA_FALSE);

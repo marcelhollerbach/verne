@@ -26,7 +26,7 @@ _open(Efm_File *select)
 static Eina_Bool
 _open_cb(void *data EINA_UNUSED, const Eo_Event *event)
 {
-   _open(event->event_info);
+   _open(event->info);
    return EO_CALLBACK_CONTINUE;
 }
 
@@ -101,7 +101,7 @@ _extract(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_
 static Eina_Bool
 _menu_selector_start(void *data EINA_UNUSED, const Eo_Event *event)
 {
-    Elm_File_Selector_Menu_Hook *ev = event->event_info;
+    Elm_File_Selector_Menu_Hook *ev = event->info;
     Efm_File *file = ev->file;
     Elm_Object_Item *item;
 

@@ -46,7 +46,7 @@ _path_changed_cb(void *data EINA_UNUSED, const Eo_Event *event)
    const char *share;
    const char *path;
 
-   path = efm_file_path_get(event->event_info);
+   path = efm_file_path_get(event->info);
 
    if (barrier)
      return EINA_TRUE;

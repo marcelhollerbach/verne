@@ -26,8 +26,8 @@ _dir_changed(void *data EINA_UNUSED, const Eo_Event *event)
    const char *filename;
 
    buf = eina_strbuf_new();
-   filename = efm_file_filename_get(event->event_info);
-   titlebar_path_set(efm_file_path_get(event->event_info));
+   filename = efm_file_filename_get(event->info);
+   titlebar_path_set(efm_file_path_get(event->info));
 
    eina_strbuf_append_printf(buf, "elm - Jesus | %s", filename);
    elm_win_title_set(win, eina_strbuf_string_get(buf));

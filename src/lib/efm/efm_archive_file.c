@@ -79,7 +79,7 @@ _efm_archive_file_real_path_get(Eo *obj, Efm_Archive_File_Data *pd EINA_UNUSED)
 EOLIAN static void *
 _efm_archive_file_efm_file_monitor(Eo *obj EINA_UNUSED, Efm_Archive_File_Data *pd EINA_UNUSED, void *filter)
 {
-   return eo_add(EFM_ARCHIVE_MONITOR_CLASS, NULL, efm_archive_monitor_generate(eoid, obj, filter));
+   return eo_add(EFM_ARCHIVE_MONITOR_CLASS, NULL, efm_archive_monitor_generate(__eo_self, obj, filter));
 }
 
 EOLIAN static Efm_File *

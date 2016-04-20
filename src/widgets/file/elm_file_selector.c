@@ -122,7 +122,7 @@ _elm_file_selector_view_pool_del(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, cons
 static Eina_Bool
 _view_selected_cb(void *data, const Eo_Event *event)
 {
-   Efm_File *f = event->event_info;
+   Efm_File *f = event->info;
 
    eo_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_ITEM_SELECTED, f);
    return EINA_TRUE;
@@ -131,7 +131,7 @@ _view_selected_cb(void *data, const Eo_Event *event)
 static Eina_Bool
 _view_choosen_cb(void *data, const Eo_Event *event)
 {
-   Efm_File *f = event->event_info;
+   Efm_File *f = event->info;
 
    eo_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_ITEM_CHOOSEN, f);
 
@@ -144,10 +144,10 @@ _view_select_changed_cb(void *data, const Eo_Event *event)
    Evas_Object *wid = data;
    PRIV_DATA(wid);
 
-   if (!event->event_info)
+   if (!event->info)
      return EO_CALLBACK_CONTINUE;
 
-   pd->selection = event->event_info;
+   pd->selection = event->info;
    eo_event_callback_call(wid, ELM_FILE_SELECTOR_EVENT_ITEM_SELECTION_CHANGED, pd->selection);
    return EO_CALLBACK_CONTINUE;
 }
@@ -299,7 +299,7 @@ static Eina_Bool
 _event_rect_mouse_move(void *data, const Eo_Event *event)
 {
    PRIV_DATA(data)
-   Evas_Event_Mouse_Move *ev = event->event_info;
+   Evas_Event_Mouse_Move *ev = event->info;
    Eina_Rectangle view, selection;
 
    if (!pd->event.selection)
@@ -382,7 +382,7 @@ _event_rect_mouse_down(void *data, const Eo_Event *event)
 {
    PRIV_DATA(data)
    Eina_List *icons;
-   Evas_Event_Mouse_Down *ev = event->event_info;
+   Evas_Event_Mouse_Down *ev = event->info;
    Eina_Rectangle view, search;
 
    EINA_RECTANGLE_SET(&search, ev->output.x, ev->output.y, 1, 1);
@@ -596,7 +596,7 @@ _dnd_data_get_cb(Evas_Object *obj, Elm_Object_Item *it EINA_UNUSED, Elm_Drag_Use
 static Eina_Bool
 _icon_rename_cb(void *data EINA_UNUSED, const Eo_Event *event)
 {
-   const char *name = event->event_info;
+   const char *name = event->info;
    const char *filename;
    Efm_File *file;
 
@@ -1217,7 +1217,7 @@ _elm_file_selector_icon_generate(Eo *obj, Elm_File_Selector_Data *pd EINA_UNUSED
    Evas_Object *ic;
 
 #if 1
-   ic = eo_add(ELM_FILE_ICON_CLASS, obj, elm_obj_file_icon_install(eoid, pd->cache, file, config->image_preview));
+   ic = eo_add(ELM_FILE_ICON_CLASS, obj, elm_obj_file_icon_install(__eo_self, pd->cache, file, config->image_preview));
    eo_event_callback_add(ic, ELM_FILE_ICON_EVENT_ITEM_DROP, _drop_cb, obj);
    eo_event_callback_add(ic, ELM_FILE_ICON_EVENT_ITEM_HOVER, _hover_cb, obj);
 #else

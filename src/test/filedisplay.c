@@ -31,7 +31,7 @@ item_cb(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 static Eina_Bool
 _menu_hook_start(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
-   elm_menu_item_add(event->event_info, NULL, NULL, "you can add menu entrys",
+   elm_menu_item_add(event->info, NULL, NULL, "you can add menu entrys",
                      NULL, NULL);
    return EINA_TRUE;
 }
@@ -39,7 +39,7 @@ _menu_hook_start(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 static Eina_Bool
 _menu_hook_end(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
-   elm_menu_item_add(event->event_info, NULL, NULL, "even on the end!!",
+   elm_menu_item_add(event->info, NULL, NULL, "even on the end!!",
                      NULL, NULL);
    return EINA_TRUE;
 }

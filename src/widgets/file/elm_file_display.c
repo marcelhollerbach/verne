@@ -19,7 +19,7 @@ _selector_path_changed(void *data, const Eo_Event *event)
    const char *file;
    PRIV_DATA(data)
 
-   file = efm_file_path_get(event->event_info);
+   file = efm_file_path_get(event->info);
    efl_file_set(pd->bookmark, file, NULL);
 
    return EO_CALLBACK_CONTINUE;
@@ -31,7 +31,7 @@ _update_preview(void *data, const Eo_Event *event)
    Efm_File *f;
    PRIV_DATA(data)
 
-   f = event->event_info;
+   f = event->info;
 
    elm_file_detail_file_set(pd->detail, f);
    return EO_CALLBACK_CONTINUE;
@@ -71,7 +71,7 @@ static Eina_Bool
 _menu_cb(void *data, const Eo_Event *event)
 {
    PRIV_DATA(data)
-   Elm_File_Selector_Menu_Hook *ev = event->event_info;
+   Elm_File_Selector_Menu_Hook *ev = event->info;
    Evas_Object *it, *ck;
    Evas_Object *menu = ev->menu;
 

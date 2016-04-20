@@ -29,7 +29,7 @@ static Eina_Bool
 _file_hide(void *data, const Eo_Event *event)
 {
    View_Common *common = data;
-   Efm_File *file = event->event_info;
+   Efm_File *file = event->info;
 
    eo_event_callback_del(file, EO_BASE_EVENT_DEL, _file_del, data);
 
@@ -42,7 +42,7 @@ static Eina_Bool
 _file_add(void *data, const Eo_Event *event)
 {
    View_Common *common = data;
-   Efm_File *file = event->event_info;
+   Efm_File *file = event->info;
    void *res;
 
    res = common->add(common, file);

@@ -1,4 +1,4 @@
-class Elm_File_Icon (Elm.Layout) {
+class Elm.File.Icon (Elm.Layout) {
    eo_prefix: elm_obj_file_icon;
    methods {
       install {
@@ -58,7 +58,7 @@ class Elm_File_Icon (Elm.Layout) {
    events {
      rename,start; [[The widget has gone to rename mode]]
      rename,done : const(char)*; [[The widget went back to normal displaymode new name is passed]]
-     item,drop : Elm.Selection.Data; [[Called when something else is droped above this]]
+     item,drop : void*; [[Its Elm.Selection.Data. Called when something else is droped above this]]
      item,hover; [[Called when something is hover over above this item for a long time]]
    }
 }

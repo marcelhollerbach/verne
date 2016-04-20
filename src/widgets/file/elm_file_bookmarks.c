@@ -455,7 +455,7 @@ _device_add(Emous_Device *d, Evas_Object *w)
 static Eina_Bool
 _device_add_cb(void *data, const Eo_Event *event)
 {
-  Emous_Device *d = event->event_info;
+  Emous_Device *d = event->info;
 
   _device_add(d, data);
 

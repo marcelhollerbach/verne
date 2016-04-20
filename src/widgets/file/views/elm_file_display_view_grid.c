@@ -224,7 +224,7 @@ _item_select_swap(Evas_Object *obj, const Eina_List *selected, Elm_Object_Item *
 static Eina_Bool
 _key_down(void *data, const Eo_Event *event)
 {
-   Evas_Event_Key_Down *ev = event->event_info;
+   Evas_Event_Key_Down *ev = event->info;
    const Eina_List *selected;
    Eo *grid = data;
    Elm_Object_Item *mover;
