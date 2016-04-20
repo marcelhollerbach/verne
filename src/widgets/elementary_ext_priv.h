@@ -1,12 +1,22 @@
 #ifndef ELM_EXT_PRIV_H
 #define ELM_EXT_PRIV_H
 
-#define EFL_BETA_API_SUPPORT
-#define EFL_EO_API_SUPPORT
-#include <Efl.h>
-#include <Elementary.h>
-#include "Elementary_Ext.h"
 #include "config.h"
+
+#include <Emous.h>
+#include <Efl.h>
+#include <Eio.h>
+#include <Evas.h>
+#include <Elementary.h>
+
+#ifdef INEEDWIDGET
+# define ELM_INTERNAL_API_ARGESFSDFEFC
+# include <elm_widget.h>
+#  undef ELM_INTERNAL_API_ARGESFSDFEFC
+#endif
+
+#include "./file/elm_file_config.h"
+#include "Elementary_Ext.h"
 
 #ifdef DEBUG
 #  include "./file/views/elm_file_display_view_debug.eo.h"
@@ -14,10 +24,6 @@
 
 #ifdef EAPI
 # undef EAPI
-#endif
-
-#ifndef THEME_PATH
-# warning THEME_PATH NOT DEFINED
 #endif
 
 #ifdef _WIN32

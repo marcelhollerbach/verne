@@ -1,11 +1,5 @@
-#define ELM_INTERNAL_API_ARGESFSDFEFC
-#define EFL_BETA_API_SUPPORT
-#define EFL_EO_API_SUPPORT
-#include <Emous.h>
-#include <Eo.h>
+#define INEEDWIDGET
 #include "../elementary_ext_priv.h"
-#include "elm_file_config.h"
-#include <elm_widget.h>
 
 #define PRIV_DATA(o) Elm_File_Selector_Data *pd = eo_data_scope_get(o, ELM_FILE_SELECTOR_CLASS);
 #define STEP_SIZE 10

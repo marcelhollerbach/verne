@@ -1,5 +1,3 @@
-#include <Emous.h>
-#include "elm_file_config.h"
 #include "../elementary_ext_priv.h"
 
 #define PRIV_DATA(o) Elm_File_Bookmarks_Data *pd = eo_data_scope_get(o, ELM_FILE_BOOKMARKS_CLASS);

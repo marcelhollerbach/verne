@@ -1,6 +1,3 @@
-#define EFL_BETA_API_SUPPORT
-#define EFL_EO_API_SUPPORT
-
 #define NO_ENTRY ">FAIL"
 
 #include "../elementary_ext_priv.h"

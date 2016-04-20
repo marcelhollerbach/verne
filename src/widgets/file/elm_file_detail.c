@@ -1,5 +1,4 @@
 #include "../elementary_ext_priv.h"
-#include <Emous.h>
 
 typedef struct {
   Evas_Object *label;
