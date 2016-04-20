@@ -84,7 +84,7 @@ _drop_cb(void *data EINA_UNUSED, Evas_Object *obj, Elm_Selection_Data *ev)
 }
 
 EOLIAN static void
-_elm_file_icon_evas_object_smart_add(Eo *obj, Elm_File_Icon_Data *pd)
+_elm_file_icon_evas_object_smart_add(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED)
 {
    evas_obj_smart_add(eo_super(obj, ELM_FILE_ICON_CLASS));
 

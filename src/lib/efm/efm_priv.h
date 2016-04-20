@@ -7,6 +7,7 @@
 #include <Eio.h>
 #include <Ecore.h>
 #include <Ecore_File.h>
+#include <Efreet.h>
 #include <Efreet_Mime.h>
 
 #include "Efm.h"

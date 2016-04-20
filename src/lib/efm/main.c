@@ -1,7 +1,3 @@
- #define EFL_BETA_API_SUPPORT
-#define EFL_EO_API_SUPPORT
-
-#include <Efreet.h>
 #include "efm_priv.h"
 
 typedef struct {
@@ -80,7 +76,7 @@ EO_CALLBACKS_ARRAY_DEFINE(factory_events, {EFM_FILE_EVENT_INVALID, _file_del},
                                           {EO_BASE_EVENT_DEL, _file_del});
 
 static Eina_Bool
-_file_del(void *data, const Eo_Event *event)
+_file_del(void *data EINA_UNUSED, const Eo_Event *event)
 {
    eina_hash_del_by_data(sd->factory, event->obj);
    eo_event_callback_array_del(event->obj, factory_events(), sd->factory);

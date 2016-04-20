@@ -64,7 +64,7 @@ _view_free(View_Common *common)
 }
 
 static Eina_Bool
-_error(void *data, const Eo_Event *event)
+_error(void *data, const Eo_Event *event EINA_UNUSED)
 {
    View_Common *common = data;
 

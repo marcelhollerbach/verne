@@ -1,5 +1,7 @@
-#include <Elementary_Ext.h>
+#define EFL_BETA_API_SUPPORT
+#define EFL_EO_API_SUPPORT
 
+#include <Elementary_Ext.h>
 
 static void
 on_done(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
