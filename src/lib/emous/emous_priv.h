@@ -1,12 +1,12 @@
-#define EFL_EO_API_SUPPORT
-#define EFL_BETA_API_SUPPORT
+#ifndef EMOUS_PRIV_H
+#define EMOUS_PRIV_H
 
+#include "config.h"
 #include "Emous.h"
 
 #include <Eio.h>
 #include <Ecore.h>
 #include <Ecore_File.h>
-#include <config.h>
 
 #ifdef EAPI
 # undef EAPI
@@ -56,3 +56,5 @@ void _emous_mount_add(const char *type, const char *mount_point, const char *sou
  * After event is done the Mount Point is freeed etc.
  */
 void _emous_mount_del(const char *mount_point);
+
+#endif

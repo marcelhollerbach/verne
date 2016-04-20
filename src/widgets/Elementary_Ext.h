@@ -1,7 +1,7 @@
 #ifndef ELM_EXT_H
 #define ELM_EXT_H
 
-#include <Evas.h>
+#include <Elementary.h>
 #include <Efm.h>
 
 #ifdef EAPI
@@ -21,5 +21,7 @@
 #include "./file/views/elm_file_display_view_list.eo.h"
 
 EAPI void elm_ext_init();
+
+#undef EAPI
 
 #endif

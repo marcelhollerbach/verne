@@ -1,8 +1,3 @@
-#define EFL_BETA_API_SUPPORT
-#define EFL_EO_API_SUPPORT
-
-#include <Efl.h>
-#include <Elementary.h>
 #include <Elementary_Ext.h>
 
 
@@ -44,7 +39,7 @@ _menu_hook_end(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
    return EINA_TRUE;
 }
 
-EAPI_MAIN int
+int
 elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 {
    Evas_Object *win, *ic, *bx;

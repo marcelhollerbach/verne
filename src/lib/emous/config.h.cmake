@@ -3,4 +3,7 @@
 
 #cmakedefine EMOUS_MODULE_PATH @EMOUS_MODULE_PATH@
 
+#define EFL_EO_API_SUPPORT
+#define EFL_BETA_API_SUPPORT
+
 #endif // CONFIG_H

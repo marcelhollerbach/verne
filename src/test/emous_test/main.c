@@ -1,4 +1,5 @@
 #include <Emous.h>
+#define EAPI
 #include "emous_device_debug.eo.h"
 #include "emous_type_debug.eo.h"
 

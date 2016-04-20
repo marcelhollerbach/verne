@@ -92,7 +92,7 @@ ui_init()
    evas_object_show(win);
 }
 
-EAPI_MAIN int
+int
 elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 {
    char *path = NULL;

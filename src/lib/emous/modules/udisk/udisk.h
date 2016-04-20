@@ -4,10 +4,14 @@
 #define EFL_EO_API_SUPPORT
 #define EFL_BETA_API_SUPPORT
 
+#include <Eo.h>
 #include <Eina.h>
 #include <Eldbus.h>
 
 #include "Emous.h"
+
+#define EAPI
+
 #include "emous_device_udisks.eo.h"
 #include "emous_type_udisks.eo.h"
 
