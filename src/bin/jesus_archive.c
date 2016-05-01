@@ -102,7 +102,7 @@ typedef struct {
 } Create_Request;
 
 static void
-_main_cb(void *data, Eio_File *f, const Eina_File_Direct_Info *ff)
+_main_cb(void *data, Eio_File *f EINA_UNUSED, const Eina_File_Direct_Info *ff)
 {
     Create_Request *req;
     struct archive_entry *entry;
@@ -136,7 +136,7 @@ _main_cb(void *data, Eio_File *f, const Eina_File_Direct_Info *ff)
 }
 
 static void
-_done_cb(void *data, Eio_File *f)
+_done_cb(void *data, Eio_File *f EINA_UNUSED)
 {
     Create_Request *req;
 
@@ -149,7 +149,7 @@ _done_cb(void *data, Eio_File *f)
 }
 
 static void
-_error_cb(void *data, Eio_File *f, int reason)
+_error_cb(void *data, Eio_File *f EINA_UNUSED, int reason EINA_UNUSED)
 {
     Create_Request *req;
 
