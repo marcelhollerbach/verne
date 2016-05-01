@@ -16,7 +16,7 @@ typedef struct {
 } Efm_Monitor_Eio_Job;
 
 #define MARK_POPULATED(o) eo_key_data_set(o, "__populated", ((void*)1));
-#define UNMARK_POPULATED(o) eo_key_data_del(o, "__populated");
+#define UNMARK_POPULATED(o) eo_key_del(o, "__populated");
 #define CHECK_POPULATED(o) (eo_key_data_get(o, "__populated") != NULL)
 
 static inline Eina_Bool

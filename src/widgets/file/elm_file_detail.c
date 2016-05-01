@@ -298,7 +298,7 @@ _fallback_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache ,Efm_File *fi
      ic = "folder";
    else
      ic = elm_file_mimetype_cache_mimetype_get(cache, mime_type);
-   elm_obj_icon_standard_set(o, ic);
+   elm_icon_standard_set(o,ic);
 
    return o;
 }
