@@ -263,7 +263,6 @@ _as_default_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED
 void
 exec_ui_open_with(Efm_File *file, Cmd_Choosen choosen)
 {
-#if 0
     Open_With2_Main_Win_Widgets *wid;
     Open_With_Ui *ui;
 
@@ -288,5 +287,4 @@ exec_ui_open_with(Efm_File *file, Cmd_Choosen choosen)
 
     //listen for changes in the entry
     evas_object_smart_callback_add(wid->search, "changed", _search_cb, ui);
-#endif
 }
