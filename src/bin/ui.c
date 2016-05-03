@@ -8,9 +8,6 @@
 #define ELM_INTERNAL_API_ARGESFSDFEFC
 #endif
 #include <Elementary.h>
-#include "elm_widget_container.h"
-#include "elm_interface_scrollable.h"
-#include "elm_interface_fileselector.h"
 #include "ui.h"
 
 static Eina_Bool
@@ -116,7 +113,7 @@ open_with2_main_win_create(Eo *__main_parent)
    elm_entry_icon_visible_set (search, EINA_FALSE);
    elm_entry_scrollable_set (search, EINA_TRUE);
    elm_entry_single_line_set (search, EINA_TRUE);
-   elm_widget_part_text_set (search, "guide", "search");
+   elm_object_part_text_set (search, "guide", "search");
    elm_box_pack_end (elm_box1, elm_box3);
    elm_box_pack_end (elm_box1, search);
    elm_box_pack_end (elm_box1, elm_genlist1);
