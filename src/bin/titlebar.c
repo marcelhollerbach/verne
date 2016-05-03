@@ -7,199 +7,321 @@ struct tuple {
   Evas_Object *obj;
 };
 
+typedef struct {
+  Eina_List *parts;
+} Titlebar_Content;
+
 static Ecore_Idler *focus_idler;
 
 static Eina_Bool unfocus_barrier;
 static Evas_Object *entry;
 
-static const char*
-_path_transform(const char *text)
+static void
+titlebar_whipe(Titlebar_Content *content)
 {
-    Eina_Bool dir_break;
-    char **parts;
-    Eina_Strbuf *buf, *dir;
-    int c = 0;
-    const char *result;
+   Eina_Strbuf *buf;
 
-    // split for /
-    parts = eina_str_split(text, SEP, 0);
+   EINA_LIST_FREE(content->parts, buf)
+     {
+        eina_strbuf_free(buf);
+     }
+}
 
-    // init result
-    buf = eina_strbuf_new();
-    dir = eina_strbuf_new();
-    dir_break = EINA_FALSE;
+static void
+titlebar_content_add(Titlebar_Content *content, unsigned int pos, const char *symbol)
+{
+   Eina_List *current_node;
+   Eina_Strbuf *buf = NULL;
+   int jump_in;
 
-    for(c = 0;parts[c]; c++)
-      {
-         char part[PATH_MAX];
-         const char *dirr;
+   if (!symbol) return;
 
-         if (*parts[c] == '\0')
-           continue;
+   current_node = content->parts;
+   if (!current_node)
+     {
+        buf = eina_strbuf_new();
+        content->parts = eina_list_append(content->parts, buf);
+        jump_in = 0;
+     }
+   else
+     {
+        jump_in = 0;
+        for(unsigned int i = 0; i <= pos;i ++)
+          {
+             buf = eina_list_data_get(current_node);
 
-         // update durrect dir
-         eina_strbuf_append(dir, "/");
-         eina_strbuf_append(dir, parts[c]);
-         dirr = eina_strbuf_string_get(dir);
+             if (i + eina_strbuf_length_get(buf) > pos)
+               {
+                  //here we drop in our symbols
+                  jump_in = pos - i;
+                  break;
+               }
 
-         if (!dir_break && ecore_file_exists(dirr))
-           {
-              snprintf(part, sizeof(part), "<a href=%s>%s</a>", dirr, parts[c]);
-           }
-         else
-           {
-              snprintf(part, sizeof(part), "%s", parts[c]);
-              dir_break = EINA_TRUE;
-           }
+             i += eina_strbuf_length_get(buf);
 
-         eina_strbuf_append(buf, SEP);
-         eina_strbuf_append(buf, part);
-      }
+             current_node = eina_list_next(current_node);
+          }
+     }
 
-   result = (eina_strbuf_string_steal(buf));
-   eina_strbuf_free(buf);
-   eina_strbuf_free(dir);
-   free(parts);
+   if (jump_in == 0)
+     eina_strbuf_append(buf, symbol);
+   else
+     eina_strbuf_insert(buf, symbol, jump_in);
+
+   //simplty split buf at the "/" and insert behind the buf
+   {
+      char **splits;
+
+      splits = eina_str_split(eina_strbuf_string_get(buf), "/", 0);
+
+      if (splits)
+        {
+           for(int i = 0; splits[i]; i ++)
+             {
+                Eina_Strbuf *new;
+
+                new = eina_strbuf_new();
+                eina_strbuf_append(new, splits[i]);
+
+                content->parts = eina_list_prepend_relative(content->parts, new, buf);
+             }
+           content->parts = eina_list_remove(content->parts, buf);
+        }
+   }
+}
+
+static void
+titlebar_del(Titlebar_Content *content, unsigned int pos, int length)
+{
+   Eina_Strbuf *buf;
+   Eina_Strbuf *tmp;
+   Eina_List *next_node, *last = NULL;
+   int start_rest = -1;
+
+   next_node = content->parts;
+
+
+   tmp = eina_strbuf_new();
+
+   for(unsigned int i = 0; i <= pos+ length;i ++)
+     {
+        Eina_List *prev;
+        int i_tmp;
+        buf = eina_list_data_get(next_node);
+        i_tmp = i + eina_strbuf_length_get(buf);
+        prev = next_node;
+        next_node = eina_list_next(next_node);
+
+        if (i >= pos || i + eina_strbuf_length_get(buf) >= pos)
+          {
+             if (start_rest != -1)
+               {
+                  eina_strbuf_append(tmp, "/");
+               }
+             eina_strbuf_append_buffer(tmp, buf);
+             if (start_rest == -1)
+               {
+                  start_rest = pos - i;
+                  last = eina_list_prev(prev);
+               }
+
+             content->parts = eina_list_remove(content->parts, buf);
+             eina_strbuf_free(buf);
+          }
+
+
+
+        i = i_tmp;
+     }
+
+   eina_strbuf_remove(tmp, start_rest, start_rest + length);
+
+   content->parts = eina_list_append_relative_list(content->parts, tmp, last);
+
+
+}
+
+static void
+_debug(Titlebar_Content *content)
+{
+   Eina_List *node;
+   Eina_Strbuf *buf;
+
+   EINA_LIST_FOREACH(content->parts, node, buf)
+     {
+        printf("DEBUG >%s<\n", eina_strbuf_string_get(buf));
+     }
+}
+
+static Eina_Strbuf*
+titlebar_anchor_get(Titlebar_Content *content)
+{
+   Eina_List *node;
+   Eina_Strbuf *buf;
+   Eina_Strbuf *result;
+   Eina_Strbuf *link;
+   Eina_Bool dir_break = EINA_FALSE;
+
+   result = eina_strbuf_new();
+   link = eina_strbuf_new();
+
+   EINA_LIST_FOREACH(content->parts, node, buf)
+     {
+
+        eina_strbuf_append_buffer(link, buf);
+        if (eina_list_next(node))
+          eina_strbuf_append_char(link, '/');
+
+        if (!ecore_file_exists(eina_strbuf_string_get(link)))
+          {
+             dir_break = EINA_TRUE;
+          }
+
+        if (eina_strbuf_length_get(buf))
+          {
+             if (!dir_break)
+               {
+                  eina_strbuf_append_printf(result,
+                    "<a href=%s>%s</a>",
+                    eina_strbuf_string_get(link),
+                    eina_strbuf_string_get(buf));
+               }
+             else
+               {
+                  eina_strbuf_append_printf(result,
+                    "%s",
+                    eina_strbuf_string_get(buf));
+               }
+
+          }
+
+        if (eina_list_next(node))
+          eina_strbuf_append(result, SEP);
+
+     }
 
    return result;
 }
 
-static void
-_markup_filter(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, char ** text)
+static Eina_Strbuf*
+titlebar_link_get(Titlebar_Content *content)
 {
-   char *n = *text;
-   int c = 0;
+   Eina_List *node;
    Eina_Strbuf *buf;
+   Eina_Strbuf *result;
 
-   buf = eina_strbuf_new();
+   result = eina_strbuf_new();
 
-   while(n[c] != '\0')
+   EINA_LIST_FOREACH(content->parts, node, buf)
      {
-        if (n[c] == '/')
-          {
-             n[c] = '\0';
 
-             eina_strbuf_append(buf, SEP);
-          }
-        else
-          eina_strbuf_append_char(buf, n[c]);
-        c ++;
+        eina_strbuf_append_buffer(result, buf);
+        if (eina_list_next(node))
+          eina_strbuf_append(result, "/");
      }
-   free(*text);
-   *text = eina_strbuf_string_steal(buf);
-   eina_strbuf_free(buf);
+
+   return result;
 }
 
-static Eina_Bool
-_focus_idler(void *data)
+static Eina_Strbuf*
+titlebar_normal_get(Titlebar_Content *content)
 {
-   const char *text;
+   Eina_List *node;
+   Eina_Strbuf *buf;
+   Eina_Strbuf *result;
+
+   result = eina_strbuf_new();
+
+   EINA_LIST_FOREACH(content->parts, node, buf)
+     {
+        eina_strbuf_append_buffer(result, buf);
+        if (eina_list_next(node))
+          eina_strbuf_append(result, SEP);
+     }
+
+   return result;
+}
 
 
-   text = evas_object_data_del(data, "__orig_text");
+static void
+_content_refresh(Evas_Object *entry)
+{
+   Titlebar_Content *content = evas_object_data_get(entry, "__content");
+   Eina_Strbuf *buf;
+   int cursor_pos = 0;
 
-   elm_object_text_set(data, text);
+   if (!elm_object_focus_get(entry))
+     buf = titlebar_anchor_get(content);
+   else
+     buf = titlebar_normal_get(content);
 
-   free((char*)text);
-   unfocus_barrier = EINA_TRUE;
-
-   return EINA_FALSE;
+   cursor_pos = elm_entry_cursor_pos_get(entry);
+   elm_object_text_set(entry, eina_strbuf_string_get(buf));
+   elm_entry_cursor_pos_set(entry, cursor_pos);
+   eina_strbuf_string_free(buf);
 }
 
 static void
-_trigger_change(const char *text) {
-    char **parts;
-    char path[PATH_MAX];
-    Efm_File *file;
-
-    parts = eina_str_split(text, SEP, 0);
-
-    path[0] = '\0';
-
-    for(int i = 0; parts[i]; i++) {
-      strcat(path, "/");
-      strcat(path, parts[i]);
-    }
-    file = efm_file_get(EFM_CLASS, path);
-    elm_file_selector_file_set(selector, file);
-}
-
-static Eina_Bool
-_unfocus_idler(void *data)
+_link_flush(Evas_Object *entry)
 {
-    const char *text;
+   Titlebar_Content *content = evas_object_data_get(entry, "__content");
+   Eina_Strbuf *link;
+   Efm_File *file = NULL;
 
-    if (!unfocus_barrier)
-      return EINA_FALSE;
+   link = titlebar_link_get(content);
+   file = efm_file_get(EFM_CLASS, eina_strbuf_string_get(link));
 
-    unfocus_barrier = EINA_FALSE;
-    // get the currect text
-    text = elm_object_text_get(data);
+   if (file)
+     {
+        elm_file_selector_file_set(selector, file);
+     }
 
-    _trigger_change(text);
-
-    // save the current state
-    evas_object_data_set(data, "__orig_text", strdup(text));
-
-    elm_object_text_set(data, _path_transform(text));
-
-
-    return EINA_FALSE;
+   eina_strbuf_free(link);
 }
+
 
 static void
 _focus_cb(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
 {
-   focus_idler = ecore_idler_add(_focus_idler, obj);
+   _content_refresh(obj);
 }
 
 static void
 _unfocus_cb(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
 {
-   ecore_idler_add(_unfocus_idler, obj);
-}
-
-static Eina_Bool
-_change_idle(void *data)
-{
-   struct tuple *h = data;
-
-   elm_object_text_set(h->obj, h->now);
-
-   free(h);
-
-   return EINA_FALSE;
+   _content_refresh(obj);
+   _link_flush(obj);
 }
 
 static void
-_entry_transform(Evas_Object *obj)
+_changed_cb(void *data EINA_UNUSED, Evas_Object *obj, void *event)
 {
-   const char *text;
-   const char *transform;
+   Elm_Entry_Change_Info *info = event;
+   Titlebar_Content *content = evas_object_data_get(obj, "__content");
 
+   if (info->insert)
+     {
+        titlebar_content_add(content, info->change.insert.pos, info->change.insert.content);
+     }
+   else
+     {
+        int pos = -1, length = -1;
+        if (info->change.del.start < info->change.del.end)
+          {
+             pos = info->change.del.start;
+             length = info->change.del.end - pos;
+          }
+        else
+          {
+             pos = info->change.del.end;
+             length = info->change.del.start - pos;
+          }
 
-   if (elm_object_focus_get(obj))
-     return;
+        titlebar_del(content,
+          pos, length);
+     }
 
-   text = elm_object_text_get(obj);
-
-   evas_object_data_set(obj, "__orig_text", strdup(text));
-
-   transform = _path_transform(text);
-
-   struct tuple *h;
-
-   h = calloc(1, sizeof(struct tuple));
-   h->obj = obj;
-   h->now = transform;
-
-   ecore_idler_add(_change_idle, h);
-}
-
-static void
-_changed_cb(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
-{
-   _entry_transform(obj);
+   _content_refresh(obj);
 }
 
 static void
@@ -211,8 +333,6 @@ _anchor_clicked_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *e
    if (focus_idler)
      ecore_idler_del(focus_idler);
 
-
-
    elm_object_focus_set(obj, EINA_FALSE);
    elm_object_text_set(obj, NULL);
    elm_entry_entry_append(obj, info->name);
@@ -223,9 +343,11 @@ _anchor_clicked_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *e
 void
 titlebar_init(void)
 {
+   Titlebar_Content *content = calloc(1, sizeof(Titlebar_Content));
+
    entry = elm_entry_add(layout);
+   evas_object_data_set(entry, "__content", content);
    elm_entry_single_line_set(entry, EINA_TRUE);
-   elm_entry_markup_filter_append(entry, _markup_filter, NULL);
    evas_object_smart_callback_add(entry, "focused", _focus_cb, NULL);
    evas_object_smart_callback_add(entry, "unfocused", _unfocus_cb, NULL);
    evas_object_smart_callback_add(entry, "changed,user", _changed_cb, NULL);
@@ -240,7 +362,11 @@ titlebar_init(void)
 void
 titlebar_path_set(const char *path)
 {
-   elm_entry_entry_set(entry, NULL);
-   elm_entry_entry_append(entry, path);
-   _entry_transform(entry);
+   Titlebar_Content *content = evas_object_data_get(entry, "__content");
+
+   titlebar_whipe(content);
+
+   titlebar_content_add(content, elm_entry_cursor_pos_get(entry), path);
+
+   _content_refresh(entry);
 }
