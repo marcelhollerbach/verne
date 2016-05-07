@@ -118,7 +118,8 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
      {
         path = "/";
      }
-   efm_init(EFM_CLASS);
+
+   efm_init();
    file = efm_file_get(EFM_CLASS, path);
 
    if (!file)
@@ -167,7 +168,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    clipboard_shutdown();
    config_shutdown();
 
-   efm_shutdown(EFM_CLASS);
+   efm_shutdown();
    return 0;
 }
 ELM_MAIN()

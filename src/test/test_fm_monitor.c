@@ -21,13 +21,13 @@ START_TEST(efm_file_invalid_name)
    const char *filename = "I-Am-Invalid";
 
    eo_init();
-   efm_init(EFM_CLASS);
+   efm_init();
 
    file = efm_file_get(EFM_CLASS, filename);
 
    ck_assert_ptr_eq(file, NULL);
 
-   efm_shutdown(EFM_CLASS);
+   efm_shutdown();
 
 }
 END_TEST
@@ -50,7 +50,7 @@ START_TEST(efm_valid_file)
    system("touch "TEST_FILE);
 
    eo_init();
-   efm_init(EFM_CLASS);
+   efm_init();
 
    done = EINA_FALSE;
 
@@ -64,7 +64,7 @@ START_TEST(efm_valid_file)
 
    ck_assert_int_eq(done, 1);
 
-   efm_shutdown(EFM_CLASS);
+   efm_shutdown();
    ecore_shutdown();
    eina_shutdown();
 }
@@ -96,7 +96,7 @@ START_TEST(efm_stresstest)
 
    eina_init();
    ecore_init();
-   efm_init(EFM_CLASS);
+   efm_init();
 
    done = EINA_FALSE;
    for (i = 0; i < TEST_FILE_ITER_MAX; i++)
@@ -111,7 +111,7 @@ START_TEST(efm_stresstest)
 
    ck_assert_int_eq(filecounter, TEST_FILE_ITER_MAX);
 
-   efm_shutdown(EFM_CLASS);
+   efm_shutdown();
    ecore_shutdown();
    eina_shutdown();
 }
@@ -164,7 +164,7 @@ START_TEST(efm_monitor_test)
    files = 0;
 
    eo_init();
-   efm_init(EFM_CLASS);
+   efm_init();
 
    f = efm_file_get(EFM_CLASS, TEST_DIRECTORY);
 
@@ -179,7 +179,7 @@ START_TEST(efm_monitor_test)
 
    ck_assert_int_eq(error, 0);
    ck_assert_int_eq(files, TEST_DIRECTORY_FILES_MAX);
-   efm_shutdown(EFM_CLASS);
+   efm_shutdown();
 }
 END_TEST
 
@@ -216,7 +216,7 @@ START_TEST(efm_archive_monitor_test)
    Efm_File *f;
 
    eo_init();
-   efm_init(EFM_CLASS);
+   efm_init();
    f = efm_archive_get(EFM_CLASS, TEST_RESSOURCES"/src/test/archiv.tar", "zip-test/");
 
    archive = efm_file_monitor(f, NULL);
@@ -226,7 +226,7 @@ START_TEST(efm_archive_monitor_test)
    ecore_main_loop_begin();
    ck_assert_int_eq(mon_files, ARCHIVE_FILE_NUMBER);
 
-   efm_shutdown(EFM_CLASS);
+   efm_shutdown();
 }
 END_TEST
 
@@ -235,13 +235,13 @@ START_TEST(efm_archive_test)
    Efm_File *archive;
 
    eo_init();
-   efm_init(EFM_CLASS);
+   efm_init();
 
    archive = efm_archive_get(EFM_CLASS, TEST_RESSOURCES"/src/test/archiv.tar", "zip-test/dir1/bla1");
 
    ck_assert_ptr_ne(archive, NULL);
 
-   efm_shutdown(EFM_CLASS);
+   efm_shutdown();
 }
 END_TEST
 

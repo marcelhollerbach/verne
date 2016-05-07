@@ -78,7 +78,7 @@ _config_free(void)
 }
 
 void
-config_save(void)
+elm_ext_config_save(void)
 {
    Eet_File *ef;
 
@@ -94,7 +94,7 @@ config_save(void)
 }
 
 void
-config_read(void)
+elm_ext_config_read(void)
 {
    Eet_File *ef;
 
@@ -112,7 +112,7 @@ config_read(void)
      {
         config = calloc(1, sizeof(Config));
         _standart_setup(config);
-        config_save();
+        elm_ext_config_save();
      }
 }
 
@@ -134,7 +134,7 @@ helper_bookmarks_add(const char *ptr)
      }
 
    config->bookmarks = eina_list_append(config->bookmarks, ptr);
-   config_save();
+   elm_ext_config_save();
 }
 
 void
@@ -152,11 +152,11 @@ helper_bookmarks_del(const char *ptr)
           }
      }
 
-   config_save();
+   elm_ext_config_save();
 }
 
 void
-config_init(void)
+elm_ext_config_init(void)
 {
    Eet_Data_Descriptor_Class eddc;
    char buf[PATH_MAX];
@@ -194,14 +194,14 @@ config_init(void)
    // TODO add ecore event for the change
    ctx->path = eina_stringshare_add(buf);
 
-   config_read();
+   elm_ext_config_read();
 
 inc:
    counter ++;
 }
 
 void
-config_shutdown(void)
+elm_ext_config_shutdown(void)
 {
    counter --;
    if (counter > 0)

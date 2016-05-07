@@ -1,23 +1,5 @@
 class Emous {
     methods {
-        init_lib @class {
-            [[Will init all needed libs.]]
-            return : int;
-        }
-        init @class {
-            [[This will start monitoring mountpoint changes and init all installed modules
-
-              At first this calls init_lib
-              Will result > 1 if everything went well or 0 if the init failed]]
-            return : int;
-        }
-        shutdown @class {
-            [[This will stop monitring the mountpoints and unload all installed modules
-              And call shutdown_lib]]
-        }
-        shutdown_lib @class {
-            [[This will shutdown all needed libs]]
-        }
         util_size_convert @class {
             [[Will convert bytes into a nice looking string
 

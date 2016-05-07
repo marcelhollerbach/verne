@@ -495,7 +495,7 @@ _ctx_gtk(void *data, Evas_Object *obj EINA_UNUSED, void *event)
   if (config)
     config->display_gtk = !b;
   _setup_list(data);
-  config_save();
+  elm_ext_config_save();
 }
 
 static void
@@ -652,8 +652,8 @@ _elm_file_bookmarks_eo_base_constructor(Eo *obj, Elm_File_Bookmarks_Data *pd)
    Eo *eo;
    Emous_Manager *m;
 
-   config_init();
-   emous_init(EMOUS_CLASS);
+   elm_ext_config_init();
+   emous_init();
 
    _static_data_ref();
    pd->icons = eina_hash_stringshared_new(NULL);
@@ -687,9 +687,9 @@ _elm_file_bookmarks_eo_base_constructor(Eo *obj, Elm_File_Bookmarks_Data *pd)
 EOLIAN static void
 _elm_file_bookmarks_eo_base_destructor(Eo *obj, Elm_File_Bookmarks_Data *pd EINA_UNUSED)
 {
-    config_shutdown();
+    elm_ext_config_shutdown();
     _static_data_unref();
-    emous_shutdown(EMOUS_CLASS);
+    emous_shutdown();
 
     eo_destructor(eo_super(obj, ELM_FILE_BOOKMARKS_CLASS));
 }

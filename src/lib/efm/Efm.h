@@ -37,6 +37,9 @@
 #include "efm_monitor.eo.h"
 #include "efm.eo.h"
 
+EAPI int efm_init(void);
+EAPI void efm_shutdown(void);
+
 #undef EAPI
 
 #endif

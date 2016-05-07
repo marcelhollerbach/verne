@@ -215,8 +215,8 @@ _elm_file_selector_view_get(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd)
 EOLIAN static Eo_Base *
 _elm_file_selector_eo_base_constructor(Eo *obj, Elm_File_Selector_Data *pd)
 {
-   efm_init(EFM_CLASS);
-   config_init();
+   efm_init();
+   elm_ext_config_init();
 
    if (!views)
      _views_standart_init();
@@ -234,9 +234,9 @@ EOLIAN static void
 _elm_file_selector_eo_base_destructor(Eo *obj, Elm_File_Selector_Data *pd)
 {
    eo_del(pd->cache);
-   config_shutdown();
+   elm_ext_config_shutdown();
    eo_destructor(eo_super(obj, ELM_FILE_SELECTOR_CLASS));
-   efm_shutdown(EFM_CLASS);
+   efm_shutdown();
 }
 
 EOLIAN static void
@@ -736,7 +736,7 @@ _ctx_view_sel(void *data, Evas_Object *obj, void *event EINA_UNUSED)
 
    config->viewname = elm_file_view_name_get(data);
 
-   config_save();
+   elm_ext_config_save();
 
    elm_file_selector_view_set(w, data);
 }
@@ -1057,7 +1057,7 @@ EOLIAN static void
 _elm_file_selector_show_icon_size_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd, int size)
 {
    config->icon_size = size;
-   config_save();
+   elm_ext_config_save();
    eo_del(pd->cache);
 
    pd->cache = elm_file_mimetype_cache_generate(ELM_FILE_MIMETYPE_CACHE_CLASS, size);
@@ -1075,7 +1075,7 @@ EOLIAN static void
 _elm_file_selector_show_hidden_file_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd, Eina_Bool hidden)
 {
    config->hidden_files = hidden;
-   config_save();
+   elm_ext_config_save();
    _filter_update_hidden(obj, pd);
 }
 
@@ -1089,7 +1089,7 @@ EOLIAN static void
 _elm_file_selector_only_folder_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd, Eina_Bool hidden)
 {
    config->only_folder = hidden;
-   config_save();
+   elm_ext_config_save();
    _filter_update_only_folder(obj, pd);
 }
 
@@ -1103,7 +1103,7 @@ EOLIAN static void
 _elm_file_selector_sort_type_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd, Elm_File_Selector_Sort_Type t)
 {
    config->sort.type = t;
-   config_save();
+   elm_ext_config_save();
    elm_file_view_file_set(pd->view.obj, pd->file);
 }
 
@@ -1117,7 +1117,7 @@ EOLIAN static void
 _elm_file_selector_folder_placement_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd, Elm_File_Selector_Folder_Placement t)
 {
    config->sort.folder_placement = t;
-   config_save();
+   elm_ext_config_save();
    elm_file_view_file_set(pd->view.obj, pd->file);
 }
 
@@ -1131,7 +1131,7 @@ EOLIAN static void
 _elm_file_selector_reverse_sort_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd, Eina_Bool b)
 {
    config->sort.reverse = b;
-   config_save();
+   elm_ext_config_save();
    elm_file_view_file_set(pd->view.obj, pd->file);
 }
 
@@ -1145,7 +1145,7 @@ EOLIAN static void
 _elm_file_selector_case_sensetive_sort_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd, Eina_Bool b)
 {
    config->sort.casesensetive = b;
-   config_save();
+   elm_ext_config_save();
    elm_file_view_file_set(pd->view.obj, pd->file);
 }
 
@@ -1159,7 +1159,7 @@ EOLIAN static void
 _elm_file_selector_image_preview_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd EINA_UNUSED, Eina_Bool b)
 {
    config->image_preview = b;
-   config_save();
+   elm_ext_config_save();
    elm_file_view_file_set(pd->view.obj, pd->file);
 }
 

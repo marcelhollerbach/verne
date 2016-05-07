@@ -23,16 +23,15 @@ START_TEST(emous_mount_point_listening)
 
    eo_init();
 
-   emous_init_lib(EMOUS_CLASS);
    mount_added = EINA_FALSE;
    manager = emous_manager_object_get(EMOUS_MANAGER_CLASS);
+   ck_assert_ptr_ne(manager, NULL);
    eo_event_callback_add(manager, EMOUS_MANAGER_EVENT_MOUNT_ADD, _mount_add, NULL);
-   emous_init(EMOUS_CLASS);
+   emous_init();
 
    ck_assert_int_eq(mount_added, EINA_TRUE);
 
-   emous_shutdown(EMOUS_CLASS);
-   emous_shutdown_lib(EMOUS_CLASS);
+   emous_shutdown();
 }
 END_TEST
 
@@ -42,8 +41,8 @@ START_TEST(normal_init)
 {
    eo_init();
 
-   ck_assert_int_eq(emous_init(EMOUS_CLASS), 1);
-   emous_shutdown(EMOUS_CLASS);
+   ck_assert_int_eq(emous_init(), 1);
+   emous_shutdown();
 }
 END_TEST
 
@@ -71,7 +70,7 @@ START_TEST(debug_devices_appear)
    Eina_List *list;
 
    eo_init();
-   emous_init_lib(EMOUS_CLASS);
+   emous_init();
    manager = emous_manager_object_get(EMOUS_MANAGER_CLASS);
                   eo_event_callback_add(manager, EMOUS_MANAGER_EVENT_DEVICE_ADD, _add_cb, NULL);
                   eo_event_callback_add(manager, EMOUS_MANAGER_EVENT_DEVICE_DEL, _del_cb, NULL);
@@ -85,7 +84,7 @@ START_TEST(debug_devices_appear)
    ck_assert_int_eq(adddev, 2);
    ck_assert_int_eq(deldev, 1);
 
-   emous_shutdown_lib(EMOUS_CLASS);
+   emous_shutdown();
 }
 END_TEST
 

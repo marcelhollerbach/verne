@@ -14,8 +14,8 @@ static Efm_Static_Data *sd;
 
 int _efm_domain;
 
-EOLIAN static int
-_efm_init(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
+EAPI int
+efm_init(void)
 {
    eina_init();
    ecore_init();
@@ -47,8 +47,8 @@ inc:
     return sd->counter;
 }
 
-EOLIAN static void
-_efm_shutdown(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
+EAPI void
+efm_shutdown(void)
 {
    sd->counter --;
 

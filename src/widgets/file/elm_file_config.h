@@ -23,22 +23,22 @@ extern Config *config;
 /*
  * init the config sutff
  */
-void config_init(void);
+void elm_ext_config_init(void);
 
 /*
  * Save the config
  */
-void config_save(void);
+void elm_ext_config_save(void);
 
 /*
  * Load the config
  */
-void config_read(void);
+void elm_ext_config_read(void);
 
 /*
  * Shutdown the system, the config will be cleared
  */
-void config_shutdown(void);
+void elm_ext_config_shutdown(void);
 /*
  * Return a list of gtk bookmarks
  *

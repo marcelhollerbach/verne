@@ -35,6 +35,9 @@
 #include "emous_type.eo.h"
 #include "emous_manager.eo.h"
 
+EAPI int emous_init(void);
+EAPI void emous_shutdown(void);
+
 #undef EAPI
 
 #endif
