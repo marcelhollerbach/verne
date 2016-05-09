@@ -105,7 +105,7 @@ _efm_file_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *_path)
      {
         path = efm_file_path_get(file);
         eo_event_callback_array_add(file, factory_events(), sd->factory);
-        eina_hash_add(sd->factory, &path, file);
+        eina_hash_add(sd->factory, path, file);
      }
 
    return file;
