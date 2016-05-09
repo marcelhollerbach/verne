@@ -95,6 +95,9 @@ _efm_file_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *_path)
 {
    Efm_File *file;
    const char *path;
+
+   _path = eina_file_path_sanitize(_path);
+
    SEARCH_IF_FOUND_RETURN_INCED(_path, file)
 
    file = eo_add(EFM_FS_FILE_CLASS, NULL, efm_fs_file_generate(__eo_self, _path));
@@ -114,6 +117,8 @@ _efm_archive_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *archive_
    char compose_path[PATH_MAX];
    const char *path;
    Efm_File *file;
+
+   archive_path = eina_file_path_sanitize(archive_path);
 
    snprintf(compose_path, sizeof(compose_path), "%s/%s", archive_path, innerpath);
 
