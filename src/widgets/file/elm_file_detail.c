@@ -509,6 +509,10 @@ _update_thumbnail(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
         evas_object_del(pd->filepreview);
      }
    mime_type = efm_file_mimetype_get(file);
+
+   //we cannot do anything if there is no mimetype for this file
+   if (!mime_type) return;
+
    //there are "group mimetypes" for text/image/video/audio/application/multipart/message and model.
    //handlers can subsribe to them to provide a good thumbnail
    for (int i = 0; i < MIME_TYPE_END; i++)
