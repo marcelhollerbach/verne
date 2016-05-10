@@ -200,6 +200,9 @@ titlebar_anchor_get(Titlebar_Content *content)
 
      }
 
+   _debug(content);
+   printf("%s\n", eina_strbuf_string_get(result));
+
    return result;
 }
 
