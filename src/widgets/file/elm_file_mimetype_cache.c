@@ -8,6 +8,12 @@ typedef struct {
 } Elm_File_MimeType_Cache_Data;
 
 
+static void
+_free(void *data)
+{
+   eina_stringshare_del(data);
+}
+
 EOLIAN static Elm_File_MimeType_Cache*
 _elm_file_mimetype_cache_cache_generate(Eo *obj EINA_UNUSED, void *npd EINA_UNUSED, int size)
 {
@@ -18,7 +24,7 @@ _elm_file_mimetype_cache_cache_generate(Eo *obj EINA_UNUSED, void *npd EINA_UNUS
     pd = eo_data_scope_get(result, ELM_FILE_MIMETYPE_CACHE_CLASS);
 
     pd->size = size;
-    pd->mime_type = eina_hash_string_small_new(NULL);
+    pd->mime_type = eina_hash_string_small_new(_free);
 
     return result;
 }
@@ -32,11 +38,12 @@ _elm_file_mimetype_cache_mimetype_get(Eo *obj EINA_UNUSED, Elm_File_MimeType_Cac
 
     if (!result)
       {
-         const char *theme;
+         const char *theme, *icon;
 
          theme = elm_obj_file_icon_util_icon_theme_get(ELM_FILE_ICON_CLASS);
 
-         result = efreet_mime_type_icon_get(name, theme, pd->size);
+         icon = efreet_mime_type_icon_get(name, theme, pd->size);
+         result = eina_stringshare_add(icon);
          if (!result)
            eina_hash_direct_add(pd->mime_type, name, NO_ENTRY);
          else
