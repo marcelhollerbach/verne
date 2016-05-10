@@ -97,6 +97,10 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 {
    char *path = NULL;
    Efm_File *file;
+   Eina_Counter *counter;
+
+   counter = eina_counter_new("jesus");
+
    // check if someone gave us a path
    if (argc > 2)
      {
@@ -119,6 +123,8 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
         path = "/";
      }
 
+   eina_counter_start(counter);
+   eina_counter_stop(counter, 0);
    efm_init();
    file = efm_file_get(EFM_CLASS, path);
 
@@ -149,7 +155,11 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    elm_need_efreet();
 
    // init ui and stuff
+   eina_counter_start(counter);
+   eina_counter_stop(counter, 1);
    ui_init();
+   eina_counter_start(counter);
+   eina_counter_stop(counter, 2);
 
    // init the hooks
    hooks_init();
@@ -162,6 +172,11 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    // set the correct path
    elm_file_selector_file_set(selector, file);
    titlebar_path_set(path);
+
+   eina_counter_start(counter);
+   eina_counter_stop(counter, 3);
+
+   printf("%s\n", eina_counter_dump(counter));
 
    elm_run();
 
