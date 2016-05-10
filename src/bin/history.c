@@ -10,8 +10,8 @@ _history_push(Efm_File *file)
    Eina_Stringshare *path;
 
    path = eina_stringshare_add(
-    efm_file_path_get(file));
-
+    efm_file_path_get(file)
+   );
 
    list = eina_list_append(list, path);
 }
@@ -22,8 +22,6 @@ _history_pop(void)
    Eina_List *last;
 
    last = eina_list_last(list);
-
-   eo_unref(last->data);
 
    list = eina_list_remove_list(list, last);
 
