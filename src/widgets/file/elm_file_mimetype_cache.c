@@ -4,6 +4,7 @@
 
 typedef struct {
     int size;
+    const char *no_entry;
     Eina_Hash *mime_type;
 } Elm_File_MimeType_Cache_Data;
 
@@ -24,7 +25,8 @@ _elm_file_mimetype_cache_cache_generate(Eo *obj EINA_UNUSED, void *npd EINA_UNUS
     pd = eo_data_scope_get(result, ELM_FILE_MIMETYPE_CACHE_CLASS);
 
     pd->size = size;
-    pd->mime_type = eina_hash_string_small_new(_free);
+    pd->mime_type = eina_hash_stringshared_new(_free);
+    pd->no_entry = eina_stringshare_add(NO_ENTRY);
 
     return result;
 }
@@ -45,11 +47,11 @@ _elm_file_mimetype_cache_mimetype_get(Eo *obj EINA_UNUSED, Elm_File_MimeType_Cac
          icon = efreet_mime_type_icon_get(name, theme, pd->size);
          result = eina_stringshare_add(icon);
          if (!result)
-           eina_hash_direct_add(pd->mime_type, name, NO_ENTRY);
+           eina_hash_direct_add(pd->mime_type, name, pd->no_entry);
          else
            eina_hash_direct_add(pd->mime_type, name, result);
       }
-    else if (!strcmp(result, NO_ENTRY))
+    else if (result == pd->no_entry)
       {
          return NULL;
       }
