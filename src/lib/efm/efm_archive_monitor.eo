@@ -2,8 +2,8 @@ class Efm.Archive.Monitor (Efm.Fs.Monitor) {
     methods {
         generate {
             params {
-                file : Efm.Archive.File*;
-                filter : Efm.Filter*;
+                file : Efm.Archive.File;
+                filter : Efm.Filter;
             }
         }
     }

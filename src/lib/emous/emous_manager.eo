@@ -8,7 +8,7 @@ class Emous.Manager (Eo.Base) {
    methods {
       device_types_get @class {
          [[Returns a list of classes which are registered by device type del]]
-         return: list<Emous.Type*>*;
+         return: list<Emous.Type>;
       }
       device_type_add @class {
          [[This adds this type of Emous.Type to the internal list to listen of known types
@@ -16,28 +16,28 @@ class Emous.Manager (Eo.Base) {
            If one of the, by the the singleton call, emitts a device,added call it will be redirected here.
          ]]
          params {
-            type : const(Eo.Base)*;
+            type : const(Eo.Base);
          }
       }
       device_type_del @class {
          [[This will remove this calss from the internal list]]
          params {
-            type : const(Eo.Base)*;
+            type : const(Eo.Base);
          }
       }
       object_get @class {
          [[this will just return allways the same object of Emous_Manager you can listen on signals with this object.]]
-         return: Emous.Manager* ;
+         return: Emous.Manager;
       }
       devices_get @class {
          [[Returns a list of all available devices]]
-         return: list<Emous.Device*>*;
+         return: list<Emous.Device>;
       }
    }
    events {
-      device,add : Emous.Device*; [[ Some Type added a device]]
-      device,del : Emous.Device*; [[ A device dissapeared]]
+      device,add : Emous.Device; [[ Some Type added a device]]
+      device,del : Emous.Device; [[ A device dissapeared]]
       mount,add : Emous.MountPoint*; [[A annonym Device was mounted]]
-      mount,del : const(char)*; [[A annonym Device was unmounted]]
+      mount,del : const(char); [[A annonym Device was unmounted]]
    }
 }

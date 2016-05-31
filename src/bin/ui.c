@@ -132,7 +132,7 @@ open_with2_main_win_create(Eo *__main_parent)
    elm_win_resize_object_add (main_win, elm_bg1);
    elm_win_resize_object_add (main_win, elm_box1);
    efl_gfx_visible_set (main_win, EINA_TRUE);
-   eo_event_callback_add (main_win, EO_BASE_EVENT_DEL, _pubs_free_cb, pub_widgets);
+   eo_event_callback_add (main_win, EO_EVENT_DEL, _pubs_free_cb, pub_widgets);
 
    return pub_widgets;
 }

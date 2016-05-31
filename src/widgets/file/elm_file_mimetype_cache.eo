@@ -11,7 +11,7 @@ class Elm.File.MimeType.Cache(Eo.Base){
             params {
                 size : int;
             }
-            return : Elm.File.MimeType.Cache*;
+            return : Elm.File.MimeType.Cache;
         }
         mimetype_get {
             [[This will return the icon of the given mime_type]]

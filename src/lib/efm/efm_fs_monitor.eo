@@ -3,8 +3,8 @@ class Efm.Fs.Monitor (Eo.Base, Efm.Monitor) {
         install {
             [[constructor to construct to Monitor]]
             params {
-                file : Efm.Fs.File*;
-                filter : Efm.Filter*;
+                file : Efm.Fs.File;
+                filter : Efm.Filter;
             }
         }
     }

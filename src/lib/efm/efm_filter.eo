@@ -42,7 +42,7 @@ class Efm.Filter(Eo.Base) {
         matches {
             [[Matches a passed file against the rules of this object]]
             params {
-                file : Efm.File*;
+                file : Efm.File;
             }
             return : bool;
         }

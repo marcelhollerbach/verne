@@ -1,12 +1,13 @@
 class Elm.File.Icon (Elm.Layout) {
    eo_prefix: elm_obj_file_icon;
+   event_prefix: elm_file_icon;
    methods {
       install {
         [[
         ]]
         params {
-           cache : Elm.File.MimeType.Cache*; [[Cache to use]]
-           file : Efm.File*; [[Set the file which should be visualized ]]
+           cache : Elm.File.MimeType.Cache; [[Cache to use]]
+           file : Efm.File; [[Set the file which should be visualized ]]
            preview : bool; [[Set if you want to have preview of images and .desktop files]]
         }
       }
@@ -16,7 +17,7 @@ class Elm.File.Icon (Elm.Layout) {
           [[get the file]]
         }
         values {
-          file : Efm.File*;
+          file : Efm.File;
         }
       }
       util_icon_theme_get @class{
@@ -46,9 +47,9 @@ class Elm.File.Icon (Elm.Layout) {
       }
    }
    implements {
-     Evas.Object_Smart.del;
-     Evas.Object_Smart.add;
-     Evas.Object_Smart.resize;
+     Evas.Object.Smart.del;
+     Evas.Object.Smart.add;
+     Evas.Object.Smart.resize;
      Eo.Base.destructor;
      Eo.Base.finalize;
    }

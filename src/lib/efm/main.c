@@ -73,13 +73,13 @@ efm_shutdown(void)
 static Eina_Bool _file_del(void *data, const Eo_Event *event);
 
 EO_CALLBACKS_ARRAY_DEFINE(factory_events, {EFM_FILE_EVENT_INVALID, _file_del},
-                                          {EO_BASE_EVENT_DEL, _file_del});
+                                          {EO_EVENT_DEL, _file_del});
 
 static Eina_Bool
 _file_del(void *data EINA_UNUSED, const Eo_Event *event)
 {
-   eina_hash_del_by_data(sd->factory, event->obj);
-   eo_event_callback_array_del(event->obj, factory_events(), sd->factory);
+   eina_hash_del_by_data(sd->factory, event->object);
+   eo_event_callback_array_del(event->object, factory_events(), sd->factory);
    return EO_CALLBACK_CONTINUE;
 }
 

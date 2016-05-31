@@ -66,7 +66,7 @@ _changed(void *data EINA_UNUSED, const Eo_Event *event)
 {
    Eina_Bool state;
 
-   state = elm_check_state_get(event->obj);
+   state = elm_check_state_get(event->object);
 
    if (state)
      eo_event_callback_call(data, ELM_FILE_VIEW_EVENT_WORKING_START, NULL);

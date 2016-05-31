@@ -43,7 +43,7 @@ interface Emous.Device ( ) {
       @property mountpoints {
          [[A List of mountpoints where this device is mounted]]
          values {
-            mountpoints : list<Eina_Stringshare*>*;
+            mountpoints : list<Eina_Stringshare*>;
          }
          get {
             [[Get the list of mountpoints]]

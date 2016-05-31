@@ -11,7 +11,7 @@ interface Efm.Monitor {
 
               If the filter changes all files are populated/unpopulated]]
             values {
-                filter : Efm.Filter*;
+                filter : Efm.Filter;
             }
         }
         @property file {
@@ -19,13 +19,13 @@ interface Efm.Monitor {
                 [[returns the path this monitor is running on]]
             }
             values {
-                path : Efm.File*;
+                path : Efm.File;
             }
         }
     }
     events {
-        file,hide : Efm.File*; [[If the buildin filter is changed and this file shoudlnt be published by the monitor anymore this is called]]
-        file,add : Efm.File*; [[Called when a file was added]]
+        file,hide : Efm.File; [[If the buildin filter is changed and this file shoudlnt be published by the monitor anymore this is called]]
+        file,add : Efm.File; [[Called when a file was added]]
         listing,done;
         error; [[called when the monitor got an error. The bahavoir after this event is unknown. The monitor should be deleted and never be used again!]]
     }

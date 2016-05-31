@@ -16,7 +16,7 @@ typedef struct {
 } Efm_Monitor_Eio_Job;
 
 #define MARK_POPULATED(o) eo_key_data_set(o, "__populated", ((void*)1));
-#define UNMARK_POPULATED(o) eo_key_del(o, "__populated");
+#define UNMARK_POPULATED(o) eo_key_data_set(o, "__populated", NULL);
 #define CHECK_POPULATED(o) (eo_key_data_get(o, "__populated") != NULL)
 
 static inline Eina_Bool
@@ -33,7 +33,7 @@ _file_del(void *data, const Eo_Event *event)
    Efm_Fs_Monitor_Data *pd;
 
    pd = eo_data_scope_get(data, EFM_FS_MONITOR_CLASS);
-   eina_hash_del_by_data(pd->file_icons, event->obj);
+   eina_hash_del_by_data(pd->file_icons, event->object);
    return EO_CALLBACK_CONTINUE;
 }
 
@@ -46,6 +46,8 @@ _add(Efm_Monitor *mon, const char *file)
    pd = eo_data_scope_get(mon, EFM_FS_MONITOR_CLASS);
 
    filename = ecore_file_file_get(file);
+
+   eo_key_data_set(NULL, NULL, NULL);
 
    ef = efm_file_child_get(pd->origin, filename);
 
@@ -80,7 +82,7 @@ _error(Efm_Monitor *efm)
    //tell everyone that this monitor is crashed now
    eo_event_callback_call(efm, EFM_MONITOR_EVENT_ERROR, NULL);
    //delete the monitor
-   eo_del(efm);
+   eo_unref(efm);
 }
 
 static void
@@ -119,7 +121,7 @@ _fm_action(void *data EINA_UNUSED, Efm_Monitor *mon, const char *file, Fm_Action
    else if (action == SELFDEL)
      {
        //delete the monitor
-       eo_del(mon);
+       eo_unref(mon);
      }
    else
      {

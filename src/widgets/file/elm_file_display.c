@@ -43,7 +43,7 @@ _bookmark_path_changed(void *data,  const Eo_Event *event)
    Efm_File *f;
    PRIV_DATA(data)
 
-   efl_file_get(event->obj, &file, NULL);
+   efl_file_get(event->object, &file, NULL);
    f = efm_file_get(EFM_CLASS, file);
    elm_file_selector_file_set(pd->selector, f);
 

@@ -2,17 +2,17 @@ class Elm.File.Detail(Elm.Layout) {
     methods {
         @property file {
             values {
-                file : Efm.File*;
+                file : Efm.File;
             }
         }
         @property cache {
             values {
-                cache : Elm.File.MimeType.Cache*;
+                cache : Elm.File.MimeType.Cache;
             }
         }
     }
     implements {
-        Evas.Object_Smart.add;
+        Evas.Object.Smart.add;
         class.constructor;
     }
 }

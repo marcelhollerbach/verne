@@ -18,7 +18,7 @@ class Elm_File_Display (Elm.Layout) {
 
          }
          values {
-            filepreview : Evas.Object*;
+            filepreview : Evas.Object;
          }
       }
       @property bookmarks {
@@ -26,7 +26,7 @@ class Elm_File_Display (Elm.Layout) {
 
          }
          values {
-            bookmark : Evas.Object*;
+            bookmark : Evas.Object;
          }
       }
       @property selector {
@@ -34,14 +34,14 @@ class Elm_File_Display (Elm.Layout) {
 
          }
          values {
-            selector : Evas.Object*;
+            selector : Evas.Object;
          }
       }
    }
 
    implements {
       Eo.Base.constructor;
-      Evas.Object_Smart.add;
+      Evas.Object.Smart.add;
    }
 
    events {

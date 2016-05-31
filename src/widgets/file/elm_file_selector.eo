@@ -17,8 +17,8 @@ enum Elm.File.Selector.Folder_Placement {
 
 struct Elm.File.Selector.Menu_Hook {
    [[Used to pass the file and object at once to the event]]
-   menu : Evas.Object*;
-   file : Efm.File*;
+   menu : Evas.Object;
+   file : Efm.File;
 }
 
 class Elm.File.Selector (Elm.Layout) {
@@ -28,19 +28,19 @@ class Elm.File.Selector (Elm.Layout) {
          [[Adds the given Display view to the pool.
            The pool will be used to display different view options in the ui]]
          params {
-            view : const(Eo.Base)*; [[Should be a Elm.File.Display.View]]
+            view : const(Eo.Base); [[Should be a Elm.File.Display.View]]
          }
       }
       view_pool_del @class {
          [[Remove the given View from the pool]]
          params {
-            view : const(Eo.Base)*;
+            view : const(Eo.Base);
          }
       }
       @property view {
          [[Sets the view which should be used to display the "to display" path]]
          values {
-            klass: const(Eo.Base)*; [[klass should implement elm.File.Display.View]]
+            klass: const(Eo.Base); [[klass should implement elm.File.Display.View]]
          }
       }
       search {
@@ -97,7 +97,7 @@ class Elm.File.Selector (Elm.Layout) {
             [[Get the selection of the displaying view]]
          }
          values {
-            list : list<Efm.File*>*;
+            list : list<Efm.File>;
          }
       }
       @property image_preview {
@@ -112,36 +112,36 @@ class Elm.File.Selector (Elm.Layout) {
 
          }
          values {
-            cache : Elm.File.MimeType.Cache*;
+            cache : Elm.File.MimeType.Cache;
          }
       }
       @property file {
          values {
-            file : Efm.File*;
+            file : Efm.File;
          }
       }
       icon_generate {
          [[Factory to get a new icon which has the settings of the selector]]
          params {
-            file : Efm.File*;
+            file : Efm.File;
          }
-         return : Elm.File.Icon*;
+         return : Elm.File.Icon;
       }
    }
 
    implements {
       Eo.Base.constructor;
       Eo.Base.destructor;
-      Evas.Object_Smart.add;
+      Evas.Object.Smart.add;
       Elm.Widget.event;
    }
 
    events {
-      path,changed : Efm.File*; [[Called if the path has changed]]
-      item,selection,changed : list<Efm.File*>*; [[The selection of the view has changed]]
-      item,choosen : Efm.File*; [[A item is selected, this means its _not_ a directry and the view decived to *click* this file]]
-      item,selected : Efm.File*; [[A item got selected, _not_ chossen]]
-      dnd,item,hover : Elm.File.Icon*; [[A item was hovered above another item ]]
+      path,changed : Efm.File; [[Called if the path has changed]]
+      item,selection,changed : list<Efm.File>; [[The selection of the view has changed]]
+      item,choosen : Efm.File; [[A item is selected, this means its _not_ a directry and the view decived to *click* this file]]
+      item,selected : Efm.File; [[A item got selected, _not_ chossen]]
+      dnd,item,hover : Elm.File.Icon; [[A item was hovered above another item ]]
       dnd,item,droped; [[Item was droped above another item]]
       dnd,droped; [[Item droped in the file display]]
       hook,menu,selector,start : Elm.File.Selector.Menu_Hook*; [[*@ Menu_Hook will be passed ]]

@@ -14,12 +14,12 @@ interface Elm.File.View {
          params {
             select : Eina.Rectangle*;
          }
-         return : list<Elm.File.Icon*>*;
+         return : list<Elm.File.Icon>;
       }
       @property selection {
          [[Return the current selection]]
          values {
-            selection : list<Elm.File.Icon*>*;
+            selection : list<Elm.File.Icon>;
          }
       }
       @property iconsize {
@@ -31,7 +31,7 @@ interface Elm.File.View {
       @property filter {
          [[A correctly setup filter to use for the monitor]]
          values {
-            filter : Efm.Filter*;
+            filter : Efm.Filter;
          }
       }
       size_get {
@@ -49,15 +49,15 @@ interface Elm.File.View {
       }
       @property file {
          values {
-            file : Efm.File*;
+            file : Efm.File;
          }
       }
    }
    events {
-      item,select,hover : Efm.File*; [[The mouse hovers over a item]]
-      item,select,simple : Efm.File*; [[A item got selected ]]
-      item,select,choosen : Efm.File*; [[A item got choosen]]
-      item,select,changed : list<Efm.File*>*; [[called when the selection has changed. Used to keep a internal list of all selected files. The pointer given to the event will just be updated each time the list is _never_ touched by the displayer. the view has to take care of freeing the list]]
+      item,select,hover : Efm.File; [[The mouse hovers over a item]]
+      item,select,simple : Efm.File; [[A item got selected ]]
+      item,select,choosen : Efm.File; [[A item got choosen]]
+      item,select,changed : list<Efm.File>; [[called when the selection has changed. Used to keep a internal list of all selected files. The pointer given to the event will just be updated each time the list is _never_ touched by the displayer. the view has to take care of freeing the list]]
       working,start; [[The view has started listing work]]
       working,done; [[The view has stopped listing work]]
    }

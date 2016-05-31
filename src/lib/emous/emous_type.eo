@@ -7,7 +7,7 @@ interface Emous.Type ( ) {
 
             }
             values {
-                devices : list<Emous.Device*>*;
+                devices : list<Emous.Device>;
             }
         }
         create @class {
@@ -39,11 +39,11 @@ interface Emous.Type ( ) {
         }
         object_get @class {
             [[Will return _one_ unique instance of this class where the events will e called on]]
-            return : Emous.Type*;
+            return : Emous.Type;
         }
     }
     events {
-        device,added : Emous.Device*; [[Called if a device appeared]]
-        device,deleted : Emous.Device*; [[Called if a device dissapeared]]
+        device,added : Emous.Device; [[Called if a device appeared]]
+        device,deleted : Emous.Device; [[Called if a device dissapeared]]
     }
 }

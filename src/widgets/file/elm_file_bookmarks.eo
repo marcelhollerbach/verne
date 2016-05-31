@@ -10,9 +10,9 @@ class Elm.File.Bookmarks (Elm.Genlist, Efl.File) {
     }
     events {
         path,selected;
-        hook,menu,bookmarks,start : Evas.Object*; [[A menu will be passed]]
-        hook,menu,bookmarks,end : Evas.Object*; [[A menu will be passed]]
-        hook,menu,device,start : Evas.Object*; [[@ A menu will be passed]]
-        hook,menu,device,end : Evas.Object*; [[A menu will be passed]]
+        hook,menu,bookmarks,start : Evas.Object; [[A menu will be passed]]
+        hook,menu,bookmarks,end : Evas.Object; [[A menu will be passed]]
+        hook,menu,device,start : Evas.Object; [[@ A menu will be passed]]
+        hook,menu,device,end : Evas.Object; [[A menu will be passed]]
     }
 }
