@@ -38,6 +38,7 @@ typedef struct {
    } changes;
    Efm_File *file;
    Elm_File_MimeType_Cache *cache;
+   Eina_Bool havy_setup;
 } Elm_File_Detail_Data;
 
 typedef enum {
@@ -838,6 +839,23 @@ detail_row_changable_init(Evas_Object *obj, Detail_Row_Mutable *row)
       elm_box_pack_end(bx, pd->W.table); \
    } while(0)
 
+static Eina_Bool
+_setup_cb(void *data, const Eo_Event *info EINA_UNUSED)
+{
+   Elm_File_Detail_Data *pd;
+
+   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+
+   if (pd->havy_setup) return EO_CALLBACK_CONTINUE;
+
+   pd->havy_setup = EINA_TRUE;
+
+   _user_hover_init(data, pd->user.change_display);
+   _group_hover_init(data, pd->group.change_display);
+
+   return EO_CALLBACK_CONTINUE;
+}
+
 EOLIAN static void
 _elm_file_detail_evas_object_smart_add(Eo *obj, Elm_File_Detail_Data *pd)
 {
@@ -857,11 +875,11 @@ _elm_file_detail_evas_object_smart_add(Eo *obj, Elm_File_Detail_Data *pd)
    DETAIL_ROW_UNCHANGABLE(size, "<b>Size:");
    SEPERATOR
    pd->user.change_display = elm_hoversel_add(obj);
-   _user_hover_init(obj, pd->user.change_display);
+   eo_event_callback_add(pd->user.change_display, EFL_UI_EVENT_CLICKED, _setup_cb, obj);
    DETAIL_ROW_CHANGABLE(user, "<b>User:");
    SEPERATOR
    pd->group.change_display = elm_hoversel_add(obj);
-   _group_hover_init(obj, pd->group.change_display);
+   eo_event_callback_add(pd->group.change_display, EFL_UI_EVENT_CLICKED, _setup_cb, obj);
    DETAIL_ROW_CHANGABLE(group, "<b>Group:");
    SEPERATOR
    _permission_init(obj, pd);
