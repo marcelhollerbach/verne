@@ -56,7 +56,7 @@ _file_add(void *data, const Eo_Event *event)
 void
 _view_free(View_Common *common)
 {
-   if (common->monitor) eo_unref(common->monitor);
+   if (common->monitor) eo_del(common->monitor);
    common->monitor = NULL;
    if (common->selection) eina_list_free(common->selection);
    common->selection = NULL;
@@ -140,7 +140,7 @@ view_file_set(View_Common *common, Efm_File *file)
    common->files = eina_hash_pointer_new(NULL);
 
    eo_event_callback_call(common->obj, ELM_FILE_VIEW_EVENT_WORKING_START , NULL);
-   eo_unref(common->monitor);
+   eo_del(common->monitor);
    common->monitor = efm_file_monitor(file, common->f);
    eo_event_callback_array_add(common->monitor, _monitor_event_cbs(), common);
 }

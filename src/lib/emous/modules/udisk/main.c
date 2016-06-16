@@ -131,7 +131,7 @@ _name_start_cb(void *data EINA_UNUSED, const Eldbus_Message *msg,
 static void
 _free_cb(void *data)
 {
-    eo_unref(data);
+    eo_del(data);
 }
 
 static void

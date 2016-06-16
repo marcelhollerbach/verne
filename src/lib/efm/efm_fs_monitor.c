@@ -82,7 +82,7 @@ _error(Efm_Monitor *efm)
    //tell everyone that this monitor is crashed now
    eo_event_callback_call(efm, EFM_MONITOR_EVENT_ERROR, NULL);
    //delete the monitor
-   eo_unref(efm);
+   eo_del(efm);
 }
 
 static void
@@ -121,7 +121,7 @@ _fm_action(void *data EINA_UNUSED, Efm_Monitor *mon, const char *file, Fm_Action
    else if (action == SELFDEL)
      {
        //delete the monitor
-       eo_unref(mon);
+       eo_del(mon);
      }
    else
      {

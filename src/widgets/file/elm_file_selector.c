@@ -186,7 +186,7 @@ _elm_file_selector_view_set(Eo *obj, Elm_File_Selector_Data *pd, const Eo_Class 
    pd->view.klass = klass;
    if (pd->view.obj)
      {
-        eo_unref(pd->view.obj);
+        eo_del(pd->view.obj);
         elm_drag_item_container_del(pd->view.obj);
      }
    pd->view.obj = eo_add(pd->view.klass, obj);
@@ -233,7 +233,7 @@ _elm_file_selector_eo_base_constructor(Eo *obj, Elm_File_Selector_Data *pd)
 EOLIAN static void
 _elm_file_selector_eo_base_destructor(Eo *obj, Elm_File_Selector_Data *pd)
 {
-   eo_unref(pd->cache);
+   eo_del(pd->cache);
    elm_ext_config_shutdown();
    eo_destructor(eo_super(obj, ELM_FILE_SELECTOR_CLASS));
    efm_shutdown();
@@ -1058,7 +1058,7 @@ _elm_file_selector_show_icon_size_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Dat
 {
    config->icon_size = size;
    elm_ext_config_save();
-   eo_unref(pd->cache);
+   eo_del(pd->cache);
 
    pd->cache = elm_file_mimetype_cache_generate(ELM_FILE_MIMETYPE_CACHE_CLASS, size);
    elm_file_view_iconsize_set(pd->view.obj, config->icon_size);

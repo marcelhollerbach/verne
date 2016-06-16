@@ -348,7 +348,7 @@ _emous_device_new(Eldbus_Message_Iter *dict, const char **opath)
 
 fail_dev:
 
-   eo_unref(dev);
+   eo_del(dev);
 
    return NULL;
 }
