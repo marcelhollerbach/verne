@@ -47,8 +47,6 @@ _add(Efm_Monitor *mon, const char *file)
 
    filename = ecore_file_file_get(file);
 
-   eo_key_data_set(NULL, NULL, NULL);
-
    ef = efm_file_child_get(pd->origin, filename);
 
    if (!ef)
@@ -59,7 +57,6 @@ _add(Efm_Monitor *mon, const char *file)
 
    path = efm_file_path_get(ef);
    eo_event_callback_add(ef, EFM_FILE_EVENT_INVALID, _file_del, mon);
-   pd = eo_data_scope_get(mon, EFM_FS_MONITOR_CLASS);
 
    //prevent a file from beeing populated twice
    if (eina_hash_find(pd->file_icons, path)) return;

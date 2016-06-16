@@ -56,6 +56,7 @@ ui_init()
    evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    evas_object_show(box);
 
+
    layout = elm_layout_add(win);
    efl_file_set(layout, THEME_PATH"/jesus.edc.edj", "headbar");
    evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, 0.0);
