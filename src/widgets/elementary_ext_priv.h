@@ -3,6 +3,8 @@
 
 #include "config.h"
 
+#define EVAS_OBJECT_BETA
+
 #include <Emous.h>
 #include <Efl.h>
 #include <Eio.h>
