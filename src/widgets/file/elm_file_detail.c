@@ -286,7 +286,6 @@ _request_chown_group(Evas_Object *obj, const char *group) {
 static Evas_Object*
 _fallback_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache ,Efm_File *file)
 {
-   const char *ic;
    const char *mime_type;
    Evas_Object *o;
 
@@ -295,11 +294,11 @@ _fallback_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache ,Efm_File *fi
    // display the mime_type icon
    o = elm_icon_add(obj);
    elm_icon_order_lookup_set(o, ELM_ICON_LOOKUP_FDO_THEME);
+
    if (efm_file_is_type(file, EFM_FILE_TYPE_DIRECTORY))
-     ic = "folder";
+     elm_file_mimetype_cache_mimetype_set(cache, o, "folder");
    else
-     ic = elm_file_mimetype_cache_mimetype_get(cache, mime_type);
-   elm_icon_standard_set(o,ic);
+     elm_file_mimetype_cache_mimetype_set(cache, o, mime_type);
 
    return o;
 }

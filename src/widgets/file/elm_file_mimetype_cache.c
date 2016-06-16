@@ -31,32 +31,35 @@ _elm_file_mimetype_cache_cache_generate(Eo *obj EINA_UNUSED, void *npd EINA_UNUS
     return result;
 }
 
-static const char*
-_elm_file_mimetype_cache_mimetype_get(Eo *obj EINA_UNUSED, Elm_File_MimeType_Cache_Data *pd, const char *name)
+static void
+_elm_file_mimetype_cache_mimetype_set(Eo *obj EINA_UNUSED, Elm_File_MimeType_Cache_Data *pd, Elm_Icon *icon, const char *name)
 {
     const char *result;
 
+    if (!strcmp(elm_config_icon_theme_get(), "_Elementary_Icon_Theme"))
+      {
+         //just use normal standard set
+         elm_icon_standard_set(icon, name);
+         return;
+      }
+
     result = eina_hash_find(pd->mime_type, name);
 
-    if (!result)
-      {
-         const char *theme, *icon;
+   if (!result)
+     {
+        const char *theme, *ic;
 
-         theme = elm_obj_file_icon_util_icon_theme_get(ELM_FILE_ICON_CLASS);
+        theme = elm_config_icon_theme_get();
+        ic = efreet_mime_type_icon_get(name, theme, pd->size);
+        result = eina_stringshare_add(ic);
 
-         icon = efreet_mime_type_icon_get(name, theme, pd->size);
-         result = eina_stringshare_add(icon);
-         if (!result)
-           eina_hash_direct_add(pd->mime_type, name, pd->no_entry);
-         else
-           eina_hash_direct_add(pd->mime_type, name, result);
-      }
-    else if (result == pd->no_entry)
-      {
-         return NULL;
+        if (!result)
+          eina_hash_direct_add(pd->mime_type, name, pd->no_entry);
+        else
+          eina_hash_direct_add(pd->mime_type, name, result);
       }
 
-    return result;
+   elm_image_file_set(icon, result, NULL);
 }
 
 #include "elm_file_mimetype_cache.eo.x"

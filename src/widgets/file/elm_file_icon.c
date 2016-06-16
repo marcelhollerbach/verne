@@ -165,26 +165,10 @@ _elm_file_icon_rename_get(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
   return pd->rename_mode;
 }
 
-EOLIAN static const char *
-_elm_file_icon_util_icon_theme_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
-{
-   const char *theme;
-
-   theme = getenv("E_ICON_THEME");
-
-   if (!theme)
-     theme = "hicolor";
-
-   if (!efreet_icon_theme_find(theme))
-     ERR("Failed to find usefull theme");
-
-   return theme;
-}
-
 static void
 mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
 {
-   const char *file, *mime_type;;
+   const char *mime_type;
 
    mime_type = efm_file_mimetype_get(pd->file);
 
@@ -192,15 +176,9 @@ mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
      return;
 
    if (efm_file_is_type(pd->file, EFM_FILE_TYPE_DIRECTORY))
-     elm_icon_standard_set(pd->icon, "folder");
+     elm_file_mimetype_cache_mimetype_set(pd->cache, pd->icon, "folder");
    else
-     {
-        file = elm_file_mimetype_cache_mimetype_get(pd->cache, mime_type);
-        if (!file)
-          INF("Failed to fetch icon for mime type %s\n", mime_type);
-        else
-          elm_image_file_set(pd->icon, file, NULL);
-     }
+     elm_file_mimetype_cache_mimetype_set(pd->cache, pd->icon, mime_type);
 
    evas_object_show(pd->icon);
 }

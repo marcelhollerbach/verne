@@ -20,10 +20,6 @@ class Elm.File.Icon (Elm.Layout) {
           file : Efm.File;
         }
       }
-      util_icon_theme_get @class{
-         [[Will return the name of the icon theme]]
-         return : const(char)*;
-      }
       @property rename {
         [[Set the state of this icon, if it is in rename mode or not
 

@@ -463,11 +463,11 @@ _dnd_anim_ics_gen(Evas_Object *obj, Evas_Object *view, Eina_List **anim_icons, E
 
         f = elm_obj_file_icon_file_get(icon);
         mimetype = efm_file_mimetype_get(f);
-        file = elm_file_mimetype_cache_mimetype_get(pd->cache, mimetype);
 
         icon = elm_icon_add(view);
         evas_object_geometry_get(icon, &place.x, &place.y, &place.w, &place.h);
         evas_object_geometry_set(icon, place.x, place.y, place.w, place.h);
+        elm_file_mimetype_cache_mimetype_set(pd->cache, icon, mimetype);
         elm_image_file_set(icon, file, NULL);
         evas_object_show(icon);
 

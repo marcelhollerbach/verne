@@ -1,12 +1,20 @@
 class Elm.File.Bookmarks (Elm.Genlist, Efl.File) {
     methods {
-
+        @property cache {
+            values {
+                cache : Elm.File.MimeType.Cache;
+            }
+        }
     }
     implements {
         Efl.File.file.set;
         Efl.File.file.get;
         Eo.Base.constructor;
         Eo.Base.destructor;
+        Eo.Base.finalize;
+    }
+    constructors {
+        .cache;
     }
     events {
         path,selected;

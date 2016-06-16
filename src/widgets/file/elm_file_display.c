@@ -130,7 +130,7 @@ _elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
    elm_object_part_content_set(obj, "content", o);
    evas_object_show(o);
 
-   pd->bookmark = o = eo_add(ELM_FILE_BOOKMARKS_CLASS, obj);
+   pd->bookmark = o = eo_add(ELM_FILE_BOOKMARKS_CLASS, obj, elm_file_bookmarks_cache_set(eo_self, cache));
    eo_event_callback_add(o, ELM_FILE_BOOKMARKS_EVENT_PATH_SELECTED, _bookmark_path_changed, obj);
    elm_object_part_content_set(obj, "bookmark", o);
    evas_object_show(o);

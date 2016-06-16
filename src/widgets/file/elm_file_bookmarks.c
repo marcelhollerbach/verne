@@ -8,7 +8,7 @@ typedef struct {
 } Elm_File_Bookmarks_Sd;
 
 typedef struct {
-
+   Elm_File_MimeType_Cache *cache;
    Elm_Genlist_Item *bookmark_group_it;
    Elm_Genlist_Item *device_group_it;
    const char *path; //<the current path, if in icons, the item will be selected
@@ -291,12 +291,15 @@ _item_content_get(void *data, Evas_Object *obj, const char *part)
    Bookmark_Item *item = data;
    Directory *b = &item->pd.dir;
    Evas_Object *ic;
+   Elm_File_Bookmarks_Data *pd;
+
+   pd = eo_data_scope_get(obj, ELM_FILE_BOOKMARKS_CLASS);
 
    if (!!strcmp(part, "elm.swallow.icon")) return NULL;
 
    ic = elm_icon_add(obj);
    elm_icon_order_lookup_set(ic, ELM_ICON_LOOKUP_FDO_THEME);
-   elm_icon_standard_set(ic, b->icon);
+   elm_file_mimetype_cache_mimetype_set(pd->cache, ic, b->icon);
    evas_object_show(ic);
    return ic;
 }
@@ -692,6 +695,32 @@ _elm_file_bookmarks_eo_base_destructor(Eo *obj, Elm_File_Bookmarks_Data *pd EINA
     emous_shutdown();
 
     eo_destructor(eo_super(obj, ELM_FILE_BOOKMARKS_CLASS));
+}
+
+EOLIAN static void
+_elm_file_bookmarks_cache_set(Eo *obj EINA_UNUSED, Elm_File_Bookmarks_Data *pd, Elm_File_MimeType_Cache *cache)
+{
+   if (pd->cache)
+     eo_unref(pd->cache);
+
+   pd->cache = cache;
+
+   if (pd->cache)
+     eo_ref(pd->cache);
+}
+
+EOLIAN static Elm_File_MimeType_Cache *
+_elm_file_bookmarks_cache_get(Eo *obj EINA_UNUSED, Elm_File_Bookmarks_Data *pd)
+{
+   return pd->cache;
+}
+
+EOLIAN static Eo_Base *
+_elm_file_bookmarks_eo_base_finalize(Eo *obj, Elm_File_Bookmarks_Data *pd)
+{
+   if (!pd->cache) return NULL;
+
+   return eo_finalize(eo_super(obj, ELM_FILE_BOOKMARKS_CLASS));
 }
 
 #include "elm_file_bookmarks.eo.x"

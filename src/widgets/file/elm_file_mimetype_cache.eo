@@ -13,12 +13,11 @@ class Elm.File.MimeType.Cache(Eo.Base){
             }
             return : Elm.File.MimeType.Cache;
         }
-        mimetype_get {
-            [[This will return the icon of the given mime_type]]
+        mimetype_set {
             params {
+                icon : Elm.Icon;
                 name : const(char)*;
             }
-            return : const(char)*;
         }
     }
 }
