@@ -660,6 +660,8 @@ _flip_update(Elm_File_Detail_Data *pd)
 
    Efm_File_Stat *st;
 
+   if (elm_segment_control_item_selected_get(pd->perm2.segment) == pd->perm2.items[0]) return;
+
    st = efm_file_stat_get(pd->file);
    for (int i = 0; i < 3; i++)
      {
@@ -667,36 +669,6 @@ _flip_update(Elm_File_Detail_Data *pd)
           elm_flipselector_item_selected_set(pd->perm2.pmodes[i], EINA_TRUE);
         else
           elm_flipselector_item_selected_set(pd->perm2.nmodes[i], EINA_TRUE);
-     }
-}
-
-static void
-_segment_changed_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_info)
-{
-   Elm_File_Detail_Data *pd;
-   Eina_Bool flip_visible;
-
-   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
-
-   flip_visible = pd->perm2.items[0] != event_info;
-
-   efl_gfx_visible_set(pd->perm2.permstring, !flip_visible);
-   for (int i = 0; i < 3; i++)
-     efl_gfx_visible_set(pd->perm2.flip[i], flip_visible);
-
-   if (flip_visible)
-     {
-       //check which part is active, owner, group or other
-       for (int part = 1; part < 4; part ++)
-         {
-            if (pd->perm2.items[part] == event_info)
-              {
-                 //update the current usertype to the correct part
-                 pd->perm2.user_type = part - 1;
-              }
-         }
-       //update flips
-       _flip_update(pd);
      }
 }
 
@@ -747,8 +719,60 @@ _flip_cb(void *data, Evas_Object *obj, void *event_info)
 }
 
 static void
-_permission_init(Evas_Object *obj, Elm_File_Detail_Data *pd) {
+_init_flip_selectors(Eo *obj, Elm_File_Detail_Data *pd)
+{
    char *lbl[] = {"r","w","x"};
+
+   for (int i = 0; i < 3; i++)
+     {
+        pd->perm2.flip[i] = elm_flipselector_add(obj);
+        pd->perm2.pmodes[i] = elm_flipselector_item_append(pd->perm2.flip[i], lbl[i], NULL, NULL);
+        pd->perm2.nmodes[i] = elm_flipselector_item_append(pd->perm2.flip[i], "-", NULL, NULL);
+        evas_object_smart_callback_add(pd->perm2.flip[i], "selected", _flip_cb, obj);
+        elm_table_pack(pd->perm.change_display, pd->perm2.flip[i], i + 1, 1, 1, 1);
+        evas_object_show(pd->perm2.flip[i]);
+     }
+}
+
+static void
+_segment_changed_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_info)
+{
+   Elm_File_Detail_Data *pd;
+   Eina_Bool flip_visible;
+
+   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+
+   flip_visible = pd->perm2.items[0] != event_info;
+
+   efl_gfx_visible_set(pd->perm2.permstring, !flip_visible);
+
+   if (!pd->perm2.flip[0] && flip_visible)
+     {
+        //we are not initializied yet, do it now
+        _init_flip_selectors(data, pd);
+     }
+
+   for (int i = 0; i < 3; i++)
+     efl_gfx_visible_set(pd->perm2.flip[i], flip_visible);
+
+   if (flip_visible)
+     {
+       //check which part is active, owner, group or other
+       for (int part = 1; part < 4; part ++)
+         {
+            if (pd->perm2.items[part] == event_info)
+              {
+                 //update the current usertype to the correct part
+                 pd->perm2.user_type = part - 1;
+              }
+         }
+       //update flips
+       _flip_update(pd);
+     }
+}
+
+static void
+_permission_init(Evas_Object *obj, Elm_File_Detail_Data *pd) {
    char *segments[] = {"View", "Owner", "Group", "Other", NULL};
 
    pd->perm.change_display = elm_table_add(obj);
@@ -765,15 +789,6 @@ _permission_init(Evas_Object *obj, Elm_File_Detail_Data *pd) {
    pd->perm2.permstring = elm_label_add(obj);
    elm_table_pack(pd->perm.change_display, pd->perm2.permstring, 0, 1, 5, 1);
 
-   for (int i = 0; i < 3; i++)
-     {
-        pd->perm2.flip[i] = elm_flipselector_add(obj);
-        pd->perm2.pmodes[i] = elm_flipselector_item_append(pd->perm2.flip[i], lbl[i], NULL, NULL);
-        pd->perm2.nmodes[i] = elm_flipselector_item_append(pd->perm2.flip[i], "-", NULL, NULL);
-        evas_object_smart_callback_add(pd->perm2.flip[i], "selected", _flip_cb, obj);
-        elm_table_pack(pd->perm.change_display, pd->perm2.flip[i], i + 1, 1, 1, 1);
-        evas_object_show(pd->perm2.flip[i]);
-     }
    //fake selection to select part 0
    _segment_changed_cb(obj, pd->perm2.segment, pd->perm2.items[0]);
 }
