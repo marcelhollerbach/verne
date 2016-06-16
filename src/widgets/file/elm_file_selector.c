@@ -150,7 +150,7 @@ static Eina_Bool
 _work_done(void *data, const Eo_Event *event EINA_UNUSED)
 {
    PRIV_DATA(data);
-   eo_unref(pd->work_indicator);
+   eo_del(pd->work_indicator);
    pd->work_indicator = NULL;
 
    return EO_CALLBACK_CONTINUE;
