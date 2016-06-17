@@ -11,9 +11,6 @@ typedef struct {
   Eina_List *parts;
 } Titlebar_Content;
 
-static Ecore_Idler *focus_idler;
-
-static Eina_Bool unfocus_barrier;
 static Evas_Object *entry;
 
 static void
@@ -141,6 +138,7 @@ titlebar_del(Titlebar_Content *content, unsigned int pos, int length)
 
 }
 
+#if 0
 static void
 _debug(Titlebar_Content *content)
 {
@@ -152,6 +150,7 @@ _debug(Titlebar_Content *content)
         printf("DEBUG >%s<\n", eina_strbuf_string_get(buf));
      }
 }
+#endif
 
 static Eina_Strbuf*
 titlebar_anchor_get(Titlebar_Content *content)
@@ -223,26 +222,6 @@ titlebar_link_get(Titlebar_Content *content)
    return result;
 }
 
-static Eina_Strbuf*
-titlebar_normal_get(Titlebar_Content *content)
-{
-   Eina_List *node;
-   Eina_Strbuf *buf;
-   Eina_Strbuf *result;
-
-   result = eina_strbuf_new();
-
-   EINA_LIST_FOREACH(content->parts, node, buf)
-     {
-        eina_strbuf_append_buffer(result, buf);
-        if (eina_list_next(node))
-          eina_strbuf_append(result, SEP);
-     }
-
-   return result;
-}
-
-
 static void
 _content_refresh(Evas_Object *entry)
 {
@@ -250,11 +229,7 @@ _content_refresh(Evas_Object *entry)
    Eina_Strbuf *buf;
    int cursor_pos = 0;
 
-   if (!elm_object_focus_get(entry))
-     buf = titlebar_anchor_get(content);
-   else
-     buf = titlebar_normal_get(content);
-
+   buf = titlebar_anchor_get(content);
    cursor_pos = elm_entry_cursor_pos_get(entry);
    elm_object_text_set(entry, eina_strbuf_string_get(buf));
    elm_entry_cursor_pos_set(entry, cursor_pos);
@@ -279,17 +254,9 @@ _link_flush(Evas_Object *entry)
    eina_strbuf_free(link);
 }
 
-
-static void
-_focus_cb(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
-{
-   _content_refresh(obj);
-}
-
 static void
 _unfocus_cb(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUSED)
 {
-   _content_refresh(obj);
    _link_flush(obj);
 }
 
@@ -330,9 +297,6 @@ _anchor_clicked_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *e
    Elm_Entry_Anchor_Info *info = event;
    Efm_File *file;
 
-   if (focus_idler)
-     ecore_idler_del(focus_idler);
-
    elm_object_focus_set(obj, EINA_FALSE);
    elm_object_text_set(obj, NULL);
    elm_entry_entry_append(obj, info->name);
@@ -348,15 +312,12 @@ titlebar_init(void)
    entry = elm_entry_add(layout);
    evas_object_data_set(entry, "__content", content);
    elm_entry_single_line_set(entry, EINA_TRUE);
-   evas_object_smart_callback_add(entry, "focused", _focus_cb, NULL);
    evas_object_smart_callback_add(entry, "unfocused", _unfocus_cb, NULL);
    evas_object_smart_callback_add(entry, "changed,user", _changed_cb, NULL);
    evas_object_smart_callback_add(entry, "anchor,clicked", _anchor_clicked_cb, NULL);
    evas_object_show(entry);
 
    elm_object_part_content_set(layout, "jesus.textbar", entry);
-
-   unfocus_barrier = EINA_FALSE;
 }
 
 void
