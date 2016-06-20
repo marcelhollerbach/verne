@@ -40,12 +40,12 @@ _long_cb(void *data)
 }
 
 EOLIAN static void
-_elm_file_icon_evas_object_smart_del(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED)
+_elm_file_icon_efl_canvas_group_group_del(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED)
 {
   if (pd->t)
     ecore_timer_del(pd->t);
   pd->t = NULL;
-  evas_obj_smart_del(eo_super(obj, ELM_FILE_ICON_CLASS));
+  efl_canvas_group_del(eo_super(obj, ELM_FILE_ICON_CLASS));
 }
 
 static void
@@ -84,9 +84,9 @@ _drop_cb(void *data EINA_UNUSED, Evas_Object *obj, Elm_Selection_Data *ev)
 }
 
 EOLIAN static void
-_elm_file_icon_evas_object_smart_add(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED)
+_elm_file_icon_efl_canvas_group_group_add(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED)
 {
-   evas_obj_smart_add(eo_super(obj, ELM_FILE_ICON_CLASS));
+   efl_canvas_group_add(eo_super(obj, ELM_FILE_ICON_CLASS));
 
    if (!elm_layout_theme_set(obj, "file_icon", "base", elm_object_style_get(obj)))
      {
@@ -181,12 +181,6 @@ mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
      elm_file_mimetype_cache_mimetype_set(pd->cache, pd->icon, mime_type);
 
    evas_object_show(pd->icon);
-}
-
-EOLIAN static void
-_elm_file_icon_evas_object_smart_resize(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED, Evas_Coord w, Evas_Coord h)
-{
-   evas_obj_smart_resize(eo_super(obj, ELM_FILE_ICON_CLASS), w, h);
 }
 
 static Eina_Bool

@@ -132,7 +132,7 @@ class Elm.File.Selector (Elm.Layout) {
    implements {
       Eo.Base.constructor;
       Eo.Base.destructor;
-      Evas.Object.Smart.add;
+      Efl.Canvas.Group.group_add;
       Elm.Widget.event;
    }
 

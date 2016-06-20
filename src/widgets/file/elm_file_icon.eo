@@ -43,9 +43,8 @@ class Elm.File.Icon (Elm.Layout) {
       }
    }
    implements {
-     Evas.Object.Smart.del;
-     Evas.Object.Smart.add;
-     Evas.Object.Smart.resize;
+     Efl.Canvas.Group.group_del;
+     Efl.Canvas.Group.group_add;
      Eo.Base.destructor;
      Eo.Base.finalize;
    }

@@ -240,11 +240,11 @@ _elm_file_selector_eo_base_destructor(Eo *obj, Elm_File_Selector_Data *pd)
 }
 
 EOLIAN static void
-_elm_file_selector_evas_object_smart_add(Eo *obj, Elm_File_Selector_Data *pd EINA_UNUSED)
+_elm_file_selector_efl_canvas_group_group_add(Eo *obj, Elm_File_Selector_Data *pd EINA_UNUSED)
 {
    const Eo_Class *view;
 
-   evas_obj_smart_add(eo_super(obj, ELM_FILE_SELECTOR_CLASS));
+   efl_canvas_group_add(eo_super(obj, ELM_FILE_SELECTOR_CLASS));
 
    if (!elm_layout_theme_set(obj, "file_selector", "base", "default"))
      {

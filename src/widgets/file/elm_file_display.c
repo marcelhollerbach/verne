@@ -107,12 +107,12 @@ _elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd EINA_UN
 }
 
 EOLIAN static void
-_elm_file_display_evas_object_smart_add(Eo *obj, Elm_File_Display_Data *pd)
+_elm_file_display_efl_canvas_group_group_add(Eo *obj, Elm_File_Display_Data *pd)
 {
    Evas_Object *o;
    Eo *cache;
 
-   evas_obj_smart_add(eo_super(obj, ELM_FILE_DISPLAY_CLASS));
+   efl_canvas_group_add(eo_super(obj, ELM_FILE_DISPLAY_CLASS));
 
    if (!elm_layout_theme_set(obj, "file_display", "base", "default"))
      {

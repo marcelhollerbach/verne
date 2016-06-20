@@ -12,7 +12,7 @@ class Elm.File.Detail(Elm.Layout) {
         }
     }
     implements {
-        Evas.Object.Smart.add;
+        Efl.Canvas.Group.group_add;
         class.constructor;
     }
 }

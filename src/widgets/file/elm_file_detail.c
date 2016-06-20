@@ -871,11 +871,11 @@ _setup_cb(void *data, const Eo_Event *info EINA_UNUSED)
 }
 
 EOLIAN static void
-_elm_file_detail_evas_object_smart_add(Eo *obj, Elm_File_Detail_Data *pd)
+_elm_file_detail_efl_canvas_group_group_add(Eo *obj, Elm_File_Detail_Data *pd)
 {
    Evas_Object *bx;
 
-   evas_obj_smart_add(eo_super(obj, ELM_FILE_DETAIL_CLASS));
+   efl_canvas_group_add(eo_super(obj, ELM_FILE_DETAIL_CLASS));
 
    if (!elm_layout_theme_set(obj, "file_display", "file_preview", "default"))
      {

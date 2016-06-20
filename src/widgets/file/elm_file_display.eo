@@ -41,7 +41,7 @@ class Elm_File_Display (Elm.Layout) {
 
    implements {
       Eo.Base.constructor;
-      Evas.Object.Smart.add;
+      Efl.Canvas.Group.group_add;
    }
 
    events {
