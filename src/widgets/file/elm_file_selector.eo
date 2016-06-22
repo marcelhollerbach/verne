@@ -17,7 +17,7 @@ enum Elm.File.Selector.Folder_Placement {
 
 struct Elm.File.Selector.Menu_Hook {
    [[Used to pass the file and object at once to the event]]
-   menu : Evas.Object;
+   menu : Efl.Canvas.Object;
    file : Efm.File;
 }
 

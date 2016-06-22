@@ -18,7 +18,7 @@ class Elm_File_Display (Elm.Layout) {
 
          }
          values {
-            filepreview : Evas.Object;
+            filepreview : Efl.Canvas.Object;
          }
       }
       @property bookmarks {
@@ -26,7 +26,7 @@ class Elm_File_Display (Elm.Layout) {
 
          }
          values {
-            bookmark : Evas.Object;
+            bookmark : Efl.Canvas.Object;
          }
       }
       @property selector {
@@ -34,7 +34,7 @@ class Elm_File_Display (Elm.Layout) {
 
          }
          values {
-            selector : Evas.Object;
+            selector : Efl.Canvas.Object;
          }
       }
    }
