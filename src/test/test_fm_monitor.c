@@ -34,12 +34,11 @@ END_TEST
 
 Eina_Bool done;
 
-static Eina_Bool
+static void
 _done_cb(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    done = EINA_TRUE;
    ecore_main_loop_quit();
-   return EINA_TRUE;
 }
 
 START_TEST(efm_valid_file)
@@ -72,13 +71,12 @@ END_TEST
 
 int filecounter = 0;
 
-static Eina_Bool
+static void
 _done2_cb(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    filecounter ++;
    if (filecounter >= TEST_FILE_ITER_MAX)
      ecore_main_loop_quit();
-   return EINA_TRUE;
 }
 
 START_TEST(efm_stresstest)
@@ -120,12 +118,11 @@ END_TEST
 Eina_Bool error;
 int files;
 
-static Eina_Bool
+static void
 _error(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    error = EINA_TRUE;
    ecore_main_loop_quit();
-   return EINA_TRUE;
 }
 
 #if 0
@@ -136,13 +133,12 @@ _del(void *data, Eo *obj, const Eo_Event_Description *desc,  void *event)
 }
 #endif
 
-static Eina_Bool
+static void
 _add(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    files ++;
    if (files >= TEST_DIRECTORY_FILES_MAX)
      ecore_main_loop_quit();
-   return EINA_TRUE;
 }
 
 START_TEST(efm_monitor_test)
@@ -185,12 +181,11 @@ END_TEST
 
 int mon_files;
 
-static Eina_Bool
+static void
 _error_mon(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    mon_files = -1;
    ecore_main_loop_quit();
-   return EINA_TRUE;
 }
 
 #if 0
@@ -201,13 +196,12 @@ _del(void *data, Eo *obj, const Eo_Event_Description *desc,  void *event)
 }
 #endif
 
-static Eina_Bool
+static void
 _add_mon(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
    mon_files ++;
    if (mon_files >= ARCHIVE_FILE_NUMBER)
      ecore_main_loop_quit();
-   return EINA_TRUE;
 }
 
 START_TEST(efm_archive_monitor_test)

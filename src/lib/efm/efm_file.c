@@ -10,14 +10,12 @@ _efm_file_is_invalid_get(Eo *obj EINA_UNUSED, Efm_File_Data *pd)
     return pd->invalid;
 }
 
-static Eina_Bool
+static void
 _invalid_cb(void *data, const Eo_Event *event EINA_UNUSED)
 {
    Efm_File_Data *pd = data;
 
    pd->invalid = EINA_TRUE;
-
-   return EO_CALLBACK_CONTINUE;
 }
 
 EOLIAN static Eo_Base *

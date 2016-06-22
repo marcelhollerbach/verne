@@ -71,11 +71,11 @@ _forward_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, const char *em
    _flush();
 }
 
-static Eina_Bool
+static void
 _path_changed_cb(void *data EINA_UNUSED, const Eo_Event *event)
 {
-   if (barrier) return EO_CALLBACK_CONTINUE;
-   if (event->info == _history_get()) return EO_CALLBACK_CONTINUE;
+   if (barrier) return;
+   if (event->info == _history_get()) return;
 
    while(pointer > 0)
      {
@@ -84,8 +84,6 @@ _path_changed_cb(void *data EINA_UNUSED, const Eo_Event *event)
      }
 
    _history_push(event->info);
-
-   return EINA_TRUE;
 }
 
 void

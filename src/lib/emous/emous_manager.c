@@ -12,31 +12,27 @@ typedef struct {
 static Emous_Manager *manager;
 static Emous_Manager_Static_Data *sd;
 
-static Eina_Bool
+static void
 _added_cb(void *data EINA_UNUSED, const Eo_Event *event)
 {
     Emous_Device *device = event->info;
 
     // a device appeared
-    if (!sd) return EINA_TRUE;
+    if (!sd) return;
 
     sd->devices = eina_list_append(sd->devices, device);
     eo_event_callback_call(manager, EMOUS_MANAGER_EVENT_DEVICE_ADD, device);
-
-    return EINA_TRUE;
 }
 
-static Eina_Bool
+static void
 _deled_cb(void *data EINA_UNUSED, const Eo_Event *event)
 {
     Emous_Device *device = event->info;
 
-    if (!sd) return EINA_TRUE;
+    if (!sd) return;
 
     sd->devices = eina_list_remove(sd->devices, device);
     eo_event_callback_call(manager, EMOUS_MANAGER_EVENT_DEVICE_DEL, device);
-
-    return EINA_TRUE;
 }
 
 EOLIAN static Eina_List*

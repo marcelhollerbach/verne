@@ -3,7 +3,7 @@
 
 #include "config.h"
 
-#define EVAS_OBJECT_BETA
+#define EFL_CANVAS_OBJECT_BETA
 
 #include <Emous.h>
 #include <Efl.h>

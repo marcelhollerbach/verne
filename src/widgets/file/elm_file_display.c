@@ -12,7 +12,7 @@ typedef struct
    Eina_Bool bookmarks_show;
 } Elm_File_Display_Data;
 
-static Eina_Bool
+static void
 _selector_path_changed(void *data, const Eo_Event *event)
 {
    const char *file;
@@ -20,11 +20,9 @@ _selector_path_changed(void *data, const Eo_Event *event)
 
    file = efm_file_path_get(event->info);
    efl_file_set(pd->bookmark, file, NULL);
-
-   return EO_CALLBACK_CONTINUE;
 }
 
-static Eina_Bool
+static void
 _update_preview(void *data, const Eo_Event *event)
 {
    Efm_File *f;
@@ -33,10 +31,9 @@ _update_preview(void *data, const Eo_Event *event)
    f = event->info;
 
    elm_file_detail_file_set(pd->detail, f);
-   return EO_CALLBACK_CONTINUE;
 }
 
-static Eina_Bool
+static void
 _bookmark_path_changed(void *data,  const Eo_Event *event)
 {
    const char *file;
@@ -46,8 +43,6 @@ _bookmark_path_changed(void *data,  const Eo_Event *event)
    efl_file_get(event->object, &file, NULL);
    f = efm_file_get(EFM_CLASS, file);
    elm_file_selector_file_set(pd->selector, f);
-
-   return EO_CALLBACK_CONTINUE;
 }
 
 static void
@@ -66,7 +61,7 @@ _ctx_preview_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSE
    elm_file_display_filepreview_show_set(data, !pd->preview_show);
 }
 
-static Eina_Bool
+static void
 _menu_cb(void *data, const Eo_Event *event)
 {
    PRIV_DATA(data)
@@ -89,8 +84,6 @@ _menu_cb(void *data, const Eo_Event *event)
    elm_object_text_set(ck, "File Details");
    elm_object_item_content_set(it, ck);
    evas_object_show(ck);
-
-   return EO_CALLBACK_CONTINUE;
 }
 
 EOLIAN static Eo_Base *

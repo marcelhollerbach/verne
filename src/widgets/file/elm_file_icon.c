@@ -73,7 +73,8 @@ _drop_cb(void *data EINA_UNUSED, Evas_Object *obj, Elm_Selection_Data *ev)
 {
    PRIV_DATA
 
-   eo_event_callback_call(obj, ELM_FILE_ICON_EVENT_ITEM_DROP, ev);
+   eo_event_callback_call(
+    obj, ELM_FILE_ICON_EVENT_ITEM_DROP, ev);
 
    if (pd->t)
      ecore_timer_del(pd->t);
@@ -94,7 +95,7 @@ _elm_file_icon_efl_canvas_group_group_add(Eo *obj, Elm_File_Icon_Data *pd EINA_U
      }
 }
 
-static Eina_Bool
+static void
 _key_down_cb(void *data, const Eo_Event *event)
 {
    Evas_Event_Key_Down *ev;
@@ -105,8 +106,6 @@ _key_down_cb(void *data, const Eo_Event *event)
      elm_obj_file_icon_rename_set(data, EINA_FALSE, EINA_FALSE);
    else if (!strcmp(ev->key, "Return"))
      elm_obj_file_icon_rename_set(data, EINA_FALSE, EINA_TRUE);
-
-   return EO_CALLBACK_CONTINUE;
 }
 
 EOLIAN static void
@@ -127,7 +126,7 @@ _elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode, Eina_
         filename = efm_file_filename_get(pd->file);
 
         entry = elm_entry_add(obj);
-        eo_event_callback_add(entry, EVAS_OBJECT_EVENT_KEY_DOWN, _key_down_cb, obj);
+        eo_event_callback_add(entry, EFL_EVENT_KEY_DOWN, _key_down_cb, obj);
         evas_object_propagate_events_set(entry, EINA_FALSE);
         elm_entry_scrollable_set(entry, EINA_TRUE);
         elm_scroller_policy_set(entry, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
@@ -183,7 +182,7 @@ mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
    evas_object_show(pd->icon);
 }
 
-static Eina_Bool
+static void
 _mime_ready(void *data, const Eo_Event *event EINA_UNUSED)
 {
    Eo *icon = data;
@@ -191,7 +190,6 @@ _mime_ready(void *data, const Eo_Event *event EINA_UNUSED)
 
    pd = eo_data_scope_get(icon, ELM_FILE_ICON_CLASS);
    mime_ready(icon, pd);
-   return EINA_TRUE;
 }
 
 typedef enum {

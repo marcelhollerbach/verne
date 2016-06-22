@@ -15,18 +15,16 @@ _file_remove(View_Common *common, Efm_File *file)
    view_file_unselect(common, file);
 }
 
-static Eina_Bool
+static void
 _file_del(void *data, const Eo_Event *event)
 {
    View_Common *common = data;
    Efm_File *file = event->object;
 
    _file_remove(common, file);
-
-   return EINA_TRUE;
 }
 
-static Eina_Bool
+static void
 _file_hide(void *data, const Eo_Event *event)
 {
    View_Common *common = data;
@@ -35,11 +33,9 @@ _file_hide(void *data, const Eo_Event *event)
    eo_event_callback_del(file, EO_EVENT_DEL, _file_del, data);
 
    _file_remove(common, file);
-
-   return EINA_TRUE;
 }
 
-static Eina_Bool
+static void
 _file_add(void *data, const Eo_Event *event)
 {
    View_Common *common = data;
@@ -50,7 +46,6 @@ _file_add(void *data, const Eo_Event *event)
 
    eina_hash_add(common->files, &file, res);
    eo_event_callback_add(file, EFM_FILE_EVENT_INVALID, _file_del, data);
-   return EINA_TRUE;
 }
 
 void
@@ -64,7 +59,7 @@ _view_free(View_Common *common)
    common->files = NULL;
 }
 
-static Eina_Bool
+static void
 _error(void *data, const Eo_Event *event EINA_UNUSED)
 {
    View_Common *common = data;
@@ -74,18 +69,15 @@ _error(void *data, const Eo_Event *event EINA_UNUSED)
    common->err(common);
 
    eo_event_callback_call(common->obj, ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, NULL);
-
-   return EINA_TRUE;
 }
 
-static Eina_Bool
+static void
 _listing_done(void *data, const Eo_Event *event EINA_UNUSED
   )
 {
    View_Common *common = data;
 
    eo_event_callback_call(common->obj, ELM_FILE_VIEW_EVENT_WORKING_DONE , NULL);
-   return EO_CALLBACK_CONTINUE;
 }
 
 EO_CALLBACKS_ARRAY_DEFINE(_monitor_event_cbs,

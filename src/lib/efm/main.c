@@ -70,17 +70,16 @@ efm_shutdown(void)
    ecore_shutdown();
    eina_shutdown();
 }
-static Eina_Bool _file_del(void *data, const Eo_Event *event);
+static void _file_del(void *data, const Eo_Event *event);
 
 EO_CALLBACKS_ARRAY_DEFINE(factory_events, {EFM_FILE_EVENT_INVALID, _file_del},
                                           {EO_EVENT_DEL, _file_del});
 
-static Eina_Bool
+static void
 _file_del(void *data EINA_UNUSED, const Eo_Event *event)
 {
    eina_hash_del_by_data(sd->factory, event->object);
    eo_event_callback_array_del(event->object, factory_events(), sd->factory);
-   return EO_CALLBACK_CONTINUE;
 }
 
 #define SEARCH_IF_FOUND_RETURN_INCED(PATH,FILE) \

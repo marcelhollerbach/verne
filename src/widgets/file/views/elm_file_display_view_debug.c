@@ -61,7 +61,7 @@ _elm_file_display_view_debug_elm_file_view_search(Eo *obj EINA_UNUSED, Elm_File_
    return EINA_FALSE;
 }
 
-EOLIAN static Eina_Bool
+EOLIAN static void
 _changed(void *data EINA_UNUSED, const Eo_Event *event)
 {
    Eina_Bool state;
@@ -72,8 +72,6 @@ _changed(void *data EINA_UNUSED, const Eo_Event *event)
      eo_event_callback_call(data, ELM_FILE_VIEW_EVENT_WORKING_START, NULL);
    else
      eo_event_callback_call(data, ELM_FILE_VIEW_EVENT_WORKING_DONE, NULL);
-
-   return EO_CALLBACK_CONTINUE;
 }
 
 EOLIAN static void

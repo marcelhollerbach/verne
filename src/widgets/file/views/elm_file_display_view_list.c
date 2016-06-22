@@ -221,7 +221,7 @@ _selection_del(void *data EINA_UNUSED, Evas_Object *obj, void *event_info)
    view_file_unselect(&pd->common, file);
 }
 
-static Eina_Bool
+static void
 _key_down(void *data, const Eo_Event *event)
 {
    Evas_Event_Key_Down *ev = event->info;
@@ -235,17 +235,15 @@ _key_down(void *data, const Eo_Event *event)
         selected = elm_genlist_selected_items_get(list);
 
         if (eina_list_count(selected) > 1)
-          return EO_CALLBACK_STOP;
+          eo_event_callback_stop(event->object);
 
         mover =  eina_list_data_get(eina_list_last(selected));
 
         fmm_file = elm_object_item_data_get(mover);
         eo_event_callback_call(list, ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHOOSEN, fmm_file);
 
-        return EO_CALLBACK_STOP;
+        eo_event_callback_stop(event->object);
      }
-
-   return EO_CALLBACK_CONTINUE;
 }
 
 EOLIAN static Eo_Base *
@@ -263,7 +261,7 @@ _elm_file_display_view_list_eo_base_constructor(Eo *obj, Elm_File_Display_View_L
 
    parent = eo_parent_get(obj);
 
-   eo_event_callback_add(parent, EVAS_OBJECT_EVENT_KEY_DOWN, _key_down, obj);
+   eo_event_callback_add(parent, EFL_CANVAS_OBJECT_EVENT_KEY_DOWN, _key_down, obj);
    evas_object_smart_callback_add(obj, "selected", _selection_add, NULL);
    evas_object_smart_callback_add(obj, "unselected", _selection_del, NULL);
 

@@ -10,11 +10,10 @@
 #include <Elementary.h>
 #include "ui.h"
 
-static Eina_Bool
+static void
 _pubs_free_cb(void *data, const Eo_Event *event EINA_UNUSED)
 {
    free(data);
-   return EINA_TRUE;
 }
 
 Open_With2_Main_Win_Widgets *

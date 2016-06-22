@@ -537,7 +537,7 @@ _update_thumbnail(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
   evas_object_show(o);
 }
 
-static Eina_Bool
+static void
 _file_changed(void *data, const Eo_Event *event EINA_UNUSED)
 {
    Elm_File_Detail *oo;
@@ -549,7 +549,6 @@ _file_changed(void *data, const Eo_Event *event EINA_UNUSED)
    _update_thumbnail(oo, pd, pd->file);
    _update_stat(pd, pd->file);
    _flip_update(pd);
-   return EO_CALLBACK_CONTINUE;
 }
 
 EOLIAN static void
@@ -853,21 +852,20 @@ detail_row_changable_init(Evas_Object *obj, Detail_Row_Mutable *row)
       elm_box_pack_end(bx, pd->W.table); \
    } while(0)
 
-static Eina_Bool
+static void
 _setup_cb(void *data, const Eo_Event *info EINA_UNUSED)
 {
    Elm_File_Detail_Data *pd;
 
    pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
 
-   if (pd->havy_setup) return EO_CALLBACK_CONTINUE;
+   if (pd->havy_setup) return;
 
    pd->havy_setup = EINA_TRUE;
 
    _user_hover_init(data, pd->user.change_display);
    _group_hover_init(data, pd->group.change_display);
 
-   return EO_CALLBACK_CONTINUE;
 }
 
 EOLIAN static void

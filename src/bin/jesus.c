@@ -19,7 +19,7 @@ printHelp()
    printf("usage: jesus [Path] \n If path is not given $HOME will be taken, if this is not set / will be used.");
 }
 
-static Eina_Bool
+static void
 _dir_changed(void *data EINA_UNUSED, const Eo_Event *event)
 {
    Eina_Strbuf *buf;
@@ -32,7 +32,6 @@ _dir_changed(void *data EINA_UNUSED, const Eo_Event *event)
    eina_strbuf_append_printf(buf, "elm - Jesus | %s", filename);
    elm_win_title_set(win, eina_strbuf_string_get(buf));
    eina_strbuf_free(buf);
-   return EO_CALLBACK_CONTINUE;
 }
 
 static void

@@ -427,13 +427,11 @@ _device_update(Bookmark_Item *item)
      elm_layout_signal_emit(item->pd.dev.indicator, signal, "elm");
 }
 
-static Eina_Bool
+static void
 _state_changed(void *data, const Eo_Event *event EINA_UNUSED)
 {
    Bookmark_Item *item = data;
    _device_update(item);
-
-   return EINA_TRUE;
 }
 
 static Bookmark_Item*
@@ -453,22 +451,18 @@ _device_add(Emous_Device *d, Evas_Object *w)
   return it;
 }
 
-static Eina_Bool
+static void
 _device_add_cb(void *data, const Eo_Event *event)
 {
   Emous_Device *d = event->info;
 
   _device_add(d, data);
-
-  return EINA_TRUE;
 }
 
-static Eina_Bool
+static void
 _device_del_cb(void *data, const Eo_Event *event EINA_UNUSED)
 {
    _setup_list(data);
-
-   return EINA_TRUE;
 }
 
 //============================================================================================

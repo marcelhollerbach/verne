@@ -23,11 +23,10 @@ _open(Efm_File *select)
       }
 }
 
-static Eina_Bool
+static void
 _open_cb(void *data EINA_UNUSED, const Eo_Event *event)
 {
    _open(event->info);
-   return EO_CALLBACK_CONTINUE;
 }
 
 static void
@@ -98,7 +97,7 @@ _extract(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_
    archive_extract(path);
 }
 
-static Eina_Bool
+static void
 _menu_selector_start(void *data EINA_UNUSED, const Eo_Event *event)
 {
     Elm_File_Selector_Menu_Hook *ev = event->info;
@@ -140,43 +139,36 @@ _menu_selector_start(void *data EINA_UNUSED, const Eo_Event *event)
     item = elm_menu_item_add(ev->menu, NULL, NULL, "Paste", _paste_cb, ev->file);
     if (clipboard_something_in())
       elm_object_item_disabled_set(item, EINA_TRUE);
-
-    return EINA_TRUE;
 }
 
-static Eina_Bool
+static void
 _menu_selector_end(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
 
-    return EINA_TRUE;
 }
 
-static Eina_Bool
+static void
 _menu_bookmarks_start(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
 
-    return EINA_TRUE;
 }
 
-static Eina_Bool
+static void
 _menu_bookmarks_end(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
 
-    return EINA_TRUE;
 }
 
-static Eina_Bool
+static void
 _menu_device_start(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
 
-    return EINA_TRUE;
 }
 
-static Eina_Bool
+static void
 _menu_device_end(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
 
-    return EINA_TRUE;
 }
 
 void

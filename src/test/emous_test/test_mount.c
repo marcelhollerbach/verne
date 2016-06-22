@@ -10,11 +10,10 @@
 
 static Eina_Bool mount_added;
 
-static Eina_Bool
+static void
 _mount_add(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
   mount_added = EINA_TRUE;
-  return EINA_TRUE;
 }
 
 START_TEST(emous_mount_point_listening)
@@ -51,17 +50,15 @@ END_TEST
 static int adddev = 0;
 static int deldev = 0;
 
-static Eina_Bool
+static void
 _add_cb(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
   adddev ++;
-  return EINA_TRUE;
 }
-static Eina_Bool
+static void
 _del_cb(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 {
   deldev ++;
-  return EINA_TRUE;
 }
 
 START_TEST(debug_devices_appear)

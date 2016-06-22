@@ -38,7 +38,7 @@ typedef struct {
 } Animpass;
 
 static Eina_Hash *views = NULL;
-static Eina_Bool _event_rect_mouse_down(void *data, const Eo_Event *event);
+static void _event_rect_mouse_down(void *data, const Eo_Event *event);
 static Elm_Object_Item* _dnd_item_get_cb(Evas_Object *obj, Evas_Coord x, Evas_Coord y, int *xposret, int *yposret);
 static Eina_Bool _dnd_data_get_cb(Evas_Object *obj, Elm_Object_Item *it, Elm_Drag_User_Info *info);
 static void _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file);
@@ -113,50 +113,44 @@ _elm_file_selector_view_pool_del(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, cons
  * View stuff
  *======================================
  */
-static Eina_Bool
+static void
 _view_selected_cb(void *data, const Eo_Event *event)
 {
    Efm_File *f = event->info;
 
    eo_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_ITEM_SELECTED, f);
-   return EINA_TRUE;
 }
 
-static Eina_Bool
+static void
 _view_choosen_cb(void *data, const Eo_Event *event)
 {
    Efm_File *f = event->info;
 
    eo_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_ITEM_CHOOSEN, f);
-
-   return EINA_TRUE;
 }
 
-static Eina_Bool
+static void
 _view_select_changed_cb(void *data, const Eo_Event *event)
 {
    Evas_Object *wid = data;
    PRIV_DATA(wid);
 
    if (!event->info)
-     return EO_CALLBACK_CONTINUE;
+     return;
 
    pd->selection = event->info;
    eo_event_callback_call(wid, ELM_FILE_SELECTOR_EVENT_ITEM_SELECTION_CHANGED, pd->selection);
-   return EO_CALLBACK_CONTINUE;
 }
 
-static Eina_Bool
+static void
 _work_done(void *data, const Eo_Event *event EINA_UNUSED)
 {
    PRIV_DATA(data);
    eo_del(pd->work_indicator);
    pd->work_indicator = NULL;
-
-   return EO_CALLBACK_CONTINUE;
 }
 
-static Eina_Bool
+static void
 _work_start(void *data, const Eo_Event *event)
 {
    PRIV_DATA(data);
@@ -167,15 +161,13 @@ _work_start(void *data, const Eo_Event *event)
    elm_progressbar_pulse(pd->work_indicator, EINA_TRUE);
    elm_object_part_content_set(data, "waiting", pd->work_indicator);
    evas_object_show(pd->work_indicator);
-
-   return EO_CALLBACK_CONTINUE;
 }
 
 EO_CALLBACKS_ARRAY_DEFINE(view_events,
   {ELM_FILE_VIEW_EVENT_ITEM_SELECT_SIMPLE, _view_selected_cb},
   {ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHOOSEN, _view_choosen_cb},
   {ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, _view_select_changed_cb},
-  {EVAS_OBJECT_EVENT_MOUSE_DOWN, _event_rect_mouse_down},
+  {EFL_CANVAS_OBJECT_EVENT_MOUSE_DOWN, _event_rect_mouse_down},
   {ELM_FILE_VIEW_EVENT_WORKING_DONE, _work_done},
   {ELM_FILE_VIEW_EVENT_WORKING_START, _work_start}
 );
@@ -289,7 +281,7 @@ _elm_file_selector_file_get(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd)
  * Event Rect mouse events
  *======================================
  */
-static Eina_Bool
+static void
 _event_rect_mouse_move(void *data, const Eo_Event *event)
 {
    PRIV_DATA(data)
@@ -347,11 +339,9 @@ _event_rect_mouse_move(void *data, const Eo_Event *event)
      selection.h = (view.y+view.h)-selection.y;
 
    evas_object_geometry_set(pd->event.selection, selection.x, selection.y, selection.w, selection.h);
-
-   return EO_CALLBACK_CONTINUE;
 }
 
-static Eina_Bool
+static void
 _event_rect_mouse_up(void *data, const Eo_Event *event)
 {
    PRIV_DATA(data);
@@ -366,12 +356,11 @@ _event_rect_mouse_up(void *data, const Eo_Event *event)
    sel = elm_file_view_search_items(pd->view.obj, &selection);
    elm_file_view_selection_set(pd->view.obj, sel);
 
-   eo_event_callback_del(event->object, EVAS_OBJECT_EVENT_MOUSE_MOVE, _event_rect_mouse_move, data);
-   eo_event_callback_del(event->object, EVAS_OBJECT_EVENT_MOUSE_UP, _event_rect_mouse_up, data);
-   return EO_CALLBACK_CONTINUE;
+   eo_event_callback_del(event->object, EFL_CANVAS_OBJECT_EVENT_MOUSE_MOVE, _event_rect_mouse_move, data);
+   eo_event_callback_del(event->object, EFL_CANVAS_OBJECT_EVENT_MOUSE_UP, _event_rect_mouse_up, data);
 }
 
-static Eina_Bool
+static void
 _event_rect_mouse_down(void *data, const Eo_Event *event)
 {
    PRIV_DATA(data)
@@ -385,14 +374,14 @@ _event_rect_mouse_down(void *data, const Eo_Event *event)
    elm_file_view_size_get(pd->view.obj, &view);
 
    if (!eina_rectangle_coords_inside(&view, ev->output.x, ev->output.y))
-     return EO_CALLBACK_CONTINUE;
+     return;
 
    if (ev->button == 1 && !icons)
      {
         pd->event.startpoint.x = ev->output.x;
         pd->event.startpoint.y = ev->output.y;
-        eo_event_callback_add(event->object, EVAS_OBJECT_EVENT_MOUSE_MOVE, _event_rect_mouse_move, data);
-        eo_event_callback_add(event->object, EVAS_OBJECT_EVENT_MOUSE_UP, _event_rect_mouse_up, data);
+        eo_event_callback_add(event->object, EFL_CANVAS_OBJECT_EVENT_MOUSE_MOVE, _event_rect_mouse_move, data);
+        eo_event_callback_add(event->object, EFL_CANVAS_OBJECT_EVENT_MOUSE_UP, _event_rect_mouse_up, data);
      }
    else if (ev->button == 3)
      {
@@ -401,8 +390,6 @@ _event_rect_mouse_down(void *data, const Eo_Event *event)
         file = elm_obj_file_icon_file_get(file_icon);
         _ctx_menu_open(data, ev->output.x, ev->output.y, file_icon, file);
      }
-
-   return EO_CALLBACK_CONTINUE;
 }
 
 /*
@@ -587,7 +574,7 @@ _dnd_data_get_cb(Evas_Object *obj, Elm_Object_Item *it EINA_UNUSED, Elm_Drag_Use
  * icon rename things
  *======================================
  */
-static Eina_Bool
+static void
 _icon_rename_cb(void *data EINA_UNUSED, const Eo_Event *event)
 {
    const char *name = event->info;
@@ -596,7 +583,7 @@ _icon_rename_cb(void *data EINA_UNUSED, const Eo_Event *event)
 
    file = elm_obj_file_icon_file_get(event->object);
 
-   if (!file) return EINA_FALSE;
+   if (!file) return;
 
    filename = efm_file_filename_get(file);
 
@@ -612,7 +599,6 @@ _icon_rename_cb(void *data EINA_UNUSED, const Eo_Event *event)
         if (!ecore_file_mv(path, buf))
           ERR("Rename failed!");
      }
-   return EINA_TRUE;
 }
 
 /*
@@ -713,7 +699,7 @@ _elm_file_selector_elm_widget_event(Eo *obj, Elm_File_Selector_Data *pd, Evas_Ob
              eo_event_callback_add(icon, ELM_FILE_ICON_EVENT_RENAME_DONE, _icon_rename_cb, NULL);
              elm_obj_file_icon_rename_set(icon, EINA_TRUE, EINA_FALSE);
           }
-        return EO_CALLBACK_STOP;
+        return EINA_FALSE;
       }
    else if (!strcmp(ev->key, "Escape"))
       {
@@ -1187,22 +1173,20 @@ _elm_file_selector_search(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd, const
    _search_update(obj, pd);
 }
 
-static Eina_Bool
+static void
 _drop_cb(void *data, const Eo_Event *event)
 {
    eo_ref(event->object);
    eo_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_DND_ITEM_DROPED, NULL);
    eo_unref(event->object);
-   return EINA_FALSE;
 }
 
-static Eina_Bool
+static void
 _hover_cb(void *data, const Eo_Event *event)
 {
    eo_ref(event->object);
    eo_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_DND_ITEM_HOVER, event->object);
    eo_unref(event->object);
-   return EINA_FALSE;
 }
 
 EOLIAN static Elm_File_Icon *
