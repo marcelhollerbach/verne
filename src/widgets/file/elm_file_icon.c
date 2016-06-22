@@ -126,7 +126,7 @@ _elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode, Eina_
         filename = efm_file_filename_get(pd->file);
 
         entry = elm_entry_add(obj);
-        eo_event_callback_add(entry, EFL_EVENT_KEY_DOWN, _key_down_cb, obj);
+        eo_event_callback_add(entry, EFL_CANVAS_OBJECT_EVENT_KEY_DOWN, _key_down_cb, obj);
         evas_object_propagate_events_set(entry, EINA_FALSE);
         elm_entry_scrollable_set(entry, EINA_TRUE);
         elm_scroller_policy_set(entry, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
