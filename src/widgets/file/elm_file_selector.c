@@ -35,6 +35,7 @@ typedef struct {
    int x;
    int y;
    Eina_List *icons;
+   Elm_File_MimeType_Cache *cache;
 } Animpass;
 
 static Eina_Hash *views = NULL;
@@ -430,7 +431,7 @@ _dnd_item_get_cb(Evas_Object *obj, Evas_Coord x, Evas_Coord y, int *xposret, int
 }
 
 static Eina_List*
-_dnd_anim_ics_gen(Evas_Object *obj, Evas_Object *view, Eina_List **anim_icons, Eina_List **mimetypes)
+_dnd_anim_ics_gen(Evas_Object *obj, Evas_Object *view)
 {
    PRIV_DATA(obj)
    Eina_List *node, *list;
@@ -439,27 +440,24 @@ _dnd_anim_ics_gen(Evas_Object *obj, Evas_Object *view, Eina_List **anim_icons, E
 
 
    list = elm_file_view_selection_get(view);
-   *anim_icons = NULL;
-   *mimetypes = NULL;
+
    EINA_LIST_FOREACH(list, node, icon)
      {
         Eina_Rectangle place;
         Efm_File *f;
-        const char *file;
+        Eo *widget_icon;
         const char *mimetype;
 
         f = elm_obj_file_icon_file_get(icon);
         mimetype = efm_file_mimetype_get(f);
 
-        icon = elm_icon_add(view);
+        widget_icon = elm_icon_add(view);
         evas_object_geometry_get(icon, &place.x, &place.y, &place.w, &place.h);
-        evas_object_geometry_set(icon, place.x, place.y, place.w, place.h);
-        elm_file_mimetype_cache_mimetype_set(pd->cache, icon, mimetype);
-        elm_image_file_set(icon, file, NULL);
-        evas_object_show(icon);
+        evas_object_geometry_set(widget_icon, place.x, place.y, place.w, place.h);
+        elm_file_mimetype_cache_mimetype_set(pd->cache, widget_icon, mimetype);
+        evas_object_show(widget_icon);
 
-        *anim_icons = eina_list_append(*anim_icons, icon);
-        *mimetypes = eina_list_append(*mimetypes, file);
+        result = eina_list_append(result, widget_icon);
      }
 
    return result;
@@ -500,7 +498,7 @@ _dnd_create_icon(void *data, Evas_Object *win, Evas_Coord *xoff, Evas_Coord *yof
    Evas_Object *res;
    Eina_List *node;
    Animpass *pass = data;
-   const char *file;
+   Elm_File_Icon *file;
    int i = 0;
 
    res = elm_layout_add(win);
@@ -512,20 +510,21 @@ _dnd_create_icon(void *data, Evas_Object *win, Evas_Coord *xoff, Evas_Coord *yof
 
    EINA_LIST_FOREACH(pass->icons, node, file)
      {
-        Evas_Object *icon;
         char buf[PATH_MAX];
+        Efm_File *f;
+        Eo *widget_icon;
+        const char *mimetype;
+
+        f = elm_obj_file_icon_file_get(file);
+        mimetype = efm_file_mimetype_get(f);
+
+        widget_icon = elm_icon_add(win);
+        elm_file_mimetype_cache_mimetype_set(pass->cache, widget_icon, mimetype);
+        evas_object_show(widget_icon);
+
         i++;
-
-        icon = elm_icon_add(win);
-        elm_icon_order_lookup_set(icon, ELM_ICON_LOOKUP_FDO_THEME);
-        elm_image_file_set(icon, file, NULL);
-        elm_icon_standard_set(icon, file);
-        evas_object_show(icon);
-
         snprintf(buf, sizeof(buf), "img%d", i);
-        elm_object_part_content_set(res, buf, icon);
-        if (i == 3)
-          break;
+        elm_object_part_content_set(res, buf, widget_icon);
      }
    evas_object_show(res);
    evas_object_layer_set(res, EVAS_LAYER_MAX);
@@ -548,16 +547,30 @@ _dnd_drag_start(void *data, Evas_Object *obj)
 static Eina_Bool
 _dnd_data_get_cb(Evas_Object *obj, Elm_Object_Item *it EINA_UNUSED, Elm_Drag_User_Info *info)
 {
+
     Animpass *pass = calloc(1, sizeof(Animpass));
     Evas_Object *parent;
-    Eina_List *mimetypelist;
     Eina_List *anim_icons;
 
     parent = eo_parent_get(obj);
+    PRIV_DATA(parent)
 
-    _dnd_anim_ics_gen(parent, obj, &anim_icons, &mimetypelist);
-    pass->icons = mimetypelist;
+    anim_icons = _dnd_anim_ics_gen(parent, obj);
+    pass->cache = pd->cache;
 
+    //copy 3 items
+    {
+       Eina_List *selection = elm_file_view_selection_get(obj);
+       for (int i = 0; i < 3; i++)
+         {
+            Eo *icon = eina_list_data_get(selection);
+
+            eo_ref(icon);
+            pass->icons = eina_list_append(pass->icons, icon);
+
+            selection = eina_list_next(selection);
+         }
+    }
     info->format = ELM_SEL_FORMAT_TARGETS;
     info->icons = anim_icons;
     info->data = _dnd_items_gen(obj);
