@@ -49,7 +49,7 @@ _elm_file_mimetype_cache_mimetype_set(Eo *obj EINA_UNUSED, Elm_File_MimeType_Cac
          return;
       }
 
-    result = eina_hash_find(pd->mime_type, name);
+   result = eina_hash_find(pd->mime_type, name);
 
    if (!result)
      {
@@ -64,8 +64,8 @@ _elm_file_mimetype_cache_mimetype_set(Eo *obj EINA_UNUSED, Elm_File_MimeType_Cac
         else
           eina_hash_direct_add(pd->mime_type, name, result);
       }
-
-   elm_image_file_set(icon, result, NULL);
+   if (result && result != pd->no_entry)
+     elm_image_file_set(icon, result, NULL);
 }
 
 #include "elm_file_mimetype_cache.eo.x"
