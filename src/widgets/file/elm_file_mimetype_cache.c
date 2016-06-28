@@ -36,6 +36,12 @@ _elm_file_mimetype_cache_mimetype_set(Eo *obj EINA_UNUSED, Elm_File_MimeType_Cac
 {
     const char *result;
 
+    if (!name)
+      {
+         evas_object_hide(icon);
+         return;
+      }
+
     if (!strcmp(elm_config_icon_theme_get(), "_Elementary_Icon_Theme"))
       {
          //just use normal standard set
