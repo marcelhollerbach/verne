@@ -449,11 +449,15 @@ _dnd_anim_ics_gen(Evas_Object *obj, Evas_Object *view)
         const char *mimetype;
 
         f = elm_obj_file_icon_file_get(icon);
-        mimetype = efm_file_mimetype_get(f);
 
         widget_icon = elm_icon_add(view);
         evas_object_geometry_get(icon, &place.x, &place.y, &place.w, &place.h);
         evas_object_geometry_set(widget_icon, place.x, place.y, place.w, place.h);
+
+        if (efm_file_is_type(f, EFM_FILE_TYPE_DIRECTORY))
+          mimetype = "folder";
+        else
+          mimetype = efm_file_mimetype_get(f);
         elm_file_mimetype_cache_mimetype_set(pd->cache, widget_icon, mimetype);
         evas_object_show(widget_icon);
 
@@ -516,9 +520,13 @@ _dnd_create_icon(void *data, Evas_Object *win, Evas_Coord *xoff, Evas_Coord *yof
         const char *mimetype;
 
         f = elm_obj_file_icon_file_get(file);
-        mimetype = efm_file_mimetype_get(f);
-
         widget_icon = elm_icon_add(win);
+
+        if (efm_file_is_type(f, EFM_FILE_TYPE_DIRECTORY))
+          mimetype = "folder";
+        else
+          mimetype = efm_file_mimetype_get(f);
+
         elm_file_mimetype_cache_mimetype_set(pass->cache, widget_icon, mimetype);
         evas_object_show(widget_icon);
 
