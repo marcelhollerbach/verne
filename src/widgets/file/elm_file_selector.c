@@ -573,10 +573,11 @@ _dnd_data_get_cb(Evas_Object *obj, Elm_Object_Item *it EINA_UNUSED, Elm_Drag_Use
          {
             Eo *icon = eina_list_data_get(selection);
 
-            eo_ref(icon);
             pass->icons = eina_list_append(pass->icons, icon);
 
             selection = eina_list_next(selection);
+
+            if (!selection) break;
          }
     }
     info->format = ELM_SEL_FORMAT_TARGETS;
