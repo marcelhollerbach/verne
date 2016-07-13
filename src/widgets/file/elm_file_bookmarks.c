@@ -247,7 +247,7 @@ _device_item_content_get(void *data, Evas_Object *obj, const char *part EINA_UNU
         break;
      }
 
-   indicator = elm_layout_add(obj);
+   indicator = d->indicator = elm_layout_add(obj);
    eo_wref_add(indicator, &d->indicator);
 
    icon = elm_icon_add(indicator);
@@ -267,6 +267,11 @@ _device_item_content_get(void *data, Evas_Object *obj, const char *part EINA_UNU
 static void
 _device_item_del(void *data, Evas_Object *obj EINA_UNUSED)
 {
+   Bookmark_Item *it = data;
+   Device *d = &it->pd.dev;
+
+   eo_wref_del(d->indicator, &d->indicator);
+
    free(data);
 }
 
