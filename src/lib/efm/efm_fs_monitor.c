@@ -221,7 +221,7 @@ _eio_error_cb(void *data, Eio_File *handler EINA_UNUSED, int error EINA_UNUSED)
 
    job = data;
 
-   if (job->monitor)
+   if (!job->monitor)
      return;
 
    pd = eo_data_scope_get(job->monitor, EFM_FS_MONITOR_CLASS);
