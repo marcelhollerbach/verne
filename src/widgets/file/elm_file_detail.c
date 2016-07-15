@@ -293,7 +293,6 @@ _fallback_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache ,Efm_File *fi
 
    // display the mime_type icon
    o = elm_icon_add(obj);
-   elm_icon_order_lookup_set(o, ELM_ICON_LOOKUP_FDO_THEME);
 
    if (efm_file_is_type(file, EFM_FILE_TYPE_DIRECTORY))
      elm_file_mimetype_cache_mimetype_set(cache, o, "folder");

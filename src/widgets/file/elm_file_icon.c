@@ -240,13 +240,11 @@ _file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
         desktop = efreet_desktop_new(path);
 
         pd->icon = elm_icon_add(obj);
-        elm_icon_order_lookup_set(pd->icon, ELM_ICON_LOOKUP_FDO_THEME);
         elm_icon_standard_set(pd->icon, desktop->icon);
      }
    else if (filemode == FILE_MODE_TRIVIAL)
      {
         pd->icon = elm_icon_add(obj);
-        elm_icon_order_lookup_set(pd->icon, ELM_ICON_LOOKUP_FDO_THEME);
 
         if (!mime_type)
           eo_event_callback_add(pd->file, EFM_FILE_EVENT_FSQUERY_DONE,
