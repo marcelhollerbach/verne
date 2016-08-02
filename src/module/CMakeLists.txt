@@ -14,28 +14,30 @@ LIST(APPEND jesus_files
    )
 list(APPEND bg_deps
   ../widgets/file/
+  ../lib/efm
   )
 
 eo_rule_create("${jesus_files}" "${bg_deps}")
 
-add_library(jesus MODULE ${jesus_files})
+add_library(jesus_module MODULE ${jesus_files})
 
-target_link_libraries (jesus
+target_link_libraries (jesus_module
    ${EINA_LIBRARIES}
    ${EVAS_LIBRARIES}
    ${EFL_LIBRARIES}
+   ${EINA_LIBRARIES}
    ${EO_LIBRARIES}
    ${ELEMENTARY_LIBRARIES}
-   widgets
-   efm_lib
-   ${Enlightenment_LIBRARIES}
+   efm
+   elm_ext
+
 )
 
-set_target_properties(jesus PROPERTIES OUTPUT_NAME module)
-set_target_properties(jesus PROPERTIES PREFIX "")
+set_target_properties(jesus_module PROPERTIES OUTPUT_NAME module)
+set_target_properties(jesus_module PROPERTIES PREFIX "")
 
-INSTALL(TARGETS jesus
-  DESTINATION  /usr/local/lib/enlightenment/modules/jesus/linux-gnu-x86_64-ver-autocannoli-0.20/
+INSTALL(TARGETS jesus_module
+  DESTINATION  /usr/local-e/lib/enlightenment/modules/jesus/linux-gnu-x86_64-ver-0.22/
   RENAME module.so
 )
-INSTALL(FILES module.desktop DESTINATION /usr/local/lib/enlightenment/modules/jesus/)
+INSTALL(FILES module.desktop DESTINATION /usr/local-e/lib/enlightenment/modules/jesus/)
