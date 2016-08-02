@@ -253,10 +253,12 @@ _elm_file_display_view_grid_eo_base_constructor(Eo *obj, Elm_File_Display_View_G
    Eo *parent;
 
    pd->gic = elm_gengrid_item_class_new();
-   pd->gic->item_style = "default";
+   pd->gic->item_style = "view_icon";
    pd->gic->func.content_get = _grid_content_get;
 
    eo = eo_constructor(eo_super(obj, ELM_FILE_DISPLAY_VIEW_GRID_CLASS));
+
+   elm_object_style_set(obj, "file_display");
 
    elm_gengrid_align_set(obj, 0.5, 0.0);
    parent = eo_parent_get(obj);

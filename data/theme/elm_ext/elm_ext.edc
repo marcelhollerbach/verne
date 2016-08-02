@@ -3,6 +3,7 @@
 
 collections {
     #include "file_display_genlist_style.edc"
+    #include "file_display_gengrid_style.edc"
     #include "file_display.edc"
     #include "file_preview.edc"
     #include "file_selector.edc"
