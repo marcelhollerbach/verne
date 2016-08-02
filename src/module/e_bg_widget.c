@@ -7,7 +7,7 @@ typedef struct {
 } E_Bg_Widget_Data;
 
 EOLIAN static Elm_File_Icon *
-_e_bg_widget_elm_file_selector_icon_generate(Eo *obj, E_Bg_Widget_Data *pd, Efm_File *file)
+_e_bg_widget_elm_file_selector_icon_generate(Eo *obj, E_Bg_Widget_Data *pd EINA_UNUSED, Efm_File *file)
 {
    Evas_Object *ic;
    Elm_File_MimeType_Cache *cache;

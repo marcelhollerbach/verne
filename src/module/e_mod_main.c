@@ -7,7 +7,7 @@
 
 typedef struct {
     struct {
-        Ecore_Event_Handler *zone_resize, *zone_del;
+        Ecore_Event_Handler *zone_resize, *zone_del, *zone_add;
     } handler;
     Eina_Hash *fms;
 } Jesus_Data;
@@ -45,6 +45,8 @@ _fm_add(E_Zone *zone)
    Efm_File *file;
    const char *desk;
 
+   if (_fm_find(zone)) return;
+
    fm = eo_add(E_BG_WIDGET_CLASS, e_comp->elm);
 
    desk = efreet_desktop_dir_get();
@@ -65,16 +67,35 @@ _fm_del(E_Zone *zone)
 }
 
 static Eina_Bool
-_zone_resize(void *data, int type EINA_UNUSED, void *event)
+_zone_resize(void *data EINA_UNUSED, int type EINA_UNUSED, void *event EINA_UNUSED)
 {
+   E_Event_Zone_Move_Resize *ev = event;
+
+   _fm_resize(ev->zone);
+
    return ECORE_CALLBACK_PASS_ON;
 }
 
 static Eina_Bool
-_zone_del(void *data, int type EINA_UNUSED, void *event)
+_zone_del(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 {
+   E_Event_Zone_Del *ev = event;
+
+   _fm_del(ev->zone);
+
    return ECORE_CALLBACK_PASS_ON;
 }
+
+static Eina_Bool
+_zone_add(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
+{
+   E_Event_Zone_Add *ev = event;
+
+   _fm_add(ev->zone);
+
+   return ECORE_CALLBACK_PASS_ON;
+}
+
 
 static void
 _fm_free(void *data)
@@ -97,6 +118,9 @@ e_modapi_init(E_Module *m)
 
    sd->fms = eina_hash_pointer_new(_fm_free);
 
+   sd->handler.zone_add =
+     ecore_event_handler_add(E_EVENT_ZONE_ADD,
+                             _zone_add, NULL);
    sd->handler.zone_resize =
      ecore_event_handler_add(E_EVENT_ZONE_MOVE_RESIZE,
                              _zone_resize, NULL);
@@ -116,6 +140,7 @@ e_modapi_init(E_Module *m)
 E_API void *
 e_modapi_shutdown(E_Module *m)
 {
+   ecore_event_handler_del(sd->handler.zone_add);
    ecore_event_handler_del(sd->handler.zone_resize);
    ecore_event_handler_del(sd->handler.zone_del);
    eina_hash_free(sd->fms);
