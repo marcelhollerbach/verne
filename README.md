@@ -9,19 +9,21 @@ Like the header says. A filemanager, written in C using the EFL and elementary
 ```
 git clone <URL>
 
-cd <here is the clonedplace> 
+cd <here is the clonedplace>
 
-mkdir build 
+mkdir build
 
-cd build 
+cd build
 
-cmake .. 
+cmake ..
 
-make all 
+make all
 
 sudo make install
 
 ```
+Be aware, this is installing 3 libraries!
+Make sure to include the library path is in the ldconfig search path and the ldconfig cache is up to date!
 
 ### Distro packages:
 
@@ -46,7 +48,7 @@ Widgets which are built as separated library.
 
 A abstraction for filesystem monitoring and listing.
 
-Once a file appears, big operations such as finding the mimetype and the like are done asynchronously. 
+Once a file appears, big operations such as finding the mimetype and the like are done asynchronously.
 
 ### Emous ###
 
