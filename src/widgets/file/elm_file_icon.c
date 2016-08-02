@@ -232,6 +232,7 @@ _file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
      {
         pd->icon = elm_thumb_add(obj);
         efl_file_set(pd->icon, path, NULL);
+        elm_object_part_text_set(obj, "public.text", filename);
      }
    else if (filemode == FILE_MODE_DESKTOP)
      {
@@ -241,6 +242,7 @@ _file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
 
         pd->icon = elm_icon_add(obj);
         elm_icon_standard_set(pd->icon, desktop->icon);
+        elm_object_part_text_set(obj, "public.text", desktop->name);
      }
    else if (filemode == FILE_MODE_TRIVIAL)
      {
@@ -251,13 +253,13 @@ _file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
                           _mime_ready, obj);
         else
           mime_ready(obj, pd);
+        elm_object_part_text_set(obj, "public.text", filename);
      }
 
    // set the new conecnt
    _content_set(obj, pd->icon);
 
    // set the text of the filename
-   elm_object_part_text_set(obj, "public.text", filename);
 }
 
 EOLIAN static Efm_File *
