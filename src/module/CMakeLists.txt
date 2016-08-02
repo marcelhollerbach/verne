@@ -1,3 +1,32 @@
+execute_process(COMMAND pkg-config --variable=modules enlightenment
+   OUTPUT_VARIABLE _pkgconfig_invoke_result
+   RESULT_VARIABLE _pkgconfig_failed)
+
+if(_pkgconfig_failed)
+   BUILD_WARNING ("Failed to find Eolian Eo directory.")
+else()
+   set (ENLIGHTENMENT_MOD_DIR ${_pkgconfig_invoke_result})
+endif()
+
+execute_process(COMMAND pkg-config --variable=release enlightenment
+   OUTPUT_VARIABLE _pkgconfig_invoke_result
+   RESULT_VARIABLE _pkgconfig_failed)
+
+if(_pkgconfig_failed)
+   BUILD_WARNING ("Failed to find Eolian Eo directory.")
+else()
+   set (ENLIGHTENMENT_VERSION ${_pkgconfig_invoke_result})
+endif()
+
+set(MOD_DESKTOP_INSTALL_DIR "${ENLIGHTENMENT_MOD_DIR}/jesus/")
+set(MOD_INSTALL_DIR "${MOD_DESKTOP_INSTALL_DIR}linux-gnu-${CMAKE_SYSTEM_PROCESSOR}-${ENLIGHTENMENT_VERSION}/")
+
+string(REPLACE "\n" "" MOD_DESKTOP_INSTALL_DIR "${MOD_DESKTOP_INSTALL_DIR}")
+string(REPLACE "\n" "" MOD_INSTALL_DIR "${MOD_INSTALL_DIR}")
+
+message("Installing module to ${MOD_DESKTOP_INSTALL_DIR}")
+message("Installing module binary to ${MOD_INSTALL_DIR}")
+
 include_directories(
   ${Enlightenment_INCLUDE_DIRS}
   ${ELEMENTARY_INCLUDE_DIRS}
@@ -37,7 +66,7 @@ set_target_properties(jesus_module PROPERTIES OUTPUT_NAME module)
 set_target_properties(jesus_module PROPERTIES PREFIX "")
 
 INSTALL(TARGETS jesus_module
-  DESTINATION  /usr/local-e/lib/enlightenment/modules/jesus/linux-gnu-x86_64-ver-0.22/
+  DESTINATION  ${MOD_INSTALL_DIR}
   RENAME module.so
 )
-INSTALL(FILES module.desktop DESTINATION /usr/local-e/lib/enlightenment/modules/jesus/)
+INSTALL(FILES module.desktop DESTINATION ${MOD_DESKTOP_INSTALL_DIR})
