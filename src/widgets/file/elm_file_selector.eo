@@ -1,5 +1,3 @@
-import elm_file_icon;
-
 enum Elm.File.Selector.Sort_Type {
    [[ The different sort types]]
    SIZE = 0, [[Sort from size]]

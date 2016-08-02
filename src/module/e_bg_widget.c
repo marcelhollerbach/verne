@@ -1,4 +1,5 @@
 #include "../widgets/Elementary_Ext.h"
+#define EAPI
 #include "e_bg_widget.eo.h"
 
 typedef struct {
@@ -11,10 +12,10 @@ _e_bg_widget_elm_file_selector_icon_generate(Eo *obj, E_Bg_Widget_Data *pd, Efm_
    Evas_Object *ic;
    Elm_File_MimeType_Cache *cache;
 
-   cache = elm_file_selector_cache_get();
+   cache = elm_file_selector_cache_get(obj);
 
    ic = eo_add(ELM_FILE_ICON_CLASS, obj,
-   elm_obj_file_icon_install(cache, file, EINA_TRUE));
+    elm_obj_file_icon_install(eo_self, cache, file, EINA_TRUE));
    evas_object_show(ic);
 
    return ic;

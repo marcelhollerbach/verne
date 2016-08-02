@@ -1,3 +1,6 @@
+import efm_file;
+import elm_file_selector;
+
 class E.Bg.Widget(Elm.File.Selector) {
     implements {
         Elm.File.Selector.icon_generate;

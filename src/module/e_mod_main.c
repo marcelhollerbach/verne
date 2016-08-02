@@ -16,7 +16,7 @@ static Jesus_Data *sd;
 
 E_API E_Module_Api e_modapi =
 {
-   16,
+   21,
    "Jesus"
 };
 
@@ -42,11 +42,15 @@ static void
 _fm_add(E_Zone *zone)
 {
    Evas_Object *fm;
+   Efm_File *file;
    const char *desk;
 
    fm = eo_add(E_BG_WIDGET_CLASS, e_comp->elm);
+
    desk = efreet_desktop_dir_get();
-   eo_do(fm, efl_file_set(desk, NULL));
+   file = efm_file_get(EFM_CLASS, desk);
+
+   elm_file_selector_file_set(fm, file);
 
    eina_hash_add(sd->fms, &zone, fm);
 
