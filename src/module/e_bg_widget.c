@@ -1,3 +1,4 @@
+#define EFL_BETA_API_SUPPORT
 #include "../widgets/Elementary_Ext.h"
 #define EAPI
 #include "e_bg_widget.eo.h"

@@ -1,3 +1,4 @@
+#define EFL_BETA_API_SUPPORT
 #include <Emous.h>
 #define EAPI
 #include "emous_device_debug.eo.h"
