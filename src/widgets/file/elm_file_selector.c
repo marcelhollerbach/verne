@@ -1198,8 +1198,13 @@ _elm_file_selector_search(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd, const
 static void
 _drop_cb(void *data, const Eo_Event *event)
 {
+   Elm_File_Selector_Dnd_Drop_Event ev;
+
+   ev.file = event->object;
+   ev.selection_data = event->info;
+
    eo_ref(event->object);
-   eo_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_DND_ITEM_DROPED, NULL);
+   eo_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_DND_ITEM_DROPED, &ev);
    eo_unref(event->object);
 }
 

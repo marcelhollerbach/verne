@@ -19,6 +19,11 @@ struct Elm.File.Selector.Menu_Hook {
    file : Efm.File;
 }
 
+struct Elm.File.Selector.Dnd_Drop_Event {
+   selection_data: void_ptr; [[ the Elm_Selection_Data pointer]]
+   file : Elm.File.Icon; [[Icon where the file is dropped above]]
+}
+
 class Elm.File.Selector (Elm.Layout) {
    [[ The file display widget class used to display the files and dirs of a specific path]]
    methods {
@@ -140,8 +145,8 @@ class Elm.File.Selector (Elm.Layout) {
       item,choosen : Efm.File; [[A item is selected, this means its _not_ a directry and the view decived to *click* this file]]
       item,selected : Efm.File; [[A item got selected, _not_ chossen]]
       dnd,item,hover : Elm.File.Icon; [[A item was hovered above another item ]]
-      dnd,item,droped; [[Item was droped above another item]]
-      dnd,droped; [[Item droped in the file display]]
+      dnd,item,droped : Elm.File.Selector.Dnd_Drop_Event ; [[Item was droped above another item]]
+      dnd,droped : void_ptr; [[Item droped in the file display, Elm_Selection_Data as pointer]]
       hook,menu,selector,start : Elm.File.Selector.Menu_Hook*; [[*@ Menu_Hook will be passed ]]
       hook,menu,selector,end : Elm.File.Selector.Menu_Hook*; [[Menu_Hook will be passed]]
    }

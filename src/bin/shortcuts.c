@@ -80,6 +80,46 @@ _hover(void *data EINA_UNUSED, const Eo_Event *event) {
    titlebar_path_set(path);
 }
 
+static Eina_List*
+_convert( Elm_Selection_Data *data)
+{
+   Eina_List *result = NULL;
+   char **files;
+   char *string;
+   //first check if this is a string which ends with \0
+
+   string = malloc(sizeof(char) * (data->len + 1));
+
+   memcpy(string, data->data, data->len);
+   string[data->len] = '\0';
+
+   files = eina_str_split(string, "\n", 0);
+   for (int i = 0; files[i]; i++)
+     {
+        if (ecore_file_exists(files[i]))
+          result = eina_list_append(result, files[i]);
+     }
+
+   return result;
+}
+
+static void
+_drop(void *data EINA_UNUSED, const Eo_Event *event) {
+    Elm_File_Selector_Dnd_Drop_Event *ev;
+    Elm_Selection_Data *dnd_data;
+    Efm_File *file;
+    Eina_List *passes = NULL;
+
+    ev = event->info;
+    dnd_data = ev->selection_data;
+
+    file = elm_obj_file_icon_file_get(ev->file);
+
+    passes = _convert(dnd_data);
+
+    fs_operations_copy(passes, efm_file_path_get(file));
+}
+
 void
 shortcuts_init()
 {
@@ -88,6 +128,12 @@ shortcuts_init()
 
    //add dnd shortcut
    eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_DND_ITEM_HOVER, _hover, NULL);
+
+   //add dnd shortcut
+   eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_DND_ITEM_DROPED, _drop, NULL);
+
+   //add dnd shortcut
+   eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_DND_DROPED, _drop, NULL);
 }
 
 static void
