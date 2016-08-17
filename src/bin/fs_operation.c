@@ -231,7 +231,7 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
       {
          Evas_Object *layout, *progress;
 
-         layout = eo_add(ELM_LAYOUT_CLASS, obj);
+         layout = efl_add(ELM_LAYOUT_CLASS, obj);
          evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
          evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
          switch(operation->type)
@@ -245,8 +245,8 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
                 efl_file_set(layout, THEME_PATH"/efm.edc.edj", "jesus.fs_op.copy");
 
               // add progressbar
-              progress = eo_add(ELM_PROGRESSBAR_CLASS, obj);
-              eo_wref_add(progress, &operation->ui.progress);
+              progress = efl_add(ELM_PROGRESSBAR_CLASS, obj);
+              efl_wref_add(progress, &operation->ui.progress);
               // set part and text
               elm_object_part_content_set(layout, "jesus.progress", progress);
               elm_object_part_text_set(layout, "jesus.to", operation->goal);
@@ -263,7 +263,7 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
          elm_layout_sizing_eval(layout);
          elm_box_pack_end(box, layout);
 
-         eo_wref_add(obj, &operation->ui.layout);
+         efl_wref_add(obj, &operation->ui.layout);
       }
 
     scroller = elm_scroller_add(popup);

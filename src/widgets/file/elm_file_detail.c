@@ -82,13 +82,13 @@ _notify_ui_init(Evas_Object *obj, Notify_Ui *ui, Evas_Smart_Cb _no, Evas_Smart_C
 
    ui->notify = elm_notify_add(elm_object_top_widget_get(obj));
    evas_object_smart_callback_add(ui->notify, "timeout", _no, obj);
-   eo_weak_ref(&ui->notify);
+   efl_weak_ref(&ui->notify);
    elm_notify_timeout_set(ui->notify, 5.0);
    elm_notify_align_set(ui->notify, 1.0, 0.0);
    evas_object_show(ui->notify);
 
    ui->label = elm_label_add(ui->notify);
-   eo_weak_ref(&ui->label);
+   efl_weak_ref(&ui->label);
    evas_object_show(ui->label);
 
    yes = elm_button_add(ui->notify);
@@ -119,7 +119,7 @@ _chmod_yes(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSE
    Elm_File_Detail_Data *pd;
    const char *path;
 
-   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+   pd = efl_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
    path = efm_file_path_get(pd->file);
 
    if (chmod(path, pd->changes.mode) < 0)
@@ -136,7 +136,7 @@ _chmod_no(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED
 {
    Elm_File_Detail_Data *pd;
 
-   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+   pd = efl_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
    pd->changes.mode = 0;
 }
 static void
@@ -145,7 +145,7 @@ _request_chmod(Evas_Object *obj, int mode) {
    char buf[PATH_MAX], perm[PATH_MAX];
    Efm_File_Stat *st;
 
-   pd = eo_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
+   pd = efl_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
    pd->changes.mode = mode;
    st = efm_file_stat_get(pd->file);
 
@@ -176,7 +176,7 @@ _chown_yes(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSE
    uid_t user;
    gid_t group;
 
-   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+   pd = efl_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
 
    if (pd->changes.group)
      {
@@ -221,7 +221,7 @@ _chown_no(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED
 {
    Elm_File_Detail_Data *pd;
 
-   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+   pd = efl_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
    pd->changes.user = NULL;
    pd->changes.group = NULL;
 }
@@ -232,7 +232,7 @@ _request_chown_user(Evas_Object *obj, const char *user) {
    char buf[PATH_MAX];
    const char *group;
 
-   pd = eo_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
+   pd = efl_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
    pd->changes.user = user;
 
    if (pd->changes.group)
@@ -259,7 +259,7 @@ _request_chown_group(Evas_Object *obj, const char *group) {
    char buf[PATH_MAX];
    const char *user;
 
-   pd = eo_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
+   pd = efl_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
    pd->changes.group = group;
 
    if (pd->changes.user)
@@ -353,7 +353,7 @@ _text_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache EINA_UNUSED, Efm_
 }
 
 EOLIAN static void
-_elm_file_detail_class_constructor(Eo_Class *c EINA_UNUSED) {
+_elm_file_detail_class_constructor(Efl_Class *c EINA_UNUSED) {
    mimetype_cbs[MIME_TYPE_FALLBACK] = _fallback_handler;
    mimetype_cbs[MIME_TYPE_IMAGE] = _image_handler;
    mimetype_cbs[MIME_TYPE_TEXT] = _text_handler;
@@ -365,9 +365,9 @@ _elm_file_detail_class_constructor(Eo_Class *c EINA_UNUSED) {
 EOLIAN static void
 _elm_file_detail_cache_set(Eo *obj EINA_UNUSED, Elm_File_Detail_Data *pd, Elm_File_MimeType_Cache *cache)
 {
-   eo_weak_unref(&pd->cache);
+   efl_weak_unref(&pd->cache);
     pd->cache = cache;
-   eo_weak_ref(&pd->cache);
+   efl_weak_ref(&pd->cache);
 }
 
 EOLIAN static Elm_File_MimeType_Cache *
@@ -543,7 +543,7 @@ _file_changed(void *data, const Eo_Event *event EINA_UNUSED)
    Elm_File_Detail_Data *pd;
 
    oo = data;
-   pd = eo_data_scope_get(oo, ELM_FILE_DETAIL_CLASS);
+   pd = efl_data_scope_get(oo, ELM_FILE_DETAIL_CLASS);
 
    _update_thumbnail(oo, pd, pd->file);
    _update_stat(pd, pd->file);
@@ -558,16 +558,16 @@ _elm_file_detail_file_set(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
 
    if (pd->file)
      {
-        eo_event_callback_del(file, EFM_FILE_EVENT_CHANGED, _file_changed, obj);
-        eo_weak_unref(&pd->file);
+        efl_event_callback_del(file, EFM_FILE_EVENT_CHANGED, _file_changed, obj);
+        efl_weak_unref(&pd->file);
      }
 
    pd->file = file;
    if (!pd->file) return;
 
-   eo_weak_ref(&pd->file);
+   efl_weak_ref(&pd->file);
    st = efm_file_stat_get(pd->file);
-   eo_event_callback_add(pd->file, EFM_FILE_EVENT_CHANGED, _file_changed, obj);
+   efl_event_callback_add(pd->file, EFM_FILE_EVENT_CHANGED, _file_changed, obj);
 
    filename = efm_file_filename_get(pd->file);
 
@@ -677,7 +677,7 @@ _flip_cb(void *data, Evas_Object *obj, void *event_info)
    int flip = -1;
    mode_t permission;
 
-   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+   pd = efl_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
    st = efm_file_stat_get(pd->file);
    if (!pd->changes.mode)
      permission = st->mode;
@@ -737,7 +737,7 @@ _segment_changed_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_info)
    Elm_File_Detail_Data *pd;
    Eina_Bool flip_visible;
 
-   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+   pd = efl_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
 
    flip_visible = pd->perm2.items[0] != event_info;
 
@@ -856,7 +856,7 @@ _setup_cb(void *data, const Eo_Event *info EINA_UNUSED)
 {
    Elm_File_Detail_Data *pd;
 
-   pd = eo_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+   pd = efl_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
 
    if (pd->havy_setup) return;
 
@@ -872,7 +872,7 @@ _elm_file_detail_efl_canvas_group_group_add(Eo *obj, Elm_File_Detail_Data *pd)
 {
    Evas_Object *bx;
 
-   efl_canvas_group_add(eo_super(obj, ELM_FILE_DETAIL_CLASS));
+   efl_canvas_group_add(efl_super(obj, ELM_FILE_DETAIL_CLASS));
 
    if (!elm_layout_theme_set(obj, "file_display", "file_preview", "default"))
      {
@@ -886,11 +886,11 @@ _elm_file_detail_efl_canvas_group_group_add(Eo *obj, Elm_File_Detail_Data *pd)
    DETAIL_ROW_UNCHANGABLE(size, "<b>Size:");
    SEPERATOR
    pd->user.change_display = elm_hoversel_add(obj);
-   eo_event_callback_add(pd->user.change_display, EFL_UI_EVENT_CLICKED, _setup_cb, obj);
+   efl_event_callback_add(pd->user.change_display, EFL_UI_EVENT_CLICKED, _setup_cb, obj);
    DETAIL_ROW_CHANGABLE(user, "<b>User:");
    SEPERATOR
    pd->group.change_display = elm_hoversel_add(obj);
-   eo_event_callback_add(pd->group.change_display, EFL_UI_EVENT_CLICKED, _setup_cb, obj);
+   efl_event_callback_add(pd->group.change_display, EFL_UI_EVENT_CLICKED, _setup_cb, obj);
    DETAIL_ROW_CHANGABLE(group, "<b>Group:");
    SEPERATOR
    _permission_init(obj, pd);

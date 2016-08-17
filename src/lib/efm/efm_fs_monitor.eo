@@ -1,4 +1,4 @@
-class Efm.Fs.Monitor (Eo.Base, Efm.Monitor) {
+class Efm.Fs.Monitor (Efl.Object, Efm.Monitor) {
     methods {
         install {
             [[constructor to construct to Monitor]]
@@ -14,8 +14,8 @@ class Efm.Fs.Monitor (Eo.Base, Efm.Monitor) {
     implements {
         Efm.Monitor.file.get;
         Efm.Monitor.filter;
-        Eo.Base.destructor;
-        Eo.Base.constructor;
-        Eo.Base.finalize;
+        Efl.Object.destructor;
+        Efl.Object.constructor;
+        Efl.Object.finalize;
     }
 }

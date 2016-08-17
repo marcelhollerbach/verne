@@ -31,19 +31,19 @@ class Elm.File.Selector (Elm.Layout) {
          [[Adds the given Display view to the pool.
            The pool will be used to display different view options in the ui]]
          params {
-            view : const(Eo.Base); [[Should be a Elm.File.Display.View]]
+            view : const(Efl.Object); [[Should be a Elm.File.Display.View]]
          }
       }
       view_pool_del @class {
          [[Remove the given View from the pool]]
          params {
-            view : const(Eo.Base);
+            view : const(Efl.Object);
          }
       }
       @property view {
          [[Sets the view which should be used to display the "to display" path]]
          values {
-            klass: const(Eo.Base); [[klass should implement elm.File.Display.View]]
+            klass: const(Efl.Object); [[klass should implement elm.File.Display.View]]
          }
       }
       search {
@@ -133,8 +133,8 @@ class Elm.File.Selector (Elm.Layout) {
    }
 
    implements {
-      Eo.Base.constructor;
-      Eo.Base.destructor;
+      Efl.Object.constructor;
+      Efl.Object.destructor;
       Efl.Canvas.Group.group_add;
       Elm.Widget.event;
    }

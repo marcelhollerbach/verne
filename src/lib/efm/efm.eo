@@ -1,4 +1,4 @@
-class Efm (Eo.Base) {
+class Efm (Efl.Object) {
     methods {
         file_get @class {
             [[This will generate a new file handle for the given file.

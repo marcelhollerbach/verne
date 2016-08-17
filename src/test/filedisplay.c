@@ -55,22 +55,22 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    evas_object_size_hint_weight_set(bx, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    evas_object_show(bx);
 
-   ic = eo_add(ELM_FILE_SELECTOR_CLASS, win);
+   ic = efl_add(ELM_FILE_SELECTOR_CLASS, win);
    efl_file_set(ic, "/home/marcel", NULL);
-   eo_event_callback_add(ic, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED,
+   efl_event_callback_add(ic, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED,
                          dir_cb, NULL);
-   eo_event_callback_add(ic, ELM_FILE_SELECTOR_EVENT_ITEM_CHOOSEN,
+   efl_event_callback_add(ic, ELM_FILE_SELECTOR_EVENT_ITEM_CHOOSEN,
                          item_cb, NULL);
-   eo_event_callback_add(ic, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_START,
+   efl_event_callback_add(ic, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_START,
                          _menu_hook_start, NULL);
-   eo_event_callback_add(ic, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END,
+   efl_event_callback_add(ic, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END,
                          _menu_hook_end, NULL);
    evas_object_size_hint_align_set(ic, EVAS_HINT_FILL, EVAS_HINT_FILL);
    evas_object_size_hint_weight_set(ic, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    elm_box_pack_end(bx, ic);
    evas_object_show(ic);
 #if 1
-   ic = eo_add(ELM_FILE_DISPLAY_CLASS, win);
+   ic = efl_add(ELM_FILE_DISPLAY_CLASS, win);
 
    elm_file_display_bookmarks_show_set(ic, EINA_FALSE);
    elm_file_display_filepreview_show_set(ic, EINA_FALSE);

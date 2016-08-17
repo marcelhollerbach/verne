@@ -4,7 +4,7 @@ struct Emous.MountPoint{
    fs_type : const(char)*;
 }
 
-class Emous.Manager (Eo.Base) {
+class Emous.Manager (Efl.Object) {
    methods {
       device_types_get @class {
          [[Returns a list of classes which are registered by device type del]]
@@ -16,13 +16,13 @@ class Emous.Manager (Eo.Base) {
            If one of the, by the the singleton call, emitts a device,added call it will be redirected here.
          ]]
          params {
-            type : const(Eo.Base);
+            type : const(Efl.Object);
          }
       }
       device_type_del @class {
          [[This will remove this calss from the internal list]]
          params {
-            type : const(Eo.Base);
+            type : const(Efl.Object);
          }
       }
       object_get @class {

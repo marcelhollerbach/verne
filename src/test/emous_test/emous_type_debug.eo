@@ -1,4 +1,4 @@
-class Emous.Type.Debug (Eo.Base, Emous.Type) {
+class Emous.Type.Debug (Efl.Object, Emous.Type) {
     [[This abstracts a set of Devices]]
     methods {
     }

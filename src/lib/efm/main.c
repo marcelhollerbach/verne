@@ -72,20 +72,20 @@ efm_shutdown(void)
 }
 static void _file_del(void *data, const Eo_Event *event);
 
-EO_CALLBACKS_ARRAY_DEFINE(factory_events, {EFM_FILE_EVENT_INVALID, _file_del},
-                                          {EO_EVENT_DEL, _file_del});
+EFL_CALLBACKS_ARRAY_DEFINE(factory_events, {EFM_FILE_EVENT_INVALID, _file_del},
+                                          {EFL_EVENT_DEL, _file_del});
 
 static void
 _file_del(void *data EINA_UNUSED, const Eo_Event *event)
 {
    eina_hash_del_by_data(sd->factory, event->object);
-   eo_event_callback_array_del(event->object, factory_events(), sd->factory);
+   efl_event_callback_array_del(event->object, factory_events(), sd->factory);
 }
 
 #define SEARCH_IF_FOUND_RETURN_INCED(PATH,FILE) \
    FILE = eina_hash_find(sd->factory, PATH); \
    if (FILE) { \
-     eo_ref(FILE); \
+     efl_ref(FILE); \
      return FILE; \
    }\
 
@@ -99,11 +99,11 @@ _efm_file_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *_path)
 
    SEARCH_IF_FOUND_RETURN_INCED(_path, file)
 
-   file = eo_add(EFM_FS_FILE_CLASS, NULL, efm_fs_file_generate(__eo_self, _path));
+   file = efl_add(EFM_FS_FILE_CLASS, NULL, efm_fs_file_generate(efl_self, _path));
    if (file)
      {
         path = efm_file_path_get(file);
-        eo_event_callback_array_add(file, factory_events(), sd->factory);
+        efl_event_callback_array_add(file, factory_events(), sd->factory);
         eina_hash_add(sd->factory, path, file);
      }
 
@@ -123,12 +123,12 @@ _efm_archive_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *archive_
 
    SEARCH_IF_FOUND_RETURN_INCED(compose_path, file);
 
-   file = eo_add(EFM_ARCHIVE_FILE_CLASS, NULL, efm_archive_file_generate(__eo_self, archive_path, innerpath));
+   file = efl_add(EFM_ARCHIVE_FILE_CLASS, NULL, efm_archive_file_generate(efl_self, archive_path, innerpath));
 
    if (file)
      {
         path = efm_file_path_get(file);
-        eo_event_callback_array_add(file, factory_events(), sd->factory);
+        efl_event_callback_array_add(file, factory_events(), sd->factory);
         eina_hash_add(sd->factory, &path, file);
      }
 

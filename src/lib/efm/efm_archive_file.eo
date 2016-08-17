@@ -22,7 +22,7 @@ class Efm.Archive.File (Efm.Fs.File) {
         Efm.File.path.get;
         Efm.File.monitor;
         Efm.File.child_get;
-        Eo.Base.destructor;
-        Eo.Base.finalize;
+        Efl.Object.destructor;
+        Efl.Object.finalize;
     }
 }

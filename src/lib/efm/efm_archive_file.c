@@ -39,7 +39,7 @@ _efm_archive_file_generate(Eo *obj, Efm_Archive_File_Data *pd, const char *archi
    pd->internal = eina_stringshare_add(internal);
 
 
-   efm_fs_file_generate(eo_super(obj, EFM_ARCHIVE_FILE_CLASS), eina_file_path_sanitize(pd->real_path));
+   efm_fs_file_generate(efl_super(obj, EFM_ARCHIVE_FILE_CLASS), eina_file_path_sanitize(pd->real_path));
 }
 
 EOLIAN static const char *
@@ -49,33 +49,33 @@ _efm_archive_file_efm_file_path_get(Eo *obj EINA_UNUSED, Efm_Archive_File_Data *
 }
 
 EOLIAN static void
-_efm_archive_file_eo_base_destructor(Eo *obj, Efm_Archive_File_Data *pd)
+_efm_archive_file_efl_object_destructor(Eo *obj, Efm_Archive_File_Data *pd)
 {
    if (!pd->archive.find_path) archive_unref(pd->archive.find_path);
    eina_stringshare_del(pd->fake_path);
    eina_stringshare_del(pd->real_path);
    eina_stringshare_del(pd->internal);
-   eo_destructor(eo_super(obj, EFM_ARCHIVE_FILE_CLASS));
+   efl_destructor(efl_super(obj, EFM_ARCHIVE_FILE_CLASS));
 }
 
-EOLIAN static Eo_Base *
-_efm_archive_file_eo_base_finalize(Eo *obj, Efm_Archive_File_Data *pd)
+EOLIAN static Efl_Object *
+_efm_archive_file_efl_object_finalize(Eo *obj, Efm_Archive_File_Data *pd)
 {
     if (!pd->archive.find_path) return NULL;
 
-    return eo_finalize(eo_super(obj, EFM_ARCHIVE_FILE_CLASS));
+    return efl_finalize(efl_super(obj, EFM_ARCHIVE_FILE_CLASS));
 }
 
 EOLIAN static const char *
 _efm_archive_file_real_path_get(Eo *obj, Efm_Archive_File_Data *pd EINA_UNUSED)
 {
-    return efm_file_path_get(eo_super(obj, EFM_ARCHIVE_FILE_CLASS));
+    return efm_file_path_get(efl_super(obj, EFM_ARCHIVE_FILE_CLASS));
 }
 
 EOLIAN static void *
 _efm_archive_file_efm_file_monitor(Eo *obj EINA_UNUSED, Efm_Archive_File_Data *pd EINA_UNUSED, void *filter)
 {
-   return eo_add(EFM_ARCHIVE_MONITOR_CLASS, NULL, efm_archive_monitor_generate(__eo_self, obj, filter));
+   return efl_add(EFM_ARCHIVE_MONITOR_CLASS, NULL, efm_archive_monitor_generate(efl_self, obj, filter));
 }
 
 EOLIAN static Efm_File *

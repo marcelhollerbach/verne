@@ -1,6 +1,6 @@
 #include "../elementary_ext_priv.h"
 
-#define PRIV_DATA(o) Elm_File_Display_Data *pd = eo_data_scope_get(o, ELM_FILE_DISPLAY_CLASS);
+#define PRIV_DATA(o) Elm_File_Display_Data *pd = efl_data_scope_get(o, ELM_FILE_DISPLAY_CLASS);
 
 typedef struct
 {
@@ -86,12 +86,12 @@ _menu_cb(void *data, const Eo_Event *event)
    evas_object_show(ck);
 }
 
-EOLIAN static Eo_Base *
-_elm_file_display_eo_base_constructor(Eo *obj, Elm_File_Display_Data *pd EINA_UNUSED)
+EOLIAN static Efl_Object *
+_elm_file_display_efl_object_constructor(Eo *obj, Elm_File_Display_Data *pd EINA_UNUSED)
 {
    Eo *eo;
 
-   eo = eo_constructor(eo_super(obj, ELM_FILE_DISPLAY_CLASS));
+   eo = efl_constructor(efl_super(obj, ELM_FILE_DISPLAY_CLASS));
    // XXX: take a config ?
    elm_file_display_bookmarks_show_set(obj, EINA_TRUE);
    elm_file_display_filepreview_show_set(obj, EINA_TRUE);
@@ -105,30 +105,30 @@ _elm_file_display_efl_canvas_group_group_add(Eo *obj, Elm_File_Display_Data *pd)
    Evas_Object *o;
    Eo *cache;
 
-   efl_canvas_group_add(eo_super(obj, ELM_FILE_DISPLAY_CLASS));
+   efl_canvas_group_add(efl_super(obj, ELM_FILE_DISPLAY_CLASS));
 
    if (!elm_layout_theme_set(obj, "file_display", "base", "default"))
      {
         CRI("Failed to set theme file\n");
      }
 
-   pd->selector = o = eo_add(ELM_FILE_SELECTOR_CLASS, obj);
+   pd->selector = o = efl_add(ELM_FILE_SELECTOR_CLASS, obj);
 
    cache = elm_file_selector_cache_get(o);
-   eo_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, _menu_cb, obj);
-   eo_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _selector_path_changed, obj);
-   eo_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _update_preview, obj);
-   eo_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_ITEM_SELECTED, _update_preview, obj);
+   efl_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, _menu_cb, obj);
+   efl_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _selector_path_changed, obj);
+   efl_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _update_preview, obj);
+   efl_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_ITEM_SELECTED, _update_preview, obj);
 
    elm_object_part_content_set(obj, "content", o);
    evas_object_show(o);
 
-   pd->bookmark = o = eo_add(ELM_FILE_BOOKMARKS_CLASS, obj, elm_file_bookmarks_cache_set(eo_self, cache));
-   eo_event_callback_add(o, ELM_FILE_BOOKMARKS_EVENT_PATH_SELECTED, _bookmark_path_changed, obj);
+   pd->bookmark = o = efl_add(ELM_FILE_BOOKMARKS_CLASS, obj, elm_file_bookmarks_cache_set(efl_self, cache));
+   efl_event_callback_add(o, ELM_FILE_BOOKMARKS_EVENT_PATH_SELECTED, _bookmark_path_changed, obj);
    elm_object_part_content_set(obj, "bookmark", o);
    evas_object_show(o);
 
-   pd->detail = o = eo_add(ELM_FILE_DETAIL_CLASS, obj);
+   pd->detail = o = efl_add(ELM_FILE_DETAIL_CLASS, obj);
    elm_file_detail_cache_set(o, cache);
    elm_object_part_content_set(obj, "filepreview", o);
    evas_object_show(o);

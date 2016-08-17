@@ -10,7 +10,7 @@ struct Efm.File.Stat{
     atime : long;
 }
 
-abstract Efm.File(Eo.Base) {
+abstract Efm.File(Efl.Object) {
     [[A class to abstract files in storage.
       A object can be crated with the generate function.
     ]]
@@ -97,7 +97,7 @@ abstract Efm.File(Eo.Base) {
         invalid; [[This object is not valid anymore]]
     }
     implements {
-        Eo.Base.constructor;
+        Efl.Object.constructor;
         @empty Efm.File.is_type;
         @empty Efm.File.stat.get;
         @empty Efm.File.fileending.get;

@@ -9,9 +9,9 @@ class Elm.File.Bookmarks (Elm.Genlist, Efl.File) {
     implements {
         Efl.File.file.set;
         Efl.File.file.get;
-        Eo.Base.constructor;
-        Eo.Base.destructor;
-        Eo.Base.finalize;
+        Efl.Object.constructor;
+        Efl.Object.destructor;
+        Efl.Object.finalize;
     }
     constructors {
         .cache;

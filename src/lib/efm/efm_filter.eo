@@ -1,6 +1,6 @@
 import efm;
 
-class Efm.Filter(Eo.Base) {
+class Efm.Filter(Efl.Object) {
     [[The filter object ownes a bunch of rules.
 
       You can check by a function call if a Efm.File matches the owned rules.
@@ -51,7 +51,7 @@ class Efm.Filter(Eo.Base) {
         filter,changed; [[Called if a rule got added or removed]]
     }
     implements {
-        Eo.Base.constructor;
-        Eo.Base.destructor;
+        Efl.Object.constructor;
+        Efl.Object.destructor;
     }
 }

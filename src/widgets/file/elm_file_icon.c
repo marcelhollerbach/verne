@@ -12,7 +12,7 @@ typedef struct
    Eina_Bool rename_mode;
 } Elm_File_Icon_Data;
 
-#define PRIV_DATA  Elm_File_Icon_Data *pd = eo_data_scope_get(obj, ELM_FILE_ICON_CLASS);
+#define PRIV_DATA  Elm_File_Icon_Data *pd = efl_data_scope_get(obj, ELM_FILE_ICON_CLASS);
 
 static void
 _content_set(Evas_Object *obj, Evas_Object *c)
@@ -34,7 +34,7 @@ _long_cb(void *data)
 
    ecore_timer_del(pd->t);
    pd->t = NULL;
-   eo_event_callback_call(obj, ELM_FILE_ICON_EVENT_ITEM_HOVER, NULL);
+   efl_event_callback_call(obj, ELM_FILE_ICON_EVENT_ITEM_HOVER, NULL);
 
    return EINA_FALSE;
 }
@@ -45,7 +45,7 @@ _elm_file_icon_efl_canvas_group_group_del(Eo *obj, Elm_File_Icon_Data *pd EINA_U
   if (pd->t)
     ecore_timer_del(pd->t);
   pd->t = NULL;
-  efl_canvas_group_del(eo_super(obj, ELM_FILE_ICON_CLASS));
+  efl_canvas_group_del(efl_super(obj, ELM_FILE_ICON_CLASS));
 }
 
 static void
@@ -73,7 +73,7 @@ _drop_cb(void *data EINA_UNUSED, Evas_Object *obj, Elm_Selection_Data *ev)
 {
    PRIV_DATA
 
-   eo_event_callback_call(
+   efl_event_callback_call(
     obj, ELM_FILE_ICON_EVENT_ITEM_DROP, ev);
 
    if (pd->t)
@@ -87,7 +87,7 @@ _drop_cb(void *data EINA_UNUSED, Evas_Object *obj, Elm_Selection_Data *ev)
 EOLIAN static void
 _elm_file_icon_efl_canvas_group_group_add(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED)
 {
-   efl_canvas_group_add(eo_super(obj, ELM_FILE_ICON_CLASS));
+   efl_canvas_group_add(efl_super(obj, ELM_FILE_ICON_CLASS));
 
    if (!elm_layout_theme_set(obj, "file_icon", "base", elm_object_style_get(obj)))
      {
@@ -98,13 +98,15 @@ _elm_file_icon_efl_canvas_group_group_add(Eo *obj, Elm_File_Icon_Data *pd EINA_U
 static void
 _key_down_cb(void *data, const Eo_Event *event)
 {
-   Evas_Event_Key_Down *ev;
+   Efl_Event_Key *ev;
+   const char *key;
 
    ev = event->info;
+   key = efl_event_key_get(ev);
 
-   if (!strcmp(ev->key, "Escape"))
+   if (!strcmp(key, "Escape"))
      elm_obj_file_icon_rename_set(data, EINA_FALSE, EINA_FALSE);
-   else if (!strcmp(ev->key, "Return"))
+   else if (!strcmp(key, "Return"))
      elm_obj_file_icon_rename_set(data, EINA_FALSE, EINA_TRUE);
 }
 
@@ -126,14 +128,14 @@ _elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode, Eina_
         filename = efm_file_filename_get(pd->file);
 
         entry = elm_entry_add(obj);
-        eo_event_callback_add(entry, EFL_CANVAS_OBJECT_EVENT_KEY_DOWN, _key_down_cb, obj);
+        efl_event_callback_add(entry, EFL_EVENT_KEY_DOWN, _key_down_cb, obj);
         evas_object_propagate_events_set(entry, EINA_FALSE);
         elm_entry_scrollable_set(entry, EINA_TRUE);
         elm_scroller_policy_set(entry, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
         elm_entry_single_line_set(entry, EINA_TRUE);
         elm_entry_editable_set(entry, EINA_TRUE);
         elm_entry_entry_set(entry, filename);
-        eo_event_callback_call(obj, ELM_FILE_ICON_EVENT_RENAME_START, NULL);
+        efl_event_callback_call(obj, ELM_FILE_ICON_EVENT_RENAME_START, NULL);
         elm_object_part_content_set(obj, "public.rename", entry);
         evas_object_show(entry);
         elm_object_focus_set(entry, EINA_TRUE);
@@ -152,7 +154,7 @@ _elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode, Eina_
         nname = elm_object_text_get(entry);
 
         if (take)
-          eo_event_callback_call(obj, ELM_FILE_ICON_EVENT_RENAME_DONE, (char*)nname);
+          efl_event_callback_call(obj, ELM_FILE_ICON_EVENT_RENAME_DONE, (char*)nname);
         elm_object_part_text_set(obj, "public.text", filename);
         evas_object_del(entry);
      }
@@ -188,7 +190,7 @@ _mime_ready(void *data, const Eo_Event *event EINA_UNUSED)
    Eo *icon = data;
    Elm_File_Icon_Data *pd;
 
-   pd = eo_data_scope_get(icon, ELM_FILE_ICON_CLASS);
+   pd = efl_data_scope_get(icon, ELM_FILE_ICON_CLASS);
    mime_ready(icon, pd);
 }
 
@@ -203,7 +205,7 @@ _file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
    File_Mode filemode = FILE_MODE_TRIVIAL;
    const char *path, *mime_type, *filename, *fileextension;
 
-   eo_wref_add(file, &pd->file);
+   efl_wref_add(file, &pd->file);
    path = efm_file_path_get(pd->file);
    dir = efm_file_is_type(pd->file, EFM_FILE_TYPE_DIRECTORY);
    mime_type = efm_file_mimetype_get(pd->file);
@@ -249,7 +251,7 @@ _file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
         pd->icon = elm_icon_add(obj);
 
         if (!mime_type)
-          eo_event_callback_add(pd->file, EFM_FILE_EVENT_FSQUERY_DONE,
+          efl_event_callback_add(pd->file, EFM_FILE_EVENT_FSQUERY_DONE,
                           _mime_ready, obj);
         else
           mime_ready(obj, pd);
@@ -277,12 +279,12 @@ _elm_file_icon_install(Eo *obj, Elm_File_Icon_Data *pd, Elm_File_MimeType_Cache 
    pd->preview = preview;
    _file_set(obj, pd, file);
 }
-EOLIAN static Eo_Base*
-_elm_file_icon_eo_base_finalize(Eo *obj, Elm_File_Icon_Data *pd)
+EOLIAN static Efl_Object*
+_elm_file_icon_efl_object_finalize(Eo *obj, Elm_File_Icon_Data *pd)
 {
    Eo *res;
 
-   res = eo_finalize(eo_super(obj, ELM_FILE_ICON_CLASS));
+   res = efl_finalize(efl_super(obj, ELM_FILE_ICON_CLASS));
 
    EINA_SAFETY_ON_NULL_RETURN_VAL(pd->cache, NULL);
    EINA_SAFETY_ON_NULL_RETURN_VAL(pd->file, NULL);
@@ -291,12 +293,12 @@ _elm_file_icon_eo_base_finalize(Eo *obj, Elm_File_Icon_Data *pd)
 }
 
 static void
-_elm_file_icon_eo_base_destructor(Eo *obj, Elm_File_Icon_Data *pd)
+_elm_file_icon_efl_object_destructor(Eo *obj, Elm_File_Icon_Data *pd)
 {
-   eo_event_callback_del(pd->file, EFM_FILE_EVENT_FSQUERY_DONE, _mime_ready, obj);
-   eo_wref_del(pd->file, &pd->file);
+   efl_event_callback_del(pd->file, EFM_FILE_EVENT_FSQUERY_DONE, _mime_ready, obj);
+   efl_wref_del(pd->file, &pd->file);
 
-   eo_destructor(eo_super(obj, ELM_FILE_ICON_CLASS));
+   efl_destructor(efl_super(obj, ELM_FILE_ICON_CLASS));
 }
 
 #include "elm_file_icon.eo.x"

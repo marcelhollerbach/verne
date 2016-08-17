@@ -21,7 +21,7 @@ _added_cb(void *data EINA_UNUSED, const Eo_Event *event)
     if (!sd) return;
 
     sd->devices = eina_list_append(sd->devices, device);
-    eo_event_callback_call(manager, EMOUS_MANAGER_EVENT_DEVICE_ADD, device);
+    efl_event_callback_call(manager, EMOUS_MANAGER_EVENT_DEVICE_ADD, device);
 }
 
 static void
@@ -32,7 +32,7 @@ _deled_cb(void *data EINA_UNUSED, const Eo_Event *event)
     if (!sd) return;
 
     sd->devices = eina_list_remove(sd->devices, device);
-    eo_event_callback_call(manager, EMOUS_MANAGER_EVENT_DEVICE_DEL, device);
+    efl_event_callback_call(manager, EMOUS_MANAGER_EVENT_DEVICE_DEL, device);
 }
 
 EOLIAN static Eina_List*
@@ -45,7 +45,7 @@ _emous_manager_device_types_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 }
 
 EOLIAN static void
-_emous_manager_device_type_add(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const Eo_Class *type)
+_emous_manager_device_type_add(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const Efl_Class *type)
 {
     Emous_Type *device_type;
 
@@ -60,12 +60,12 @@ _emous_manager_device_type_add(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const 
 
     sd->device_types = eina_list_append(sd->device_types, type);
 
-    eo_event_callback_add(device_type, EMOUS_TYPE_EVENT_DEVICE_ADDED, _added_cb, NULL);
-    eo_event_callback_add(device_type, EMOUS_TYPE_EVENT_DEVICE_DELETED, _deled_cb, NULL);
+    efl_event_callback_add(device_type, EMOUS_TYPE_EVENT_DEVICE_ADDED, _added_cb, NULL);
+    efl_event_callback_add(device_type, EMOUS_TYPE_EVENT_DEVICE_DELETED, _deled_cb, NULL);
 }
 
 EOLIAN static void
-_emous_manager_device_type_del(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const Eo_Class *type)
+_emous_manager_device_type_del(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const Efl_Class *type)
 {
     Emous_Type *device_type;
     if (!sd) // there cannot be a type
@@ -83,8 +83,8 @@ _emous_manager_device_type_del(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const 
     sd->device_types = eina_list_remove(sd->device_types, type);
 
     // do not monitor them anymore
-    eo_event_callback_del(device_type, EMOUS_TYPE_EVENT_DEVICE_ADDED, _added_cb, NULL);
-    eo_event_callback_del(device_type, EMOUS_TYPE_EVENT_DEVICE_DELETED, _deled_cb, NULL);
+    efl_event_callback_del(device_type, EMOUS_TYPE_EVENT_DEVICE_ADDED, _added_cb, NULL);
+    efl_event_callback_del(device_type, EMOUS_TYPE_EVENT_DEVICE_DELETED, _deled_cb, NULL);
 
 }
 
@@ -96,7 +96,7 @@ _emous_manager_object_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 
    sd = calloc(1, sizeof(Emous_Manager_Static_Data));
 
-   manager = eo_add(EMOUS_MANAGER_CLASS, NULL);
+   manager = efl_add(EMOUS_MANAGER_CLASS, NULL);
 
    return manager;
 }

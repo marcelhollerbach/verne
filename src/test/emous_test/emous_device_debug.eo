@@ -1,4 +1,4 @@
-class Emous.Device.Debug (Eo.Base, Emous.Device) {
+class Emous.Device.Debug (Efl.Object, Emous.Device) {
     methods {
     }
     implements {

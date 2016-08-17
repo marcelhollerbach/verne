@@ -2,7 +2,7 @@
 
 #include "efm_priv.h"
 
-#define POPULATE_CHANGE(obj) eo_event_callback_call(obj, EFM_FILTER_EVENT_FILTER_CHANGED, NULL)
+#define POPULATE_CHANGE(obj) efl_event_callback_call(obj, EFM_FILTER_EVENT_FILTER_CHANGED, NULL)
 
 typedef struct {
     Eina_Bool init;
@@ -148,15 +148,15 @@ _efm_filter_matches(Eo *obj EINA_UNUSED, Efm_Filter_Data *pd, Efm_File *file)
    return EINA_TRUE;
 }
 
-EOLIAN static Eo_Base *
-_efm_filter_eo_base_constructor(Eo *obj, Efm_Filter_Data *pd)
+EOLIAN static Efl_Object *
+_efm_filter_efl_object_constructor(Eo *obj, Efm_Filter_Data *pd)
 {
    pd->whitelist = EINA_TRUE;
-   return eo_constructor(eo_super(obj, EFM_FILTER_CLASS));
+   return efl_constructor(efl_super(obj, EFM_FILTER_CLASS));
 }
 
 EOLIAN static void
-_efm_filter_eo_base_destructor(Eo *obj, Efm_Filter_Data *pd)
+_efm_filter_efl_object_destructor(Eo *obj, Efm_Filter_Data *pd)
 {
    for (int i = 0; i < EFM_ATTRIBUTE_END; i++)
      {
@@ -170,7 +170,7 @@ _efm_filter_eo_base_destructor(Eo *obj, Efm_Filter_Data *pd)
           }
      }
    eina_list_free(pd->types);
-   eo_destructor(eo_super(obj, EFM_FILTER_CLASS));
+   efl_destructor(efl_super(obj, EFM_FILTER_CLASS));
 }
 
 

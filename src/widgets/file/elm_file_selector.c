@@ -1,7 +1,7 @@
 #define INEEDWIDGET
 #include "../elementary_ext_priv.h"
 
-#define PRIV_DATA(o) Elm_File_Selector_Data *pd = eo_data_scope_get(o, ELM_FILE_SELECTOR_CLASS);
+#define PRIV_DATA(o) Elm_File_Selector_Data *pd = efl_data_scope_get(o, ELM_FILE_SELECTOR_CLASS);
 #define STEP_SIZE 10
 #define ICON_SIZE_INF 0
 #define ICON_SIZE_SUP 101
@@ -15,7 +15,7 @@ typedef struct
 
    struct {
      Evas_Object *obj;
-     const Eo_Class *klass;
+     const Efl_Class *klass;
    } view;
 
    struct {
@@ -85,7 +85,7 @@ _views_standart_init()
 }
 
 EOLIAN static void
-_elm_file_selector_view_pool_add(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const Eo_Class *view)
+_elm_file_selector_view_pool_add(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const Efl_Class *view)
 {
    const char *name;
 
@@ -98,7 +98,7 @@ _elm_file_selector_view_pool_add(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, cons
 }
 
 EOLIAN static void
-_elm_file_selector_view_pool_del(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const Eo_Class *view)
+_elm_file_selector_view_pool_del(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const Efl_Class *view)
 {
    const char *name;
 
@@ -119,7 +119,7 @@ _view_selected_cb(void *data, const Eo_Event *event)
 {
    Efm_File *f = event->info;
 
-   eo_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_ITEM_SELECTED, f);
+   efl_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_ITEM_SELECTED, f);
 }
 
 static void
@@ -127,7 +127,7 @@ _view_choosen_cb(void *data, const Eo_Event *event)
 {
    Efm_File *f = event->info;
 
-   eo_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_ITEM_CHOOSEN, f);
+   efl_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_ITEM_CHOOSEN, f);
 }
 
 static void
@@ -140,14 +140,14 @@ _view_select_changed_cb(void *data, const Eo_Event *event)
      return;
 
    pd->selection = event->info;
-   eo_event_callback_call(wid, ELM_FILE_SELECTOR_EVENT_ITEM_SELECTION_CHANGED, pd->selection);
+   efl_event_callback_call(wid, ELM_FILE_SELECTOR_EVENT_ITEM_SELECTION_CHANGED, pd->selection);
 }
 
 static void
 _work_done(void *data, const Eo_Event *event EINA_UNUSED)
 {
    PRIV_DATA(data);
-   eo_del(pd->work_indicator);
+   efl_del(pd->work_indicator);
    pd->work_indicator = NULL;
 }
 
@@ -164,29 +164,29 @@ _work_start(void *data, const Eo_Event *event)
    evas_object_show(pd->work_indicator);
 }
 
-EO_CALLBACKS_ARRAY_DEFINE(view_events,
+EFL_CALLBACKS_ARRAY_DEFINE(view_events,
   {ELM_FILE_VIEW_EVENT_ITEM_SELECT_SIMPLE, _view_selected_cb},
   {ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHOOSEN, _view_choosen_cb},
   {ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, _view_select_changed_cb},
-  {EFL_CANVAS_OBJECT_EVENT_MOUSE_DOWN, _event_rect_mouse_down},
+  {EFL_EVENT_POINTER_MOVE, _event_rect_mouse_down},
   {ELM_FILE_VIEW_EVENT_WORKING_DONE, _work_done},
   {ELM_FILE_VIEW_EVENT_WORKING_START, _work_start}
 );
 
 EOLIAN static void
-_elm_file_selector_view_set(Eo *obj, Elm_File_Selector_Data *pd, const Eo_Class *klass)
+_elm_file_selector_view_set(Eo *obj, Elm_File_Selector_Data *pd, const Efl_Class *klass)
 {
    pd->view.klass = klass;
    if (pd->view.obj)
      {
-        eo_del(pd->view.obj);
+        efl_del(pd->view.obj);
         elm_drag_item_container_del(pd->view.obj);
      }
-   pd->view.obj = eo_add(pd->view.klass, obj);
+   pd->view.obj = efl_add(pd->view.klass, obj);
    elm_drag_item_container_add(pd->view.obj, 0.3, 0.3, _dnd_item_get_cb, _dnd_data_get_cb);
    elm_object_part_content_set(obj, "content", pd->view.obj);
    evas_object_show(pd->view.obj);
-   eo_event_callback_array_add(pd->view.obj, view_events(), obj);
+   efl_event_callback_array_add(pd->view.obj, view_events(), obj);
    elm_file_view_iconsize_set(pd->view.obj, config->icon_size);
    elm_file_view_filter_set(pd->view.obj, pd->filter);
 
@@ -195,7 +195,7 @@ _elm_file_selector_view_set(Eo *obj, Elm_File_Selector_Data *pd, const Eo_Class 
    elm_file_view_file_set(pd->view.obj, pd->file);
 }
 
-EOLIAN static const Eo_Class *
+EOLIAN static const Efl_Class *
 _elm_file_selector_view_get(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd)
 {
    return pd->view.klass;
@@ -205,8 +205,8 @@ _elm_file_selector_view_get(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd)
  * Object co/de - struction
  *======================================
  */
-EOLIAN static Eo_Base *
-_elm_file_selector_eo_base_constructor(Eo *obj, Elm_File_Selector_Data *pd)
+EOLIAN static Efl_Object *
+_elm_file_selector_efl_object_constructor(Eo *obj, Elm_File_Selector_Data *pd)
 {
    efm_init();
    elm_ext_config_init();
@@ -214,30 +214,30 @@ _elm_file_selector_eo_base_constructor(Eo *obj, Elm_File_Selector_Data *pd)
    if (!views)
      _views_standart_init();
 
-   pd->filter = eo_add(EFM_FILTER_CLASS, NULL);
+   pd->filter = efl_add(EFM_FILTER_CLASS, NULL);
    _filter_update_hidden(obj, pd);
    _filter_update_only_folder(obj, pd);
 
    pd->cache = elm_file_mimetype_cache_generate(ELM_FILE_MIMETYPE_CACHE_CLASS, config->icon_size);
 
-   return eo_constructor(eo_super(obj, ELM_FILE_SELECTOR_CLASS));
+   return efl_constructor(efl_super(obj, ELM_FILE_SELECTOR_CLASS));
 }
 
 EOLIAN static void
-_elm_file_selector_eo_base_destructor(Eo *obj, Elm_File_Selector_Data *pd)
+_elm_file_selector_efl_object_destructor(Eo *obj, Elm_File_Selector_Data *pd)
 {
-   eo_del(pd->cache);
+   efl_del(pd->cache);
    elm_ext_config_shutdown();
-   eo_destructor(eo_super(obj, ELM_FILE_SELECTOR_CLASS));
+   efl_destructor(efl_super(obj, ELM_FILE_SELECTOR_CLASS));
    efm_shutdown();
 }
 
 EOLIAN static void
 _elm_file_selector_efl_canvas_group_group_add(Eo *obj, Elm_File_Selector_Data *pd EINA_UNUSED)
 {
-   const Eo_Class *view;
+   const Efl_Class *view;
 
-   efl_canvas_group_add(eo_super(obj, ELM_FILE_SELECTOR_CLASS));
+   efl_canvas_group_add(efl_super(obj, ELM_FILE_SELECTOR_CLASS));
 
    if (!elm_layout_theme_set(obj, "file_selector", "base", "default"))
      {
@@ -259,12 +259,12 @@ _elm_file_selector_file_set(Eo *obj, Elm_File_Selector_Data *pd, Efm_File *file)
 {
    if (pd->file == file) return;
 
-   if (pd->file) eo_unref(pd->file);
+   if (pd->file) efl_unref(pd->file);
    pd->file = file;
-   if (pd->file) eo_ref(pd->file);
+   if (pd->file) efl_ref(pd->file);
 
    elm_file_view_file_set(pd->view.obj, pd->file);
-   eo_event_callback_call(obj, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, pd->file);
+   efl_event_callback_call(obj, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, pd->file);
 
    eina_strbuf_free(pd->search.buffer);
    pd->search.buffer = NULL;
@@ -286,8 +286,9 @@ static void
 _event_rect_mouse_move(void *data, const Eo_Event *event)
 {
    PRIV_DATA(data)
-   Evas_Event_Mouse_Move *ev = event->info;
+   Efl_Event_Pointer *ev = event->info;
    Eina_Rectangle view, selection;
+   int move_x, move_y;
 
    if (!pd->event.selection)
      {
@@ -300,8 +301,10 @@ _event_rect_mouse_move(void *data, const Eo_Event *event)
    selection.x = pd->event.startpoint.x;
    selection.y = pd->event.startpoint.y;
 
-   selection.w = ev->cur.canvas.x - pd->event.startpoint.x;
-   selection.h = ev->cur.canvas.y - pd->event.startpoint.y;
+   efl_event_pointer_position_get(ev, &move_x, &move_y);
+
+   selection.w = move_x - pd->event.startpoint.x;
+   selection.h = move_y - pd->event.startpoint.y;
 
    elm_file_view_size_get(pd->view.obj, &view);
 
@@ -357,8 +360,8 @@ _event_rect_mouse_up(void *data, const Eo_Event *event)
    sel = elm_file_view_search_items(pd->view.obj, &selection);
    elm_file_view_selection_set(pd->view.obj, sel);
 
-   eo_event_callback_del(event->object, EFL_CANVAS_OBJECT_EVENT_MOUSE_MOVE, _event_rect_mouse_move, data);
-   eo_event_callback_del(event->object, EFL_CANVAS_OBJECT_EVENT_MOUSE_UP, _event_rect_mouse_up, data);
+   efl_event_callback_del(event->object, EFL_EVENT_POINTER_MOVE, _event_rect_mouse_move, data);
+   efl_event_callback_del(event->object, EFL_EVENT_POINTER_UP, _event_rect_mouse_up, data);
 }
 
 static void
@@ -366,30 +369,31 @@ _event_rect_mouse_down(void *data, const Eo_Event *event)
 {
    PRIV_DATA(data)
    Eina_List *icons;
-   Evas_Event_Mouse_Down *ev = event->info;
+   Efl_Event_Pointer *ev = event->info;
    Eina_Rectangle view, search;
 
-   EINA_RECTANGLE_SET(&search, ev->output.x, ev->output.y, 1, 1);
+   EINA_RECTANGLE_SET(&search, 0, 0, 1, 1);
+   efl_event_pointer_position_get(ev, &search.x, &search.y);
 
    icons = elm_file_view_search_items(pd->view.obj, &search);
    elm_file_view_size_get(pd->view.obj, &view);
 
-   if (!eina_rectangle_coords_inside(&view, ev->output.x, ev->output.y))
+   if (!eina_rectangle_coords_inside(&view, search.x, search.y))
      return;
 
-   if (ev->button == 1 && !icons)
+   if (efl_event_pointer_button_get(ev) == 1 && !icons)
      {
-        pd->event.startpoint.x = ev->output.x;
-        pd->event.startpoint.y = ev->output.y;
-        eo_event_callback_add(event->object, EFL_CANVAS_OBJECT_EVENT_MOUSE_MOVE, _event_rect_mouse_move, data);
-        eo_event_callback_add(event->object, EFL_CANVAS_OBJECT_EVENT_MOUSE_UP, _event_rect_mouse_up, data);
+        pd->event.startpoint.x = search.x;
+        pd->event.startpoint.y = search.y;
+        efl_event_callback_add(event->object, EFL_EVENT_POINTER_MOVE, _event_rect_mouse_move, data);
+        efl_event_callback_add(event->object, EFL_EVENT_POINTER_UP, _event_rect_mouse_up, data);
      }
-   else if (ev->button == 3)
+   else if (efl_event_pointer_button_get(ev) == 3)
      {
         Elm_File_Icon *file_icon = eina_list_data_get(icons);
         Efm_File *file = NULL;
         file = elm_obj_file_icon_file_get(file_icon);
-        _ctx_menu_open(data, ev->output.x, ev->output.y, file_icon, file);
+        _ctx_menu_open(data, search.x, search.y, file_icon, file);
      }
 }
 
@@ -560,7 +564,7 @@ _dnd_data_get_cb(Evas_Object *obj, Elm_Object_Item *it EINA_UNUSED, Elm_Drag_Use
     Evas_Object *parent;
     Eina_List *anim_icons;
 
-    parent = eo_parent_get(obj);
+    parent = efl_parent_get(obj);
     PRIV_DATA(parent)
 
     anim_icons = _dnd_anim_ics_gen(parent, obj);
@@ -718,7 +722,7 @@ _elm_file_selector_elm_widget_event(Eo *obj, Elm_File_Selector_Data *pd, Evas_Ob
         selection = elm_file_view_selection_get(pd->view.obj);
         EINA_LIST_FOREACH(selection, node, icon)
           {
-             eo_event_callback_add(icon, ELM_FILE_ICON_EVENT_RENAME_DONE, _icon_rename_cb, NULL);
+             efl_event_callback_add(icon, ELM_FILE_ICON_EVENT_RENAME_DONE, _icon_rename_cb, NULL);
              elm_obj_file_icon_rename_set(icon, EINA_TRUE, EINA_FALSE);
           }
         return EINA_FALSE;
@@ -828,7 +832,7 @@ _ctx_only_folder(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUS
 static void
 _ctx_rename(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
-   eo_event_callback_add(data, ELM_FILE_ICON_EVENT_RENAME_DONE, _icon_rename_cb, NULL);
+   efl_event_callback_add(data, ELM_FILE_ICON_EVENT_RENAME_DONE, _icon_rename_cb, NULL);
    elm_obj_file_icon_rename_set(data, EINA_TRUE, EINA_FALSE);
 }
 
@@ -873,7 +877,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
    ev.menu = menu;
    ev.file = file;
 
-   eo_event_callback_call(obj, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_START,&ev);
+   efl_event_callback_call(obj, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_START,&ev);
    elm_menu_item_separator_add(menu, NULL);
    /*
     * Rename
@@ -896,7 +900,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
    if (views)
      {
         Eina_Iterator *iter;
-        const Eo_Class *klass;
+        const Efl_Class *klass;
 
         iter = eina_hash_iterator_data_new(views);
 
@@ -1050,7 +1054,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
    }
 
    elm_menu_item_separator_add(menu, NULL);
-   eo_event_callback_call(obj, &_ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, &ev);
+   efl_event_callback_call(obj, &_ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, &ev);
    elm_menu_move(menu, x, y);
    evas_object_show(menu);
 }
@@ -1066,7 +1070,7 @@ _elm_file_selector_show_icon_size_set(Eo *obj EINA_UNUSED, Elm_File_Selector_Dat
 {
    config->icon_size = size;
    elm_ext_config_save();
-   eo_del(pd->cache);
+   efl_del(pd->cache);
 
    pd->cache = elm_file_mimetype_cache_generate(ELM_FILE_MIMETYPE_CACHE_CLASS, size);
    elm_file_view_iconsize_set(pd->view.obj, config->icon_size);
@@ -1203,17 +1207,17 @@ _drop_cb(void *data, const Eo_Event *event)
    ev.file = event->object;
    ev.selection_data = event->info;
 
-   eo_ref(event->object);
-   eo_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_DND_ITEM_DROPED, &ev);
-   eo_unref(event->object);
+   efl_ref(event->object);
+   efl_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_DND_ITEM_DROPED, &ev);
+   efl_unref(event->object);
 }
 
 static void
 _hover_cb(void *data, const Eo_Event *event)
 {
-   eo_ref(event->object);
-   eo_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_DND_ITEM_HOVER, event->object);
-   eo_unref(event->object);
+   efl_ref(event->object);
+   efl_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_DND_ITEM_HOVER, event->object);
+   efl_unref(event->object);
 }
 
 EOLIAN static Elm_File_Icon *
@@ -1222,9 +1226,9 @@ _elm_file_selector_icon_generate(Eo *obj, Elm_File_Selector_Data *pd EINA_UNUSED
    Evas_Object *ic;
 
 #if 1
-   ic = eo_add(ELM_FILE_ICON_CLASS, obj, elm_obj_file_icon_install(__eo_self, pd->cache, file, config->image_preview));
-   eo_event_callback_add(ic, ELM_FILE_ICON_EVENT_ITEM_DROP, _drop_cb, obj);
-   eo_event_callback_add(ic, ELM_FILE_ICON_EVENT_ITEM_HOVER, _hover_cb, obj);
+   ic = efl_add(ELM_FILE_ICON_CLASS, obj, elm_obj_file_icon_install(efl_self, pd->cache, file, config->image_preview));
+   efl_event_callback_add(ic, ELM_FILE_ICON_EVENT_ITEM_DROP, _drop_cb, obj);
+   efl_event_callback_add(ic, ELM_FILE_ICON_EVENT_ITEM_HOVER, _hover_cb, obj);
 #else
    const char *name;
    name = efm_file_path_get(file);

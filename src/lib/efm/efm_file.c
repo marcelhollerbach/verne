@@ -18,12 +18,12 @@ _invalid_cb(void *data, const Eo_Event *event EINA_UNUSED)
    pd->invalid = EINA_TRUE;
 }
 
-EOLIAN static Eo_Base *
-_efm_file_eo_base_constructor(Eo *obj, Efm_File_Data *pd)
+EOLIAN static Efl_Object *
+_efm_file_efl_object_constructor(Eo *obj, Efm_File_Data *pd)
 {
-   eo_event_callback_add(obj, EFM_FILE_EVENT_INVALID, _invalid_cb, pd);
+   efl_event_callback_add(obj, EFM_FILE_EVENT_INVALID, _invalid_cb, pd);
 
-   return eo_constructor(eo_super(obj, EFM_FILE_CLASS));
+   return efl_constructor(efl_super(obj, EFM_FILE_CLASS));
 }
 
 

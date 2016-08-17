@@ -350,22 +350,22 @@ _open_tab(const char *path)
    elm_box_pack_end(lb1, o2);
    evas_object_show(o2);
 
-   tab->content = content = eo_add(ELM_FILE_DISPLAY_CLASS, pane);
+   tab->content = content = efl_add(ELM_FILE_DISPLAY_CLASS, pane);
    evas_object_size_hint_align_set(content, EVAS_HINT_FILL, EVAS_HINT_FILL);
    evas_object_size_hint_weight_set(content, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    eo_do(content,
-         eo_event_callback_add(&_ELM_FILE_DISPLAY_EVENT_PATH_CHANGED,
+         efl_event_callback_add(&_ELM_FILE_DISPLAY_EVENT_PATH_CHANGED,
                                _fm_tab_dir_changed, tab);
-         eo_event_callback_add(&_ELM_FILE_DISPLAY_EVENT_ITEM_CHOOSEN,
+         efl_event_callback_add(&_ELM_FILE_DISPLAY_EVENT_ITEM_CHOOSEN,
                                _fm_tab_item_open, NULL);
-         eo_event_callback_add(&_ELM_FILE_DISPLAY_EVENT_HOOK_MENU_SELECTOR_START,
+         efl_event_callback_add(&_ELM_FILE_DISPLAY_EVENT_HOOK_MENU_SELECTOR_START,
                                _fm_tab_menu_hook_start, NULL);
          efl_file_set(path, NULL);
      );
    evas_object_show(content);
 
    elm_box_pack_end(bx, content);
-   eo_unref(content);
+   efl_unref(content);
 
    tab->label = lb2 = elm_label_add(pane);
    elm_object_text_set(lb2, tab->path);
@@ -410,12 +410,12 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    evas_object_size_hint_weight_set(bx, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    evas_object_show(bx);
 
-   pane = eo_add(ELM_TAB_PANE_CLASS, win);
+   pane = efl_add(ELM_TAB_PANE_CLASS, win);
    evas_object_size_hint_align_set(pane, EVAS_HINT_FILL, EVAS_HINT_FILL);
    evas_object_size_hint_weight_set(pane, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    evas_object_show(pane);
       eo_do(pane,
-     eo_event_callback_add(&_ELM_TAB_PANE_EVENT_ITEM_ADD,
+     efl_event_callback_add(&_ELM_TAB_PANE_EVENT_ITEM_ADD,
                            _item_add, pane);
      );
    elm_box_pack_end(bx, pane);
@@ -427,7 +427,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    elm_win_resize_object_add(win, bx);
    evas_object_resize(win, 200,200);
    evas_object_show(win);
-   eo_unref(pane);
+   efl_unref(pane);
    elm_run();
    return 0;
 }

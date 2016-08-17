@@ -45,8 +45,8 @@ class Elm.File.Icon (Elm.Layout) {
    implements {
      Efl.Canvas.Group.group_del;
      Efl.Canvas.Group.group_add;
-     Eo.Base.destructor;
-     Eo.Base.finalize;
+     Efl.Object.destructor;
+     Efl.Object.finalize;
    }
    constructors {
      .install;

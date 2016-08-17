@@ -1,4 +1,4 @@
-class Elm.File.MimeType.Cache(Eo.Base){
+class Elm.File.MimeType.Cache(Efl.Object){
     [[ A class to cache the mimetypes for a special size
 
        Why having this class instead of using efreet ? Here we are simply having a hash table with all entrys. in Efreet we are having a hash with the known mime_types which has a list, this list carrys all the icons with the name across all themes and sizes, so we are iterating throuw a big list, which costs time.

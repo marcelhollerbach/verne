@@ -69,9 +69,9 @@ _changed(void *data EINA_UNUSED, const Eo_Event *event)
    state = elm_check_state_get(event->object);
 
    if (state)
-     eo_event_callback_call(data, ELM_FILE_VIEW_EVENT_WORKING_START, NULL);
+     efl_event_callback_call(data, ELM_FILE_VIEW_EVENT_WORKING_START, NULL);
    else
-     eo_event_callback_call(data, ELM_FILE_VIEW_EVENT_WORKING_DONE, NULL);
+     efl_event_callback_call(data, ELM_FILE_VIEW_EVENT_WORKING_DONE, NULL);
 }
 
 EOLIAN static void
@@ -79,7 +79,7 @@ _elm_file_display_view_debug_evas_object_smart_add(Eo *obj, Elm_File_Display_Vie
 {
    Evas_Object *o;
 
-   evas_obj_smart_add(eo_super(obj, ELM_FILE_DISPLAY_VIEW_DEBUG_CLASS));
+   evas_obj_smart_add(efl_super(obj, ELM_FILE_DISPLAY_VIEW_DEBUG_CLASS));
 
    evas_object_size_hint_weight_set(obj, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    evas_object_size_hint_align_set(obj, EVAS_HINT_FILL, EVAS_HINT_FILL);
@@ -117,7 +117,7 @@ _elm_file_display_view_debug_evas_object_smart_add(Eo *obj, Elm_File_Display_Vie
 
    pd->working = elm_check_add(obj);
    elm_table_pack(obj, pd->working, 1, 2, 1, 1);
-   eo_do(pd->working, eo_event_callback_add(ELM_CHECK_EVENT_CHANGED, _changed, obj));
+   eo_do(pd->working, efl_event_callback_add(ELM_CHECK_EVENT_CHANGED, _changed, obj));
    evas_object_show(pd->working);
 
    o = evas_object_rectangle_add(evas_object_evas_get(obj));

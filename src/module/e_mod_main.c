@@ -47,7 +47,7 @@ _fm_add(E_Zone *zone)
 
    if (_fm_find(zone)) return;
 
-   fm = eo_add(E_BG_WIDGET_CLASS, e_comp->elm);
+   fm = efl_add(E_BG_WIDGET_CLASS, e_comp->elm);
 
    desk = efreet_desktop_dir_get();
    file = efm_file_get(EFM_CLASS, desk);
@@ -100,7 +100,7 @@ _zone_add(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 static void
 _fm_free(void *data)
 {
-   eo_del(data);
+   efl_del(data);
 }
 
 E_API void *

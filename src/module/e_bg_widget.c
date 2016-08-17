@@ -15,8 +15,8 @@ _e_bg_widget_elm_file_selector_icon_generate(Eo *obj, E_Bg_Widget_Data *pd EINA_
 
    cache = elm_file_selector_cache_get(obj);
 
-   ic = eo_add(ELM_FILE_ICON_CLASS, obj,
-    elm_obj_file_icon_install(eo_self, cache, file, EINA_TRUE));
+   ic = efl_add(ELM_FILE_ICON_CLASS, obj,
+    elm_obj_file_icon_install(efl_self, cache, file, EINA_TRUE));
    evas_object_show(ic);
 
    return ic;

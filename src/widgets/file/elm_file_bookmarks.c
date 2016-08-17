@@ -1,6 +1,6 @@
 #include "../elementary_ext_priv.h"
 
-#define PRIV_DATA(o) Elm_File_Bookmarks_Data *pd = eo_data_scope_get(o, ELM_FILE_BOOKMARKS_CLASS);
+#define PRIV_DATA(o) Elm_File_Bookmarks_Data *pd = efl_data_scope_get(o, ELM_FILE_BOOKMARKS_CLASS);
 
 typedef struct {
    int ref;
@@ -79,7 +79,7 @@ static void
 _file_change(Evas_Object *obj, const char *dir)
 {
    efl_file_set(obj, dir, NULL);
-   eo_event_callback_call(obj, ELM_FILE_BOOKMARKS_EVENT_PATH_SELECTED, NULL);
+   efl_event_callback_call(obj, ELM_FILE_BOOKMARKS_EVENT_PATH_SELECTED, NULL);
 
 }
 
@@ -248,7 +248,7 @@ _device_item_content_get(void *data, Evas_Object *obj, const char *part EINA_UNU
      }
 
    indicator = d->indicator = elm_layout_add(obj);
-   eo_wref_add(indicator, &d->indicator);
+   efl_wref_add(indicator, &d->indicator);
 
    icon = elm_icon_add(indicator);
    elm_icon_standard_set(icon, iconname);
@@ -269,7 +269,7 @@ _device_item_del(void *data, Evas_Object *obj EINA_UNUSED)
    Bookmark_Item *it = data;
    Device *d = &it->pd.dev;
 
-   eo_wref_del(d->indicator, &d->indicator);
+   efl_wref_del(d->indicator, &d->indicator);
 
    free(data);
 }
@@ -297,7 +297,7 @@ _item_content_get(void *data, Evas_Object *obj, const char *part)
    Evas_Object *ic;
    Elm_File_Bookmarks_Data *pd;
 
-   pd = eo_data_scope_get(obj, ELM_FILE_BOOKMARKS_CLASS);
+   pd = efl_data_scope_get(obj, ELM_FILE_BOOKMARKS_CLASS);
 
    if (!!strcmp(part, "elm.swallow.icon")) return NULL;
 
@@ -447,7 +447,7 @@ _device_add(Emous_Device *d, Evas_Object *w)
   it->type = BOOKMARK_TYPE_DEVICE;
   it->pd.dev.d = d;
 
-  eo_event_callback_add(d, EMOUS_DEVICE_EVENT_STATE_CHANGED, _state_changed, it);
+  efl_event_callback_add(d, EMOUS_DEVICE_EVENT_STATE_CHANGED, _state_changed, it);
 
   elm_genlist_item_append(w, sd->device_item_class, it, pd->device_group_it, 0, _device_item_sel, &it->pd.dev.d);
 
@@ -509,7 +509,7 @@ _ctx_menu_directory(Evas_Object *w, int x, int y, Directory *b)
   // save the widget
   evas_object_data_set(menu, "_genlist", w);
 
-  eo_event_callback_call(w, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_START , menu);
+  efl_event_callback_call(w, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_START , menu);
 
   // if we are removable remove it
   if (b->removable)
@@ -524,7 +524,7 @@ _ctx_menu_directory(Evas_Object *w, int x, int y, Directory *b)
   it = elm_menu_item_add(menu, NULL, NULL, NULL, _ctx_gtk, w);
   elm_object_item_content_set(it, o);
 
-  eo_event_callback_call(w, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_END, menu);
+  efl_event_callback_call(w, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_END, menu);
 
   // move and show
   elm_menu_move(menu, x, y);
@@ -557,7 +557,7 @@ _ctx_menu_device(Evas_Object *w, int x, int y, Device *b)
 
    mounted = !!emous_device_mountpoints_get(b->d);
 
-   //eo_do(w, eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_HOOK_MENU_DEVICE_START, menu));
+   //eo_do(w, efl_event_callback_call(ELM_FILE_DISPLAY_EVENT_HOOK_MENU_DEVICE_START, menu));
 
    elm_menu_item_separator_add(menu, NULL);
 
@@ -568,7 +568,7 @@ _ctx_menu_device(Evas_Object *w, int x, int y, Device *b)
 
    elm_menu_item_separator_add(menu, NULL);
 
-   //eo_do(w, eo_event_callback_call(ELM_FILE_DISPLAY_EVENT_HOOK_MENU_DEVICE_END, menu));
+   //eo_do(w, efl_event_callback_call(ELM_FILE_DISPLAY_EVENT_HOOK_MENU_DEVICE_END, menu));
 
    elm_menu_move(menu, x, y);
    evas_object_show(menu);
@@ -646,8 +646,8 @@ _static_data_unref()
 }
 
 
-EOLIAN static Eo_Base *
-_elm_file_bookmarks_eo_base_constructor(Eo *obj, Elm_File_Bookmarks_Data *pd)
+EOLIAN static Efl_Object *
+_elm_file_bookmarks_efl_object_constructor(Eo *obj, Elm_File_Bookmarks_Data *pd)
 {
    Eo *eo;
    Emous_Manager *m;
@@ -660,11 +660,11 @@ _elm_file_bookmarks_eo_base_constructor(Eo *obj, Elm_File_Bookmarks_Data *pd)
 
 
    m = emous_manager_object_get(EMOUS_MANAGER_CLASS);
-   eo_event_callback_add(m, EMOUS_MANAGER_EVENT_DEVICE_ADD, _device_add_cb, obj);
-   eo_event_callback_add(m, EMOUS_MANAGER_EVENT_DEVICE_DEL, _device_del_cb, obj);
+   efl_event_callback_add(m, EMOUS_MANAGER_EVENT_DEVICE_ADD, _device_add_cb, obj);
+   efl_event_callback_add(m, EMOUS_MANAGER_EVENT_DEVICE_DEL, _device_del_cb, obj);
 
 
-   eo = eo_constructor(eo_super(obj, ELM_FILE_BOOKMARKS_CLASS));
+   eo = efl_constructor(efl_super(obj, ELM_FILE_BOOKMARKS_CLASS));
 
    elm_object_focus_allow_set(obj, EINA_FALSE);
 
@@ -685,25 +685,25 @@ _elm_file_bookmarks_eo_base_constructor(Eo *obj, Elm_File_Bookmarks_Data *pd)
 }
 
 EOLIAN static void
-_elm_file_bookmarks_eo_base_destructor(Eo *obj, Elm_File_Bookmarks_Data *pd EINA_UNUSED)
+_elm_file_bookmarks_efl_object_destructor(Eo *obj, Elm_File_Bookmarks_Data *pd EINA_UNUSED)
 {
     elm_ext_config_shutdown();
     _static_data_unref();
     emous_shutdown();
 
-    eo_destructor(eo_super(obj, ELM_FILE_BOOKMARKS_CLASS));
+    efl_destructor(efl_super(obj, ELM_FILE_BOOKMARKS_CLASS));
 }
 
 EOLIAN static void
 _elm_file_bookmarks_cache_set(Eo *obj EINA_UNUSED, Elm_File_Bookmarks_Data *pd, Elm_File_MimeType_Cache *cache)
 {
    if (pd->cache)
-     eo_unref(pd->cache);
+     efl_unref(pd->cache);
 
    pd->cache = cache;
 
    if (pd->cache)
-     eo_ref(pd->cache);
+     efl_ref(pd->cache);
 }
 
 EOLIAN static Elm_File_MimeType_Cache *
@@ -712,12 +712,12 @@ _elm_file_bookmarks_cache_get(Eo *obj EINA_UNUSED, Elm_File_Bookmarks_Data *pd)
    return pd->cache;
 }
 
-EOLIAN static Eo_Base *
-_elm_file_bookmarks_eo_base_finalize(Eo *obj, Elm_File_Bookmarks_Data *pd)
+EOLIAN static Efl_Object *
+_elm_file_bookmarks_efl_object_finalize(Eo *obj, Elm_File_Bookmarks_Data *pd)
 {
    if (!pd->cache) return NULL;
 
-   return eo_finalize(eo_super(obj, ELM_FILE_BOOKMARKS_CLASS));
+   return efl_finalize(efl_super(obj, ELM_FILE_BOOKMARKS_CLASS));
 }
 
 #include "elm_file_bookmarks.eo.x"

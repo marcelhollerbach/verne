@@ -30,7 +30,7 @@ _file_hide(void *data, const Eo_Event *event)
    View_Common *common = data;
    Efm_File *file = event->info;
 
-   eo_event_callback_del(file, EO_EVENT_DEL, _file_del, data);
+   efl_event_callback_del(file, EFL_EVENT_DEL, _file_del, data);
 
    _file_remove(common, file);
 }
@@ -45,13 +45,13 @@ _file_add(void *data, const Eo_Event *event)
    res = common->add(common, file);
 
    eina_hash_add(common->files, &file, res);
-   eo_event_callback_add(file, EFM_FILE_EVENT_INVALID, _file_del, data);
+   efl_event_callback_add(file, EFM_FILE_EVENT_INVALID, _file_del, data);
 }
 
 void
 _view_free(View_Common *common)
 {
-   if (common->monitor) eo_del(common->monitor);
+   if (common->monitor) efl_del(common->monitor);
    common->monitor = NULL;
    if (common->selection) eina_list_free(common->selection);
    common->selection = NULL;
@@ -68,7 +68,7 @@ _error(void *data, const Eo_Event *event EINA_UNUSED)
 
    common->err(common);
 
-   eo_event_callback_call(common->obj, ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, NULL);
+   efl_event_callback_call(common->obj, ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, NULL);
 }
 
 static void
@@ -77,10 +77,10 @@ _listing_done(void *data, const Eo_Event *event EINA_UNUSED
 {
    View_Common *common = data;
 
-   eo_event_callback_call(common->obj, ELM_FILE_VIEW_EVENT_WORKING_DONE , NULL);
+   efl_event_callback_call(common->obj, ELM_FILE_VIEW_EVENT_WORKING_DONE , NULL);
 }
 
-EO_CALLBACKS_ARRAY_DEFINE(_monitor_event_cbs,
+EFL_CALLBACKS_ARRAY_DEFINE(_monitor_event_cbs,
   {EFM_MONITOR_EVENT_FILE_ADD, _file_add},
   {EFM_MONITOR_EVENT_FILE_HIDE, _file_hide},
   {EFM_MONITOR_EVENT_ERROR, _error},
@@ -108,7 +108,7 @@ view_file_select(View_Common *common, Efm_File *f)
    common->sel(common, it, EINA_TRUE);
 
    common->selection = eina_list_append(common->selection, f);
-   eo_event_callback_call(common->obj, ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection);
+   efl_event_callback_call(common->obj, ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection);
 }
 
 void
@@ -120,7 +120,7 @@ view_file_unselect(View_Common *common, Efm_File *f)
    common->sel(common, it, EINA_FALSE);
 
    common->selection = eina_list_remove(common->selection, f);
-   eo_event_callback_call(common->obj, ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection);
+   efl_event_callback_call(common->obj, ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection);
 }
 
 void
@@ -128,13 +128,13 @@ view_file_set(View_Common *common, Efm_File *file)
 {
    _view_free(common);
 
-   eo_event_callback_call(common->obj, ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection);
+   efl_event_callback_call(common->obj, ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, common->selection);
    common->files = eina_hash_pointer_new(NULL);
 
-   eo_event_callback_call(common->obj, ELM_FILE_VIEW_EVENT_WORKING_START , NULL);
-   eo_del(common->monitor);
+   efl_event_callback_call(common->obj, ELM_FILE_VIEW_EVENT_WORKING_START , NULL);
+   efl_del(common->monitor);
    common->monitor = efm_file_monitor(file, common->f);
-   eo_event_callback_array_add(common->monitor, _monitor_event_cbs(), common);
+   efl_event_callback_array_add(common->monitor, _monitor_event_cbs(), common);
 }
 
 void

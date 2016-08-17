@@ -19,7 +19,7 @@ typedef struct {
 static void
 _device_state_change(Emous_Device *dev, Emous_Device_State state)
 {
-    Emous_Device_UDisks_Data *pd = eo_data_scope_get(dev, EMOUS_DEVICE_UDISKS_CLASS);
+    Emous_Device_UDisks_Data *pd = efl_data_scope_get(dev, EMOUS_DEVICE_UDISKS_CLASS);
     Emous_Device_State_Changed ev;
 
     if (pd->state == state) return;
@@ -28,13 +28,13 @@ _device_state_change(Emous_Device *dev, Emous_Device_State state)
     ev.current = state;
 
     pd->state = state;
-    eo_event_callback_call(dev, EMOUS_DEVICE_EVENT_STATE_CHANGED, &ev);
+    efl_event_callback_call(dev, EMOUS_DEVICE_EVENT_STATE_CHANGED, &ev);
 }
 
 static void
 _device_mp_add(Emous_Device *dev, const char *mp)
 {
-   Emous_Device_UDisks_Data *pd = eo_data_scope_get(dev, EMOUS_DEVICE_UDISKS_CLASS);
+   Emous_Device_UDisks_Data *pd = efl_data_scope_get(dev, EMOUS_DEVICE_UDISKS_CLASS);
    Eina_List *node;
    const char *mpi;
 
@@ -52,7 +52,7 @@ _device_mp_add(Emous_Device *dev, const char *mp)
 static void
 _device_mp_del(Emous_Device *dev, const char *mp)
 {
-   Emous_Device_UDisks_Data *pd = eo_data_scope_get(dev, EMOUS_DEVICE_UDISKS_CLASS);
+   Emous_Device_UDisks_Data *pd = efl_data_scope_get(dev, EMOUS_DEVICE_UDISKS_CLASS);
    Emous_Device_State state;
    Eina_List *node;
    const char *mpi;
@@ -147,7 +147,7 @@ mountpoint_update_cb(void *data EINA_UNUSED, const Eldbus_Message *msg, Eldbus_P
 {
    Eldbus_Message_Iter *var, *mountpoints = NULL;
    Emous_Device *dev = data;
-   Emous_Device_UDisks_Data *pd = eo_data_scope_get(dev, EMOUS_DEVICE_UDISKS_CLASS);
+   Emous_Device_UDisks_Data *pd = efl_data_scope_get(dev, EMOUS_DEVICE_UDISKS_CLASS);
    Eina_List *list = NULL, *node = NULL, *ex_mountpoints = NULL;
    Eldbus_Message_Iter *string = NULL;
    const char *errname;
@@ -209,7 +209,7 @@ _device_mounts_get(Emous_Device *dev)
 {
    Emous_Device_UDisks_Data *pd;
 
-   pd = eo_data_scope_get(dev, EMOUS_DEVICE_UDISKS_CLASS);
+   pd = efl_data_scope_get(dev, EMOUS_DEVICE_UDISKS_CLASS);
 
    eldbus_proxy_property_get(pd->proxy, "MountPoints", mountpoint_update_cb, dev);
 }
@@ -281,8 +281,8 @@ _emous_device_new(Eldbus_Message_Iter *dict, const char **opath)
                        *drive = NULL;
 
    //create a object to work with
-   dev = eo_add(EMOUS_DEVICE_UDISKS_CLASS, type);
-   pd = eo_data_scope_get(dev, EMOUS_DEVICE_UDISKS_CLASS);
+   dev = efl_add(EMOUS_DEVICE_UDISKS_CLASS, type);
+   pd = efl_data_scope_get(dev, EMOUS_DEVICE_UDISKS_CLASS);
 
    //get interfaces and objectpath
    if (!eldbus_message_iter_arguments_get(dict, "oa{sa{sv}}", &pd->opath, &interfaces))
@@ -348,7 +348,7 @@ _emous_device_new(Eldbus_Message_Iter *dict, const char **opath)
 
 fail_dev:
 
-   eo_del(dev);
+   efl_del(dev);
 
    return NULL;
 }

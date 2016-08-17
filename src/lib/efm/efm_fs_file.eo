@@ -15,8 +15,8 @@ class Efm.Fs.File (Efm.File) {
         Efm.File.is_type;
         Efm.File.monitor;
         Efm.File.child_get;
-        Eo.Base.finalize;
-        Eo.Base.destructor;
+        Efl.Object.finalize;
+        Efl.Object.destructor;
     }
     constructors {
         .generate;

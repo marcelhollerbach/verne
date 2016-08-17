@@ -20,7 +20,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    win = elm_win_util_standard_add("efm", "tabbed pane  demo");
    evas_object_smart_callback_add(win, "delete,request", on_done, NULL);
 
-   tabbed_pane = eo_add(ELM_TAB_PANE_CLASS, win);
+   tabbed_pane = efl_add(ELM_TAB_PANE_CLASS, win);
 
    lb1 = elm_label_add(win);
    elm_object_text_set(lb1, ".........active");
@@ -75,7 +75,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    elm_win_resize_object_add(win, tabbed_pane);
    evas_object_resize(win, 200,200);
    evas_object_show(win);
-   eo_unref(tabbed_pane);
+   efl_unref(tabbed_pane);
    elm_run();
    return 0;
 }

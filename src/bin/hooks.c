@@ -178,12 +178,12 @@ hooks_init(void)
 
    bookmarks = elm_file_display_bookmarks_get(preview);
 
-   eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_START, _menu_selector_start, NULL);
-   eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, _menu_selector_end, NULL);
-   eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_ITEM_CHOOSEN, _open_cb, NULL);
+   efl_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_START, _menu_selector_start, NULL);
+   efl_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, _menu_selector_end, NULL);
+   efl_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_ITEM_CHOOSEN, _open_cb, NULL);
 
-   eo_event_callback_add(bookmarks, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_START, _menu_bookmarks_start, NULL);
-   eo_event_callback_add(bookmarks, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_END, _menu_bookmarks_end, NULL);
-   eo_event_callback_add(bookmarks, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_DEVICE_START, _menu_device_start, NULL);
-   eo_event_callback_add(bookmarks, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_DEVICE_END, _menu_device_end, NULL);
+   efl_event_callback_add(bookmarks, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_START, _menu_bookmarks_start, NULL);
+   efl_event_callback_add(bookmarks, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_END, _menu_bookmarks_end, NULL);
+   efl_event_callback_add(bookmarks, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_DEVICE_START, _menu_device_start, NULL);
+   efl_event_callback_add(bookmarks, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_DEVICE_END, _menu_device_end, NULL);
 }

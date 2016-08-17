@@ -15,9 +15,9 @@ typedef struct {
   Eo *monitor;
 } Efm_Monitor_Eio_Job;
 
-#define MARK_POPULATED(o) eo_key_data_set(o, "__populated", ((void*)1));
-#define UNMARK_POPULATED(o) eo_key_data_set(o, "__populated", NULL);
-#define CHECK_POPULATED(o) (eo_key_data_get(o, "__populated") != NULL)
+#define MARK_POPULATED(o) efl_key_data_set(o, "__populated", ((void*)1));
+#define UNMARK_POPULATED(o) efl_key_data_set(o, "__populated", NULL);
+#define CHECK_POPULATED(o) (efl_key_data_get(o, "__populated") != NULL)
 
 static inline Eina_Bool
 _take_filter(Efm_Monitor *mon EINA_UNUSED, Efm_Fs_Monitor_Data *pd, Efm_File *file)
@@ -32,7 +32,7 @@ _file_del(void *data, const Eo_Event *event)
 {
    Efm_Fs_Monitor_Data *pd;
 
-   pd = eo_data_scope_get(data, EFM_FS_MONITOR_CLASS);
+   pd = efl_data_scope_get(data, EFM_FS_MONITOR_CLASS);
    eina_hash_del_by_data(pd->file_icons, event->object);
 }
 
@@ -42,7 +42,7 @@ _add(Efm_Monitor *mon, const char *file)
    const char *path, *filename;
    Efm_File *ef;
    Efm_Fs_Monitor_Data *pd;
-   pd = eo_data_scope_get(mon, EFM_FS_MONITOR_CLASS);
+   pd = efl_data_scope_get(mon, EFM_FS_MONITOR_CLASS);
 
    filename = ecore_file_file_get(file);
 
@@ -55,7 +55,7 @@ _add(Efm_Monitor *mon, const char *file)
      }
 
    path = efm_file_path_get(ef);
-   eo_event_callback_add(ef, EFM_FILE_EVENT_INVALID, _file_del, mon);
+   efl_event_callback_add(ef, EFM_FILE_EVENT_INVALID, _file_del, mon);
 
    //prevent a file from beeing populated twice
    if (eina_hash_find(pd->file_icons, path)) return;
@@ -68,7 +68,7 @@ _add(Efm_Monitor *mon, const char *file)
         return;
      }
 
-   eo_event_callback_call(mon, EFM_MONITOR_EVENT_FILE_ADD, ef);
+   efl_event_callback_call(mon, EFM_MONITOR_EVENT_FILE_ADD, ef);
    MARK_POPULATED(ef);
 }
 
@@ -76,9 +76,9 @@ void
 _error(Efm_Monitor *efm)
 {
    //tell everyone that this monitor is crashed now
-   eo_event_callback_call(efm, EFM_MONITOR_EVENT_ERROR, NULL);
+   efl_event_callback_call(efm, EFM_MONITOR_EVENT_ERROR, NULL);
    //delete the monitor
-   eo_del(efm);
+   efl_del(efm);
 }
 
 static void
@@ -97,12 +97,12 @@ _refresh_files(Efm_Monitor *mon, Efm_Fs_Monitor_Data *pd)
         if (_take_filter(mon, pd, ef) && !populated)
           {
              MARK_POPULATED(ef);
-             eo_event_callback_call(mon, EFM_MONITOR_EVENT_FILE_ADD, ef);
+             efl_event_callback_call(mon, EFM_MONITOR_EVENT_FILE_ADD, ef);
           }
         else if (!_take_filter(mon, pd, ef) && populated)
           {
              UNMARK_POPULATED(ef);
-             eo_event_callback_call(mon, EFM_MONITOR_EVENT_FILE_HIDE, ef);
+             efl_event_callback_call(mon, EFM_MONITOR_EVENT_FILE_HIDE, ef);
           }
      }
 }
@@ -117,7 +117,7 @@ _fm_action(void *data EINA_UNUSED, Efm_Monitor *mon, const char *file, Fm_Action
    else if (action == SELFDEL)
      {
        //delete the monitor
-       eo_del(mon);
+       efl_del(mon);
      }
    else
      {
@@ -128,7 +128,7 @@ _fm_action(void *data EINA_UNUSED, Efm_Monitor *mon, const char *file, Fm_Action
 static void
 _filter_changed_cb(void *data, const Eo_Event *event EINA_UNUSED)
 {
-   Efm_Fs_Monitor_Data *pd = eo_data_scope_get(data, EFM_FS_MONITOR_CLASS);
+   Efm_Fs_Monitor_Data *pd = efl_data_scope_get(data, EFM_FS_MONITOR_CLASS);
 
    _refresh_files(data, pd);
 }
@@ -141,15 +141,15 @@ _efm_fs_monitor_efm_monitor_filter_set(Eo *obj, Efm_Fs_Monitor_Data *pd, Efm_Fil
      {
         if (pd->filter)
           {
-             eo_event_callback_del(pd->filter, EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, obj);
-             eo_wref_del(pd->filter, &pd->filter);
+             efl_event_callback_del(pd->filter, EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, obj);
+             efl_wref_del(pd->filter, &pd->filter);
           }
 
         pd->filter = filter;
         if (pd->filter)
           {
-             eo_event_callback_add(pd->filter, EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, obj);
-             eo_wref_add(pd->filter, &pd->filter);
+             efl_event_callback_add(pd->filter, EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, obj);
+             efl_wref_add(pd->filter, &pd->filter);
           }
         _refresh_files(obj, pd);
      }
@@ -194,17 +194,17 @@ _eio_done_cb(void *data, Eio_File *handler EINA_UNUSED)
    if (!job->monitor)
      return;
 
-   pd = eo_data_scope_get(job->monitor, EFM_FS_MONITOR_CLASS);
+   pd = efl_data_scope_get(job->monitor, EFM_FS_MONITOR_CLASS);
    //free the eio file
    pd->file = NULL;
 
    //free the job of the monitor
    mon = job->monitor;
-   eo_wref_del(job->monitor, &job->monitor);
+   efl_wref_del(job->monitor, &job->monitor);
    free(job);
 
    //call changed event
-   eo_event_callback_call(mon, EFM_MONITOR_EVENT_LISTING_DONE, NULL);
+   efl_event_callback_call(mon, EFM_MONITOR_EVENT_LISTING_DONE, NULL);
 
    //start monitoring
    dir = efm_file_path_get(pd->origin);
@@ -224,42 +224,42 @@ _eio_error_cb(void *data, Eio_File *handler EINA_UNUSED, int error EINA_UNUSED)
    if (!job->monitor)
      return;
 
-   pd = eo_data_scope_get(job->monitor, EFM_FS_MONITOR_CLASS);
+   pd = efl_data_scope_get(job->monitor, EFM_FS_MONITOR_CLASS);
    //free the eio file
    pd->file = NULL;
 
    _error(job->monitor);
 
-   eo_wref_del(job->monitor, &job->monitor);
+   efl_wref_del(job->monitor, &job->monitor);
    free(job);
 }
 
 static void
 _del_cb(void *data)
 {
-   eo_unref(data);
+   efl_unref(data);
 }
 
-EOLIAN static Eo_Base*
-_efm_fs_monitor_eo_base_constructor(Eo *obj, Efm_Fs_Monitor_Data *pd)
+EOLIAN static Efl_Object*
+_efm_fs_monitor_efl_object_constructor(Eo *obj, Efm_Fs_Monitor_Data *pd)
 {
-   Eo_Base *construct;
+   Efl_Object *construct;
 
-   construct = eo_constructor(eo_super(obj, EFM_FS_MONITOR_CLASS));
+   construct = efl_constructor(efl_super(obj, EFM_FS_MONITOR_CLASS));
 
    pd->file_icons = eina_hash_string_superfast_new(_del_cb);
 
    return construct;
 }
 
-EOLIAN static Eo_Base*
-_efm_fs_monitor_eo_base_finalize(Eo *obj, Efm_Fs_Monitor_Data *pd)
+EOLIAN static Efl_Object*
+_efm_fs_monitor_efl_object_finalize(Eo *obj, Efm_Fs_Monitor_Data *pd)
 {
-   Eo_Base *base;
+   Efl_Object *base;
    Efm_Monitor_Eio_Job *job;
    const char *dir;
 
-   base = eo_finalize(eo_super(obj, EFM_FS_MONITOR_CLASS));
+   base = efl_finalize(efl_super(obj, EFM_FS_MONITOR_CLASS));
 
    if (!pd->origin) {
      ERR("monitor does not have a set path");
@@ -272,7 +272,7 @@ _efm_fs_monitor_eo_base_finalize(Eo *obj, Efm_Fs_Monitor_Data *pd)
    job = calloc(1, sizeof(Efm_Monitor_Eio_Job));
    job->monitor = obj;
 
-   eo_wref_add(obj, &job->monitor);
+   efl_wref_add(obj, &job->monitor);
 
    //start the listing
    pd->file = eio_file_ls(dir, _eio_filter_cb, _eio_main_cb,
@@ -283,15 +283,15 @@ _efm_fs_monitor_eo_base_finalize(Eo *obj, Efm_Fs_Monitor_Data *pd)
 static void
 _inv_file_cb(void *data, const Eo_Event *event EINA_UNUSED)
 {
-   eo_event_callback_call(data, EFM_MONITOR_EVENT_ERROR, NULL);
+   efl_event_callback_call(data, EFM_MONITOR_EVENT_ERROR, NULL);
 }
 
 EOLIAN static void
 _efm_fs_monitor_install(Eo *obj, Efm_Fs_Monitor_Data *pd, Efm_Fs_File *file, Efm_Filter *filter)
 {
    pd->origin = file;
-   eo_ref(pd->origin);
-   eo_event_callback_add(pd->origin, EFM_FILE_EVENT_INVALID, _inv_file_cb, obj);
+   efl_ref(pd->origin);
+   efl_event_callback_add(pd->origin, EFM_FILE_EVENT_INVALID, _inv_file_cb, obj);
    efm_monitor_filter_set(obj, filter);
 }
 
@@ -302,7 +302,7 @@ _efm_fs_monitor_efm_monitor_file_get(Eo *obj EINA_UNUSED, Efm_Fs_Monitor_Data *p
 }
 
 EOLIAN static void
-_efm_fs_monitor_eo_base_destructor(Eo *obj, Efm_Fs_Monitor_Data *pd)
+_efm_fs_monitor_efl_object_destructor(Eo *obj, Efm_Fs_Monitor_Data *pd)
 {
 
    if (pd->file)
@@ -310,17 +310,17 @@ _efm_fs_monitor_eo_base_destructor(Eo *obj, Efm_Fs_Monitor_Data *pd)
 
    if (pd->filter)
      {
-        eo_event_callback_del(pd->filter, EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, obj);
-        eo_wref_del(pd->filter, &pd->filter);
+        efl_event_callback_del(pd->filter, EFM_FILTER_EVENT_FILTER_CHANGED, _filter_changed_cb, obj);
+        efl_wref_del(pd->filter, &pd->filter);
      }
 
-   eo_unref(pd->origin);
+   efl_unref(pd->origin);
 
    fm_monitor_del(obj, pd->mon);
    eio_monitor_del(pd->mon);
 
    eina_hash_free(pd->file_icons);
 
-   eo_destructor(eo_super(obj, EFM_FS_MONITOR_CLASS));
+   efl_destructor(efl_super(obj, EFM_FS_MONITOR_CLASS));
 }
 #include "efm_fs_monitor.eo.x"

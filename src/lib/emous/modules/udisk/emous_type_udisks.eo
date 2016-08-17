@@ -1,4 +1,4 @@
-class Emous.Type.Udisks (Eo.Base, Emous.Type) {
+class Emous.Type.Udisks (Efl.Object, Emous.Type) {
     methods {
     }
     implements {

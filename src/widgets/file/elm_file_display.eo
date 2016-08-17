@@ -40,7 +40,7 @@ class Elm_File_Display (Elm.Layout) {
    }
 
    implements {
-      Eo.Base.constructor;
+      Efl.Object.constructor;
       Efl.Canvas.Group.group_add;
    }
 

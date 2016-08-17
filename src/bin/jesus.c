@@ -70,13 +70,13 @@ ui_init()
    elm_box_pack_end(box, seperator);
    evas_object_show(seperator);
 
-   preview = eo_add(ELM_FILE_DISPLAY_CLASS, win);
+   preview = efl_add(ELM_FILE_DISPLAY_CLASS, win);
    evas_object_size_hint_align_set(preview, EVAS_HINT_FILL, EVAS_HINT_FILL);
    evas_object_size_hint_weight_set(preview, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    elm_box_pack_end(box, preview);
 
    selector = elm_file_display_selector_get(preview);
-   eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED,
+   efl_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED,
                                  _dir_changed, NULL);
    evas_object_show(preview);
 

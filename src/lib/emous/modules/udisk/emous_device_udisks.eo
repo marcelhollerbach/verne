@@ -1,4 +1,4 @@
-class Emous.Device.UDisks (Eo.Base, Emous.Device) {
+class Emous.Device.UDisks (Efl.Object, Emous.Device) {
     implements {
         Emous.Device.mount;
         Emous.Device.umount;

@@ -127,13 +127,13 @@ shortcuts_init()
    evas_object_event_callback_add(selector, EVAS_CALLBACK_KEY_DOWN, _search_key_down, NULL);
 
    //add dnd shortcut
-   eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_DND_ITEM_HOVER, _hover, NULL);
+   efl_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_DND_ITEM_HOVER, _hover, NULL);
 
    //add dnd shortcut
-   eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_DND_ITEM_DROPED, _drop, NULL);
+   efl_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_DND_ITEM_DROPED, _drop, NULL);
 
    //add dnd shortcut
-   eo_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_DND_DROPED, _drop, NULL);
+   efl_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_DND_DROPED, _drop, NULL);
 }
 
 static void

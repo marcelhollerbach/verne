@@ -20,7 +20,7 @@ START_TEST(efm_file_invalid_name)
    Efm_File *file;
    const char *filename = "I-Am-Invalid";
 
-   eo_init();
+   efl_object_init();
    efm_init();
 
    file = efm_file_get(EFM_CLASS, filename);
@@ -48,7 +48,7 @@ START_TEST(efm_valid_file)
 
    system("touch "TEST_FILE);
 
-   eo_init();
+   efl_object_init();
    efm_init();
 
    done = EINA_FALSE;
@@ -57,7 +57,7 @@ START_TEST(efm_valid_file)
 
    ck_assert_ptr_ne(file, NULL);
 
-   eo_event_callback_add(file, EFM_FILE_EVENT_FSQUERY_DONE, _done_cb, NULL);
+   efl_event_callback_add(file, EFM_FILE_EVENT_FSQUERY_DONE, _done_cb, NULL);
 
    ecore_main_loop_begin();
 
@@ -103,7 +103,7 @@ START_TEST(efm_stresstest)
 
         ck_assert_ptr_ne(file, NULL);
 
-        eo_event_callback_add(file, EFM_FILE_EVENT_FSQUERY_DONE, _done2_cb, NULL);
+        efl_event_callback_add(file, EFM_FILE_EVENT_FSQUERY_DONE, _done2_cb, NULL);
      }
    ecore_main_loop_begin();
 
@@ -159,16 +159,16 @@ START_TEST(efm_monitor_test)
    error = EINA_FALSE;
    files = 0;
 
-   eo_init();
+   efl_object_init();
    efm_init();
 
    f = efm_file_get(EFM_CLASS, TEST_DIRECTORY);
 
    mon = efm_file_monitor(f, NULL);
 
-//      eo_event_callback_add(EFM_MONITOR_EVENT_FILE_DEL, _del, NULL);
-   eo_event_callback_add(mon, EFM_MONITOR_EVENT_FILE_ADD, _add, NULL);
-   eo_event_callback_add(mon, EFM_MONITOR_EVENT_ERROR, _error, NULL);
+//      efl_event_callback_add(EFM_MONITOR_EVENT_FILE_DEL, _del, NULL);
+   efl_event_callback_add(mon, EFM_MONITOR_EVENT_FILE_ADD, _add, NULL);
+   efl_event_callback_add(mon, EFM_MONITOR_EVENT_ERROR, _error, NULL);
 
 
    ecore_main_loop_begin();
@@ -209,14 +209,14 @@ START_TEST(efm_archive_monitor_test)
    Efm_Monitor *archive;
    Efm_File *f;
 
-   eo_init();
+   efl_object_init();
    efm_init();
    f = efm_archive_get(EFM_CLASS, TEST_RESSOURCES"/src/test/archiv.tar", "zip-test/");
 
    archive = efm_file_monitor(f, NULL);
    ck_assert_ptr_ne(archive, NULL);
-   eo_event_callback_add(archive, EFM_MONITOR_EVENT_FILE_ADD, _add_mon, NULL);
-   eo_event_callback_add(archive, EFM_MONITOR_EVENT_ERROR, _error_mon, NULL);
+   efl_event_callback_add(archive, EFM_MONITOR_EVENT_FILE_ADD, _add_mon, NULL);
+   efl_event_callback_add(archive, EFM_MONITOR_EVENT_ERROR, _error_mon, NULL);
    ecore_main_loop_begin();
    ck_assert_int_eq(mon_files, ARCHIVE_FILE_NUMBER);
 
@@ -228,7 +228,7 @@ START_TEST(efm_archive_test)
 {
    Efm_File *archive;
 
-   eo_init();
+   efl_object_init();
    efm_init();
 
    archive = efm_archive_get(EFM_CLASS, TEST_RESSOURCES"/src/test/archiv.tar", "zip-test/dir1/bla1");

@@ -15,7 +15,7 @@ _emous_mount_add(const char *type, const char *mount_point, const char *source)
    mp->fs_type = type;
 
    manager = emous_manager_object_get(EMOUS_MANAGER_CLASS);
-   eo_event_callback_call(manager, EMOUS_MANAGER_EVENT_MOUNT_ADD, mp);
+   efl_event_callback_call(manager, EMOUS_MANAGER_EVENT_MOUNT_ADD, mp);
 
    free(mp);
 }
@@ -27,5 +27,5 @@ _emous_mount_del(const char *mount_point)
 
    manager = emous_manager_object_get(EMOUS_MANAGER_CLASS);
 
-   eo_event_callback_call(manager, EMOUS_MANAGER_EVENT_DEVICE_DEL, (void*)mount_point);
+   efl_event_callback_call(manager, EMOUS_MANAGER_EVENT_DEVICE_DEL, (void*)mount_point);
 }

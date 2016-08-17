@@ -21,8 +21,8 @@ _elm_file_mimetype_cache_cache_generate(Eo *obj EINA_UNUSED, void *npd EINA_UNUS
     Eo *result;
     Elm_File_MimeType_Cache_Data *pd;
 
-    result = eo_add(ELM_FILE_MIMETYPE_CACHE_CLASS, NULL);
-    pd = eo_data_scope_get(result, ELM_FILE_MIMETYPE_CACHE_CLASS);
+    result = efl_add(ELM_FILE_MIMETYPE_CACHE_CLASS, NULL);
+    pd = efl_data_scope_get(result, ELM_FILE_MIMETYPE_CACHE_CLASS);
 
     pd->size = size;
     pd->mime_type = eina_hash_stringshared_new(_free);
