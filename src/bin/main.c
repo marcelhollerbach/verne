@@ -1,4 +1,4 @@
-#include "jesus.h"
+#include "main.h"
 
 Evas_Object *win;
 Evas_Object *preview;
@@ -57,7 +57,7 @@ ui_init()
 
 
    layout = elm_layout_add(win);
-   efl_file_set(layout, THEME_PATH"/jesus.edc.edj", "headbar");
+   efl_file_set(layout, THEME_PATH"/default.edc.edj", "headbar");
    evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, 0.0);
    evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, 0.0);
    elm_box_pack_end(box, layout);

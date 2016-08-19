@@ -1,4 +1,4 @@
-#include "jesus.h"
+#include "main.h"
 
 #define SEP "<item relsize=15x15 vsize=full href=path/separator></item>"
 

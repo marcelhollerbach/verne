@@ -1,4 +1,4 @@
-#include "jesus.h"
+#include "main.h"
 
 static void
 _open(Efm_File *select)

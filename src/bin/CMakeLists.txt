@@ -1,13 +1,14 @@
-set(THEME_INSTALL_PATH "${CMAKE_INSTALL_FULL_DATADIR}/jesus/")
+set(THEME_INSTALL_PATH "${CMAKE_INSTALL_FULL_DATADIR}/${CMAKE_PROJECT_NAME}/")
 
 add_custom_command(
-     OUTPUT ${CMAKE_BINARY_DIR}/data/theme/jesus.edc.edj
-     COMMAND edje_cc -id ${CMAKE_SOURCE_DIR}/data/img ${CMAKE_SOURCE_DIR}/data/theme/efm/jesus.edc ${CMAKE_BINARY_DIR}/data/theme/jesus.edc.edj
-     DEPENDS ${CMAKE_SOURCE_DIR}/data/theme/efm/jesus.edc
+     OUTPUT ${CMAKE_BINARY_DIR}/data/theme/default.edc.edj
+     COMMAND edje_cc -id ${CMAKE_SOURCE_DIR}/data/img ${CMAKE_SOURCE_DIR}/data/theme/efm/default.edc ${CMAKE_BINARY_DIR}/data/theme/default.edc.edj
+     DEPENDS ${CMAKE_SOURCE_DIR}/data/theme/efm/default.edc
 )
 
 LIST(APPEND JESUS_FILES
-  jesus.c
+  main.c
+  main.h
   titlebar.c
   ui.c
   config.c
@@ -19,9 +20,9 @@ LIST(APPEND JESUS_FILES
   clipboard.c
   fs_operation.c
   shortcuts.c
-  jesus_archive.h
-  jesus_archive.c
-  ${CMAKE_BINARY_DIR}/data/theme/jesus.edc.edj
+  archive.h
+  archive.c
+  ${CMAKE_BINARY_DIR}/data/theme/default.edc.edj
 )
 
 add_executable(jesus ${JESUS_FILES})
@@ -60,7 +61,7 @@ set(PACKAGE_BIN_DIR \"${CMAKE_INSTALL_FULL_BINDIR}\")
 
 configure_file(${CMAKE_SOURCE_DIR}/src/bin/config.h.cmake ${CMAKE_SOURCE_DIR}/src/bin/config.h)
 
-INSTALL(FILES ${CMAKE_BINARY_DIR}/data/theme/jesus.edc.edj
-  DESTINATION ${CMAKE_INSTALL_DATADIR}/jesus/)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/data/theme/default.edc.edj
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}/)
 
 INSTALL(TARGETS jesus DESTINATION ${CMAKE_INSTALL_BINDIR})

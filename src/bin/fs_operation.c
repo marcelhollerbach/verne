@@ -1,4 +1,4 @@
-#include "jesus.h"
+#include "main.h"
 
 typedef enum {
   OP_COPY,
