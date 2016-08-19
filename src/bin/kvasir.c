@@ -1,4 +1,4 @@
-#include "jesus.h"
+#include "kvasir.h"
 
 Evas_Object *win;
 Evas_Object *preview;
@@ -16,7 +16,7 @@ on_done(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 void
 printHelp()
 {
-   printf("usage: jesus [Path] \n If path is not given $HOME will be taken, if this is not set / will be used.");
+   printf("usage: Kvasir [Path] \n If path is not given $HOME will be taken, if this is not set / will be used.");
 }
 
 static void
@@ -29,7 +29,7 @@ _dir_changed(void *data EINA_UNUSED, const Eo_Event *event)
    filename = efm_file_filename_get(event->info);
    titlebar_path_set(efm_file_path_get(event->info));
 
-   eina_strbuf_append_printf(buf, "elm - Jesus | %s", filename);
+   eina_strbuf_append_printf(buf, "elm - Kvasir | %s", filename);
    elm_win_title_set(win, eina_strbuf_string_get(buf));
    eina_strbuf_free(buf);
 }
@@ -40,7 +40,7 @@ ui_init()
    Evas_Object *icon, *seperator, *box;
    Evas_Image *img;
 
-   win = elm_win_util_standard_add("Jesus", "Jesus - Fm");
+   win = elm_win_util_standard_add("Kvasir", "Kvasir - Fm");
 
    icon = elm_icon_add(win);
    elm_icon_standard_set(icon, "system-file-manager");
@@ -57,7 +57,7 @@ ui_init()
 
 
    layout = elm_layout_add(win);
-   efl_file_set(layout, THEME_PATH"/jesus.edc.edj", "headbar");
+   efl_file_set(layout, THEME_PATH"/kvasir.edc.edj", "headbar");
    evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, 0.0);
    evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, 0.0);
    elm_box_pack_end(box, layout);
@@ -128,12 +128,12 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
      printf("WAD\n");
 
    // set app informations
-   elm_app_name_set("Jesus");
+   elm_app_name_set("Kvasir");
    elm_app_compile_bin_dir_set(PACKAGE_BIN_DIR);
    elm_app_compile_lib_dir_set(PACKAGE_LIB_DIR);
    elm_app_compile_data_dir_set(PACKAGE_DATA_DIR);
    elm_app_desktop_entry_set("efm.desktop");
-   elm_app_info_set(elm_main, "jesus", "");
+   elm_app_info_set(elm_main, "kvasir", "");
 
    // init external elementary stuff
    elm_ext_init();

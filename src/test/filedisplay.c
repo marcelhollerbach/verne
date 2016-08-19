@@ -47,7 +47,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 
    elm_ext_init();
 
-   win = elm_win_util_standard_add("efm", "efm - Jesus");
+   win = elm_win_util_standard_add("efm", "efm - Kvasir");
    evas_object_smart_callback_add(win, "delete,request", on_done, NULL);
 
    bx = elm_box_add(win);

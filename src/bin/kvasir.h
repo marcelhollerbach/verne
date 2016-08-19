@@ -10,7 +10,7 @@
 #include <Elementary_Ext.h>
 #include "ui.h"
 #include "config.h"
-#include "jesus_archive.h"
+#include "kvasir_archive.h"
 
 typedef enum
 {
@@ -19,11 +19,11 @@ typedef enum
 
 typedef struct {
     Eina_Hash *mime_type_open;
-} Jesus_Config;
+} Kvasir_Config;
 
 typedef void (*Cmd_Choosen)(Efm_File *file, Efreet_Desktop *desk);
 
-extern Jesus_Config *config;
+extern Kvasir_Config *config;
 
 // the general window
 extern Evas_Object *win;

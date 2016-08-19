@@ -1,4 +1,4 @@
-#include "jesus.h"
+#include "kvasir.h"
 
 #define SEP "<item relsize=15x15 vsize=full href=path/separator></item>"
 
@@ -317,7 +317,7 @@ titlebar_init(void)
    evas_object_smart_callback_add(entry, "anchor,clicked", _anchor_clicked_cb, NULL);
    evas_object_show(entry);
 
-   elm_object_part_content_set(layout, "jesus.textbar", entry);
+   elm_object_part_content_set(layout, "kvasir.textbar", entry);
 }
 
 void

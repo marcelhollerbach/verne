@@ -1,25 +1,25 @@
-#include "jesus.h"
+#include "kvasir.h"
 
-#define CONFIG_NAME "jesus-config"
+#define CONFIG_NAME "kvasir-config"
 #define CONFIG_VERSION "0.3"
 #define CONFIG_KEY CONFIG_NAME"-"CONFIG_VERSION
 static Eet_Data_Descriptor *edd;
 
-Jesus_Config *config;
+Kvasir_Config *config;
 
-Jesus_Config*
+Kvasir_Config*
 _config_standart_new()
 {
-   Jesus_Config *config;
+   Kvasir_Config *config;
 
-   config = calloc(1, sizeof(Jesus_Config));
+   config = calloc(1, sizeof(Kvasir_Config));
    config->mime_type_open = eina_hash_string_small_new(NULL);
 
    return config;
 }
 
 void
-_config_free(Jesus_Config *config)
+_config_free(Kvasir_Config *config)
 {
     eina_hash_free(config->mime_type_open);
     free(config);
@@ -37,7 +37,7 @@ _config_read()
         config = NULL;
      }
 
-   snprintf(path, sizeof(path), "%s/%s", efreet_config_home_get(), "jesus.eet");
+   snprintf(path, sizeof(path), "%s/%s", efreet_config_home_get(), "kvasir.eet");
 
    cf = eet_open(path, EET_FILE_MODE_READ);
 
@@ -59,10 +59,10 @@ config_init(void)
 {
    Eet_Data_Descriptor_Class eddc;
 
-   EET_EINA_STREAM_DATA_DESCRIPTOR_CLASS_SET(&eddc, Jesus_Config);
+   EET_EINA_STREAM_DATA_DESCRIPTOR_CLASS_SET(&eddc, Kvasir_Config);
 
    edd = eet_data_descriptor_stream_new(&eddc);
-   EET_DATA_DESCRIPTOR_ADD_HASH_STRING(edd, Jesus_Config, "mime_type_open", mime_type_open);
+   EET_DATA_DESCRIPTOR_ADD_HASH_STRING(edd, Kvasir_Config, "mime_type_open", mime_type_open);
 
    _config_read();
 }
@@ -76,7 +76,7 @@ config_flush(void)
    if (!config)
      return;
 
-   snprintf(path, sizeof(path), "%s/%s", efreet_config_home_get(), "jesus.eet");
+   snprintf(path, sizeof(path), "%s/%s", efreet_config_home_get(), "kvasir.eet");
 
    cf = eet_open(path, EET_FILE_MODE_WRITE);
 
