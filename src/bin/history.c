@@ -89,7 +89,7 @@ _path_changed_cb(void *data EINA_UNUSED, const Eo_Event *event)
 void
 history_init(void)
 {
-   elm_layout_signal_callback_add(layout, "jesus.history.back", "theme", _back_cb, NULL);
-   elm_layout_signal_callback_add(layout, "jesus.history.forward", "theme", _forward_cb, NULL);
+   elm_layout_signal_callback_add(layout, "verne.history.back", "theme", _back_cb, NULL);
+   elm_layout_signal_callback_add(layout, "verne.history.forward", "theme", _forward_cb, NULL);
    efl_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _path_changed_cb, NULL);
 }

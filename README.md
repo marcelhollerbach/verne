@@ -27,7 +27,7 @@ Make sure to include the library path is in the ldconfig search path and the ldc
 
 ### Distro packages:
 
-* Arch Linux (AUR): https://aur.archlinux.org/packages/jesus-git/
+* Arch Linux (AUR): https://aur.archlinux.org/packages/verne-git/
 
 
 ## Bugs ##

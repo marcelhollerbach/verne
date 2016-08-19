@@ -1,5 +1,5 @@
 # Maintainer: Daniel Haß <aur@hass.onl>
-_pkgname=jesus
+_pkgname=verne
 pkgname=$_pkgname-git
 pkgver=544.0c04880
 pkgrel=1
@@ -11,7 +11,7 @@ depends=('elementary-git')
 makedepends=('git' 'cmake' 'check')
 provides=("$_pkgname=$pkgver")
 conflicts=("$_pkgname")
-source=("git://git.enlightenment.org/devs/bu5hm4n/jesus.git")
+source=("git://git.enlightenment.org/devs/bu5hm4n/verne.git")
 sha256sums=('SKIP')
 
 pkgver() {

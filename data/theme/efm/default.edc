@@ -11,9 +11,9 @@ collections{
       image: "icon_notfavorites.png" COMP;
       image: "icon_apps.png" COMP;
    }
-   group { name: "jesus.fs_op.copy";
+   group { name: "verne.fs_op.copy";
       parts {
-         swallow { "jesus.progress"
+         swallow { "verne.progress"
             desc {
                rel1.offset: 0 5;
                rel2.relative: 1.0 0.0;
@@ -25,9 +25,9 @@ collections{
             source: "elm/icon";
             desc { "default"
                rel1.relative: 0.0 1.0;
-               rel1.to_y: "jesus.progress";
+               rel1.to_y: "verne.progress";
                rel2.relative: 0.0 1.0;
-               rel2.to_y: "jesus.to";
+               rel2.to_y: "verne.to";
                aspect: 1 1;
                align: 0.0 0.0;
                fixed: 1 1;
@@ -39,7 +39,7 @@ collections{
          text { "descriptor_from"
             desc {
                rel1.relative: 1.0 1.0;
-               rel1.to_y: "jesus.progress";
+               rel1.to_y: "verne.progress";
                rel1.to_x: "indicator";
                rel2.relative: 1.0 0.0;
                rel2.to_y: "descriptor_to";
@@ -53,11 +53,11 @@ collections{
                }
             }
          }
-         text { "jesus.from"
+         text { "verne.from"
             desc {
                rel1.relative: 1.0 0.0;
                rel1.to: "descriptor_from";
-               rel2.to_y: "jesus.to";
+               rel2.to_y: "verne.to";
                rel2.relative: 1.0 0.0;
                align: 1.0 0.5;
                text {
@@ -83,9 +83,9 @@ collections{
                }
             }
          }
-         text { "jesus.to"
+         text { "verne.to"
             desc {
-               rel1.to_x: "jesus.from";
+               rel1.to_x: "verne.from";
                rel1.relative: 0.0 1.0;
                rel2.relative: 1.0 1.0;
                align: 1.0 1.0;
@@ -102,7 +102,7 @@ collections{
                rel1.relative: 0.0 1.0;
                rel1.to: "indicator";
                rel2.relative: 1.0 1.0;
-               rel2.to: "jesus.to";
+               rel2.to: "verne.to";
                rel2.offset: 0 1;
                color: 64 64 64 255;
             }
@@ -110,16 +110,16 @@ collections{
       }
    }
 
-   group { name: "jesus.fs_op.move";
-      inherit: "jesus.fs_op.copy";
+   group { name: "verne.fs_op.move";
+      inherit: "verne.fs_op.copy";
       parts {
          external { "indicator"
             source: "elm/icon";
             desc { "default"
                rel1.relative: 0.0 1.0;
-               rel1.to_y: "jesus.progress";
+               rel1.to_y: "verne.progress";
                rel2.relative: 0.0 1.0;
-               rel2.to_y: "jesus.to";
+               rel2.to_y: "verne.to";
                aspect: 1 1;
                align: 0.0 0.0;
                params {
@@ -130,7 +130,7 @@ collections{
       }
    }
 
-   group { name: "jesus.fs_op.remove";
+   group { name: "verne.fs_op.remove";
       parts {
          external { "indicator"
             source: "elm/icon";
@@ -160,7 +160,7 @@ collections{
                }
             }
          }
-         text { "jesus.from";
+         text { "verne.from";
             desc { "default"
                rel1.relative: 1.0 0.0;
                rel1.to: "description_del";
@@ -180,7 +180,7 @@ collections{
                rel1.relative: 0.0 1.0;
                rel1.to: "indicator";
                rel2.relative: 1.0 1.0;
-               rel2.to: "jesus.from";
+               rel2.to: "verne.from";
                rel2.offset: 0 1;
                color: 64 64 64 255;
             }
@@ -200,14 +200,14 @@ collections{
          }
       }
       program {
-         signal: "jesus.default";
-         source: "jesus";
+         signal: "verne.default";
+         source: "verne";
          action: STATE_SET "default";
          target: "favorite";
       }
       program {
-         signal: "jesus.notdefault";
-         source: "jesus";
+         signal: "verne.notdefault";
+         source: "verne";
          action: STATE_SET "nofavorite";
          target: "favorite";
       }
@@ -218,8 +218,8 @@ collections{
          spacer { "back"
             desc { "default"
                aspect: 1 1;
-               rel1.to_y: "jesus.textbar";
-               rel2.to_y: "jesus.textbar";
+               rel1.to_y: "verne.textbar";
+               rel2.to_y: "verne.textbar";
                rel2.relative: 0.0 1.0;
                align: 0.0 0.0;
                fixed: 1 0;
@@ -256,7 +256,7 @@ collections{
                image.normal: "icon_arrow_right.png";
             }
          }
-         swallow { "jesus.textbar"
+         swallow { "verne.textbar"
             desc { "default"
                rel1.to_x: "forward";
                rel1.relative: 1.0 0.0;
@@ -268,7 +268,7 @@ collections{
             source: "elm/icon";
             desc { "default"
                rel1.relative: 1.0 0.0;
-               rel2.to_y: "jesus.textbar";
+               rel2.to_y: "verne.textbar";
                rel2.relative: 1.0 1.0;
                aspect: 1 1;
                align: 1.0 0.0;
@@ -282,17 +282,17 @@ collections{
       program {
          signal: "mouse,clicked,*";
          source: "forward_img";
-         action: SIGNAL_EMIT "jesus.history.forward" "theme";
+         action: SIGNAL_EMIT "verne.history.forward" "theme";
       }
       program {
          signal: "mouse,clicked,*";
          source: "back_img";
-         action: SIGNAL_EMIT "jesus.history.back" "theme";
+         action: SIGNAL_EMIT "verne.history.back" "theme";
       }
       program {
          signal: "mouse,clicked,*";
          source: "fsaction";
-         action: SIGNAL_EMIT "jesus.fsaction.popup" "theme";
+         action: SIGNAL_EMIT "verne.fsaction.popup" "theme";
       }
    }
 }

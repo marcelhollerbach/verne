@@ -25,7 +25,7 @@ LIST(APPEND JESUS_FILES
   ${CMAKE_BINARY_DIR}/data/theme/default.edc.edj
 )
 
-add_executable(jesus ${JESUS_FILES})
+add_executable(verne ${JESUS_FILES})
 
 include_directories(
   ${EINA_INCLUDE_DIRS}
@@ -40,7 +40,7 @@ include_directories(
   ../widgets/
   )
 
-target_link_libraries (jesus
+target_link_libraries (verne
    ${EINA_LIBRARIES}
    ${EVAS_LIBRARIES}
    ${EFL_LIBRARIES}
@@ -64,4 +64,4 @@ configure_file(${CMAKE_SOURCE_DIR}/src/bin/config.h.cmake ${CMAKE_SOURCE_DIR}/sr
 INSTALL(FILES ${CMAKE_BINARY_DIR}/data/theme/default.edc.edj
   DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}/)
 
-INSTALL(TARGETS jesus DESTINATION ${CMAKE_INSTALL_BINDIR})
+INSTALL(TARGETS verne DESTINATION ${CMAKE_INSTALL_BINDIR})

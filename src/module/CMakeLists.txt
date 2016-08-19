@@ -18,7 +18,7 @@ else()
    set (ENLIGHTENMENT_VERSION ${_pkgconfig_invoke_result})
 endif()
 
-set(MOD_DESKTOP_INSTALL_DIR "${ENLIGHTENMENT_MOD_DIR}/jesus/")
+set(MOD_DESKTOP_INSTALL_DIR "${ENLIGHTENMENT_MOD_DIR}/verne/")
 set(MOD_INSTALL_DIR "${MOD_DESKTOP_INSTALL_DIR}linux-gnu-${CMAKE_SYSTEM_PROCESSOR}-${ENLIGHTENMENT_VERSION}/")
 
 string(REPLACE "\n" "" MOD_DESKTOP_INSTALL_DIR "${MOD_DESKTOP_INSTALL_DIR}")
@@ -34,7 +34,7 @@ include_directories(
   ../widgets/
 )
 
-LIST(APPEND jesus_files
+LIST(APPEND verne_files
    e_bg_widget.c
    e_bg_widget.eo
    e_bg_widget.eo.x
@@ -46,11 +46,11 @@ list(APPEND bg_deps
   ../lib/efm
   )
 
-eo_rule_create("${jesus_files}" "${bg_deps}")
+eo_rule_create("${verne_files}" "${bg_deps}")
 
-add_library(jesus_module MODULE ${jesus_files})
+add_library(verne_module MODULE ${verne_files})
 
-target_link_libraries (jesus_module
+target_link_libraries (verne_module
    ${EINA_LIBRARIES}
    ${EVAS_LIBRARIES}
    ${EFL_LIBRARIES}
@@ -62,10 +62,10 @@ target_link_libraries (jesus_module
 
 )
 
-set_target_properties(jesus_module PROPERTIES OUTPUT_NAME module)
-set_target_properties(jesus_module PROPERTIES PREFIX "")
+set_target_properties(verne_module PROPERTIES OUTPUT_NAME module)
+set_target_properties(verne_module PROPERTIES PREFIX "")
 
-INSTALL(TARGETS jesus_module
+INSTALL(TARGETS verne_module
   DESTINATION  ${MOD_INSTALL_DIR}
   RENAME module.so
 )

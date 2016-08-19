@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
-project(efm)
+project(verne)
 
 include(GNUInstallDirs)
 
@@ -45,5 +45,5 @@ add_subdirectory(src/test)
 add_subdirectory(src/bin)
 add_subdirectory(src/module)
 
-INSTALL(FILES ${CMAKE_SOURCE_DIR}/data/jesus.desktop
+INSTALL(FILES ${CMAKE_SOURCE_DIR}/data/verne.desktop
         DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications/)

@@ -1,6 +1,6 @@
 #include "main.h"
 
-#define CONFIG_NAME "jesus-config"
+#define CONFIG_NAME "verne-config"
 #define CONFIG_VERSION "0.3"
 #define CONFIG_KEY CONFIG_NAME"-"CONFIG_VERSION
 static Eet_Data_Descriptor *edd;
@@ -37,7 +37,7 @@ _config_read()
         config = NULL;
      }
 
-   snprintf(path, sizeof(path), "%s/%s", efreet_config_home_get(), "jesus.eet");
+   snprintf(path, sizeof(path), "%s/%s", efreet_config_home_get(), "verne.eet");
 
    cf = eet_open(path, EET_FILE_MODE_READ);
 
@@ -76,7 +76,7 @@ config_flush(void)
    if (!config)
      return;
 
-   snprintf(path, sizeof(path), "%s/%s", efreet_config_home_get(), "jesus.eet");
+   snprintf(path, sizeof(path), "%s/%s", efreet_config_home_get(), "verne.eet");
 
    cf = eet_open(path, EET_FILE_MODE_WRITE);
 

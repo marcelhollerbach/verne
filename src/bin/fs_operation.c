@@ -240,23 +240,23 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
             case OP_MOVE:
               // set correct file
               if (operation->type == OP_MOVE)
-                efl_file_set(layout, THEME_PATH"/efm.edc.edj", "jesus.fs_op.move");
+                efl_file_set(layout, THEME_PATH"/efm.edc.edj", "verne.fs_op.move");
               else
-                efl_file_set(layout, THEME_PATH"/efm.edc.edj", "jesus.fs_op.copy");
+                efl_file_set(layout, THEME_PATH"/efm.edc.edj", "verne.fs_op.copy");
 
               // add progressbar
               progress = efl_add(ELM_PROGRESSBAR_CLASS, obj);
               efl_wref_add(progress, &operation->ui.progress);
               // set part and text
-              elm_object_part_content_set(layout, "jesus.progress", progress);
-              elm_object_part_text_set(layout, "jesus.to", operation->goal);
-              elm_object_part_text_set(layout, "jesus.from", operation->from);
+              elm_object_part_content_set(layout, "verne.progress", progress);
+              elm_object_part_text_set(layout, "verne.to", operation->goal);
+              elm_object_part_text_set(layout, "verne.from", operation->from);
               // set progress to correct values
               elm_progressbar_value_set(progress, operation->ui.progress_value);
             break;
             case OP_REMOVE:
-              efl_file_set(layout, THEME_PATH"/efm.edc.edj", "jesus.fs_op.remove");
-              elm_object_part_text_set(layout, "jesus.from", operation->from);
+              efl_file_set(layout, THEME_PATH"/efm.edc.edj", "verne.fs_op.remove");
+              elm_object_part_text_set(layout, "verne.from", operation->from);
             break;
          }
          evas_object_show(layout);
@@ -285,7 +285,7 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
 void
 fs_operations_init(void)
 {
-    elm_layout_signal_callback_add(layout, "jesus.fsaction.popup", "theme", _popup_cb, NULL);
+    elm_layout_signal_callback_add(layout, "verne.fsaction.popup", "theme", _popup_cb, NULL);
 
     // Only enable for debugging
     #if 0
