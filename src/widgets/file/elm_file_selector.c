@@ -168,7 +168,7 @@ EFL_CALLBACKS_ARRAY_DEFINE(view_events,
   {ELM_FILE_VIEW_EVENT_ITEM_SELECT_SIMPLE, _view_selected_cb},
   {ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHOOSEN, _view_choosen_cb},
   {ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, _view_select_changed_cb},
-  {EFL_EVENT_POINTER_MOVE, _event_rect_mouse_down},
+  {EFL_EVENT_POINTER_DOWN, _event_rect_mouse_down},
   {ELM_FILE_VIEW_EVENT_WORKING_DONE, _work_done},
   {ELM_FILE_VIEW_EVENT_WORKING_START, _work_start}
 );
