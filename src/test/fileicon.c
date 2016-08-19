@@ -25,7 +25,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 
    common_theme_init();
 
-   win = elm_win_util_standard_add("efm", "efm - Kvasir");
+   win = elm_win_util_standard_add("efm", "efm - Jesus");
    evas_object_smart_callback_add(win, "delete,request", on_done, NULL);
 
    tb = elm_table_add(win);

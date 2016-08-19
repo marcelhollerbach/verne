@@ -10,14 +10,14 @@ typedef struct {
         Ecore_Event_Handler *zone_resize, *zone_del, *zone_add;
     } handler;
     Eina_Hash *fms;
-} Kvasir_Data;
+} Jesus_Data;
 
-static Kvasir_Data *sd;
+static Jesus_Data *sd;
 
 E_API E_Module_Api e_modapi =
 {
    21,
-   "Kvasir"
+   "Jesus"
 };
 
 static Evas_Object*
@@ -112,7 +112,7 @@ e_modapi_init(E_Module *m)
    elm_need_ethumb();
    elm_need_efreet();
 
-   sd = calloc(1, sizeof(Kvasir_Data));
+   sd = calloc(1, sizeof(Jesus_Data));
 
    elm_ext_init();
 

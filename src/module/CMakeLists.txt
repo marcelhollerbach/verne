@@ -18,7 +18,7 @@ else()
    set (ENLIGHTENMENT_VERSION ${_pkgconfig_invoke_result})
 endif()
 
-set(MOD_DESKTOP_INSTALL_DIR "${ENLIGHTENMENT_MOD_DIR}/kvasir/")
+set(MOD_DESKTOP_INSTALL_DIR "${ENLIGHTENMENT_MOD_DIR}/jesus/")
 set(MOD_INSTALL_DIR "${MOD_DESKTOP_INSTALL_DIR}linux-gnu-${CMAKE_SYSTEM_PROCESSOR}-${ENLIGHTENMENT_VERSION}/")
 
 string(REPLACE "\n" "" MOD_DESKTOP_INSTALL_DIR "${MOD_DESKTOP_INSTALL_DIR}")
@@ -34,7 +34,7 @@ include_directories(
   ../widgets/
 )
 
-LIST(APPEND kvasir_files
+LIST(APPEND jesus_files
    e_bg_widget.c
    e_bg_widget.eo
    e_bg_widget.eo.x
@@ -46,11 +46,11 @@ list(APPEND bg_deps
   ../lib/efm
   )
 
-eo_rule_create("${kvasir_files}" "${bg_deps}")
+eo_rule_create("${jesus_files}" "${bg_deps}")
 
-add_library(kvasir_module MODULE ${kvasir_files})
+add_library(jesus_module MODULE ${jesus_files})
 
-target_link_libraries (kvasir_module
+target_link_libraries (jesus_module
    ${EINA_LIBRARIES}
    ${EVAS_LIBRARIES}
    ${EFL_LIBRARIES}
@@ -62,10 +62,10 @@ target_link_libraries (kvasir_module
 
 )
 
-set_target_properties(kvasir_module PROPERTIES OUTPUT_NAME module)
-set_target_properties(kvasir_module PROPERTIES PREFIX "")
+set_target_properties(jesus_module PROPERTIES OUTPUT_NAME module)
+set_target_properties(jesus_module PROPERTIES PREFIX "")
 
-INSTALL(TARGETS kvasir_module
+INSTALL(TARGETS jesus_module
   DESTINATION  ${MOD_INSTALL_DIR}
   RENAME module.so
 )

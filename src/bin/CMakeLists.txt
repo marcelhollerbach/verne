@@ -1,13 +1,13 @@
-set(THEME_INSTALL_PATH "${CMAKE_INSTALL_FULL_DATADIR}/kvasir/")
+set(THEME_INSTALL_PATH "${CMAKE_INSTALL_FULL_DATADIR}/jesus/")
 
 add_custom_command(
-     OUTPUT ${CMAKE_BINARY_DIR}/data/theme/kvasir.edc.edj
-     COMMAND edje_cc -id ${CMAKE_SOURCE_DIR}/data/img ${CMAKE_SOURCE_DIR}/data/theme/efm/kvasir.edc ${CMAKE_BINARY_DIR}/data/theme/kvasir.edc.edj
-     DEPENDS ${CMAKE_SOURCE_DIR}/data/theme/efm/kvasir.edc
+     OUTPUT ${CMAKE_BINARY_DIR}/data/theme/jesus.edc.edj
+     COMMAND edje_cc -id ${CMAKE_SOURCE_DIR}/data/img ${CMAKE_SOURCE_DIR}/data/theme/efm/jesus.edc ${CMAKE_BINARY_DIR}/data/theme/jesus.edc.edj
+     DEPENDS ${CMAKE_SOURCE_DIR}/data/theme/efm/jesus.edc
 )
 
 LIST(APPEND JESUS_FILES
-  kvasir.c
+  jesus.c
   titlebar.c
   ui.c
   config.c
@@ -19,12 +19,12 @@ LIST(APPEND JESUS_FILES
   clipboard.c
   fs_operation.c
   shortcuts.c
-  kvasir_archive.h
-  kvasir_archive.c
-  ${CMAKE_BINARY_DIR}/data/theme/kvasir.edc.edj
+  jesus_archive.h
+  jesus_archive.c
+  ${CMAKE_BINARY_DIR}/data/theme/jesus.edc.edj
 )
 
-add_executable(kvasir ${JESUS_FILES})
+add_executable(jesus ${JESUS_FILES})
 
 include_directories(
   ${EINA_INCLUDE_DIRS}
@@ -39,7 +39,7 @@ include_directories(
   ../widgets/
   )
 
-target_link_libraries (kvasir
+target_link_libraries (jesus
    ${EINA_LIBRARIES}
    ${EVAS_LIBRARIES}
    ${EFL_LIBRARIES}
@@ -60,7 +60,7 @@ set(PACKAGE_BIN_DIR \"${CMAKE_INSTALL_FULL_BINDIR}\")
 
 configure_file(${CMAKE_SOURCE_DIR}/src/bin/config.h.cmake ${CMAKE_SOURCE_DIR}/src/bin/config.h)
 
-INSTALL(FILES ${CMAKE_BINARY_DIR}/data/theme/kvasir.edc.edj
-  DESTINATION ${CMAKE_INSTALL_DATADIR}/kvasir/)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/data/theme/jesus.edc.edj
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/jesus/)
 
-INSTALL(TARGETS kvasir DESTINATION ${CMAKE_INSTALL_BINDIR})
+INSTALL(TARGETS jesus DESTINATION ${CMAKE_INSTALL_BINDIR})
