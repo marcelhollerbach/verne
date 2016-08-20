@@ -73,7 +73,9 @@ emous_init(void)
         // init mountpoints
         // init this after loading modules
         // so every module is getting the initial mountpoints
+#ifdef MOUNT_FOUND
         _emous_mm_init();
+#endif
      }
 
    mount_ref = 1;
@@ -100,7 +102,9 @@ emous_shutdown()
    // unload the modules
    eina_module_list_unload(modules);
    // shutdown mountpointslistening
+#ifdef MOUNT_FOUND
    _emous_mm_shutdown();
+#endif
    // shutdown the libs
    _shutdown_lib();
 }

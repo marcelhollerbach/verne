@@ -14,7 +14,6 @@ message(${EMOUS_MODULE_PATH})
 LIST(APPEND EMOUS_FILES
    Emous.h
    emous_priv.h
-   emous_mm_linux.c
    emous_mp.c
    emous.c
    emous.eo
@@ -33,6 +32,12 @@ LIST(APPEND EMOUS_FILES
    emous_type.eo.x
    emous_type.eo.h
    )
+
+if (Mount_FOUND)
+  LIST(APPEND EMOUS_FILES
+      emous_mm_linux.c
+     )
+endif (Mount_FOUND)
 
 list(APPEND include
    ./
