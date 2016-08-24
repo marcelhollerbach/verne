@@ -29,8 +29,6 @@ target_link_libraries (test_emous
    ${EO_LIBRARIES}
    ${Check_LIBRARIES}
    emous
-   m
-   rt
 )
 
 add_test(emous_test test_emous)
