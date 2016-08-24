@@ -25,6 +25,7 @@ _emous_type_udisks_emous_type_creatable(Eo *obj EINA_UNUSED, void *pd EINA_UNUSE
     return EINA_FALSE;
 }
 
+
 static const char *
 _emous_type_udisks_emous_type_name_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 {

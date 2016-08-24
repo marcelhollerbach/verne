@@ -46,8 +46,6 @@ target_link_libraries (test_fm_monitor
    ${CMAKE_THREAD_LIBS_INIT}
    ${Check_LIBRARIES}
    efm
-   m
-   rt
 )
 set_property(TARGET test_fm_monitor
    PROPERTY COMPILE_DEFINITIONS TEST_RESSOURCES="${CMAKE_SOURCE_DIR}")
