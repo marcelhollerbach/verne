@@ -224,12 +224,12 @@ _selection_del(void *data EINA_UNUSED, Evas_Object *obj, void *event_info)
 static void
 _key_down(void *data, const Eo_Event *event)
 {
-   Efl_Event_Key *ev = event->info;
+   Efl_Input_Key *ev = event->info;
    const Eina_List *selected;
    Eo *list = data;
    Elm_Object_Item *mover;
 
-   if (!strcmp(efl_event_key_get(ev), "Return"))
+   if (!strcmp(efl_input_key_get(ev), "Return"))
      {
         Efm_File *fmm_file;
         selected = elm_genlist_selected_items_get(list);

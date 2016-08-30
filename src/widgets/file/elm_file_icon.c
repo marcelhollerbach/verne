@@ -98,11 +98,11 @@ _elm_file_icon_efl_canvas_group_group_add(Eo *obj, Elm_File_Icon_Data *pd EINA_U
 static void
 _key_down_cb(void *data, const Eo_Event *event)
 {
-   Efl_Event_Key *ev;
+   Efl_Input_Key *ev;
    const char *key;
 
    ev = event->info;
-   key = efl_event_key_get(ev);
+   key = efl_input_key_get(ev);
 
    if (!strcmp(key, "Escape"))
      elm_obj_file_icon_rename_set(data, EINA_FALSE, EINA_FALSE);

@@ -286,7 +286,7 @@ static void
 _event_rect_mouse_move(void *data, const Eo_Event *event)
 {
    PRIV_DATA(data)
-   Efl_Event_Pointer *ev = event->info;
+   Efl_Input_Pointer *ev = event->info;
    Eina_Rectangle view, selection;
    int move_x, move_y;
 
@@ -301,7 +301,7 @@ _event_rect_mouse_move(void *data, const Eo_Event *event)
    selection.x = pd->event.startpoint.x;
    selection.y = pd->event.startpoint.y;
 
-   efl_event_pointer_position_get(ev, &move_x, &move_y);
+   efl_input_pointer_position_get(ev, &move_x, &move_y);
 
    selection.w = move_x - pd->event.startpoint.x;
    selection.h = move_y - pd->event.startpoint.y;
@@ -369,11 +369,11 @@ _event_rect_mouse_down(void *data, const Eo_Event *event)
 {
    PRIV_DATA(data)
    Eina_List *icons;
-   Efl_Event_Pointer *ev = event->info;
+   Efl_Input_Pointer *ev = event->info;
    Eina_Rectangle view, search;
 
    EINA_RECTANGLE_SET(&search, 0, 0, 1, 1);
-   efl_event_pointer_position_get(ev, &search.x, &search.y);
+   efl_input_pointer_position_get(ev, &search.x, &search.y);
 
    icons = elm_file_view_search_items(pd->view.obj, &search);
    elm_file_view_size_get(pd->view.obj, &view);
@@ -381,14 +381,14 @@ _event_rect_mouse_down(void *data, const Eo_Event *event)
    if (!eina_rectangle_coords_inside(&view, search.x, search.y))
      return;
 
-   if (efl_event_pointer_button_get(ev) == 1 && !icons)
+   if (efl_input_pointer_button_get(ev) == 1 && !icons)
      {
         pd->event.startpoint.x = search.x;
         pd->event.startpoint.y = search.y;
         efl_event_callback_add(event->object, EFL_EVENT_POINTER_MOVE, _event_rect_mouse_move, data);
         efl_event_callback_add(event->object, EFL_EVENT_POINTER_UP, _event_rect_mouse_up, data);
      }
-   else if (efl_event_pointer_button_get(ev) == 3)
+   else if (efl_input_pointer_button_get(ev) == 3)
      {
         Elm_File_Icon *file_icon = eina_list_data_get(icons);
         Efm_File *file = NULL;

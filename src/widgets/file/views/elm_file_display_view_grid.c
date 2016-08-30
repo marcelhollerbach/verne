@@ -224,12 +224,12 @@ _item_select_swap(Evas_Object *obj, const Eina_List *selected, Elm_Object_Item *
 static void
 _key_down(void *data, const Eo_Event *event)
 {
-   Efl_Event_Key *ev = event->info;
+   Efl_Input_Key *ev = event->info;
    const Eina_List *selected;
    Eo *grid = data;
    Elm_Object_Item *mover;
 
-   if (!strcmp(efl_event_key_get(ev), "Return"))
+   if (!strcmp(efl_input_key_get(ev), "Return"))
      {
         Efm_File *fmm_file;
         selected = elm_gengrid_selected_items_get(grid);
