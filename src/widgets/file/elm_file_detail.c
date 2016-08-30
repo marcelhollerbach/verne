@@ -334,6 +334,8 @@ _text_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache EINA_UNUSED, Efm_
 
    fd = fopen(path, "r");
 
+   if (!fd) goto end;
+
    buffer = eina_strbuf_new();
 
    while (fgets(buf, sizeof(buf), fd) != NULL) {
@@ -348,6 +350,8 @@ _text_handler(Evas_Object *obj, Elm_File_MimeType_Cache *cache EINA_UNUSED, Efm_
    eina_strbuf_free(buffer);
 
    fclose(fd);
+
+   end:
 
    return o;
 }
