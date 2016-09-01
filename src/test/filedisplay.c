@@ -11,27 +11,27 @@ on_done(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info E
 }
 
 static void
-dir_cb(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
+dir_cb(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
    printf("directory changed to %s\n", (char*)event);
 }
 
 static void
-item_cb(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
+item_cb(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
    printf("item choosen %s\n", (char*)event);
 }
 
 
 static void
-_menu_hook_start(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
+_menu_hook_start(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
    elm_menu_item_add(event->info, NULL, NULL, "you can add menu entrys",
                      NULL, NULL);
 }
 
 static void
-_menu_hook_end(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
+_menu_hook_end(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
    elm_menu_item_add(event->info, NULL, NULL, "even on the end!!",
                      NULL, NULL);

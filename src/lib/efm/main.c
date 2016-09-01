@@ -70,13 +70,13 @@ efm_shutdown(void)
    ecore_shutdown();
    eina_shutdown();
 }
-static void _file_del(void *data, const Eo_Event *event);
+static void _file_del(void *data, const Efl_Event *event);
 
 EFL_CALLBACKS_ARRAY_DEFINE(factory_events, {EFM_FILE_EVENT_INVALID, _file_del},
                                           {EFL_EVENT_DEL, _file_del});
 
 static void
-_file_del(void *data EINA_UNUSED, const Eo_Event *event)
+_file_del(void *data EINA_UNUSED, const Efl_Event *event)
 {
    eina_hash_del_by_data(sd->factory, event->object);
    efl_event_callback_array_del(event->object, factory_events(), sd->factory);

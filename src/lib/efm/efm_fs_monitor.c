@@ -28,7 +28,7 @@ _take_filter(Efm_Monitor *mon EINA_UNUSED, Efm_Fs_Monitor_Data *pd, Efm_File *fi
 }
 
 static void
-_file_del(void *data, const Eo_Event *event)
+_file_del(void *data, const Efl_Event *event)
 {
    Efm_Fs_Monitor_Data *pd;
 
@@ -126,7 +126,7 @@ _fm_action(void *data EINA_UNUSED, Efm_Monitor *mon, const char *file, Fm_Action
 }
 
 static void
-_filter_changed_cb(void *data, const Eo_Event *event EINA_UNUSED)
+_filter_changed_cb(void *data, const Efl_Event *event EINA_UNUSED)
 {
    Efm_Fs_Monitor_Data *pd = efl_data_scope_get(data, EFM_FS_MONITOR_CLASS);
 
@@ -281,7 +281,7 @@ _efm_fs_monitor_efl_object_finalize(Eo *obj, Efm_Fs_Monitor_Data *pd)
 }
 
 static void
-_inv_file_cb(void *data, const Eo_Event *event EINA_UNUSED)
+_inv_file_cb(void *data, const Efl_Event *event EINA_UNUSED)
 {
    efl_event_callback_call(data, EFM_MONITOR_EVENT_ERROR, NULL);
 }

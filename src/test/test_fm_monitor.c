@@ -35,7 +35,7 @@ END_TEST
 Eina_Bool done;
 
 static void
-_done_cb(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
+_done_cb(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
    done = EINA_TRUE;
    ecore_main_loop_quit();
@@ -72,7 +72,7 @@ END_TEST
 int filecounter = 0;
 
 static void
-_done2_cb(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
+_done2_cb(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
    filecounter ++;
    if (filecounter >= TEST_FILE_ITER_MAX)
@@ -119,7 +119,7 @@ Eina_Bool error;
 int files;
 
 static void
-_error(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
+_error(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
    error = EINA_TRUE;
    ecore_main_loop_quit();
@@ -127,14 +127,14 @@ _error(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 
 #if 0
 static Eina_Bool
-_del(void *data, Eo *obj, const Eo_Event_Description *desc,  void *event)
+_del(void *data, Eo *obj, const Efl_Event_Description *desc,  void *event)
 {
    return EINA_TRUE;
 }
 #endif
 
 static void
-_add(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
+_add(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
    files ++;
    if (files >= TEST_DIRECTORY_FILES_MAX)
@@ -182,7 +182,7 @@ END_TEST
 int mon_files;
 
 static void
-_error_mon(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
+_error_mon(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
    mon_files = -1;
    ecore_main_loop_quit();
@@ -190,14 +190,14 @@ _error_mon(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
 
 #if 0
 static Eina_Bool
-_del(void *data, Eo *obj, const Eo_Event_Description *desc,  void *event)
+_del(void *data, Eo *obj, const Efl_Event_Description *desc,  void *event)
 {
    return EINA_TRUE;
 }
 #endif
 
 static void
-_add_mon(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
+_add_mon(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
    mon_files ++;
    if (mon_files >= ARCHIVE_FILE_NUMBER)

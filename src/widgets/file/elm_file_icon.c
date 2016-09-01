@@ -96,10 +96,11 @@ _elm_file_icon_efl_canvas_group_group_add(Eo *obj, Elm_File_Icon_Data *pd EINA_U
 }
 
 static void
-_key_down_cb(void *data, const Eo_Event *event)
+_key_down_cb(void *data, const Efl_Event *event)
 {
    Efl_Input_Key *ev;
    const char *key;
+
 
    ev = event->info;
    key = efl_input_key_get(ev);
@@ -185,7 +186,7 @@ mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
 }
 
 static void
-_mime_ready(void *data, const Eo_Event *event EINA_UNUSED)
+_mime_ready(void *data, const Efl_Event *event EINA_UNUSED)
 {
    Eo *icon = data;
    Elm_File_Icon_Data *pd;

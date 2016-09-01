@@ -11,7 +11,7 @@ _efm_file_is_invalid_get(Eo *obj EINA_UNUSED, Efm_File_Data *pd)
 }
 
 static void
-_invalid_cb(void *data, const Eo_Event *event EINA_UNUSED)
+_invalid_cb(void *data, const Efl_Event *event EINA_UNUSED)
 {
    Efm_File_Data *pd = data;
 

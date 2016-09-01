@@ -13,7 +13,7 @@ static Emous_Manager *manager;
 static Emous_Manager_Static_Data *sd;
 
 static void
-_added_cb(void *data EINA_UNUSED, const Eo_Event *event)
+_added_cb(void *data EINA_UNUSED, const Efl_Event *event)
 {
     Emous_Device *device = event->info;
 
@@ -25,7 +25,7 @@ _added_cb(void *data EINA_UNUSED, const Eo_Event *event)
 }
 
 static void
-_deled_cb(void *data EINA_UNUSED, const Eo_Event *event)
+_deled_cb(void *data EINA_UNUSED, const Efl_Event *event)
 {
     Emous_Device *device = event->info;
 

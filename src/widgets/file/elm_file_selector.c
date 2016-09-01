@@ -39,7 +39,7 @@ typedef struct {
 } Animpass;
 
 static Eina_Hash *views = NULL;
-static void _event_rect_mouse_down(void *data, const Eo_Event *event);
+static void _event_rect_mouse_down(void *data, const Efl_Event *event);
 static Elm_Object_Item* _dnd_item_get_cb(Evas_Object *obj, Evas_Coord x, Evas_Coord y, int *xposret, int *yposret);
 static Eina_Bool _dnd_data_get_cb(Evas_Object *obj, Elm_Object_Item *it, Elm_Drag_User_Info *info);
 static void _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file);
@@ -115,7 +115,7 @@ _elm_file_selector_view_pool_del(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, cons
  *======================================
  */
 static void
-_view_selected_cb(void *data, const Eo_Event *event)
+_view_selected_cb(void *data, const Efl_Event *event)
 {
    Efm_File *f = event->info;
 
@@ -123,7 +123,7 @@ _view_selected_cb(void *data, const Eo_Event *event)
 }
 
 static void
-_view_choosen_cb(void *data, const Eo_Event *event)
+_view_choosen_cb(void *data, const Efl_Event *event)
 {
    Efm_File *f = event->info;
 
@@ -131,7 +131,7 @@ _view_choosen_cb(void *data, const Eo_Event *event)
 }
 
 static void
-_view_select_changed_cb(void *data, const Eo_Event *event)
+_view_select_changed_cb(void *data, const Efl_Event *event)
 {
    Evas_Object *wid = data;
    PRIV_DATA(wid);
@@ -144,7 +144,7 @@ _view_select_changed_cb(void *data, const Eo_Event *event)
 }
 
 static void
-_work_done(void *data, const Eo_Event *event EINA_UNUSED)
+_work_done(void *data, const Efl_Event *event EINA_UNUSED)
 {
    PRIV_DATA(data);
    efl_del(pd->work_indicator);
@@ -152,7 +152,7 @@ _work_done(void *data, const Eo_Event *event EINA_UNUSED)
 }
 
 static void
-_work_start(void *data, const Eo_Event *event)
+_work_start(void *data, const Efl_Event *event)
 {
    PRIV_DATA(data);
 
@@ -283,7 +283,7 @@ _elm_file_selector_file_get(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd)
  *======================================
  */
 static void
-_event_rect_mouse_move(void *data, const Eo_Event *event)
+_event_rect_mouse_move(void *data, const Efl_Event *event)
 {
    PRIV_DATA(data)
    Efl_Input_Pointer *ev = event->info;
@@ -346,7 +346,7 @@ _event_rect_mouse_move(void *data, const Eo_Event *event)
 }
 
 static void
-_event_rect_mouse_up(void *data, const Eo_Event *event)
+_event_rect_mouse_up(void *data, const Efl_Event *event)
 {
    PRIV_DATA(data);
    Eina_List *sel;
@@ -365,7 +365,7 @@ _event_rect_mouse_up(void *data, const Eo_Event *event)
 }
 
 static void
-_event_rect_mouse_down(void *data, const Eo_Event *event)
+_event_rect_mouse_down(void *data, const Efl_Event *event)
 {
    PRIV_DATA(data)
    Eina_List *icons;
@@ -601,7 +601,7 @@ _dnd_data_get_cb(Evas_Object *obj, Elm_Object_Item *it EINA_UNUSED, Elm_Drag_Use
  *======================================
  */
 static void
-_icon_rename_cb(void *data EINA_UNUSED, const Eo_Event *event)
+_icon_rename_cb(void *data EINA_UNUSED, const Efl_Event *event)
 {
    const char *name = event->info;
    const char *filename;
@@ -1200,7 +1200,7 @@ _elm_file_selector_search(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd, const
 }
 
 static void
-_drop_cb(void *data, const Eo_Event *event)
+_drop_cb(void *data, const Efl_Event *event)
 {
    Elm_File_Selector_Dnd_Drop_Event ev;
 
@@ -1213,7 +1213,7 @@ _drop_cb(void *data, const Eo_Event *event)
 }
 
 static void
-_hover_cb(void *data, const Eo_Event *event)
+_hover_cb(void *data, const Efl_Event *event)
 {
    efl_ref(event->object);
    efl_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_DND_ITEM_HOVER, event->object);

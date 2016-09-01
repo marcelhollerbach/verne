@@ -60,7 +60,7 @@ _about_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info
 }
 
 static Eina_Bool
-_fm_tab_menu_hook_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
+_fm_tab_menu_hook_start(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Efl_Event_Description *desc EINA_UNUSED, void *event)
 {
    Elm_File_Selector_Menu_Hook_Event *ev = event;
 
@@ -166,7 +166,7 @@ _fm_tab_for(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 }
 
 static Eina_Bool
-_fm_tab_dir_changed(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
+_fm_tab_dir_changed(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Efl_Event_Description *desc EINA_UNUSED, void *event)
 {
    FM_Tab *tab;
    const char *dir = event;
@@ -257,7 +257,7 @@ _fm_tab_entry_unfocused(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, vo
 
 
 static Eina_Bool
-_fm_tab_item_open(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event)
+_fm_tab_item_open(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Efl_Event_Description *desc EINA_UNUSED, void *event)
 {
    const char *file = event;
    char cmd[PATH_MAX];
@@ -375,7 +375,7 @@ _open_tab(const char *path)
 
 }
 static Eina_Bool
-_item_add(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Eo_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
+_item_add(void *data EINA_UNUSED, Eo *obj EINA_UNUSED, const Efl_Event_Description *desc EINA_UNUSED, void *event EINA_UNUSED)
 {
    const char *home;
    if ((home = getenv("HOME")))

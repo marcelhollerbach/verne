@@ -541,7 +541,7 @@ _update_thumbnail(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
 }
 
 static void
-_file_changed(void *data, const Eo_Event *event EINA_UNUSED)
+_file_changed(void *data, const Efl_Event *event EINA_UNUSED)
 {
    Elm_File_Detail *oo;
    Elm_File_Detail_Data *pd;
@@ -856,7 +856,7 @@ detail_row_changable_init(Evas_Object *obj, Detail_Row_Mutable *row)
    } while(0)
 
 static void
-_setup_cb(void *data, const Eo_Event *info EINA_UNUSED)
+_setup_cb(void *data, const Efl_Event *info EINA_UNUSED)
 {
    Elm_File_Detail_Data *pd;
 

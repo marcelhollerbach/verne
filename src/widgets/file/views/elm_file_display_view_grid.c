@@ -52,12 +52,12 @@ _elm_file_display_view_grid_elm_file_view_search_items(Eo *obj EINA_UNUSED, Elm_
 }
 
 EOLIAN static void
-_elm_file_display_view_grid_elm_file_view_selection_set(Eo *obj EINA_UNUSED, Elm_File_Display_View_Grid_Data *pd, Eina_List *file)
+_elm_file_display_view_grid_elm_file_view_selection_set(Eo *obj EINA_UNUSED, Elm_File_Display_View_Grid_Data *pd, Eina_List *files)
 {
    Eina_List *node;
    Evas_Object *icon;
 
-   EINA_LIST_FOREACH(file, node, icon)
+   EINA_LIST_FOREACH(files, node, icon)
      {
         Efm_File *file;
 
@@ -222,7 +222,7 @@ _item_select_swap(Evas_Object *obj, const Eina_List *selected, Elm_Object_Item *
 }
 
 static void
-_key_down(void *data, const Eo_Event *event)
+_key_down(void *data, const Efl_Event *event)
 {
    Efl_Input_Key *ev = event->info;
    const Eina_List *selected;

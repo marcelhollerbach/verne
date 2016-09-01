@@ -69,7 +69,7 @@ _search_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj E
 }
 
 static void
-_hover(void *data EINA_UNUSED, const Eo_Event *event) {
+_hover(void *data EINA_UNUSED, const Efl_Event *event) {
    Elm_File_Icon *icon = event->info;
    Efm_File *file;
    const char *path;
@@ -104,7 +104,7 @@ _convert( Elm_Selection_Data *data)
 }
 
 static void
-_drop(void *data EINA_UNUSED, const Eo_Event *event) {
+_drop(void *data EINA_UNUSED, const Efl_Event *event) {
     Elm_File_Selector_Dnd_Drop_Event *ev;
     Elm_Selection_Data *dnd_data;
     Efm_File *file;

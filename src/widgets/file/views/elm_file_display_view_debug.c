@@ -62,7 +62,7 @@ _elm_file_display_view_debug_elm_file_view_search(Eo *obj EINA_UNUSED, Elm_File_
 }
 
 EOLIAN static void
-_changed(void *data EINA_UNUSED, const Eo_Event *event)
+_changed(void *data EINA_UNUSED, const Efl_Event *event)
 {
    Eina_Bool state;
 

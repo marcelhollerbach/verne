@@ -13,7 +13,7 @@ typedef struct
 } Elm_File_Display_Data;
 
 static void
-_selector_path_changed(void *data, const Eo_Event *event)
+_selector_path_changed(void *data, const Efl_Event *event)
 {
    const char *file;
    PRIV_DATA(data)
@@ -23,7 +23,7 @@ _selector_path_changed(void *data, const Eo_Event *event)
 }
 
 static void
-_update_preview(void *data, const Eo_Event *event)
+_update_preview(void *data, const Efl_Event *event)
 {
    Efm_File *f;
    PRIV_DATA(data)
@@ -34,7 +34,7 @@ _update_preview(void *data, const Eo_Event *event)
 }
 
 static void
-_bookmark_path_changed(void *data,  const Eo_Event *event)
+_bookmark_path_changed(void *data,  const Efl_Event *event)
 {
    const char *file;
    Efm_File *f;
@@ -62,7 +62,7 @@ _ctx_preview_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSE
 }
 
 static void
-_menu_cb(void *data, const Eo_Event *event)
+_menu_cb(void *data, const Efl_Event *event)
 {
    PRIV_DATA(data)
    Elm_File_Selector_Menu_Hook *ev = event->info;

@@ -72,7 +72,7 @@ _forward_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, const char *em
 }
 
 static void
-_path_changed_cb(void *data EINA_UNUSED, const Eo_Event *event)
+_path_changed_cb(void *data EINA_UNUSED, const Efl_Event *event)
 {
    if (barrier) return;
    if (event->info == _history_get()) return;

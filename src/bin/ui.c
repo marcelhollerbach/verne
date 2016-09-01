@@ -11,7 +11,7 @@
 #include "ui.h"
 
 static void
-_pubs_free_cb(void *data, const Eo_Event *event EINA_UNUSED)
+_pubs_free_cb(void *data, const Efl_Event *event EINA_UNUSED)
 {
    free(data);
 }

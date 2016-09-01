@@ -222,7 +222,7 @@ _selection_del(void *data EINA_UNUSED, Evas_Object *obj, void *event_info)
 }
 
 static void
-_key_down(void *data, const Eo_Event *event)
+_key_down(void *data, const Efl_Event *event)
 {
    Efl_Input_Key *ev = event->info;
    const Eina_List *selected;

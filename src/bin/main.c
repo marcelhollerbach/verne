@@ -20,7 +20,7 @@ printHelp()
 }
 
 static void
-_dir_changed(void *data EINA_UNUSED, const Eo_Event *event)
+_dir_changed(void *data EINA_UNUSED, const Efl_Event *event)
 {
    Eina_Strbuf *buf;
    const char *filename;

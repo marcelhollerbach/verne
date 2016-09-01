@@ -24,7 +24,7 @@ _open(Efm_File *select)
 }
 
 static void
-_open_cb(void *data EINA_UNUSED, const Eo_Event *event)
+_open_cb(void *data EINA_UNUSED, const Efl_Event *event)
 {
    _open(event->info);
 }
@@ -98,7 +98,7 @@ _extract(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_
 }
 
 static void
-_menu_selector_start(void *data EINA_UNUSED, const Eo_Event *event)
+_menu_selector_start(void *data EINA_UNUSED, const Efl_Event *event)
 {
     Elm_File_Selector_Menu_Hook *ev = event->info;
     Efm_File *file = ev->file;
@@ -142,31 +142,31 @@ _menu_selector_start(void *data EINA_UNUSED, const Eo_Event *event)
 }
 
 static void
-_menu_selector_end(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
+_menu_selector_end(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
 
 }
 
 static void
-_menu_bookmarks_start(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
+_menu_bookmarks_start(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
 
 }
 
 static void
-_menu_bookmarks_end(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
+_menu_bookmarks_end(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
 
 }
 
 static void
-_menu_device_start(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
+_menu_device_start(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
 
 }
 
 static void
-_menu_device_end(void *data EINA_UNUSED, const Eo_Event *event EINA_UNUSED)
+_menu_device_end(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
 
 }
