@@ -70,6 +70,15 @@ _paste_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA
 {
    preview_paste();
 }
+static void
+_open_terminal_here_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
+{
+   Efm_File *f;
+
+   f = elm_file_selector_file_get(selector);
+
+   exec_terminal(f);
+}
 
 #define ARCHIVE_FUNC_NAME(type) _create_##type
 
@@ -139,6 +148,10 @@ _menu_selector_start(void *data EINA_UNUSED, const Efl_Event *event)
     item = elm_menu_item_add(ev->menu, NULL, NULL, "Paste", _paste_cb, ev->file);
     if (clipboard_something_in())
       elm_object_item_disabled_set(item, EINA_TRUE);
+
+    elm_menu_item_separator_add(ev->menu, NULL);
+
+    item = elm_menu_item_add(ev->menu, NULL, NULL, "Open Terminal here", _open_terminal_here_cb, NULL);
 }
 
 static void

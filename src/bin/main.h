@@ -50,6 +50,7 @@ void history_init(void);
 void exec_ui_open_with(Efm_File *file, Cmd_Choosen choosen);
 void exec_execute(Efm_File *f);
 void exec_run(Efreet_Desktop *desk, Efm_File *f);
+void exec_terminal(Efm_File *f);
 
 void clipboard_set(Clipboard_Mode m, Eina_List *list);
 void clipboard_init(void);
