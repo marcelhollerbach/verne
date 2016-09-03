@@ -10,6 +10,9 @@ class Elm.File.Detail(Elm.Layout) {
                 cache : Elm.File.MimeType.Cache;
             }
         }
+        rename {
+
+        }
     }
     implements {
         Efl.Canvas.Group.group_add;

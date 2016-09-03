@@ -779,12 +779,6 @@ _ctx_only_folder(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUS
 }
 
 static void
-_ctx_rename(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
-{
-   /* FIXME */
-}
-
-static void
 _ctx_new_folder(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
   Efm_File *file;
@@ -827,12 +821,6 @@ _ctx_menu_open(Eo* obj, int x, int y, Elm_File_Icon *icon, Efm_File *file)
 
    efl_event_callback_call(obj, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_START,&ev);
    elm_menu_item_separator_add(menu, NULL);
-   /*
-    * Rename
-    */
-   if (file) {
-      it = elm_menu_item_add(menu, NULL, NULL, "Rename", _ctx_rename, icon);
-   }
    /*
     * New folder
     */

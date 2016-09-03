@@ -63,15 +63,21 @@ static Mimetype_Cb mimetype_cbs[MIME_TYPE_END];
 static char*       mimetype_names[MIME_TYPE_END] = {
   "text", "image", "video", "audio", "application", "mutlipart", "message", "-"
 };
-
 static void
-_switch_to_edit(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+_switch_to_edit(Evas_Object *obj)
 {
    Elm_File_Detail_Data *pd;
-   pd = efl_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+   pd = efl_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
 
    evas_object_hide(elm_object_parent_widget_get(pd->name.display));
    evas_object_show(pd->name.change_display);
+   elm_object_focus_set(pd->name.change_display, EINA_TRUE);
+}
+
+static void
+_switch_to_edit_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   _switch_to_edit(data);
 }
 
 static void
@@ -1015,7 +1021,7 @@ _name_init(Evas_Object *obj, Elm_Box *box)
 
    o = elm_button_add(box);
    elm_object_part_content_set(o, "icon", ic);
-   evas_object_smart_callback_add(o, "clicked", _switch_to_edit, obj);
+   evas_object_smart_callback_add(o, "clicked", _switch_to_edit_cb, obj);
    elm_box_pack_end(bx, o);
    evas_object_show(o);
 
@@ -1028,6 +1034,13 @@ _name_init(Evas_Object *obj, Elm_Box *box)
 
    elm_box_pack_end(box, table);
 }
+
+EOLIAN static void
+_elm_file_detail_rename(Eo *obj, Elm_File_Detail_Data *pd EINA_UNUSED)
+{
+   _switch_to_edit(obj);
+}
+
 
 EOLIAN static void
 _elm_file_detail_efl_canvas_group_group_add(Eo *obj, Elm_File_Detail_Data *pd)

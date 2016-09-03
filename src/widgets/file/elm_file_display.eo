@@ -42,6 +42,7 @@ class Elm_File_Display (Elm.Layout) {
    implements {
       Efl.Object.constructor;
       Efl.Canvas.Group.group_add;
+      Elm.Widget.event;
    }
 
    events {

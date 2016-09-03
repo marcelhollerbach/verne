@@ -1,3 +1,4 @@
+#define INEEDWIDGET
 #include "../elementary_ext_priv.h"
 
 #define PRIV_DATA(o) Elm_File_Display_Data *pd = efl_data_scope_get(o, ELM_FILE_DISPLAY_CLASS);
@@ -62,7 +63,27 @@ _ctx_preview_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSE
 }
 
 static void
-_menu_cb(void *data, const Efl_Event *event)
+_ctx_rename(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
+{
+   PRIV_DATA(data)
+
+   elm_file_detail_rename(pd->detail);
+}
+
+static void
+_menu_start_cb(void *data, const Efl_Event *event)
+{
+   Elm_File_Selector_Menu_Hook *ev = event->info;
+   Evas_Object *it;
+   Evas_Object *menu = ev->menu;
+
+   elm_menu_item_separator_add(menu, NULL);
+
+   it = elm_menu_item_add(menu, NULL, NULL, "Rename", _ctx_rename, data);
+}
+
+static void
+_menu_end_cb(void *data, const Efl_Event *event)
 {
    PRIV_DATA(data)
    Elm_File_Selector_Menu_Hook *ev = event->info;
@@ -115,7 +136,8 @@ _elm_file_display_efl_canvas_group_group_add(Eo *obj, Elm_File_Display_Data *pd)
    pd->selector = o = efl_add(ELM_FILE_SELECTOR_CLASS, obj);
 
    cache = elm_file_selector_cache_get(o);
-   efl_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, _menu_cb, obj);
+   efl_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_START, _menu_start_cb, obj);
+   efl_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, _menu_end_cb, obj);
    efl_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _selector_path_changed, obj);
    efl_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_PATH_CHANGED, _update_preview, obj);
    efl_event_callback_add(o, ELM_FILE_SELECTOR_EVENT_ITEM_SELECTED, _update_preview, obj);
@@ -150,6 +172,24 @@ EOLIAN static Eina_Bool
 _elm_file_display_bookmarks_show_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd)
 {
    return pd->bookmarks_show;
+}
+
+EOLIAN static Eina_Bool
+_elm_file_display_elm_widget_event(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd, Efl_Canvas_Object *source EINA_UNUSED, Evas_Callback_Type type, void *event_info)
+{
+   Evas_Event_Key_Down *ev;
+
+   if (type != EVAS_CALLBACK_KEY_DOWN)
+     return EINA_FALSE;
+
+   ev = event_info;
+
+   if (!strcmp(ev->key, "F2"))
+     {
+        elm_file_detail_rename(pd->detail);
+        return EINA_TRUE;
+     }
+   return EINA_FALSE;
 }
 
 EOLIAN static void
