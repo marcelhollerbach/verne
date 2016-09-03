@@ -19,8 +19,8 @@ typedef struct {
 
 typedef struct {
    Evas_Object *filepreview;
-   Detail_Row_Mutable perm, user, group;
-   Detail_Row_Immutable size, mtime, ctime, mtype, name;
+   Detail_Row_Mutable perm, user, group, name;
+   Detail_Row_Immutable size, mtime, ctime, mtype;
    struct {
       Evas_Object *segment;
       Evas_Object *permstring;
@@ -63,6 +63,26 @@ static Mimetype_Cb mimetype_cbs[MIME_TYPE_END];
 static char*       mimetype_names[MIME_TYPE_END] = {
   "text", "image", "video", "audio", "application", "mutlipart", "message", "-"
 };
+
+static void
+_switch_to_edit(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   Elm_File_Detail_Data *pd;
+   pd = efl_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+
+   evas_object_hide(elm_object_parent_widget_get(pd->name.display));
+   evas_object_show(pd->name.change_display);
+}
+
+static void
+_switch_to_display(Evas_Object *obj)
+{
+   Elm_File_Detail_Data *pd;
+   pd = efl_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
+
+   evas_object_show(elm_object_parent_widget_get(pd->name.display));
+   evas_object_hide(pd->name.change_display);
+}
 
 static void
 _hide(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
@@ -139,6 +159,7 @@ _chmod_no(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED
    pd = efl_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
    pd->changes.mode = 0;
 }
+
 static void
 _request_chmod(Evas_Object *obj, int mode) {
    Elm_File_Detail_Data *pd;
@@ -581,8 +602,10 @@ _elm_file_detail_file_set(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
   _update_stat(pd, pd->file);
 
   //update the name of the preview
+  elm_object_text_set(pd->name.change_display, filename);
   elm_object_text_set(pd->name.display, filename);
   elm_object_tooltip_text_set(pd->name.display, filename);
+  _switch_to_display(obj);
 
   pd->changes.user = NULL;
   pd->changes.group = NULL;
@@ -809,12 +832,12 @@ detail_row_changable_init(Evas_Object *obj, Detail_Row_Mutable *row)
 {
    row->table = elm_table_add(obj);
    evas_object_size_hint_align_set(row->table, EVAS_HINT_FILL, EVAS_HINT_FILL);
-   evas_object_size_hint_weight_set(row->table, EVAS_HINT_EXPAND, 0.0); \
+   evas_object_size_hint_weight_set(row->table, EVAS_HINT_EXPAND, 0.0);
 
-   row->display = elm_label_add(obj); \
-   evas_object_size_hint_align_set(row->display, 0.5, 0.5); \
-   evas_object_size_hint_weight_set(row->display, EVAS_HINT_EXPAND, 0.0); \
-   elm_object_text_set(row->display, "-"); \
+   row->display = elm_label_add(obj);
+   evas_object_size_hint_align_set(row->display, 0.5, 0.5);
+   evas_object_size_hint_weight_set(row->display, EVAS_HINT_EXPAND, 0.0);
+   elm_object_text_set(row->display, "-");
    evas_object_show(row->display);
 
    evas_object_size_hint_align_set(row->change_display, 0.5, 0.5);
@@ -871,6 +894,141 @@ _setup_cb(void *data, const Efl_Event *info EINA_UNUSED)
 
 }
 
+static void
+_box_visible_set(Eo *bx, void *pd EINA_UNUSED, Eina_Bool v)
+{
+   Eina_List *lst, *node;
+   Evas_Object *o;
+
+   lst = elm_box_children_get(bx);
+   EINA_LIST_FOREACH(lst, node, o)
+     {
+        if (v)
+          evas_object_show(o);
+        else
+          evas_object_hide(o);
+     }
+   efl_gfx_visible_set(efl_super(bx, EFL_OBJECT_OVERRIDE_CLASS), v);
+}
+
+static void
+_box_override(Eo *box)
+{
+   Efl_Object_Ops ops;
+   Efl_Op_Description desc[] = {
+    EFL_OBJECT_OP_FUNC_OVERRIDE(efl_gfx_visible_set, _box_visible_set),
+   };
+
+   ops.count = 1;
+   ops.descs = desc;
+   efl_object_override(box, &ops);
+}
+
+static Efm_File*
+_rename(Efm_File *f, const char *filename)
+{
+   char buf[PATH_MAX];
+   char *dir;
+   const char *path;
+
+   path = efm_file_path_get(f);
+   dir = ecore_file_dir_get(path);
+
+   snprintf(buf, sizeof(buf), "%s/%s", dir, filename);
+
+   if (!!rename(path, buf))
+     {
+        perror("Failed to rename, reason");
+        return NULL;
+     }
+
+   return efm_file_get(EFM_CLASS, buf);
+}
+
+static void
+_key_down(void *data, const Efl_Event *ev)
+{
+   Elm_File_Detail_Data *pd;
+   Efl_Input_Key *key;
+
+   pd = efl_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+   key = ev->info;
+
+   if (!strcmp(efl_input_key_get(key), "Return"))
+     {
+        const char *newname;
+        Efm_File *renamed;
+
+        newname = elm_object_text_get(pd->name.change_display);
+
+        renamed = _rename(elm_file_detail_file_get(data), newname);
+
+        if (renamed)
+          elm_file_detail_file_set(data, renamed);
+
+        _switch_to_display(data);
+     }
+   else if (!strcmp(efl_input_key_get(key), "Escape"))
+     {
+        Efm_File *f;
+
+        f = elm_file_detail_file_get(data);
+
+        elm_object_text_set(pd->name.change_display, efm_file_filename_get(f));
+
+        _switch_to_display(data);
+     }
+}
+
+static void
+_name_init(Evas_Object *obj, Elm_Box *box)
+{
+   Elm_File_Detail_Data *pd;
+   Evas_Object *table, *bx, *o, *ic;
+
+   pd = efl_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
+
+   table = elm_table_add(box);
+   evas_object_size_hint_align_set(table, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_size_hint_weight_set(table, EVAS_HINT_EXPAND, 0.0);
+   evas_object_show(table);
+
+   pd->name.display = bx = elm_box_add(box);
+   _box_override(bx);
+   elm_box_horizontal_set(bx, EINA_TRUE);
+   evas_object_size_hint_align_set(bx, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_size_hint_weight_set(bx, EVAS_HINT_EXPAND, 0.0);
+   elm_table_pack(table, bx, 0, 0, 1, 1);
+   evas_object_show(bx);
+
+   ic = elm_icon_add(box);
+   elm_icon_standard_set(ic, "document-new");
+   evas_object_show(ic);
+
+   pd->name.change_display = elm_entry_add(obj);
+   efl_event_callback_add(pd->name.change_display, EFL_EVENT_KEY_DOWN, _key_down, obj);
+   elm_entry_single_line_set(pd->name.change_display, EINA_TRUE);
+   elm_entry_scrollable_set(pd->name.change_display, EINA_TRUE);
+   evas_object_size_hint_align_set(pd->name.change_display, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_size_hint_weight_set(pd->name.change_display, EVAS_HINT_EXPAND, 0.0);
+   elm_table_pack(table, pd->name.change_display, 0, 0, 1, 1);
+
+   o = elm_button_add(box);
+   elm_object_part_content_set(o, "icon", ic);
+   evas_object_smart_callback_add(o, "clicked", _switch_to_edit, obj);
+   elm_box_pack_end(bx, o);
+   evas_object_show(o);
+
+   pd->name.display = elm_label_add(box);
+   elm_label_ellipsis_set(pd->name.display, EINA_TRUE);
+   evas_object_size_hint_align_set(pd->name.display, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_size_hint_weight_set(pd->name.display, EVAS_HINT_EXPAND, 0.0);
+   elm_box_pack_end(bx, pd->name.display);
+   evas_object_show(pd->name.display);
+
+   elm_box_pack_end(box, table);
+}
+
 EOLIAN static void
 _elm_file_detail_efl_canvas_group_group_add(Eo *obj, Elm_File_Detail_Data *pd)
 {
@@ -885,7 +1043,9 @@ _elm_file_detail_efl_canvas_group_group_add(Eo *obj, Elm_File_Detail_Data *pd)
 
    bx = elm_box_add(obj);
    SEPERATOR
-   DETAIL_ROW_UNCHANGABLE(name, "<b>Name:");
+
+   LABEL(pd->name.label, "<b>Name:", 0.0, EINA_FALSE);
+   _name_init(obj, bx);
    SEPERATOR
    DETAIL_ROW_UNCHANGABLE(size, "<b>Size:");
    SEPERATOR
