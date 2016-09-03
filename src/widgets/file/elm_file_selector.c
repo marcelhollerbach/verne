@@ -408,8 +408,6 @@ _dnd_item_get_cb(Evas_Object *obj, Evas_Coord x, Evas_Coord y, int *xposret, int
    Eina_List *icons;
    Elm_File_Icon *icon;
    int xx,yy;
-   // XXX this should not be needed
-   Eina_Bool rename_mode;
    Eina_Rectangle search;
 
    EINA_RECTANGLE_SET(&search, x, y, 1, 1);
@@ -419,10 +417,6 @@ _dnd_item_get_cb(Evas_Object *obj, Evas_Coord x, Evas_Coord y, int *xposret, int
      return NULL;
 
    icon = eina_list_data_get(icons);
-   rename_mode = elm_obj_file_icon_rename_get(icon);
-
-   if (rename_mode)
-     return NULL;
 
    evas_object_geometry_get(icon, &xx, &yy, NULL, NULL);
 
@@ -595,37 +589,6 @@ _dnd_data_get_cb(Evas_Object *obj, Elm_Object_Item *it EINA_UNUSED, Elm_Drag_Use
 
     return EINA_TRUE;
 }
-/*
- *======================================
- * icon rename things
- *======================================
- */
-static void
-_icon_rename_cb(void *data EINA_UNUSED, const Efl_Event *event)
-{
-   const char *name = event->info;
-   const char *filename;
-   Efm_File *file;
-
-   file = elm_obj_file_icon_file_get(event->object);
-
-   if (!file) return;
-
-   filename = efm_file_filename_get(file);
-
-   if (!!strcmp(name, filename))
-     {
-        const char *path;
-        const char *dir;
-        char buf[PATH_MAX];
-
-        path = efm_file_path_get(file);
-        dir = ecore_file_dir_get(path);
-        snprintf(buf, sizeof(buf), "%s/%s", dir, name);
-        if (!ecore_file_mv(path, buf))
-          ERR("Rename failed!");
-     }
-}
 
 /*
  *======================================
@@ -713,20 +676,6 @@ _elm_file_selector_elm_widget_event(Eo *obj, Elm_File_Selector_Data *pd, Evas_Ob
          free(oldstr);
          _search_update(obj, pd);
      }
-   else if (!strcmp(ev->key, "F2"))
-      {
-        // start rename mode
-        Eina_List *node, *selection;
-        Elm_File_Icon *icon;
-
-        selection = elm_file_view_selection_get(pd->view.obj);
-        EINA_LIST_FOREACH(selection, node, icon)
-          {
-             efl_event_callback_add(icon, ELM_FILE_ICON_EVENT_RENAME_DONE, _icon_rename_cb, NULL);
-             elm_obj_file_icon_rename_set(icon, EINA_TRUE, EINA_FALSE);
-          }
-        return EINA_FALSE;
-      }
    else if (!strcmp(ev->key, "Escape"))
       {
          eina_strbuf_free(pd->search.buffer);
@@ -832,8 +781,7 @@ _ctx_only_folder(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUS
 static void
 _ctx_rename(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
-   efl_event_callback_add(data, ELM_FILE_ICON_EVENT_RENAME_DONE, _icon_rename_cb, NULL);
-   elm_obj_file_icon_rename_set(data, EINA_TRUE, EINA_FALSE);
+   /* FIXME */
 }
 
 static void

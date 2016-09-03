@@ -9,7 +9,6 @@ typedef struct
    Ecore_Timer *t;
    Elm_File_MimeType_Cache *cache;
 
-   Eina_Bool rename_mode;
 } Elm_File_Icon_Data;
 
 #define PRIV_DATA  Elm_File_Icon_Data *pd = efl_data_scope_get(obj, ELM_FILE_ICON_CLASS);
@@ -93,78 +92,6 @@ _elm_file_icon_efl_canvas_group_group_add(Eo *obj, Elm_File_Icon_Data *pd EINA_U
      {
         CRI("Failed to set theme file\n");
      }
-}
-
-static void
-_key_down_cb(void *data, const Efl_Event *event)
-{
-   Efl_Input_Key *ev;
-   const char *key;
-
-
-   ev = event->info;
-   key = efl_input_key_get(ev);
-
-   if (!strcmp(key, "Escape"))
-     elm_obj_file_icon_rename_set(data, EINA_FALSE, EINA_FALSE);
-   else if (!strcmp(key, "Return"))
-     elm_obj_file_icon_rename_set(data, EINA_FALSE, EINA_TRUE);
-}
-
-EOLIAN static void
-_elm_file_icon_rename_set(Eo *obj, Elm_File_Icon_Data *pd, Eina_Bool mode, Eina_Bool take)
-{
-   if (mode == pd->rename_mode)
-     return;
-
-   pd->rename_mode = mode;
-
-   if (mode)
-     {
-        const char *filename;
-        Evas_Object *entry;
-
-        elm_layout_signal_emit(obj, "public,rename,on", "elm");
-
-        filename = efm_file_filename_get(pd->file);
-
-        entry = elm_entry_add(obj);
-        efl_event_callback_add(entry, EFL_EVENT_KEY_DOWN, _key_down_cb, obj);
-        evas_object_propagate_events_set(entry, EINA_FALSE);
-        elm_entry_scrollable_set(entry, EINA_TRUE);
-        elm_scroller_policy_set(entry, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
-        elm_entry_single_line_set(entry, EINA_TRUE);
-        elm_entry_editable_set(entry, EINA_TRUE);
-        elm_entry_entry_set(entry, filename);
-        efl_event_callback_call(obj, ELM_FILE_ICON_EVENT_RENAME_START, NULL);
-        elm_object_part_content_set(obj, "public.rename", entry);
-        evas_object_show(entry);
-        elm_object_focus_set(entry, EINA_TRUE);
-     }
-   else
-     {
-        const char *filename;
-        Evas_Object *entry;
-        const char *nname;
-
-        elm_layout_signal_emit(obj, "public,rename,off", "elm");
-
-        filename = efm_file_filename_get(pd->file);
-
-        entry = elm_object_part_content_unset(obj, "public.rename");
-        nname = elm_object_text_get(entry);
-
-        if (take)
-          efl_event_callback_call(obj, ELM_FILE_ICON_EVENT_RENAME_DONE, (char*)nname);
-        elm_object_part_text_set(obj, "public.text", filename);
-        evas_object_del(entry);
-     }
-}
-
-EOLIAN static Eina_Bool
-_elm_file_icon_rename_get(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
-{
-  return pd->rename_mode;
 }
 
 static void

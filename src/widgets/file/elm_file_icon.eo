@@ -20,27 +20,6 @@ class Elm.File.Icon (Elm.Layout) {
           file : Efm.File;
         }
       }
-      @property rename {
-        [[Set the state of this icon, if it is in rename mode or not
-
-          If the rename is cancled and a new name is entered the event rename,done will be called with the new name as event.
-          This does not mean that this widget will rename the file, the caller has to take care about this
-        ]]
-
-        set {
-          [[If true the icon will be in rename mode, if false the icon will switch back to normal mode]]
-          values {
-            mode : bool; [[the mode to set]]
-            take : bool; [[if you do from rename mode to no rename mode tak = true will result in a reset to the original name]]
-          }
-        }
-        get {
-          [[Get the current mode]]
-        }
-        values {
-          mode : bool;
-        }
-      }
    }
    implements {
      Efl.Canvas.Group.group_del;
@@ -52,8 +31,6 @@ class Elm.File.Icon (Elm.Layout) {
      .install;
    }
    events {
-     rename,start; [[The widget has gone to rename mode]]
-     rename,done : const(char)*; [[The widget went back to normal displaymode new name is passed]]
      item,drop : void*; [[Its Elm.Selection.Data. Called when something else is droped above this]]
      item,hover; [[Called when something is hover over above this item for a long time]]
    }
