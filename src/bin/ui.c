@@ -36,7 +36,7 @@ open_with2_main_win_create(Eo *__main_parent)
    Eo *elm_bg1;
 
 
-   main_win = efl_add(EFL_UI_WIN_CLASS, __main_parent, efl_ui_win_type_set(efl_self, EFL_UI_WIN_BASIC));
+   main_win = efl_add(EFL_UI_WIN_CLASS, __main_parent, efl_ui_win_type_set(efl_added, EFL_UI_WIN_BASIC));
    pub_widgets->main_win = main_win;
    efl_gfx_size_hint_weight_set (main_win, 1.000000, 1.000000);
    efl_gfx_size_set (main_win, 454, 379);

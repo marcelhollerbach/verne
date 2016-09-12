@@ -922,7 +922,7 @@ _box_override(Eo *box)
 {
    Efl_Object_Ops ops;
    Efl_Op_Description desc[] = {
-    EFL_OBJECT_OP_FUNC_OVERRIDE(efl_gfx_visible_set, _box_visible_set),
+    EFL_OBJECT_OP_FUNC(efl_gfx_visible_set, _box_visible_set),
    };
 
    ops.count = 1;

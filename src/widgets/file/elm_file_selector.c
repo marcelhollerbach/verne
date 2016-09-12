@@ -1162,7 +1162,7 @@ _elm_file_selector_icon_generate(Eo *obj, Elm_File_Selector_Data *pd EINA_UNUSED
    Evas_Object *ic;
 
 #if 1
-   ic = efl_add(ELM_FILE_ICON_CLASS, obj, elm_obj_file_icon_install(efl_self, pd->cache, file, config->image_preview));
+   ic = efl_add(ELM_FILE_ICON_CLASS, obj, elm_obj_file_icon_install(efl_added, pd->cache, file, config->image_preview));
    efl_event_callback_add(ic, ELM_FILE_ICON_EVENT_ITEM_DROP, _drop_cb, obj);
    efl_event_callback_add(ic, ELM_FILE_ICON_EVENT_ITEM_HOVER, _hover_cb, obj);
 #else
