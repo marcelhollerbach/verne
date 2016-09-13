@@ -116,6 +116,9 @@ _attr_match(Efm_Filter_Data *pd, Efm_File *file)
           break;
         }
 
+        if (!checker)
+          checker = "";
+
         EINA_LIST_FOREACH(pd->attribute[i], node, f)
           {
              if (!f->init)
