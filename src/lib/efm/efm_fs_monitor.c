@@ -33,6 +33,7 @@ _file_del(void *data, const Efl_Event *event)
    Efm_Fs_Monitor_Data *pd;
 
    pd = efl_data_scope_get(data, EFM_FS_MONITOR_CLASS);
+   EINA_SAFETY_ON_NULL_RETURN(pd);
    eina_hash_del_by_data(pd->file_icons, event->object);
 }
 
@@ -43,6 +44,7 @@ _add(Efm_Monitor *mon, const char *file)
    Efm_File *ef;
    Efm_Fs_Monitor_Data *pd;
    pd = efl_data_scope_get(mon, EFM_FS_MONITOR_CLASS);
+   EINA_SAFETY_ON_NULL_RETURN(pd);
 
    filename = ecore_file_file_get(file);
 
