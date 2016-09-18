@@ -4,7 +4,7 @@
 #cmakedefine EMOUS_MODULE_PATH @EMOUS_MODULE_PATH@
 #cmakedefine Mount_FOUND
 
-#ifdef MOUNT_FOUND
+#ifdef Mount_FOUND
 #define MOUNT_FOUND
 #endif
 

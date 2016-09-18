@@ -69,8 +69,8 @@ START_TEST(debug_devices_appear)
    efl_object_init();
    emous_init();
    manager = emous_manager_object_get(EMOUS_MANAGER_CLASS);
-                  efl_event_callback_add(manager, EMOUS_MANAGER_EVENT_DEVICE_ADD, _add_cb, NULL);
-                  efl_event_callback_add(manager, EMOUS_MANAGER_EVENT_DEVICE_DEL, _del_cb, NULL);
+   efl_event_callback_add(manager, EMOUS_MANAGER_EVENT_DEVICE_ADD, _add_cb, NULL);
+   efl_event_callback_add(manager, EMOUS_MANAGER_EVENT_DEVICE_DEL, _del_cb, NULL);
 
    emous_debug_device_start();
 

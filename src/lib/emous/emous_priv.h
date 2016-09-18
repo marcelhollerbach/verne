@@ -23,7 +23,7 @@ extern int _emous_domain;
 #define INF(...)      EINA_LOG_DOM_INFO(_emous_domain, __VA_ARGS__)
 #define DBG(...)      EINA_LOG_DOM_DBG(_emous_domain, __VA_ARGS__)
 
-#ifdef HAVE_MOUNT
+#ifdef MOUNT_FOUND
 
 void _emous_mm_init(void);
 void _emous_mm_shutdown(void);
