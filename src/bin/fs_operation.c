@@ -229,7 +229,7 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
     evas_object_size_hint_align_set(box, EVAS_HINT_FILL, 0.0);
     EINA_LIST_FOREACH(operations, node, operation)
       {
-         Evas_Object *layout, *progress;
+         Evas_Object *layout, *progress, *sep;
 
          layout = efl_add(ELM_LAYOUT_CLASS, obj);
          evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -240,9 +240,9 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
             case OP_MOVE:
               // set correct file
               if (operation->type == OP_MOVE)
-                efl_file_set(layout, THEME_PATH"/efm.edc.edj", "verne.fs_op.move");
+                efl_file_set(layout, THEME_PATH"/default.edc.edj", "verne.fs_op.move");
               else
-                efl_file_set(layout, THEME_PATH"/efm.edc.edj", "verne.fs_op.copy");
+                efl_file_set(layout, THEME_PATH"/default.edc.edj", "verne.fs_op.copy");
 
               // add progressbar
               progress = efl_add(ELM_PROGRESSBAR_CLASS, obj);
@@ -255,7 +255,7 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
               elm_progressbar_value_set(progress, operation->ui.progress_value);
             break;
             case OP_REMOVE:
-              efl_file_set(layout, THEME_PATH"/efm.edc.edj", "verne.fs_op.remove");
+              efl_file_set(layout, THEME_PATH"/default.edc.edj", "verne.fs_op.remove");
               elm_object_part_text_set(layout, "verne.from", operation->from);
             break;
          }
@@ -264,6 +264,11 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
          elm_box_pack_end(box, layout);
 
          efl_wref_add(obj, &operation->ui.layout);
+
+         sep = elm_separator_add(obj);
+         elm_separator_horizontal_set(sep, EINA_TRUE);
+         elm_box_pack_end(box, sep);
+         evas_object_show(sep);
       }
 
     scroller = elm_scroller_add(popup);
