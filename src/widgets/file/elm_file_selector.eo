@@ -146,7 +146,7 @@ class Elm.File.Selector (Elm.Layout) {
       item,selected : Efm.File; [[A item got selected, _not_ chossen]]
       dnd,item,hover : Elm.File.Icon; [[A item was hovered above another item ]]
       dnd,item,droped : Elm.File.Selector.Dnd_Drop_Event ; [[Item was droped above another item]]
-      dnd,droped : void_ptr; [[Item droped in the file display, Elm_Selection_Data as pointer]]
+      dnd,droped : void_ptr; [[Item droped in the file display, Elm_Selection_Data as pointer, stop the event to cancel the drop action]]
       hook,menu,selector,start : Elm.File.Selector.Menu_Hook*; [[*@ Menu_Hook will be passed ]]
       hook,menu,selector,end : Elm.File.Selector.Menu_Hook*; [[Menu_Hook will be passed]]
    }
