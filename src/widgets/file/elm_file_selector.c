@@ -46,6 +46,12 @@ static Eina_Bool _dnd_data_get_cb(Evas_Object *obj, Elm_Object_Item *it, Elm_Dra
 static void _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file);
 static void _search_update(Eo *obj, Elm_File_Selector_Data *pd);
 
+static void _dnd_view_enter_cb(void *data, Evas_Object *obj EINA_UNUSED);
+static void _dnd_view_leave_cb(void *data, Evas_Object *obj EINA_UNUSED);
+static Eina_Bool _dnd_view_drop_cb(void *data, Evas_Object *obj EINA_UNUSED, Elm_Selection_Data *ev);
+
+
+
 /*
  *======================================
  * flush filter settings to the filter and view
@@ -174,42 +180,6 @@ EFL_CALLBACKS_ARRAY_DEFINE(view_events,
   {ELM_FILE_VIEW_EVENT_WORKING_START, _work_start}
 );
 
-static void
-_view_enter_cb(void *data, Evas_Object *obj EINA_UNUSED)
-{
-   PRIV_DATA(data)
-
-   if (!pd->message)
-     {
-        pd->message = elm_popup_add(data);
-        evas_object_pass_events_set(pd->message, EINA_TRUE);
-        elm_object_text_set(pd->message, "Drop here to move here");
-        evas_object_show(pd->message);
-     }
-}
-
-static void
-_view_leave_cb(void *data, Evas_Object *obj EINA_UNUSED)
-{
-   PRIV_DATA(data)
-
-   evas_object_del(pd->message);
-
-   pd->message = NULL;
-}
-
-static Eina_Bool
-_view_drop_cb(void *data, Evas_Object *obj EINA_UNUSED, Elm_Selection_Data *ev)
-{
-   PRIV_DATA(data)
-
-   evas_object_del(pd->message);
-
-   pd->message = NULL;
-
-   //if someone does stop the event, the drop action is not performed
-   return efl_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_DND_DROPED, ev);
-}
 
 EOLIAN static void
 _elm_file_selector_view_set(Eo *obj, Elm_File_Selector_Data *pd, const Efl_Class *klass)
@@ -220,14 +190,14 @@ _elm_file_selector_view_set(Eo *obj, Elm_File_Selector_Data *pd, const Efl_Class
         efl_del(pd->view.obj);
         elm_drag_item_container_del(pd->view.obj);
         elm_drop_target_del(pd->view.obj, ELM_SEL_FORMAT_TARGETS,
-                               _view_enter_cb, obj, _view_leave_cb, obj,
-                               NULL, NULL, _view_drop_cb, obj);
+                               _dnd_view_enter_cb, obj, _dnd_view_leave_cb, obj,
+                               NULL, NULL, _dnd_view_drop_cb, obj);
      }
    pd->view.obj = efl_add(pd->view.klass, obj);
    elm_drag_item_container_add(pd->view.obj, 0.3, 0.3, _dnd_item_get_cb, _dnd_data_get_cb);
    elm_drop_target_add(pd->view.obj, ELM_SEL_FORMAT_TARGETS,
-                               _view_enter_cb, obj, _view_leave_cb, obj,
-                               NULL, NULL, _view_drop_cb, obj);
+                               _dnd_view_enter_cb, obj, _dnd_view_leave_cb, obj,
+                               NULL, NULL, _dnd_view_drop_cb, obj);
    elm_object_part_content_set(obj, "content", pd->view.obj);
    evas_object_show(pd->view.obj);
    efl_event_callback_array_add(pd->view.obj, view_events(), obj);
@@ -632,6 +602,43 @@ _dnd_data_get_cb(Evas_Object *obj, Elm_Object_Item *it EINA_UNUSED, Elm_Drag_Use
     info->startcbdata = pass;
 
     return EINA_TRUE;
+}
+
+static void
+_dnd_view_enter_cb(void *data, Evas_Object *obj EINA_UNUSED)
+{
+   PRIV_DATA(data)
+
+   if (!pd->message)
+     {
+        pd->message = elm_popup_add(data);
+        evas_object_pass_events_set(pd->message, EINA_TRUE);
+        elm_object_text_set(pd->message, "Drop here to move here");
+        evas_object_show(pd->message);
+     }
+}
+
+static void
+_dnd_view_leave_cb(void *data, Evas_Object *obj EINA_UNUSED)
+{
+   PRIV_DATA(data)
+
+   evas_object_del(pd->message);
+
+   pd->message = NULL;
+}
+
+static Eina_Bool
+_dnd_view_drop_cb(void *data, Evas_Object *obj EINA_UNUSED, Elm_Selection_Data *ev)
+{
+   PRIV_DATA(data)
+
+   evas_object_del(pd->message);
+
+   pd->message = NULL;
+
+   //if someone does stop the event, the drop action is not performed
+   return efl_event_callback_call(data, ELM_FILE_SELECTOR_EVENT_DND_DROPED, ev);
 }
 
 /*
