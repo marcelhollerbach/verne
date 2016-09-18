@@ -25,7 +25,6 @@ include_directories(
 #   PROPERTY COMPILE_DEFINITIONS #${THEME_PATH_DEFINITION})
 
 add_executable(filedisplay_test filedisplay.c)
-
 target_link_libraries (filedisplay_test
    ${EINA_LIBRARIES}
    ${EVAS_LIBRARIES}
@@ -37,19 +36,5 @@ target_link_libraries (filedisplay_test
    efm
 )
 
-add_executable(test_fm_monitor test_fm_monitor.c)
-
-target_link_libraries (test_fm_monitor
-   ${EINA_LIBRARIES}
-   ${ECORE_LIBRARIES}
-   ${EO_LIBRARIES}
-   ${CMAKE_THREAD_LIBS_INIT}
-   ${Check_LIBRARIES}
-   efm
-)
-set_property(TARGET test_fm_monitor
-   PROPERTY COMPILE_DEFINITIONS TEST_RESSOURCES="${CMAKE_SOURCE_DIR}")
-
-add_test(efm_test test_fm_monitor)
-
 add_subdirectory(./emous_test)
+add_subdirectory(./efm_test)

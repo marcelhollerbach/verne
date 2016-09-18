@@ -5,20 +5,21 @@
 #include <Efm.h>
 #include <check.h>
 
-#define TEST_FILE "/tmp/bla.txt"
-#define TEST_FILE_ITER "/tmp/bla%d.txt"
+#define TEST_FILE_NAME "efm_test_file_XXXXXX.txt"
+
+#define TEST_FILE_ITER "efm_stresstest_%d_XXXXXX.txt"
 #define TEST_FILE_ITER_MAX 100
 
-#define TEST_DIRECTORY "/tmp/test"
+#define TEST_DIRECTORY "efm_test_monitor_XXXXXX"
 #define TEST_DIRECTORY_FILES_MAX 100
-#define TEST_DIRECTORY_FILES "/tmp/test/test_file%d.txt"
+#define TEST_DIRECTORY_FILES "%s/test_file_%d_XXXXXX.txt"
 
 #define ARCHIVE_FILE_NUMBER 5
 
 START_TEST(efm_file_invalid_name)
 {
    Efm_File *file;
-   const char *filename = "I-Am-Invalid";
+   const char *filename = "/I-Am-Invalid";
 
    efl_object_init();
    efm_init();
@@ -44,16 +45,21 @@ _done_cb(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 START_TEST(efm_valid_file)
 {
    Efm_File *file;
-   const char *filename = TEST_FILE;
+   Eina_Tmpstr *test_dir;
 
-   system("touch "TEST_FILE);
+   eina_init();
+   ecore_init();
+
+   eina_file_mkstemp(TEST_FILE_NAME, &test_dir);
+
+   printf("Test file in %s\n", test_dir);
 
    efl_object_init();
    efm_init();
 
    done = EINA_FALSE;
 
-   file = efm_file_get(EFM_CLASS, filename);
+   file = efm_file_get(EFM_CLASS, test_dir);
 
    ck_assert_ptr_ne(file, NULL);
 
@@ -64,6 +70,9 @@ START_TEST(efm_valid_file)
    ck_assert_int_eq(done, 1);
 
    efm_shutdown();
+
+   ecore_file_remove(test_dir);
+
    ecore_shutdown();
    eina_shutdown();
 }
@@ -82,24 +91,25 @@ _done2_cb(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 START_TEST(efm_stresstest)
 {
    Efm_File *file;
-   const char *filename = TEST_FILE;
+   Eina_Tmpstr *tmptrs[TEST_FILE_ITER_MAX];
    int i;
+
+   eina_init();
+   ecore_init();
 
    for(i = 0; i < TEST_FILE_ITER_MAX; i++)
      {
         char buf[PATH_MAX];
-        snprintf(buf, sizeof(buf), "touch "TEST_FILE_ITER, i);
-        system(buf);
+        snprintf(buf, sizeof(buf), TEST_FILE_ITER, i);
+        eina_file_mkstemp(buf, &tmptrs[i]);
      }
 
-   eina_init();
-   ecore_init();
    efm_init();
 
    done = EINA_FALSE;
    for (i = 0; i < TEST_FILE_ITER_MAX; i++)
      {
-        file = efm_file_get(EFM_CLASS, filename);
+        file = efm_file_get(EFM_CLASS, tmptrs[i]);
 
         ck_assert_ptr_ne(file, NULL);
 
@@ -110,6 +120,12 @@ START_TEST(efm_stresstest)
    ck_assert_int_eq(filecounter, TEST_FILE_ITER_MAX);
 
    efm_shutdown();
+
+   for(i = 0; i < TEST_FILE_ITER_MAX; i++)
+     {
+        ecore_file_remove(tmptrs[i]);
+     }
+
    ecore_shutdown();
    eina_shutdown();
 }
@@ -146,14 +162,18 @@ START_TEST(efm_monitor_test)
    Efm_Monitor *mon;
    Efm_File *f;
    int i;
+   Eina_Tmpstr *dir;
 
-   system("mkdir -p "TEST_DIRECTORY);
+   eina_init();
+   ecore_init();
+
+   eina_file_mkdtemp(TEST_DIRECTORY, &dir);
 
    for(i = 0; i < TEST_DIRECTORY_FILES_MAX; i++)
      {
         char buf[PATH_MAX];
-        snprintf(buf, sizeof(buf), "touch "TEST_DIRECTORY_FILES, i);
-        system(buf);
+        snprintf(buf, sizeof(buf), TEST_DIRECTORY_FILES, dir, i);
+        eina_file_mkstemp(buf, NULL);
      }
 
    error = EINA_FALSE;
@@ -162,7 +182,7 @@ START_TEST(efm_monitor_test)
    efl_object_init();
    efm_init();
 
-   f = efm_file_get(EFM_CLASS, TEST_DIRECTORY);
+   f = efm_file_get(EFM_CLASS, dir);
 
    mon = efm_file_monitor(f, NULL);
 
@@ -175,7 +195,12 @@ START_TEST(efm_monitor_test)
 
    ck_assert_int_eq(error, 0);
    ck_assert_int_eq(files, TEST_DIRECTORY_FILES_MAX);
+
+   ecore_file_remove(dir);
+
    efm_shutdown();
+   ecore_shutdown();
+   eina_shutdown();
 }
 END_TEST
 
