@@ -104,20 +104,50 @@ _convert( Elm_Selection_Data *data)
 }
 
 static void
+_handle_action(Elm_Selection_Data *data, Efm_File *basic)
+{
+   Eina_List *passes = NULL;
+
+   passes = _convert(data);
+
+   switch(data->action){
+     case ELM_XDND_ACTION_ASK:
+       /* TODO ask what to do, for now we are going to copy it */
+     case ELM_XDND_ACTION_COPY:
+      fs_operations_copy(passes, efm_file_path_get(basic));
+     break;
+     case ELM_XDND_ACTION_MOVE:
+      fs_operations_move(passes, efm_file_path_get(basic));
+     break;
+
+     case ELM_XDND_ACTION_DESCRIPTION:
+       /* tell what the data is */
+     case ELM_XDND_ACTION_LINK:
+       /* TODO create symlinks */
+     case ELM_XDND_ACTION_LIST:
+       /* just list the data */
+       printf("HELP i am not implemented %d\n", data->action);
+     default:
+      printf("Error action not understood\n");
+     break;
+   }
+}
+
+static void
+_item_drop(void *data EINA_UNUSED, const Efl_Event *event) {
+   Elm_File_Selector_Dnd_Drop_Event *ev;
+   Efm_File *file;
+
+   ev = event->info;
+   file = elm_obj_file_icon_file_get(ev->file);
+
+   _handle_action(ev->selection_data, file);
+}
+
+static void
 _drop(void *data EINA_UNUSED, const Efl_Event *event) {
-    Elm_File_Selector_Dnd_Drop_Event *ev;
-    Elm_Selection_Data *dnd_data;
-    Efm_File *file;
-    Eina_List *passes = NULL;
-
-    ev = event->info;
-    dnd_data = ev->selection_data;
-
-    file = elm_obj_file_icon_file_get(ev->file);
-
-    passes = _convert(dnd_data);
-
-    fs_operations_copy(passes, efm_file_path_get(file));
+   _handle_action(event->info,
+        elm_file_selector_file_get(event->object));
 }
 
 void
@@ -130,7 +160,7 @@ shortcuts_init()
    efl_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_DND_ITEM_HOVER, _hover, NULL);
 
    //add dnd shortcut
-   efl_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_DND_ITEM_DROPED, _drop, NULL);
+   efl_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_DND_ITEM_DROPED, _item_drop, NULL);
 
    //add dnd shortcut
    efl_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_DND_DROPED, _drop, NULL);
