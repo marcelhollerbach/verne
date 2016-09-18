@@ -42,7 +42,7 @@ if (${Eolian_VERSION} VERSION_LESS 1.16.99)
     include(eo_helper)
 endif (${Eolian_VERSION} VERSION_LESS 1.16.99)
 
-add_subdirectory(data/theme/elm_ext)
+add_subdirectory(data)
 add_subdirectory(src/lib/emous)
 add_subdirectory(src/lib/emous/modules/udisk)
 add_subdirectory(src/lib/efm)
@@ -50,6 +50,3 @@ add_subdirectory(src/widgets)
 add_subdirectory(src/test)
 add_subdirectory(src/bin)
 add_subdirectory(src/module)
-
-INSTALL(FILES ${CMAKE_SOURCE_DIR}/data/verne.desktop
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications/)

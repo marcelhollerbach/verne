@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Verne
-Comment=A Elementary based Filemanager
-Exec=verne %d
-Terminal=false
-Icon=system-file-manager
-Type=Application
-MimeType=inode/directory
-Categories=FileManager;Utility;Core;System;FileTools;

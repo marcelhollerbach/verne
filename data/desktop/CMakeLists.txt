@@ -1,0 +1,2 @@
+INSTALL(FILES verne.desktop
+        DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/applications/)
