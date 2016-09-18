@@ -61,7 +61,7 @@ _elm_file_display_view_grid_elm_file_view_selection_set(Eo *obj EINA_UNUSED, Elm
      {
         Efm_File *file;
 
-        file = elm_obj_file_icon_file_get(icon);
+        file = elm_file_icon_file_get(icon);
 
         view_file_select(&pd->common, file);
      }

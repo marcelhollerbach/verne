@@ -1,6 +1,4 @@
 class Elm.File.Icon (Elm.Layout) {
-   eo_prefix: elm_obj_file_icon;
-   event_prefix: elm_file_icon;
    methods {
       install {
         [[

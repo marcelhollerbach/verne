@@ -406,7 +406,7 @@ _event_rect_mouse_down(void *data, const Efl_Event *event)
      {
         Elm_File_Icon *file_icon = eina_list_data_get(icons);
         Efm_File *file = NULL;
-        file = elm_obj_file_icon_file_get(file_icon);
+        file = elm_file_icon_file_get(file_icon);
         _ctx_menu_open(data, search.x, search.y, file);
      }
 }
@@ -460,7 +460,7 @@ _dnd_anim_ics_gen(Evas_Object *obj, Evas_Object *view)
         Eo *widget_icon;
         const char *mimetype;
 
-        f = elm_obj_file_icon_file_get(icon);
+        f = elm_file_icon_file_get(icon);
 
         widget_icon = elm_icon_add(view);
         evas_object_geometry_get(icon, &place.x, &place.y, &place.w, &place.h);
@@ -494,7 +494,7 @@ _dnd_items_gen(Evas_Object *view)
         Efm_File *f;
         const char *path;
 
-        f = elm_obj_file_icon_file_get(icon);
+        f = elm_file_icon_file_get(icon);
         path = efm_file_path_get(f);
         eina_strbuf_append(buf, FILESEP);
         eina_strbuf_append(buf, path);
@@ -531,7 +531,7 @@ _dnd_create_icon(void *data, Evas_Object *win, Evas_Coord *xoff, Evas_Coord *yof
         Eo *widget_icon;
         const char *mimetype;
 
-        f = elm_obj_file_icon_file_get(file);
+        f = elm_file_icon_file_get(file);
         widget_icon = elm_icon_add(win);
 
         if (efm_file_is_type(f, EFM_FILE_TYPE_DIRECTORY))
@@ -1213,7 +1213,7 @@ _elm_file_selector_icon_generate(Eo *obj, Elm_File_Selector_Data *pd EINA_UNUSED
    Evas_Object *ic;
 
 #if 1
-   ic = efl_add(ELM_FILE_ICON_CLASS, obj, elm_obj_file_icon_install(efl_added, pd->cache, file, config->image_preview));
+   ic = efl_add(ELM_FILE_ICON_CLASS, obj, elm_file_icon_install(efl_added, pd->cache, file, config->image_preview));
    efl_event_callback_add(ic, ELM_FILE_ICON_EVENT_ITEM_DROP, _drop_cb, obj);
    efl_event_callback_add(ic, ELM_FILE_ICON_EVENT_ITEM_HOVER, _hover_cb, obj);
 #else
