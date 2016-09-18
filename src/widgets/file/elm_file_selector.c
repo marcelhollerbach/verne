@@ -875,7 +875,7 @@ _ctx_menu_open(Eo* obj, int x, int y, Efm_File *file)
    /*
     * New folder
     */
-   it = elm_menu_item_add(menu, NULL, NULL, "New Folder", _ctx_new_folder, obj);
+   it = elm_menu_item_add(menu, NULL, "folder-new", "New Folder", _ctx_new_folder, obj);
 
    elm_menu_item_separator_add(menu, NULL);
    /*

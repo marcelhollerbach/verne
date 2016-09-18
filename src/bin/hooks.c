@@ -121,9 +121,9 @@ _menu_selector_start(void *data EINA_UNUSED, const Efl_Event *event)
       }
 
     elm_menu_item_separator_add(ev->menu, NULL);
-    elm_menu_item_add(ev->menu, NULL, NULL, "Copy", _copy_cb, ev->file);
-    elm_menu_item_add(ev->menu, NULL, NULL, "Move", _move_cb, ev->file);
-    elm_menu_item_add(ev->menu, NULL, NULL, "Remove", _remove_cb, ev->file);
+    elm_menu_item_add(ev->menu, NULL, "edit-copy", "Copy", _copy_cb, ev->file);
+    elm_menu_item_add(ev->menu, NULL, "edit-cut", "Move", _move_cb, ev->file);
+    elm_menu_item_add(ev->menu, NULL, "edit-delete", "Remove", _remove_cb, ev->file);
 
     elm_menu_item_separator_add(ev->menu, NULL);
 
@@ -145,7 +145,7 @@ _menu_selector_start(void *data EINA_UNUSED, const Efl_Event *event)
 
     elm_menu_item_separator_add(ev->menu, NULL);
 
-    item = elm_menu_item_add(ev->menu, NULL, NULL, "Paste", _paste_cb, ev->file);
+    item = elm_menu_item_add(ev->menu, NULL, "edit-paste", "Paste", _paste_cb, ev->file);
     if (clipboard_something_in())
       elm_object_item_disabled_set(item, EINA_TRUE);
 

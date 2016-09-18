@@ -79,7 +79,7 @@ _menu_start_cb(void *data, const Efl_Event *event)
 
    elm_menu_item_separator_add(menu, NULL);
 
-   it = elm_menu_item_add(menu, NULL, NULL, "Rename", _ctx_rename, data);
+   it = elm_menu_item_add(menu, NULL, "document-new", "Rename", _ctx_rename, data);
 }
 
 static void
