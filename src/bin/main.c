@@ -43,7 +43,7 @@ ui_init()
    win = elm_win_util_standard_add("Verne", "Verne - Fm");
 
    icon = elm_icon_add(win);
-   elm_icon_standard_set(icon, "system-file-manager");
+   elm_icon_standard_set(icon, "verne");
    evas_object_show(icon);
    img = elm_image_object_get(icon);
    elm_win_icon_object_set(win, img);
@@ -132,7 +132,7 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    elm_app_compile_bin_dir_set(PACKAGE_BIN_DIR);
    elm_app_compile_lib_dir_set(PACKAGE_LIB_DIR);
    elm_app_compile_data_dir_set(PACKAGE_DATA_DIR);
-   elm_app_desktop_entry_set("efm.desktop");
+   elm_app_desktop_entry_set("verne.desktop");
    elm_app_info_set(elm_main, "verne", "");
 
    // init external elementary stuff
