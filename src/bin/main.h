@@ -70,4 +70,7 @@ void preview_paste(void);
 
 void shortcuts_init(void);
 
+
+void about_show(void);
+
 #endif

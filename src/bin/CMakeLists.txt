@@ -22,6 +22,7 @@ LIST(APPEND JESUS_FILES
   shortcuts.c
   archive.h
   archive.c
+  about.c
   ${CMAKE_BINARY_DIR}/data/theme/default.edc.edj
 )
 
@@ -53,6 +54,9 @@ target_link_libraries (verne
    ${ELEMENTARY_LIBRARIES}
    elm_ext
    efm)
+
+file(READ ${CMAKE_SOURCE_DIR}/AUTHORS AUTHORS)
+string(REPLACE "\n" "<br>" AUTHORS "${AUTHORS}")
 
 set(THEME_PATH \"${THEME_INSTALL_PATH}\")
 set(PACKAGE_DATA_DIR \"${CMAKE_INSTALL_FULL_DATADIR}/efm/\")

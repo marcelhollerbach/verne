@@ -10,6 +10,7 @@ collections{
       image: "icon_favorites.png" COMP;
       image: "icon_notfavorites.png" COMP;
       image: "icon_apps.png" COMP;
+      image: "verne_clip.svg" COMP;
    }
    group { name: "verne.fs_op.copy";
       parts {
@@ -271,6 +272,132 @@ collections{
          signal: "mouse,clicked,*";
          source: "fsaction";
          action: SIGNAL_EMIT "verne.fsaction.popup" "theme";
+      }
+   }
+   group { "verne.about";
+      styles {
+         style {
+            name: "aboutstyle";
+            base: "font=Sans font_size=13 color=white wrap=word";
+            	tag:  "b" "+ font_size= 18 color=white glow2_color=#9f9f9f glow_color=#6f6f6f";
+         }
+      }
+      parts {
+         rect { "eventcatch";
+            desc { "default";
+               color: 0 0 0 0;
+            }
+            desc { "view";
+               color: 10 10 10 60;
+            }
+         }
+         rect { "clip";
+            desc { "default";
+               rel1.to: "icon";
+               rel1.relative: 0.25 0.20;
+               rel2.to: "icon";
+               rel2.relative: 0.75 0.80;
+            }
+         }
+         rect { "screen";
+            desc { "default";
+               rel1.to: "clip";
+               rel2.to: "clip";
+               rel1.relative: 0.0 1.0;
+               rel2.relative: 1.0 1.0;
+               color: 0 0 0 0;
+            }
+            desc { "up";
+               inherit: "default";
+               rel1.relative: 0.0 0.0;
+               rel2.relative: 1.0 0.0;
+            }
+         }
+         textblock { "verne.authorship";
+            clip_to: "clip";
+            desc { "default";
+               rel1.to: "screen";
+               rel1.relative: 0.0 0.5;
+               rel2.to: "screen";
+               rel2.relative: 1.0 0.5;
+               align: 0.0 0.0;
+               text {
+                  style: "aboutstyle";
+                  text: "<b> Verne </b> <br>A filemanager based on elementary.
+
+                  Authors:
+
+
+                  test for important stuff so we know this works as expected <br>to see <br>how things <br>are going <br><br>";
+                  min: 0 1;
+               }
+            }
+            desc { "up";
+               inherit: "default";
+               align: 0.0 1.0;
+            }
+         }
+
+         image { "icon";
+            desc { "default";
+               min: 300 300;
+               aspect: 1 1;
+               image {
+                  normal: "verne_clip.svg";
+               }
+               rel1.relative: 0.5 1.0;
+               rel2.relative: 0.5 0.5;
+               align: 0.5 0.0;
+            }
+            desc { "view";
+               inherit: "default";
+               rel1.relative: 0.5 0.5;
+               rel2.relative: 0.5 0.5;
+               align: 0.5 0.5;
+            }
+         }
+      }
+      programs {
+         program {
+            signal: "begin";
+            action: STATE_SET "view";
+            transition: LINEAR 0.5;
+            target: "icon";
+            target: "eventcatch";
+            after: "scroll";
+         }
+         program {
+            signal: "mouse,clicked,*";
+            source: "*";
+            action: STATE_SET "default";
+            transition: LINEAR 0.5;
+            target: "icon";
+            target: "eventcatch";
+            after: "end";
+         }
+         program {
+            name: "end";
+            action: SIGNAL_EMIT "end" "";
+         }
+         program {
+            name: "scroll";
+            action: STATE_SET "up";
+            transition: LINEAR 10.0;
+            target: "verne.authorship";
+            target: "screen";
+            after: "reset";
+         }
+         program {
+            name: "reset";
+            action: STATE_SET "default";
+            target: "verne.authorship";
+            target: "screen";
+            after: "begin_again";
+         }
+         program {
+            name: "begin_again";
+            action: SIGNAL_EMIT "begin" "";
+         }
       }
    }
 }

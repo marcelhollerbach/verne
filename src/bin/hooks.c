@@ -154,10 +154,23 @@ _menu_selector_start(void *data EINA_UNUSED, const Efl_Event *event)
     item = elm_menu_item_add(ev->menu, NULL, NULL, "Open Terminal here", _open_terminal_here_cb, NULL);
 }
 
-static void
-_menu_selector_end(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
-{
 
+
+static void
+_about_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
+{
+   about_show();
+}
+
+static void
+_menu_selector_end(void *data EINA_UNUSED, const Efl_Event *event)
+{
+   Elm_File_Selector_Menu_Hook *ev;
+
+   ev = event->info;
+
+   elm_menu_item_separator_add(ev->menu, NULL);
+   elm_menu_item_add(ev->menu, NULL, "verne", "About", _about_cb, NULL);
 }
 
 static void
@@ -192,7 +205,7 @@ hooks_init(void)
    bookmarks = elm_file_display_bookmarks_get(preview);
 
    efl_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_START, _menu_selector_start, NULL);
-   efl_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, _menu_selector_end, NULL);
+   efl_event_callback_priority_add(selector, ELM_FILE_SELECTOR_EVENT_HOOK_MENU_SELECTOR_END, EFL_CALLBACK_PRIORITY_AFTER, _menu_selector_end, NULL);
    efl_event_callback_add(selector, ELM_FILE_SELECTOR_EVENT_ITEM_CHOOSEN, _open_cb, NULL);
 
    efl_event_callback_add(bookmarks, ELM_FILE_BOOKMARKS_EVENT_HOOK_MENU_BOOKMARKS_START, _menu_bookmarks_start, NULL);
