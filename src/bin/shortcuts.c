@@ -104,6 +104,88 @@ _convert( Elm_Selection_Data *data)
 }
 
 static void
+_move(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   Eina_List *passes;
+   Efm_File *f;
+
+   passes = efl_key_data_get(data, "__passes");
+   f = efl_key_data_get(data, "__file");
+
+   fs_operations_move(passes, efm_file_path_get(f));
+
+   evas_object_del(data);
+}
+
+static void
+_copy(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   Eina_List *passes;
+   Efm_File *f;
+
+   passes = efl_key_data_get(data, "__passes");
+   f = efl_key_data_get(data, "__file");
+
+   fs_operations_copy(passes, efm_file_path_get(f));
+
+   evas_object_del(data);
+}
+
+static void
+_cancel(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   evas_object_del(data);
+}
+
+static void
+_ask(Eina_List *passes, Efm_File *basic)
+{
+   const char *path;
+   Eina_Strbuf *buf;
+   Evas_Object *obj, *o, *bx;
+   Eina_List *n;
+
+
+   buf = eina_strbuf_new();
+   eina_strbuf_append_printf(buf, "Copy or Move the files: <br>");
+   EINA_LIST_FOREACH(passes, n, path)
+     {
+        eina_strbuf_append_printf(buf, "\t<b>%s</b>\n <br>", path);
+     }
+
+   path = efm_file_path_get(basic);
+   eina_strbuf_append_printf(buf, "to <b>%s</b> <br>\n", path);
+
+   obj = efl_add(ELM_DIALOG_CLASS, NULL);
+   elm_win_title_set(obj, "Copy or Move");
+   elm_dialog_icon_set(obj, "dialog-question");
+   elm_object_text_set(obj, eina_strbuf_string_get(buf));
+   efl_key_data_set(obj, "__passes", passes);
+   efl_key_data_set(obj, "__file", basic);
+   bx = elm_dialog_control_box_get(obj);
+
+   o = elm_button_add(obj);
+   elm_object_text_set(o, "Move");
+   evas_object_smart_callback_add(o, "clicked", _move, obj);
+   elm_box_pack_end(bx, o);
+   evas_object_show(o);
+
+   o = elm_button_add(obj);
+   elm_object_text_set(o, "Copy");
+   evas_object_smart_callback_add(o, "clicked", _copy, obj);
+   elm_box_pack_end(bx, o);
+   evas_object_show(o);
+
+   o = elm_button_add(obj);
+   elm_object_text_set(o, "Cancel");
+   evas_object_smart_callback_add(o, "clicked", _cancel, obj);
+   elm_box_pack_end(bx, o);
+   evas_object_show(o);
+
+   evas_object_show(obj);
+}
+
+static void
 _handle_action(Elm_Selection_Data *data, Efm_File *basic)
 {
    Eina_List *passes = NULL;
@@ -112,14 +194,14 @@ _handle_action(Elm_Selection_Data *data, Efm_File *basic)
 
    switch(data->action){
      case ELM_XDND_ACTION_ASK:
-       /* TODO ask what to do, for now we are going to copy it */
+        _ask(passes, basic);
+        break;
      case ELM_XDND_ACTION_COPY:
-      fs_operations_copy(passes, efm_file_path_get(basic));
-     break;
+        fs_operations_copy(passes, efm_file_path_get(basic));
+        break;
      case ELM_XDND_ACTION_MOVE:
-      fs_operations_move(passes, efm_file_path_get(basic));
-     break;
-
+        fs_operations_move(passes, efm_file_path_get(basic));
+        break;
      case ELM_XDND_ACTION_DESCRIPTION:
        /* tell what the data is */
      case ELM_XDND_ACTION_LINK:
