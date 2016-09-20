@@ -35,13 +35,6 @@ END_TEST
 
 Eina_Bool done;
 
-static void
-_done_cb(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
-{
-   done = EINA_TRUE;
-   ecore_main_loop_quit();
-}
-
 START_TEST(efm_valid_file)
 {
    Efm_File *file;
@@ -57,17 +50,9 @@ START_TEST(efm_valid_file)
    efl_object_init();
    efm_init();
 
-   done = EINA_FALSE;
-
    file = efm_file_get(EFM_CLASS, test_dir);
 
    ck_assert_ptr_ne(file, NULL);
-
-   efl_event_callback_add(file, EFM_FILE_EVENT_FSQUERY_DONE, _done_cb, NULL);
-
-   ecore_main_loop_begin();
-
-   ck_assert_int_eq(done, 1);
 
    efm_shutdown();
 
@@ -77,16 +62,6 @@ START_TEST(efm_valid_file)
    eina_shutdown();
 }
 END_TEST
-
-int filecounter = 0;
-
-static void
-_done2_cb(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
-{
-   filecounter ++;
-   if (filecounter >= TEST_FILE_ITER_MAX)
-     ecore_main_loop_quit();
-}
 
 START_TEST(efm_stresstest)
 {
@@ -112,12 +87,8 @@ START_TEST(efm_stresstest)
         file = efm_file_get(EFM_CLASS, tmptrs[i]);
 
         ck_assert_ptr_ne(file, NULL);
-
-        efl_event_callback_add(file, EFM_FILE_EVENT_FSQUERY_DONE, _done2_cb, NULL);
      }
    ecore_main_loop_begin();
-
-   ck_assert_int_eq(filecounter, TEST_FILE_ITER_MAX);
 
    efm_shutdown();
 

@@ -112,16 +112,6 @@ mime_ready(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
    evas_object_show(pd->icon);
 }
 
-static void
-_mime_ready(void *data, const Efl_Event *event EINA_UNUSED)
-{
-   Eo *icon = data;
-   Elm_File_Icon_Data *pd;
-
-   pd = efl_data_scope_get(icon, ELM_FILE_ICON_CLASS);
-   mime_ready(icon, pd);
-}
-
 typedef enum {
   FILE_MODE_IMAGE, FILE_MODE_DESKTOP, FILE_MODE_TRIVIAL
 } File_Mode;
@@ -178,11 +168,7 @@ _file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
      {
         pd->icon = elm_icon_add(obj);
 
-        if (!mime_type)
-          efl_event_callback_add(pd->file, EFM_FILE_EVENT_FSQUERY_DONE,
-                          _mime_ready, obj);
-        else
-          mime_ready(obj, pd);
+        mime_ready(obj, pd);
         elm_object_part_text_set(obj, "public.text", filename);
      }
 
@@ -223,7 +209,6 @@ _elm_file_icon_efl_object_finalize(Eo *obj, Elm_File_Icon_Data *pd)
 static void
 _elm_file_icon_efl_object_destructor(Eo *obj, Elm_File_Icon_Data *pd)
 {
-   efl_event_callback_del(pd->file, EFM_FILE_EVENT_FSQUERY_DONE, _mime_ready, obj);
    efl_wref_del(pd->file, &pd->file);
 
    efl_destructor(efl_super(obj, ELM_FILE_ICON_CLASS));

@@ -92,7 +92,6 @@ abstract Efm.File(Efl.Object) {
         }
     }
     events {
-        fsquery,done; [[Query the fs operations is done.]]
         changed; [[The stats of the file have changed]]
         invalid; [[This object is not valid anymore]]
     }

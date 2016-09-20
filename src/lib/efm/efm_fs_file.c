@@ -1,16 +1,5 @@
 #include "efm_priv.h"
 
-static Ecore_Thread *fs_query;
-static Eina_List *query_stuff;
-static Eina_Lock readlock;
-
-typedef struct {
-    const char *path;
-    const char *mimetype;
-
-    Eo *obj;
-} Thread_Job;
-
 typedef struct
 {
     const char *filename;
@@ -30,106 +19,6 @@ static Eina_Hash *watch_files;
 static Ecore_Event_Handler *handler_mod;
 static Ecore_Event_Handler *handler_del;
 static Ecore_Event_Handler *handler_err;
-
-static void
-_fs_cb(void *dat EINA_UNUSED, Ecore_Thread *thread)
-{
-    Eina_List *copy;
-    Thread_Job *data;
-
-    while(!ecore_thread_check(thread) && query_stuff)
-      {
-        // take a local copy of the list
-        eina_lock_take(&readlock);
-        copy = query_stuff;
-        query_stuff = NULL;
-        eina_lock_release(&readlock);
-
-        EINA_LIST_FREE(copy, data)
-          {
-             if (!data->obj)
-               continue;
-
-             const char *mime_type;
-
-             mime_type = efreet_mime_globs_type_get(data->path);
-             if (!mime_type) mime_type = efreet_mime_fallback_type_get(data->path);
-
-             data->mimetype = mime_type;
-             ecore_thread_feedback(thread, data);
-          }
-      }
-}
-
-static void
-_notify_cb(void *data EINA_UNUSED, Ecore_Thread *et EINA_UNUSED, void *pass)
-{
-    Efm_File *file;
-    Efm_Fs_File_Data *pd;
-    Thread_Job *job;
-
-    job = pass;
-
-    // check if our object is still valid
-    if (!job->obj)
-      return;
-
-    // we have a still valid object
-    file = job->obj;
-    pd = efl_data_scope_get(file, EFM_FS_FILE_CLASS);
-
-    // set the mimetpye
-    pd->mimetype = job->mimetype;
-
-    // Remove weak reference
-    efl_wref_del(job->obj, &job->obj);
-    //unref stringshare
-    eina_stringshare_del(job->path);
-    // notify that this efm_file is ready for the world
-    efl_event_callback_call(file, EFM_FILE_EVENT_FSQUERY_DONE, NULL);
-    free(job);
-}
-
-
-static void
-_end_cb(void *data EINA_UNUSED, Ecore_Thread *et EINA_UNUSED)
-{
-    fs_query = NULL;
-    /* FIXME There are cases that the mimethread dies but there is still work*/
-    if (query_stuff)
-      _mime_thread_fireup();
-}
-
-static void
-_cancel_cb(void *data EINA_UNUSED, Ecore_Thread *th  EINA_UNUSED)
-{
-    fs_query = NULL;
-}
-
-static void
-_mime_thread_fireup(void)
-{
-   fs_query = ecore_thread_feedback_run(_fs_cb, _notify_cb,
-                                        _end_cb, _cancel_cb,
-                                        NULL, EINA_FALSE);
-}
-
-static void
-_scheudle(Eo *obj, Efm_Fs_File_Data *pd)
-{
-    Thread_Job *job;
-
-    job = calloc(1, sizeof(Thread_Job));
-
-    efl_wref_add(obj, &job->obj);
-    job->path = eina_stringshare_ref(pd->path);
-    eina_lock_take(&readlock);
-    query_stuff = eina_list_append(query_stuff, job);
-    eina_lock_release(&readlock);
-    // if there is a running thread the list will be took
-    if (!fs_query)
-      _mime_thread_fireup();
-}
 
 EOLIAN static const char *
 _efm_fs_file_efm_file_filename_get(Eo *obj EINA_UNUSED, Efm_Fs_File_Data *pd)
@@ -229,11 +118,7 @@ _efm_fs_file_generate(Eo *obj, Efm_Fs_File_Data *pd EINA_UNUSED, const char *fil
 
     if (pd->fileending) pd->fileending ++; //skip the .
 
-    if (!S_ISREG(pd->st.st_mode))
-      pd->mimetype = efreet_mime_special_type_get(pd->path);
-    else
-      _scheudle(obj, pd);
-
+    pd->mimetype = efreet_mime_type_get(pd->path);
     pd->file_mon = eio_monitor_add(pd->path);
     eina_hash_add(watch_files, &pd->file_mon, obj);
 }
@@ -327,7 +212,6 @@ _error_cb(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 void
 efm_file_init(void)
 {
-    eina_lock_new(&readlock);
     watch_files = eina_hash_pointer_new(NULL);
     handler_mod = ecore_event_handler_add(EIO_MONITOR_FILE_MODIFIED, _mod_cb, NULL);
     handler_del = ecore_event_handler_add(EIO_MONITOR_SELF_DELETED, _file_del_cb, NULL);
@@ -343,7 +227,6 @@ efm_file_shutdown(void)
     handler_mod = NULL;
     handler_err = NULL;
     handler_del = NULL;
-    eina_lock_free(&readlock);
     eina_hash_free(watch_files);
     watch_files = NULL;
 }
