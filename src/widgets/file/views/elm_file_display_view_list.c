@@ -8,36 +8,6 @@ typedef struct {
    View_Common common;
 } Elm_File_Display_View_List_Data;
 
-static Eina_Bool
-empty_check(Evas_Object *obj)
-{
-   if (!elm_genlist_selected_items_get(obj))
-     {
-        Elm_Gengrid_Item *it;
-
-        it = elm_genlist_first_item_get(obj);
-
-        elm_genlist_item_selected_set(it, EINA_TRUE);
-        return EINA_FALSE;
-     }
-   return EINA_TRUE;
-}
-
-static void
-_item_select_swap(Evas_Object *obj, const Eina_List *selected, Elm_Object_Item *it)
-{
-   Eina_List *sel = eina_list_clone(selected);
-   Elm_Object_Item *mover;
-
-   EINA_LIST_FREE(sel, mover)
-     {
-        elm_genlist_item_selected_set(mover, EINA_FALSE);
-     }
-
-   elm_genlist_item_selected_set(it, EINA_TRUE);
-   empty_check(obj);
-}
-
 EOLIAN static const char *
 _elm_file_display_view_list_elm_file_view_name_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 {
@@ -154,21 +124,10 @@ _elm_file_display_view_list_elm_file_view_iconsize_set(Eo *obj EINA_UNUSED, Elm_
    pd->config.icon_size = iconsize;
 }
 
-EOLIAN static Eina_Bool
-_elm_file_display_view_list_elm_file_view_search(Eo *obj, Elm_File_Display_View_List_Data *pd, const char *needle)
+EOLIAN static int
+_elm_file_display_view_list_elm_file_view_count(Eo *obj, Elm_File_Display_View_List_Data *pd EINA_UNUSED)
 {
-   Elm_Object_Item *searched;
-   const Eina_List *selected;
-
-   if (!needle) return EINA_TRUE;
-
-   searched = view_search(&pd->common, needle);
-
-   if (!searched) return EINA_FALSE;
-   selected = elm_genlist_selected_items_get(obj);
-   _item_select_swap(obj, selected, searched);
-
-   return EINA_TRUE;
+   return elm_genlist_items_count(obj);
 }
 
 static Evas_Object *

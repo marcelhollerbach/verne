@@ -40,12 +40,9 @@ interface Elm.File.View {
             size : Eina.Rectangle*;
          }
       }
-      search {
-         [[Search for the given value]]
-         params {
-            needle : const(char)*;
-         }
-         return : bool; [[say if the search found a item]]
+      count {
+         [[get the numbers of displayed items]]
+         return : int;
       }
       @property file {
          values {

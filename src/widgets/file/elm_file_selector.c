@@ -20,6 +20,7 @@ typedef struct
 
    struct {
      Eina_Strbuf *buffer;
+     char *old_regex;
    } search;
 
    Evas_Object *message;
@@ -650,21 +651,33 @@ static void
 _search_update(Eo *obj, Elm_File_Selector_Data *pd)
 {
    const char *search = NULL;
-   Eina_Bool found;
+   Eina_Bool empty;
 
+   if (pd->search.old_regex)
+     {
+        efm_filter_attribute_del(pd->filter, EFM_ATTRIBUTE_FILENAME, pd->search.old_regex);
+        free(pd->search.old_regex);
+        pd->search.old_regex = NULL;
+     }
+
+   //prepare the new text and the new regex
    if (pd->search.buffer)
-     search = eina_strbuf_string_get(pd->search.buffer);
+     {
+        search = eina_strbuf_string_get(pd->search.buffer);
+        elm_layout_signal_emit(obj, "search,enable", "elm");
+        pd->search.old_regex = search ? strdup(search) : NULL;
+        efm_filter_attribute_add(pd->filter, EFM_ATTRIBUTE_FILENAME, pd->search.old_regex);
+     }
 
-   if (search)
-     elm_layout_signal_emit(obj, "search,enable", "elm");
-   else
+   if (!pd->search.old_regex)
      elm_layout_signal_emit(obj, "search,disable", "elm");
 
    elm_layout_text_set(obj, "search", search);
 
-   found = elm_file_view_search(pd->view.obj, search);
 
-   if (!found)
+   empty = !!elm_file_view_count(pd->view.obj);
+
+   if (!empty)
      elm_layout_signal_emit(obj, "search,failed", "elm");
    else
      elm_layout_signal_emit(obj, "search,found", "elm");

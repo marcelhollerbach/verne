@@ -188,39 +188,6 @@ _selection_del(void *data EINA_UNUSED, Evas_Object *obj, void *event_info)
    view_file_unselect(&pd->common, file);
 }
 
-static Eina_Bool
-empty_check(Evas_Object *obj)
-{
-   if (!elm_gengrid_selected_items_get(obj))
-     {
-        Elm_Gengrid_Item *it;
-
-        it = elm_gengrid_first_item_get(obj);
-
-        elm_gengrid_item_selected_set(it, EINA_TRUE);
-        return EINA_FALSE;
-     }
-   return EINA_TRUE;
-}
-
-static void
-_item_select_swap(Evas_Object *obj, const Eina_List *selected, Elm_Object_Item *it)
-{
-   Eina_List *selected_safe;
-   Elm_Object_Item *mover;
-
-   selected_safe = eina_list_clone(selected);
-
-   EINA_LIST_FREE(selected_safe, mover)
-     {
-        elm_gengrid_item_selected_set(mover, EINA_FALSE);
-     }
-
-   elm_gengrid_item_selected_set(it, EINA_TRUE);
-
-   empty_check(obj);
-}
-
 static void
 _key_down(void *data, const Efl_Event *event)
 {
@@ -275,25 +242,14 @@ _elm_file_display_view_grid_efl_object_constructor(Eo *obj, Elm_File_Display_Vie
    return eo;
 }
 
-EOLIAN static Eina_Bool
-_elm_file_display_view_grid_elm_file_view_search(Eo *obj, Elm_File_Display_View_Grid_Data *pd, const char *needle)
+EOLIAN static int
+_elm_file_display_view_grid_elm_file_view_count(Eo *obj, Elm_File_Display_View_Grid_Data *pd EINA_UNUSED)
 {
-   Elm_Object_Item *searched;
-   const Eina_List *selected;
-
-   if (!needle) return EINA_TRUE;
-
-   searched = view_search(&pd->common, needle);
-   if (!searched) return EINA_FALSE;
-
-   selected = elm_gengrid_selected_items_get(obj);
-   _item_select_swap(obj, selected, searched);
-
-   return EINA_TRUE;
+   return elm_gengrid_items_count(obj);
 }
 
 EOLIAN static void
-_elm_file_display_view_grid_efl_object_destructor(Eo *obj, Elm_File_Display_View_Grid_Data *pd)
+_elm_file_display_view_grid_efl_object_destructor(Eo *obj, Elm_File_Display_View_Grid_Data *pd EINA_UNUSED)
 {
    elm_gengrid_item_class_free(pd->gic);
    efl_destructor(efl_super(obj, ELM_FILE_DISPLAY_VIEW_GRID_CLASS));
