@@ -41,6 +41,9 @@ _efm_fs_file_efm_file_fileending_get(Eo *obj EINA_UNUSED, Efm_Fs_File_Data *pd)
 EOLIAN static const char *
 _efm_fs_file_efm_file_mimetype_get(Eo *obj EINA_UNUSED, Efm_Fs_File_Data *pd)
 {
+    if (!pd->mimetype)
+       pd->mimetype = efreet_mime_type_get(pd->path);
+
     return pd->mimetype;
 }
 
@@ -118,7 +121,6 @@ _efm_fs_file_generate(Eo *obj, Efm_Fs_File_Data *pd EINA_UNUSED, const char *fil
 
     if (pd->fileending) pd->fileending ++; //skip the .
 
-    pd->mimetype = efreet_mime_type_get(pd->path);
     pd->file_mon = eio_monitor_add(pd->path);
     eina_hash_add(watch_files, &pd->file_mon, obj);
 }
