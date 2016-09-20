@@ -6,7 +6,6 @@
 
 #include <Efm.h>
 #include <Eio.h>
-#include <Elementary.h>
 #include <Elementary_Ext.h>
 #include "ui.h"
 #include "config.h"
