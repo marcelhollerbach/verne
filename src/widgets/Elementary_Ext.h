@@ -39,6 +39,8 @@
 #include "./file/elm_file_view.eo.h"
 #include "./file/views/elm_file_display_view_grid.eo.h"
 #include "./file/views/elm_file_display_view_list.eo.h"
+#include "./dialog/elm_dialog.eo.h"
+#include "./dialog/elm_dialog_decision.eo.h"
 
 EAPI void elm_ext_init();
 

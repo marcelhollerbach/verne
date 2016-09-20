@@ -38,3 +38,4 @@ target_link_libraries (filedisplay_test
 
 add_subdirectory(./emous_test)
 add_subdirectory(./efm_test)
+add_subdirectory(./dialogs)

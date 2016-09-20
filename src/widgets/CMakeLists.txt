@@ -3,8 +3,15 @@ set(THEME_INSTALL_PATH "${CMAKE_INSTALL_FULL_DATADIR}/elm_ext/")
 LIST(APPEND WIDGET_LIBRARY
    Elementary_Ext.h
    elementary_ext.c
-   #itemspackage
-
+   #dialogs
+   dialog/elm_dialog.c
+   dialog/elm_dialog.eo
+   dialog/elm_dialog.eo.x
+   dialog/elm_dialog.eo.h
+   dialog/elm_dialog_decision.c
+   dialog/elm_dialog_decision.eo
+   dialog/elm_dialog_decision.eo.x
+   dialog/elm_dialog_decision.eo.h
    #filepackage
    file/elm_file_mimetype_cache.c
    file/elm_file_mimetype_cache.eo
@@ -63,6 +70,7 @@ endif(DEBUG)
 list(APPEND WIDGET_INCLUDE
   ./
   ./file/
+  ./dialog/
   ../lib/efm/
 )
 eo_rule_create("${WIDGET_LIBRARY}" "${WIDGET_INCLUDE}")

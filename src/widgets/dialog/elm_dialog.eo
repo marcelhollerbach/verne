@@ -1,0 +1,23 @@
+class Elm.Dialog (Efl.Ui.Win) {
+    [[Just a plain dialog]]
+    methods {
+        @property icon {
+            values {
+                icon : const(char)*;
+            }
+        }
+        @property control_box {
+            get {
+
+            }
+            values {
+                box : Efl.Ui.Box;
+            }
+        }
+    }
+    implements {
+        Efl.Canvas.Group.group_add;
+        Elm.Widget.part_text;
+        Efl.Object.finalize;
+    }
+}
