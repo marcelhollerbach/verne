@@ -159,7 +159,9 @@ _mod_cb(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 
     f = eina_hash_find(watch_files, &ev->monitor);
 
-    if (!f) return EINA_TRUE;
+    DBG("Modification on file %s %p\n", eio_monitor_path_get(ev->monitor), f);
+
+    if (!f) return ECORE_CALLBACK_PASS_ON;
 
     pd = efl_data_scope_get(f, EFM_FS_FILE_CLASS);
 
@@ -174,7 +176,7 @@ _mod_cb(void *data EINA_UNUSED, int type EINA_UNUSED, void *event)
 
     efl_event_callback_call(f, EFM_FILE_EVENT_CHANGED, NULL);
 
-    return EINA_TRUE;
+    return ECORE_CALLBACK_CANCEL;
 }
 
 static Eina_Bool
