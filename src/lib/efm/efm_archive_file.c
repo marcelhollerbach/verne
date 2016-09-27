@@ -23,7 +23,7 @@ _efm_archive_file_generate(Eo *obj, Efm_Archive_File_Data *pd, const char *archi
         (internal && !strcmp(internal, "/"))
       )
      root = EINA_TRUE;
-   pd->archive.find_path = archive_access(archive, !internal);
+   pd->archive.find_path = archive_access(archive, !!internal);
 
    if (!pd->archive.find_path)
      {
