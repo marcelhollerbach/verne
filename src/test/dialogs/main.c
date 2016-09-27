@@ -3,12 +3,13 @@
 
 #include <Elementary_Ext.h>
 
+#if 0
 static void
 _complex(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
 
 }
-
+#endif
 
 static void
 _apply(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
@@ -23,7 +24,7 @@ _cancel(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 }
 
 static void
-_simple(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+_simple(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
    Evas_Object *win;
 
@@ -39,7 +40,7 @@ _simple(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 int
 elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 {
-   Evas_Object *win, *box, *complex, *simple, *o;
+   Evas_Object *win, *box, *simple, *o;
    elm_ext_init();
 
    win = elm_win_util_standard_add("Dialog test", "Dialog test");
@@ -49,13 +50,13 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    elm_win_resize_object_add(win, o);
    evas_object_show(o);
-
-   /*o = complex = elm_button_add(o);
+#if 0
+   o = complex = elm_button_add(o);
    evas_object_smart_callback_add(o, "clicked", _complex, NULL);
    elm_object_text_set(o, "Complex");
    elm_box_pack_end(box, o);
-   evas_object_show(o);*/
-
+   evas_object_show(o);
+#endif
    o = simple = elm_button_add(o);
    evas_object_smart_callback_add(o, "clicked", _simple, NULL);
    elm_object_text_set(o, "Simple");
