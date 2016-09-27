@@ -31,7 +31,7 @@ extern Eldbus_Connection *con;
 extern Eina_Hash *devices;
 extern Eina_Hash *drives;
 extern Eina_List *devices_list;
-extern Emous_Type *type;
+extern Emous_Type *emous_type;
 
 Emous_Device* _emous_device_new(Eldbus_Message_Iter *dict, const char **opath);
 

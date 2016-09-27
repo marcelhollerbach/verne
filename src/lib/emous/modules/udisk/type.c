@@ -4,7 +4,7 @@ typedef struct{
 
 } Emous_Type_Udisks_Data;
 
-Emous_Type *type = NULL;
+Emous_Type *emous_type = NULL;
 
 static Eina_List *
 _emous_type_udisks_emous_type_devices_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
@@ -35,7 +35,7 @@ _emous_type_udisks_emous_type_name_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED
 static Emous_Type *
 _emous_type_udisks_emous_type_object_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED)
 {
-    if (type) return type;
+    if (emous_type) return emous_type;
 
     CRIT("Illigal call...");
     return NULL;

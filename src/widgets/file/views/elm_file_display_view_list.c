@@ -64,11 +64,11 @@ _elm_file_display_view_list_elm_file_view_selection_set(Eo *obj EINA_UNUSED, Elm
 
    EINA_LIST_FOREACH(file, node, icon)
      {
-        Efm_File *file;
+        Efm_File *f;
 
-        file = elm_file_icon_file_get(icon);
+        f = elm_file_icon_file_get(icon);
 
-        view_file_select(&pd->common, file);
+        view_file_select(&pd->common, f);
      }
 }
 

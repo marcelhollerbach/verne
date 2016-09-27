@@ -166,16 +166,16 @@ device:
    pd->device_group_it = it = elm_genlist_item_append(o, sd->group_item_class, eina_stringshare_add("Devices"), NULL, 0, NULL, NULL);
 
    {
-      Eina_List *list, *node;
+      Eina_List *list;
       Emous_Device *device;
 
       list = emous_manager_devices_get(EMOUS_MANAGER_CLASS);
 
       EINA_LIST_FOREACH(list, node, device)
         {
-           Bookmark_Item *it;
-           it = _device_add(device, o);
-           _device_update(it);
+           Bookmark_Item *bit;
+           bit = _device_add(device, o);
+           _device_update(bit);
         }
    }
 

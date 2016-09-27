@@ -229,39 +229,39 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
     evas_object_size_hint_align_set(box, EVAS_HINT_FILL, 0.0);
     EINA_LIST_FOREACH(operations, node, operation)
       {
-         Evas_Object *layout, *progress, *sep;
+         Evas_Object *op_layout, *progress, *sep;
 
-         layout = efl_add(ELM_LAYOUT_CLASS, obj);
-         evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-         evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
+         op_layout = efl_add(ELM_LAYOUT_CLASS, obj);
+         evas_object_size_hint_weight_set(op_layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+         evas_object_size_hint_align_set(op_layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
          switch(operation->type)
          {
             case OP_COPY:
             case OP_MOVE:
               // set correct file
               if (operation->type == OP_MOVE)
-                efl_file_set(layout, THEME_PATH"/default.edc.edj", "verne.fs_op.move");
+                efl_file_set(op_layout, THEME_PATH"/default.edc.edj", "verne.fs_op.move");
               else
-                efl_file_set(layout, THEME_PATH"/default.edc.edj", "verne.fs_op.copy");
+                efl_file_set(op_layout, THEME_PATH"/default.edc.edj", "verne.fs_op.copy");
 
               // add progressbar
               progress = efl_add(ELM_PROGRESSBAR_CLASS, obj);
               efl_wref_add(progress, &operation->ui.progress);
               // set part and text
-              elm_object_part_content_set(layout, "verne.progress", progress);
-              elm_object_part_text_set(layout, "verne.to", operation->goal);
-              elm_object_part_text_set(layout, "verne.from", operation->from);
+              elm_object_part_content_set(op_layout, "verne.progress", progress);
+              elm_object_part_text_set(op_layout, "verne.to", operation->goal);
+              elm_object_part_text_set(op_layout, "verne.from", operation->from);
               // set progress to correct values
               elm_progressbar_value_set(progress, operation->ui.progress_value);
             break;
             case OP_REMOVE:
-              efl_file_set(layout, THEME_PATH"/default.edc.edj", "verne.fs_op.remove");
-              elm_object_part_text_set(layout, "verne.from", operation->from);
+              efl_file_set(op_layout, THEME_PATH"/default.edc.edj", "verne.fs_op.remove");
+              elm_object_part_text_set(op_layout, "verne.from", operation->from);
             break;
          }
-         evas_object_show(layout);
-         elm_layout_sizing_eval(layout);
-         elm_box_pack_end(box, layout);
+         evas_object_show(op_layout);
+         elm_layout_sizing_eval(op_layout);
+         elm_box_pack_end(box, op_layout);
 
          efl_wref_add(obj, &operation->ui.layout);
 

@@ -10,19 +10,19 @@ Config *config;
 Config*
 _config_standart_new()
 {
-   Config *config;
+   Config *c;
 
-   config = calloc(1, sizeof(Config));
-   config->mime_type_open = eina_hash_string_small_new(NULL);
+   c = calloc(1, sizeof(Config));
+   c->mime_type_open = eina_hash_string_small_new(NULL);
 
-   return config;
+   return c;
 }
 
 void
-_config_free(Config *config)
+_config_free(Config *c)
 {
-    eina_hash_free(config->mime_type_open);
-    free(config);
+    eina_hash_free(c->mime_type_open);
+    free(c);
 }
 
 void

@@ -11,7 +11,7 @@ typedef struct {
   Eina_List *parts;
 } Titlebar_Content;
 
-static Evas_Object *entry;
+static Evas_Object *_entry;
 
 static void
 titlebar_whipe(Titlebar_Content *content)
@@ -309,25 +309,25 @@ titlebar_init(void)
 {
    Titlebar_Content *content = calloc(1, sizeof(Titlebar_Content));
 
-   entry = elm_entry_add(layout);
-   evas_object_data_set(entry, "__content", content);
-   elm_entry_single_line_set(entry, EINA_TRUE);
-   evas_object_smart_callback_add(entry, "unfocused", _unfocus_cb, NULL);
-   evas_object_smart_callback_add(entry, "changed,user", _changed_cb, NULL);
-   evas_object_smart_callback_add(entry, "anchor,clicked", _anchor_clicked_cb, NULL);
-   evas_object_show(entry);
+   _entry = elm_entry_add(layout);
+   evas_object_data_set(_entry, "__content", content);
+   elm_entry_single_line_set(_entry, EINA_TRUE);
+   evas_object_smart_callback_add(_entry, "unfocused", _unfocus_cb, NULL);
+   evas_object_smart_callback_add(_entry, "changed,user", _changed_cb, NULL);
+   evas_object_smart_callback_add(_entry, "anchor,clicked", _anchor_clicked_cb, NULL);
+   evas_object_show(_entry);
 
-   elm_object_part_content_set(layout, "verne.textbar", entry);
+   elm_object_part_content_set(layout, "verne.textbar", _entry);
 }
 
 void
 titlebar_path_set(const char *path)
 {
-   Titlebar_Content *content = evas_object_data_get(entry, "__content");
+   Titlebar_Content *content = evas_object_data_get(_entry, "__content");
 
    titlebar_whipe(content);
 
-   titlebar_content_add(content, elm_entry_cursor_pos_get(entry), path);
+   titlebar_content_add(content, elm_entry_cursor_pos_get(_entry), path);
 
-   _content_refresh(entry);
+   _content_refresh(_entry);
 }

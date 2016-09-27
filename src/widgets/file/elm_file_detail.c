@@ -630,12 +630,12 @@ _elm_file_detail_file_get(Eo *obj EINA_UNUSED, Elm_File_Detail_Data *pd)
 //Group/User settings
 //================================================================
 static void
-_standard_fill(Evas_Object *obj, Evas_Object *o, Evas_Smart_Cb cb, const char *name)
+_standard_fill(Evas_Object *obj, Evas_Object *o, Evas_Smart_Cb cb, const char *filename)
 {
     FILE *fptr;
     char line[PATH_MAX];
 
-    fptr = fopen(name,"r");
+    fptr = fopen(filename,"r");
 
     if (fptr == NULL) {
          perror("Failed to read group");

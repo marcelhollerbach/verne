@@ -13,7 +13,6 @@ typedef struct
 } Efm_Fs_File_Data;
 
 
-static void _mime_thread_fireup(void);
 static Eina_Hash *watch_files;
 
 static Ecore_Event_Handler *handler_mod;
@@ -254,8 +253,5 @@ _efm_fs_file_efm_file_child_get(Eo *obj EINA_UNUSED, Efm_Fs_File_Data *pd, const
 
    return file;
 }
-
-
-
 
 #include "efm_fs_file.eo.x"

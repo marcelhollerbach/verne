@@ -281,7 +281,7 @@ _emous_device_new(Eldbus_Message_Iter *dict, const char **opath)
                        *drive = NULL;
 
    //create a object to work with
-   dev = efl_add(EMOUS_DEVICE_UDISKS_CLASS, type);
+   dev = efl_add(EMOUS_DEVICE_UDISKS_CLASS, emous_type);
    pd = efl_data_scope_get(dev, EMOUS_DEVICE_UDISKS_CLASS);
 
    //get interfaces and objectpath

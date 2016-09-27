@@ -49,11 +49,11 @@ _extract(void *data, Ecore_Thread *thread EINA_UNUSED)
          size_t size = 0;
          int64_t offset = 0;
          int r = 0;
-         char path[PATH_MAX];
+         char entry_path[PATH_MAX];
 
-         snprintf(path, sizeof(path), "%s/%s", goal, archive_entry_pathname(entry));
+         snprintf(entry_path, sizeof(entry_path), "%s/%s", goal, archive_entry_pathname(entry));
 
-         archive_entry_set_pathname(entry, path);
+         archive_entry_set_pathname(entry, entry_path);
 
          if (archive_write_header(out, entry)
               != ARCHIVE_OK)
