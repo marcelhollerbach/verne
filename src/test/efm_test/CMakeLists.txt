@@ -9,6 +9,6 @@ target_link_libraries (efm_suite
    efm
 )
 set_property(TARGET efm_suite
-   PROPERTY COMPILE_DEFINITIONS TEST_RESSOURCES="${CMAKE_SOURCE_DIR}")
+   PROPERTY COMPILE_DEFINITIONS TEST_RESSOURCE="${CMAKE_SOURCE_DIR}/src/test/archive.tar")
 
 add_test(efm_test efm_suite)

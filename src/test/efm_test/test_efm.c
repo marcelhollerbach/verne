@@ -11,7 +11,7 @@
 #define TEST_FILE_ITER_MAX 100
 
 #define TEST_DIRECTORY "efm_test_monitor_XXXXXX"
-#define TEST_DIRECTORY_FILES_MAX 100
+#define TEST_DIRECTORY_FILES_MAX 80
 #define TEST_DIRECTORY_FILES "%s/test_file_%d_XXXXXX.txt"
 
 #define ARCHIVE_FILE_NUMBER 5
@@ -88,7 +88,6 @@ START_TEST(efm_stresstest)
 
         ck_assert_ptr_ne(file, NULL);
      }
-   ecore_main_loop_begin();
 
    efm_shutdown();
 
@@ -207,7 +206,7 @@ START_TEST(efm_archive_monitor_test)
 
    efl_object_init();
    efm_init();
-   f = efm_archive_get(EFM_CLASS, TEST_RESSOURCES"/src/test/archiv.tar", "zip-test/");
+   f = efm_archive_get(EFM_CLASS, TEST_RESSOURCE, "zip-test/");
 
    archive = efm_file_monitor(f, NULL);
    ck_assert_ptr_ne(archive, NULL);
@@ -227,7 +226,7 @@ START_TEST(efm_archive_test)
    efl_object_init();
    efm_init();
 
-   archive = efm_archive_get(EFM_CLASS, TEST_RESSOURCES"/src/test/archiv.tar", "zip-test/dir1/bla1");
+   archive = efm_archive_get(EFM_CLASS, TEST_RESSOURCE, "zip-test/dir1/bla1");
 
    ck_assert_ptr_ne(archive, NULL);
 
