@@ -117,13 +117,12 @@ typedef enum {
 } File_Mode;
 
 static inline void
-_file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
+_file_set(Eo *obj, Elm_File_Icon_Data *pd)
 {
    Eina_Bool dir;
    File_Mode filemode = FILE_MODE_TRIVIAL;
    const char *path, *mime_type, *filename, *fileextension;
 
-   efl_wref_add(file, &pd->file);
    path = efm_file_path_get(pd->file);
    dir = efm_file_is_type(pd->file, EFM_FILE_TYPE_DIRECTORY);
    mime_type = efm_file_mimetype_get(pd->file);
@@ -178,21 +177,6 @@ _file_set(Eo *obj, Elm_File_Icon_Data *pd, Efm_File *file)
    // set the text of the filename
 }
 
-EOLIAN static Efm_File *
-_elm_file_icon_file_get(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
-{
-   return pd->file;
-}
-EOLIAN static void
-_elm_file_icon_install(Eo *obj, Elm_File_Icon_Data *pd, Elm_File_MimeType_Cache *cache, Efm_File *file, Eina_Bool preview)
-{
-   EINA_SAFETY_ON_NULL_RETURN(cache);
-   EINA_SAFETY_ON_NULL_RETURN(file);
-
-   pd->cache = cache;
-   pd->preview = preview;
-   _file_set(obj, pd, file);
-}
 EOLIAN static Efl_Object*
 _elm_file_icon_efl_object_finalize(Eo *obj, Elm_File_Icon_Data *pd)
 {
@@ -202,6 +186,8 @@ _elm_file_icon_efl_object_finalize(Eo *obj, Elm_File_Icon_Data *pd)
 
    EINA_SAFETY_ON_NULL_RETURN_VAL(pd->cache, NULL);
    EINA_SAFETY_ON_NULL_RETURN_VAL(pd->file, NULL);
+
+   _file_set(obj, pd);
 
    return res;
 }
@@ -213,5 +199,55 @@ _elm_file_icon_efl_object_destructor(Eo *obj, Elm_File_Icon_Data *pd)
 
    efl_destructor(efl_super(obj, ELM_FILE_ICON_CLASS));
 }
+
+
+EOLIAN static void
+_elm_file_icon_file_set(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, Efm_File *file)
+{
+    efl_composite_detach(obj, pd->file);
+    efl_wref_del(pd->file, &pd->file);
+    pd->file = file;
+    efl_wref_add(pd->file, &pd->file);
+
+    if (efl_finalized_get(obj))
+      _file_set(obj, pd);
+
+    efl_composite_attach(obj, file);
+}
+
+EOLIAN static Efm_File *
+_elm_file_icon_file_get(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
+{
+   return pd->file;
+}
+
+EOLIAN static void
+_elm_file_icon_cache_set(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, Elm_File_MimeType_Cache *cache)
+{
+   if (efl_finalized_get(obj)) return;
+
+   pd->cache = cache;
+}
+
+EOLIAN static Elm_File_MimeType_Cache *
+_elm_file_icon_cache_get(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
+{
+   return pd->cache;
+}
+
+EOLIAN static void
+_elm_file_icon_preview_set(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, Eina_Bool preview)
+{
+   if (efl_finalized_get(obj)) return;
+
+   pd->preview = preview;
+}
+
+EOLIAN static Eina_Bool
+_elm_file_icon_preview_get(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd)
+{
+   return pd->preview;
+}
+
 
 #include "elm_file_icon.eo.x"

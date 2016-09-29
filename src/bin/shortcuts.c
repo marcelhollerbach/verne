@@ -74,9 +74,8 @@ _hover(void *data EINA_UNUSED, const Efl_Event *event) {
    Efm_File *file;
    const char *path;
 
-   file = elm_file_icon_file_get(icon);
-   elm_file_selector_file_set(selector, file);
-   path = efm_file_path_get(file);
+   elm_file_selector_file_set(selector, elm_file_icon_file_get(icon));
+   path = efm_file_path_get(icon);
    titlebar_path_set(path);
 }
 
@@ -221,9 +220,8 @@ _item_drop(void *data EINA_UNUSED, const Efl_Event *event) {
    Efm_File *file;
 
    ev = event->info;
-   file = elm_file_icon_file_get(ev->file);
 
-   _handle_action(ev->selection_data, file);
+   _handle_action(ev->selection_data, ev->file);
 }
 
 static void

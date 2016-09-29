@@ -1,21 +1,18 @@
-class Elm.File.Icon (Elm.Layout) {
+class Elm.File.Icon (Elm.Layout, Efm.File) {
    methods {
-      install {
-        [[
-        ]]
-        params {
-           cache : Elm.File.MimeType.Cache; [[Cache to use]]
-           file : Efm.File; [[Set the file which should be visualized ]]
-           preview : bool; [[Set if you want to have preview of images and .desktop files]]
-        }
-      }
       @property file {
-        [[File which is visualized]]
-        get {
-          [[get the file]]
-        }
         values {
           file : Efm.File;
+        }
+      }
+      @property cache {
+        values {
+          cache : Elm.File.MimeType.Cache;
+        }
+      }
+      @property preview {
+        values {
+          preview : bool;
         }
       }
    }
@@ -26,7 +23,9 @@ class Elm.File.Icon (Elm.Layout) {
      Efl.Object.finalize;
    }
    constructors {
-     .install;
+     .file;
+     .cache;
+     .preview;
    }
    events {
      item,drop : void*; [[Its Elm.Selection.Data. Called when something else is droped above this]]

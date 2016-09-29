@@ -406,9 +406,7 @@ _event_rect_mouse_down(void *data, const Efl_Event *event)
    else if (efl_input_pointer_button_get(ev) == 3)
      {
         Elm_File_Icon *file_icon = eina_list_data_get(icons);
-        Efm_File *file = NULL;
-        file = elm_file_icon_file_get(file_icon);
-        _ctx_menu_open(data, search.x, search.y, file);
+        _ctx_menu_open(data, search.x, search.y, file_icon);
      }
 }
 
@@ -457,20 +455,17 @@ _dnd_anim_ics_gen(Evas_Object *obj, Evas_Object *view)
    EINA_LIST_FOREACH(list, node, icon)
      {
         Eina_Rectangle place;
-        Efm_File *f;
         Eo *widget_icon;
         const char *mimetype;
-
-        f = elm_file_icon_file_get(icon);
 
         widget_icon = elm_icon_add(view);
         evas_object_geometry_get(icon, &place.x, &place.y, &place.w, &place.h);
         evas_object_geometry_set(widget_icon, place.x, place.y, place.w, place.h);
 
-        if (efm_file_is_type(f, EFM_FILE_TYPE_DIRECTORY))
+        if (efm_file_is_type(icon, EFM_FILE_TYPE_DIRECTORY))
           mimetype = "folder";
         else
-          mimetype = efm_file_mimetype_get(f);
+          mimetype = efm_file_mimetype_get(icon);
         elm_file_mimetype_cache_mimetype_set(pd->cache, widget_icon, mimetype);
         evas_object_show(widget_icon);
 
@@ -492,11 +487,9 @@ _dnd_items_gen(Evas_Object *view)
 
    EINA_LIST_FOREACH(list, node, icon)
      {
-        Efm_File *f;
         const char *path;
 
-        f = elm_file_icon_file_get(icon);
-        path = efm_file_path_get(f);
+        path = efm_file_path_get(icon);
         eina_strbuf_append(buf, FILESEP);
         eina_strbuf_append(buf, path);
         eina_strbuf_append(buf, "\n");
@@ -528,17 +521,15 @@ _dnd_create_icon(void *data, Evas_Object *win, Evas_Coord *xoff, Evas_Coord *yof
    EINA_LIST_FOREACH(pass->icons, node, file)
      {
         char buf[PATH_MAX];
-        Efm_File *f;
         Eo *widget_icon;
         const char *mimetype;
 
-        f = elm_file_icon_file_get(file);
         widget_icon = elm_icon_add(win);
 
-        if (efm_file_is_type(f, EFM_FILE_TYPE_DIRECTORY))
+        if (efm_file_is_type(file, EFM_FILE_TYPE_DIRECTORY))
           mimetype = "folder";
         else
-          mimetype = efm_file_mimetype_get(f);
+          mimetype = efm_file_mimetype_get(file);
 
         elm_file_mimetype_cache_mimetype_set(pass->cache, widget_icon, mimetype);
         evas_object_show(widget_icon);
@@ -1226,7 +1217,11 @@ _elm_file_selector_icon_generate(Eo *obj, Elm_File_Selector_Data *pd EINA_UNUSED
    Evas_Object *ic;
 
 #if 1
-   ic = efl_add(ELM_FILE_ICON_CLASS, obj, elm_file_icon_install(efl_added, pd->cache, file, config->image_preview));
+   ic = efl_add(ELM_FILE_ICON_CLASS, obj,
+    elm_file_icon_cache_set(efl_added, pd->cache),
+    elm_file_icon_file_set(efl_added, file),
+    elm_file_icon_preview_set(efl_added, config->image_preview)
+   );
    efl_event_callback_add(ic, ELM_FILE_ICON_EVENT_ITEM_DROP, _drop_cb, obj);
    efl_event_callback_add(ic, ELM_FILE_ICON_EVENT_ITEM_HOVER, _hover_cb, obj);
 #else
