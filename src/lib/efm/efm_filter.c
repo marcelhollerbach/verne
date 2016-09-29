@@ -104,6 +104,8 @@ _attr_match(Efm_Filter_Data *pd, Efm_File *file)
      {
         const char *checker;
 
+        if (eina_list_count(pd->attribute[i]) == 0) continue;
+
         switch(i){
           case EFM_ATTRIBUTE_FILEENDING:
             checker = efm_file_fileending_get(file);

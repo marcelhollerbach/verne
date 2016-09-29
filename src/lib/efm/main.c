@@ -94,18 +94,21 @@ _efm_file_get(Eo *obj EINA_UNUSED, void *pd EINA_UNUSED, const char *_path)
 {
    Efm_File *file;
    const char *path;
+   char *sanitize;
 
-   _path = eina_file_path_sanitize(_path);
+   sanitize = eina_file_path_sanitize(_path);
 
-   SEARCH_IF_FOUND_RETURN_INCED(_path, file)
+   SEARCH_IF_FOUND_RETURN_INCED(sanitize, file)
 
-   file = efl_add(EFM_FS_FILE_CLASS, NULL, efm_fs_file_generate(efl_added, _path));
+   file = efl_add(EFM_FS_FILE_CLASS, NULL, efm_fs_file_generate(efl_added, sanitize));
    if (file)
      {
         path = efm_file_path_get(file);
         efl_event_callback_array_add(file, factory_events(), sd->factory);
         eina_hash_add(sd->factory, path, file);
      }
+
+   free(sanitize);
 
    return file;
 }

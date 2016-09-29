@@ -107,6 +107,8 @@ _refresh_files(Efm_Monitor *mon, Efm_Fs_Monitor_Data *pd)
              efl_event_callback_call(mon, EFM_MONITOR_EVENT_FILE_HIDE, ef);
           }
      }
+
+   eina_iterator_free(it);
 }
 
 static void

@@ -121,11 +121,10 @@ _file_set(Eo *obj, Elm_File_Icon_Data *pd)
 {
    Eina_Bool dir;
    File_Mode filemode = FILE_MODE_TRIVIAL;
-   const char *path, *mime_type, *filename, *fileextension;
+   const char *path, *filename, *fileextension;
 
    path = efm_file_path_get(pd->file);
    dir = efm_file_is_type(pd->file, EFM_FILE_TYPE_DIRECTORY);
-   mime_type = efm_file_mimetype_get(pd->file);
    filename = efm_file_filename_get(pd->file);
    fileextension = efm_file_fileending_get(pd->file);
 
