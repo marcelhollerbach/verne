@@ -31,12 +31,6 @@ pkg_check_modules(Mount mount)
 pkg_check_modules(Check REQUIRED check)
 pkg_check_modules(Enlightenment REQUIRED enlightenment)
 
-if (Mount_FOUND)
-    message("Mount is found! YEAH")
-elseif (NOT Mount_FOUND)
-    message("Mount is not found! Mountpoint detection will not work!")
-endif (Mount_FOUND)
-
 if (${Eolian_VERSION} VERSION_LESS 1.16.99)
     message("Using legecy eo_helper")
     include(eo_helper)

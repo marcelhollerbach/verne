@@ -9,8 +9,6 @@ include_directories(
 
 set (EMOUS_MODULE_PATH "${CMAKE_INSTALL_FULL_LIBDIR}/emous-1/")
 
-message(${EMOUS_MODULE_PATH})
-
 LIST(APPEND EMOUS_FILES
    Emous.h
    emous_priv.h
