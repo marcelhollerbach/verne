@@ -71,7 +71,6 @@ _search_key_down(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj E
 static void
 _hover(void *data EINA_UNUSED, const Efl_Event *event) {
    Elm_File_Icon *icon = event->info;
-   Efm_File *file;
    const char *path;
 
    elm_file_selector_file_set(selector, elm_file_icon_file_get(icon));
@@ -217,7 +216,6 @@ _handle_action(Elm_Selection_Data *data, Efm_File *basic)
 static void
 _item_drop(void *data EINA_UNUSED, const Efl_Event *event) {
    Elm_File_Selector_Dnd_Drop_Event *ev;
-   Efm_File *file;
 
    ev = event->info;
 
