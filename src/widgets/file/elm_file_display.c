@@ -111,22 +111,13 @@ EOLIAN static Efl_Object *
 _elm_file_display_efl_object_constructor(Eo *obj, Elm_File_Display_Data *pd EINA_UNUSED)
 {
    Eo *eo;
+   Evas_Object *o;
+   Eo *cache;
 
    eo = efl_constructor(efl_super(obj, ELM_FILE_DISPLAY_CLASS));
    // XXX: take a config ?
    elm_file_display_bookmarks_show_set(obj, EINA_TRUE);
    elm_file_display_filepreview_show_set(obj, EINA_TRUE);
-
-   return eo;
-}
-
-EOLIAN static void
-_elm_file_display_efl_canvas_group_group_add(Eo *obj, Elm_File_Display_Data *pd)
-{
-   Evas_Object *o;
-   Eo *cache;
-
-   efl_canvas_group_add(efl_super(obj, ELM_FILE_DISPLAY_CLASS));
 
    if (!elm_layout_theme_set(obj, "file_display", "base", "default"))
      {
@@ -155,7 +146,7 @@ _elm_file_display_efl_canvas_group_group_add(Eo *obj, Elm_File_Display_Data *pd)
    elm_object_part_content_set(obj, "filepreview", o);
    evas_object_show(o);
 
-
+   return eo;
 }
 
 EOLIAN static void

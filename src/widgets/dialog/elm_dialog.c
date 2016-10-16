@@ -35,12 +35,17 @@ on_done(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
    evas_object_del(obj);
 }
 
-EOLIAN static void
-_elm_dialog_efl_canvas_group_group_add(Eo *obj, Elm_Dialog_Data *pd)
+static void
+_internal_constructing(Eo *obj, Elm_Dialog_Data *pd)
 {
-   Evas_Object *o;
+/*
+EOLIAN static Efl_Object*
+_elm_dialog_efl_object_constructor(Eo *obj, Elm_Dialog_Data *pd)
+{
+   Eo *eo;
+ */  Evas_Object *o;
 
-   efl_canvas_group_add(efl_super(obj, ELM_DIALOG_CLASS));
+   //eo = efl_constructor(efl_super(obj, ELM_DIALOG_CLASS));
 
    evas_object_smart_callback_add(obj, "delete,request", on_done, NULL);
 
@@ -84,6 +89,8 @@ _elm_dialog_efl_canvas_group_group_add(Eo *obj, Elm_Dialog_Data *pd)
    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0);
    evas_object_show(o);
    elm_table_pack(pd->table, o, 0, 2, 2, 1);
+
+   //return eo;
 }
 
 EOLIAN static Efl_Object *
@@ -91,6 +98,7 @@ _elm_dialog_efl_object_finalize(Eo *obj, Elm_Dialog_Data *pd)
 {
    efl_finalize(efl_super(obj, ELM_DIALOG_CLASS));
 
+   _internal_constructing(obj, pd);
    elm_win_resize_object_add(obj, pd->table);
 
    return obj;

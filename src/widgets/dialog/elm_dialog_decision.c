@@ -20,11 +20,14 @@ _apply(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
    efl_event_callback_call(data, ELM_DIALOG_DECISION_EVENT_APPLY , NULL);
 }
 
-EOLIAN static void
-_elm_dialog_decision_efl_canvas_group_group_add(Eo *obj, Elm_Dialog_Decision_Data *pd)
+
+EOLIAN static Efl_Object*
+_elm_dialog_decision_efl_object_finalize(Eo *obj, Elm_Dialog_Decision_Data *pd)
 {
    Evas_Object *bx, *o;
-   efl_canvas_group_add(efl_super(obj, ELM_DIALOG_DECISION_CLASS));
+   Eo *eo;
+
+   eo = efl_finalize(efl_super(obj, ELM_DIALOG_DECISION_CLASS));
 
    bx = elm_dialog_control_box_get(obj);
 
@@ -39,6 +42,8 @@ _elm_dialog_decision_efl_canvas_group_group_add(Eo *obj, Elm_Dialog_Decision_Dat
    evas_object_smart_callback_add(o, "clicked", _cancel, obj);
    elm_box_pack_end(bx, o);
    evas_object_show(o);
+
+   return eo;
 }
 
 #include "elm_dialog_decision.eo.x"

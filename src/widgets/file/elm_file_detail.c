@@ -1050,12 +1050,13 @@ _elm_file_detail_rename(Eo *obj, Elm_File_Detail_Data *pd EINA_UNUSED)
 }
 
 
-EOLIAN static void
-_elm_file_detail_efl_canvas_group_group_add(Eo *obj, Elm_File_Detail_Data *pd)
+EOLIAN static Efl_Object*
+_elm_file_detail_efl_object_constructor(Eo *obj, Elm_File_Detail_Data *pd)
 {
+   Eo *ret;
    Evas_Object *bx;
 
-   efl_canvas_group_add(efl_super(obj, ELM_FILE_DETAIL_CLASS));
+   ret = efl_constructor(efl_super(obj, ELM_FILE_DETAIL_CLASS));
 
    if (!elm_layout_theme_set(obj, "file_display", "file_preview", "default"))
      {
@@ -1088,6 +1089,8 @@ _elm_file_detail_efl_canvas_group_group_add(Eo *obj, Elm_File_Detail_Data *pd)
    DETAIL_ROW_UNCHANGABLE(mtype, "<b>Mime Type:");
 
    elm_object_part_content_set(obj, "content", bx);
+
+   return ret;
 }
 
 #include "elm_file_detail.eo.x"

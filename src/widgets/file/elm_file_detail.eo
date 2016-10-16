@@ -15,7 +15,7 @@ class Elm.File.Detail(Elm.Layout) {
         }
     }
     implements {
-        Efl.Canvas.Group.group_add;
+        Efl.Object.constructor;
         class.constructor;
     }
 }

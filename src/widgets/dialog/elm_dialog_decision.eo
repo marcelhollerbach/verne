@@ -1,6 +1,6 @@
 class Elm.Dialog.Decision(Elm.Dialog) {
     implements {
-        Efl.Canvas.Group.group_add;
+        Efl.Object.finalize;
     }
     events {
         apply;

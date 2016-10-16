@@ -16,7 +16,6 @@ class Elm.Dialog (Efl.Ui.Win) {
         }
     }
     implements {
-        Efl.Canvas.Group.group_add;
         Elm.Widget.part_text;
         Efl.Object.finalize;
     }

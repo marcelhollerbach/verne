@@ -135,7 +135,6 @@ class Elm.File.Selector (Elm.Layout) {
    implements {
       Efl.Object.constructor;
       Efl.Object.destructor;
-      Efl.Canvas.Group.group_add;
       Elm.Widget.event;
    }
 

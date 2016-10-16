@@ -38,15 +38,6 @@ _long_cb(void *data)
    return EINA_FALSE;
 }
 
-EOLIAN static void
-_elm_file_icon_efl_canvas_group_group_del(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED)
-{
-  if (pd->t)
-    ecore_timer_del(pd->t);
-  pd->t = NULL;
-  efl_canvas_group_del(efl_super(obj, ELM_FILE_ICON_CLASS));
-}
-
 static void
 _enter_cb(void *data EINA_UNUSED, Evas_Object *obj)
 {
@@ -81,17 +72,6 @@ _drop_cb(void *data EINA_UNUSED, Evas_Object *obj, Elm_Selection_Data *ev)
 
    elm_icon_standard_set(pd->icon, "folder");
    return EINA_FALSE;
-}
-
-EOLIAN static void
-_elm_file_icon_efl_canvas_group_group_add(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED)
-{
-   efl_canvas_group_add(efl_super(obj, ELM_FILE_ICON_CLASS));
-
-   if (!elm_layout_theme_set(obj, "file_icon", "base", elm_object_style_get(obj)))
-     {
-        CRI("Failed to set theme file\n");
-     }
 }
 
 static void
@@ -191,14 +171,33 @@ _elm_file_icon_efl_object_finalize(Eo *obj, Elm_File_Icon_Data *pd)
    return res;
 }
 
-static void
+EOLIAN static void
 _elm_file_icon_efl_object_destructor(Eo *obj, Elm_File_Icon_Data *pd)
 {
    efl_wref_del(pd->file, &pd->file);
 
+   if (pd->t)
+     ecore_timer_del(pd->t);
+   pd->t = NULL;
+
    efl_destructor(efl_super(obj, ELM_FILE_ICON_CLASS));
 }
 
+
+EOLIAN static Efl_Object*
+_elm_file_icon_efl_object_constructor(Eo *obj, Elm_File_Icon_Data *pd EINA_UNUSED)
+{
+   Eo *eo;
+
+   eo = efl_constructor(efl_super(obj, ELM_FILE_ICON_CLASS));
+
+   if (!elm_layout_theme_set(obj, "file_icon", "base", elm_object_style_get(obj)))
+     {
+        CRI("Failed to set theme file\n");
+     }
+
+   return eo;
+}
 
 EOLIAN static void
 _elm_file_icon_file_set(Eo *obj EINA_UNUSED, Elm_File_Icon_Data *pd, Efm_File *file)

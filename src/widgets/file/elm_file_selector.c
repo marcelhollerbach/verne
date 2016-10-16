@@ -223,8 +223,13 @@ _elm_file_selector_view_get(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd)
 EOLIAN static Efl_Object *
 _elm_file_selector_efl_object_constructor(Eo *obj, Elm_File_Selector_Data *pd)
 {
+   Eo *eo;
+   const Efl_Class *view;
+
    efm_init();
    elm_ext_config_init();
+
+   eo =  efl_constructor(efl_super(obj, ELM_FILE_SELECTOR_CLASS));
 
    if (!views)
      _views_standart_init();
@@ -235,24 +240,6 @@ _elm_file_selector_efl_object_constructor(Eo *obj, Elm_File_Selector_Data *pd)
 
    pd->cache = elm_file_mimetype_cache_generate(ELM_FILE_MIMETYPE_CACHE_CLASS, config->icon_size);
 
-   return efl_constructor(efl_super(obj, ELM_FILE_SELECTOR_CLASS));
-}
-
-EOLIAN static void
-_elm_file_selector_efl_object_destructor(Eo *obj, Elm_File_Selector_Data *pd)
-{
-   efl_del(pd->cache);
-   elm_ext_config_shutdown();
-   efl_destructor(efl_super(obj, ELM_FILE_SELECTOR_CLASS));
-   efm_shutdown();
-}
-
-EOLIAN static void
-_elm_file_selector_efl_canvas_group_group_add(Eo *obj, Elm_File_Selector_Data *pd EINA_UNUSED)
-{
-   const Efl_Class *view;
-
-   efl_canvas_group_add(efl_super(obj, ELM_FILE_SELECTOR_CLASS));
 
    if (!elm_layout_theme_set(obj, "file_selector", "base", "default"))
      {
@@ -267,6 +254,17 @@ _elm_file_selector_efl_canvas_group_group_add(Eo *obj, Elm_File_Selector_Data *p
      }
 
    elm_file_selector_view_set(obj, view);
+
+   return eo;
+}
+
+EOLIAN static void
+_elm_file_selector_efl_object_destructor(Eo *obj, Elm_File_Selector_Data *pd)
+{
+   efl_del(pd->cache);
+   elm_ext_config_shutdown();
+   efl_destructor(efl_super(obj, ELM_FILE_SELECTOR_CLASS));
+   efm_shutdown();
 }
 
 EOLIAN static void
