@@ -33,7 +33,7 @@ _simple(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info E
    efl_event_callback_add(win, ELM_DIALOG_DECISION_EVENT_APPLY, _apply, NULL);
    elm_win_title_set(win, "bla");
    elm_dialog_icon_set(win, "dialog-error");
-   elm_object_text_set(win, "<p align=center>Oh fuck yeah, looks like its wooorking <br>bla</align>");
+   elm_object_text_set(win, "<p align=center>And we have a sample text with error sign<br>->Testing<-</align>");
    evas_object_show(win);
 }
 
