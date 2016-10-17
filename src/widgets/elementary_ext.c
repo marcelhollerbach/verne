@@ -1,6 +1,6 @@
 #include "elementary_ext_priv.h"
 
-int log_domain;
+int ext_log_domain;
 
 EAPI void
 elm_ext_init()
@@ -12,5 +12,5 @@ elm_ext_init()
 
    elm_theme_flush(th);
 
-   log_domain = eina_log_domain_register("elm_ext", NULL);
+   ext_log_domain = eina_log_domain_register("elm_ext", NULL);
 }

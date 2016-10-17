@@ -28,14 +28,14 @@
 # define EAPI
 #endif
 
-extern int log_domain;
+extern int ext_log_domain;
 
 #define FILESEP "file://"
 #define FILESEP_LEN sizeof(FILESEP) - 1
 
-#define CRI(...) EINA_LOG_DOM_CRIT(log_domain, __VA_ARGS__)
-#define ERR(...) EINA_LOG_DOM_ERR(log_domain, __VA_ARGS__)
-#define INF(...) EINA_LOG_DOM_INFO(log_domain, __VA_ARGS__)
-#define DBG(...) EINA_LOG_DOM_DBG(log_domain, __VA_ARGS__)
+#define CRI(...) EINA_LOG_DOM_CRIT(ext_log_domain, __VA_ARGS__)
+#define ERR(...) EINA_LOG_DOM_ERR(ext_log_domain, __VA_ARGS__)
+#define INF(...) EINA_LOG_DOM_INFO(ext_log_domain, __VA_ARGS__)
+#define DBG(...) EINA_LOG_DOM_DBG(ext_log_domain, __VA_ARGS__)
 
 #endif
