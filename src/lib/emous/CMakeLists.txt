@@ -59,6 +59,17 @@ target_link_libraries(emous
   m
 )
 
+target_compile_options(emous
+  PUBLIC
+  ${EINA_DEFINITIONS}
+  ${EO_DEFINITIONS}
+  ${EIO_DEFINITIONS}
+  ${ECORE_DEFINITIONS}
+  ${ECORE_FILE_DEFINITIONS}
+  ${EFREET_MIME_DEFINITIONS}
+  ${Mount_CFLAGS}
+)
+
 INSTALL(TARGETS emous
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )

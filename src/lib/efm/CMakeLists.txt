@@ -70,6 +70,18 @@ target_link_libraries(efm
   ${CMAKE_THREAD_LIBS_INIT}
 )
 
+target_compile_options(efm
+  PUBLIC ${EINA_DEFINITIONS}
+  ${EO_DEFINITIONS}
+  ${EIO_DEFINITIONS}
+  ${ECORE_DEFINITIONS}
+  ${EEZE_DEFINITIONS}
+  ${ECORE_FILE_DEFINITIONS}
+  ${EFREET_DEFINITIONS}
+  ${EFREET_MIME_DEFINITIONS}
+  ${LibArchive_DEFINITIONS}
+)
+
 configure_file(config.h.cmake ${CMAKE_SOURCE_DIR}/src/lib/efm/config.h)
 
 INSTALL(TARGETS efm

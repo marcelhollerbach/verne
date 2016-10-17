@@ -55,6 +55,20 @@ target_link_libraries (verne
    elm_ext
    efm)
 
+target_compile_options(verne
+  PUBLIC
+   ${EINA_DEFINITIONS}
+   ${EVAS_DEFINITIONS}
+   ${EFL_DEFINITIONS}
+   ${EIO_DEFINITIONS}
+   ${EO_DEFINITIONS}
+   ${EFREET_DEFINITIONS}
+   ${EFREET_TRASH_DEFINITIONS}
+   ${ECORE_DEFINITIONS}
+   ${EET_DEFINITIONS}
+   ${ELEMENTARY_DEFINITIONS}
+)
+
 file(READ ${CMAKE_SOURCE_DIR}/AUTHORS AUTHORS)
 string(REPLACE "\n" "<br>" AUTHORS "${AUTHORS}")
 

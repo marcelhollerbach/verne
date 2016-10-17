@@ -98,6 +98,15 @@ target_link_libraries(elm_ext
   emous
 )
 
+target_compile_options(elm_ext
+  PRIVATE ${EIO_DEFINITIONS}
+  ${EVAS_DEFINITIONS}
+  ${EFL_DEFINITIONS}
+  ${EET_DEFINITIONS}
+  ${ECORE_FILE_DEFINITIONS}
+  ${ELEMENTARY_DEFINITIONS}
+  ${EFREET_TRASH_DEFINITIONS}
+)
 set(THEME_PATH \"${THEME_INSTALL_PATH}\")
 
 
