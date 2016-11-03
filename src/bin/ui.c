@@ -118,7 +118,7 @@ open_with2_main_win_create(Eo *__main_parent)
    elm_box_pack_end (elm_box1, elm_genlist1);
    elm_box_pack_end (elm_box1, elm_box2);
 
-   elm_icon1 = efl_add(ELM_ICON_CLASS, search);
+   elm_icon1 = elm_icon_add(search);
    efl_gfx_size_hint_weight_set (elm_icon1, 1.000000, 1.000000);
    efl_gfx_visible_set (elm_icon1, EINA_TRUE);
    efl_gfx_size_set (elm_icon1, 40, 40);
