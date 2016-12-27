@@ -16,7 +16,7 @@ class Elm.File.MimeType.Cache(Efl.Object){
         mimetype_set {
             params {
                 icon : Efl.Ui.Image;
-                name : const(char)*;
+                name : string;
             }
         }
     }

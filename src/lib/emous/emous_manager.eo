@@ -1,7 +1,7 @@
 struct Emous.MountPoint{
-   mount_point : const(char)*;
-   source : const(char)*;
-   fs_type : const(char)*;
+   mount_point : string;
+   source : string;
+   fs_type : string;
 }
 
 class Emous.Manager (Efl.Object) {
@@ -37,7 +37,7 @@ class Emous.Manager (Efl.Object) {
    events {
       device,add : Emous.Device; [[ Some Type added a device]]
       device,del : Emous.Device; [[ A device dissapeared]]
-      mount,add : Emous.MountPoint*; [[A annonym Device was mounted]]
+      mount,add : ptr(Emous.MountPoint); [[A annonym Device was mounted]]
       mount,del : const(char); [[A annonym Device was unmounted]]
    }
 }

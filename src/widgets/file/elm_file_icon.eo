@@ -27,7 +27,7 @@ class Elm.File.Icon (Elm.Layout, Efm.File) {
      .preview;
    }
    events {
-     item,drop : void*; [[Its Elm.Selection.Data. Called when something else is droped above this]]
+     item,drop : void_ptr; [[Its Elm.Selection.Data. Called when something else is droped above this]]
      item,hover; [[Called when something is hover over above this item for a long time]]
    }
 }

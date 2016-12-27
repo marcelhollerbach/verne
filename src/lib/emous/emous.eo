@@ -12,14 +12,14 @@ class Emous {
                 bytes : long; [[The Number of bytes to convert]]
             }
 
-            return : char*; [[The nice looking string, needs to be freed!]]
+            return : ptr(char); [[The nice looking string, needs to be freed!]]
         }
         util_device_name_get @class {
             [[Get the displayname of the device or a string which tells the size and the a generic name]]
             params {
                 dev : Emous.Device; [[The Device to call this funktions on]]
             }
-            return : char*; [[The name needs to be freed]]
+            return : ptr(char); [[The name needs to be freed]]
         }
     }
 }

@@ -2,7 +2,7 @@ class Efm.Fs.File (Efm.File) {
     methods {
         generate {
             params {
-                path : const(char)*;
+                path : string;
             }
         }
     }

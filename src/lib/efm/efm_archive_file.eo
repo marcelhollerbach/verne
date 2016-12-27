@@ -2,8 +2,8 @@ class Efm.Archive.File (Efm.Fs.File) {
     methods {
         generate {
             params {
-                archive : const(char)*;
-                internal : const(char)*;
+                archive : string;
+                internal : string;
             }
         }
         @property real_path {
@@ -11,7 +11,7 @@ class Efm.Archive.File (Efm.Fs.File) {
 
             }
             values {
-                path : const(char)*;
+                path : string;
             }
         }
     }

@@ -34,7 +34,7 @@ interface Emous.Device ( ) {
       @property displayname {
          [[Returns a the name of the displayname can be NULL if there is no usefull name]]
          values {
-            name : const(char)*;
+            name : string;
          }
          get {
             [[A name to display or NULL]]
@@ -43,7 +43,7 @@ interface Emous.Device ( ) {
       @property mountpoints {
          [[A List of mountpoints where this device is mounted]]
          values {
-            mountpoints : list<Eina_Stringshare*>;
+            mountpoints : list<ptr(Eina_Stringshare)>;
          }
          get {
             [[Get the list of mountpoints]]

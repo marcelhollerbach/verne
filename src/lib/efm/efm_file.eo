@@ -21,7 +21,7 @@ abstract Efm.File(Efl.Object) {
                 [[get the filename of this object]]
             }
             values {
-                filename : const(char)*;
+                filename : string;
             }
         }
         @property path {
@@ -30,7 +30,7 @@ abstract Efm.File(Efl.Object) {
                 [[Return the path of this object]]
             }
             values {
-                path : const(char)*;
+                path : string;
             }
         }
         @property fileending {
@@ -39,7 +39,7 @@ abstract Efm.File(Efl.Object) {
                 [[returns the Fileending]]
             }
             values {
-                path : const(char)*;
+                path : string;
             }
         }
         @property mimetype {
@@ -48,7 +48,7 @@ abstract Efm.File(Efl.Object) {
                 [[Returns the mimetype or NULL if it cannot be fetched or is not _yet_ fetched.]]
             }
             values {
-                mimetype : const(char)*;
+                mimetype : string;
             }
         }
         @property stat {
@@ -57,7 +57,7 @@ abstract Efm.File(Efl.Object) {
                 [[returns the pointer to a struct which carrys the stat]]
             }
             values {
-                stat : Efm.File.Stat*;
+                stat : ptr(Efm.File.Stat);
             }
         }
         is_type {
@@ -79,14 +79,14 @@ abstract Efm.File(Efl.Object) {
         monitor {
             [[This will start a monitor, which will monitor new files, from this point on]]
             params {
-                filter : void*; [[Trollololol give me a filter]]
+                filter : void_ptr; [[Trollololol give me a filter]]
             }
-            return : void*; [[Trololol its a Monitor!]]
+            return : void_ptr; [[Trololol its a Monitor!]]
         }
         child_get {
             [[get a child of this file (for the case its a directory)]]
             params {
-                name : const(char)*;
+                name : string;
             }
             return : Efm.File;
         }

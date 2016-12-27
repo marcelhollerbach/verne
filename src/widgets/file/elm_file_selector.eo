@@ -49,7 +49,7 @@ class Elm.File.Selector (Elm.Layout) {
       search {
          [[Tells the widget to search for the given needle in the file ]]
          params {
-            value : const(char)*;
+            value : string;
          }
       }
       @property show_icon_size {
@@ -146,7 +146,7 @@ class Elm.File.Selector (Elm.Layout) {
       dnd,item,hover : Elm.File.Icon; [[A item was hovered above another item ]]
       dnd,item,droped : Elm.File.Selector.Dnd_Drop_Event ; [[Item was droped above another item]]
       dnd,droped : void_ptr; [[Item droped in the file display, Elm_Selection_Data as pointer, stop the event to cancel the drop action]]
-      hook,menu,selector,start : Elm.File.Selector.Menu_Hook*; [[*@ Menu_Hook will be passed ]]
-      hook,menu,selector,end : Elm.File.Selector.Menu_Hook*; [[Menu_Hook will be passed]]
+      hook,menu,selector,start : Elm.File.Selector.Menu_Hook; [[*@ Menu_Hook will be passed ]]
+      hook,menu,selector,end : Elm.File.Selector.Menu_Hook; [[Menu_Hook will be passed]]
    }
 }

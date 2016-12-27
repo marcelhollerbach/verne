@@ -17,14 +17,14 @@ class Efm.Filter(Efl.Object) {
             [[Add a regex which needs to be matched by a file to match]]
             params {
                 attribute : Efm.Attribute;
-                reg : char*;
+                reg : ptr(char);
             }
         }
         attribute_del {
             [[Remove a added attribute req]]
             params {
                 attribute : Efm.Attribute;
-                req : char*;
+                req : ptr(char);
             }
         }
         type_add {

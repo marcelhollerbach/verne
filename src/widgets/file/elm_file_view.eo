@@ -7,12 +7,12 @@ interface Elm.File.View {
             [[The value will be displayed]]
          }
          values {
-            name : const(char)*;
+            name : string;
          }
       }
       search_items {
          params {
-            select : Eina.Rectangle*;
+            select : ptr(Eina.Rectangle);
          }
          return : list<Elm.File.Icon>;
       }
@@ -37,7 +37,7 @@ interface Elm.File.View {
       size_get {
          [[Give back the actual size where dnd and rect selection should work]]
          params {
-            size : Eina.Rectangle*;
+            size : ptr(Eina.Rectangle);
          }
       }
       count {

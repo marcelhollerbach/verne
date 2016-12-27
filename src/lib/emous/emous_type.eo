@@ -23,8 +23,8 @@ interface Emous.Type ( ) {
               If the result is true a device,added event will be called
             ]]
             params {
-                params : char*;
-                mountpoint : char*;
+                params : ptr(char);
+                mountpoint : ptr(char);
             }
 
             return : bool;
@@ -35,7 +35,7 @@ interface Emous.Type ( ) {
         }
         name_get @class {
             [[Returns the name of this type]]
-            return : const(char)*;
+            return : string;
         }
         object_get @class {
             [[Will return _one_ unique instance of this class where the events will e called on]]

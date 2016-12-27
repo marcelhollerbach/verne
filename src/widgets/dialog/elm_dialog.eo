@@ -3,7 +3,7 @@ class Elm.Dialog (Efl.Ui.Win) {
     methods {
         @property icon {
             values {
-                icon : const(char)*;
+                icon : string;
             }
         }
         @property control_box {

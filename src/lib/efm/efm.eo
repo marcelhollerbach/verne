@@ -4,21 +4,21 @@ class Efm (Efl.Object) {
             [[This will generate a new file handle for the given file.
               If someone allready created that handle the same handle will be returned at this call]]
               params {
-                name : const(char)*; [[The path of the file]]
+                name : string; [[The path of the file]]
               }
               return : Efm.File; [[The handle to the file, or NULL if the file does not exist]]
         }
         archive_get @class {
               [[Will return you a handle to the inner file of the archive or NULL if the archive path is invalid or the inner path is invalid]]
               params {
-                archive : const(char)*;
-                path : const(char)*;
+                archive : string;
+                path : string;
               }
               return : Efm.File;
         }
         archive_supported @class {
               params {
-                 fileending : const(char)*;
+                 fileending : string;
               }
               return : bool;
         }
