@@ -133,7 +133,8 @@ helper_bookmarks_add(const char *ptr)
           return;
      }
 
-   config->bookmarks = eina_list_append(config->bookmarks, ptr);
+   eina_iterator_free(iter);
+   config->bookmarks = eina_list_append(config->bookmarks, new_bm);
    elm_ext_config_save();
 }
 
