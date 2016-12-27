@@ -18,6 +18,7 @@ typedef enum
 
 typedef struct {
     Eina_Hash *mime_type_open;
+    int version;
 } Config;
 
 typedef void (*Cmd_Choosen)(Efm_File *file, Efreet_Desktop *desk);

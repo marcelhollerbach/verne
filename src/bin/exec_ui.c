@@ -19,6 +19,9 @@ _list_compare(Eina_List *list, const char *mime_type)
    Eina_List *node;
    const char *mime_type2;
 
+   if (!mime_type)
+     return EINA_FALSE;
+
    EINA_LIST_FOREACH(list, node, mime_type2)
    {
       if (!strcmp(mime_type2, mime_type))

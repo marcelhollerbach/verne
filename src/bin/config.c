@@ -3,6 +3,7 @@
 #define CONFIG_NAME "verne-config"
 #define CONFIG_VERSION "0.3"
 #define CONFIG_KEY CONFIG_NAME"-"CONFIG_VERSION
+#define VERSION_CURRENT 1
 static Eet_Data_Descriptor *edd;
 
 Config *config;
@@ -14,7 +15,7 @@ _config_standart_new()
 
    c = calloc(1, sizeof(Config));
    c->mime_type_open = eina_hash_string_small_new(NULL);
-
+   c->version = VERSION_CURRENT;
    return c;
 }
 
@@ -47,6 +48,12 @@ _config_read()
         eet_close(cf);
      }
 
+   if (config->version != VERSION_CURRENT)
+     {
+        free(config);
+        config = NULL;
+     }
+
    if (!config)
      {
         config = _config_standart_new();
@@ -62,6 +69,7 @@ config_init(void)
    EET_EINA_STREAM_DATA_DESCRIPTOR_CLASS_SET(&eddc, Config);
 
    edd = eet_data_descriptor_stream_new(&eddc);
+   EET_DATA_DESCRIPTOR_ADD_BASIC(edd, Config, "version", version, EET_T_INT);
    EET_DATA_DESCRIPTOR_ADD_HASH_STRING(edd, Config, "mime_type_open", mime_type_open);
 
    _config_read();
