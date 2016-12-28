@@ -53,6 +53,10 @@ _config_read()
         free(config);
         config = NULL;
      }
+   if (!config->mime_type_open)
+     {
+        config->mime_type_open = eina_hash_string_small_new(NULL);
+     }
 
    if (!config)
      {
