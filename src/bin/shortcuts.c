@@ -13,7 +13,9 @@ typedef struct {
     void (*callback)(void); // callback which will get called
 } Shortcut;
 
+
 #define ONLY_CTRL {EINA_TRUE, EINA_FALSE, EINA_FALSE, EINA_FALSE, EINA_FALSE, EINA_FALSE}
+#define ALWAYS {EINA_FALSE, EINA_FALSE, EINA_FALSE, EINA_FALSE, EINA_FALSE, EINA_FALSE}
 
 #define CHECK(v, k) \
     if (v && !evas_key_modifier_is_set(ev->modifiers, k)) \
@@ -27,6 +29,7 @@ static Shortcut shortcuts[] = {
     {"v", ONLY_CTRL, preview_paste},
     {"x", ONLY_CTRL, preview_move},
     {"q", ONLY_CTRL, window_close},
+    {"Delete", ALWAYS, preview_remove},
     {NULL, ONLY_CTRL, NULL}
 };
 
