@@ -16,7 +16,7 @@ static Verne_Data *sd;
 
 E_API E_Module_Api e_modapi =
 {
-   21,
+   25,
    "Verne"
 };
 
