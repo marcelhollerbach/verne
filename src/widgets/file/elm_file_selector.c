@@ -710,31 +710,32 @@ _elm_file_selector_elm_widget_event(Eo *obj, Elm_File_Selector_Data *pd, Evas_Ob
           return EINA_FALSE;
 
         if (eina_strbuf_length_get(pd->search.buffer) == 1)
-          {
-             eina_strbuf_free(pd->search.buffer);
-             pd->search.buffer = NULL;
-             _search_update(obj, pd);
-             return EINA_TRUE;
-          }
+         {
+            eina_strbuf_free(pd->search.buffer);
+            pd->search.buffer = NULL;
+            _search_update(obj, pd);
+            return EINA_TRUE;
+         }
 
-         oldlength = eina_strbuf_length_get(pd->search.buffer);
-         oldstr = eina_strbuf_string_steal(pd->search.buffer);
+        oldlength = eina_strbuf_length_get(pd->search.buffer);
+        oldstr = eina_strbuf_string_steal(pd->search.buffer);
 
-         // reset the string
-         eina_strbuf_reset(pd->search.buffer);
-         // cut off the last bit
-         oldstr[oldlength - 1] = '\0';
+        // reset the string
+        eina_strbuf_reset(pd->search.buffer);
+        // cut off the last bit
+        oldstr[oldlength - 1] = '\0';
 
-         eina_strbuf_append(pd->search.buffer, oldstr);
-         free(oldstr);
-         _search_update(obj, pd);
+        eina_strbuf_append(pd->search.buffer, oldstr);
+        free(oldstr);
+        _search_update(obj, pd);
      }
    else if (!strcmp(ev->key, "Escape"))
-      {
-         eina_strbuf_free(pd->search.buffer);
-         pd->search.buffer = NULL;
-         _search_update(obj, pd);
-      }
+     {
+        eina_strbuf_free(pd->search.buffer);
+        pd->search.buffer = NULL;
+        _search_update(obj, pd);
+     }
+
    return EINA_FALSE;
 }
 /*
