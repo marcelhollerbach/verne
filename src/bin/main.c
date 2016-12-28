@@ -165,6 +165,8 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 
    elm_run();
 
+   fs_operations_shutdown();
+
    clipboard_shutdown();
    config_shutdown();
 

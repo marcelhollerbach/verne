@@ -13,8 +13,8 @@ typedef struct {
       Evas_Object *progress; //< the progressbar object
       float progress_value; //< the progress from 0.0 to 1.0.
     } ui;
-    const char *goal; //< To display
-    const char *from; //< To display
+    char *goal; //< To display
+    char *from; //< To display
     Operation_Type type; //< the type of this operation
 
 } Operation;
@@ -91,7 +91,7 @@ _operation_convert(Eina_List *files, const char *goal, void (*job)(Operation *op
         filename = ecore_file_file_get(source);
 
         operation = calloc(1, sizeof(Operation));
-        operation->from = source;
+        operation->from = strdup(source);
 
         // if there is a goal directory, build a not existing path
         if (goal)
@@ -322,6 +322,19 @@ fs_operations_init(void)
          operations = eina_list_append(operations, op);
       }
     #endif
+}
+
+void
+fs_operations_shutdown(void)
+{
+   Operation *op;
+
+   EINA_LIST_FREE(operations, op)
+     {
+        free(op->from);
+        free(op->goal);
+        free(op);
+     }
 }
 
 // helperfunctions
