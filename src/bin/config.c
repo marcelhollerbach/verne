@@ -48,20 +48,20 @@ _config_read()
         eet_close(cf);
      }
 
-   if (config->version != VERSION_CURRENT)
+   if (config && config->version != VERSION_CURRENT)
      {
         free(config);
         config = NULL;
-     }
-   if (!config->mime_type_open)
-     {
-        config->mime_type_open = eina_hash_string_small_new(NULL);
      }
 
    if (!config)
      {
         config = _config_standart_new();
         config_flush();
+     }
+   if (!config->mime_type_open)
+     {
+        config->mime_type_open = eina_hash_string_small_new(NULL);
      }
 }
 
