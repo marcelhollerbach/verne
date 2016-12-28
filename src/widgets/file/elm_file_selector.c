@@ -833,21 +833,61 @@ _ctx_only_folder(void *data EINA_UNUSED, Evas_Object *obj, void *event EINA_UNUS
 }
 
 static void
+_apply(void *data, const Efl_Event *event)
+{
+   Evas_Object *entry = evas_object_data_get(event->object, "__entry");
+   const char *dir;
+   char path[PATH_MAX];
+
+   dir = efm_file_path_get(data);
+   snprintf(path, sizeof(path), "%s/%s", dir, elm_object_text_get(entry));
+
+   if (ecore_file_exists(path))
+     {
+        //FIXME some better message
+        elm_win_title_set(event->object, "File already exists");
+     }
+   else
+     {
+        ecore_file_mkdir(path);
+        evas_object_del(event->object);
+     }
+}
+
+static void
+_cancel(void *data EINA_UNUSED, const Efl_Event *event)
+{
+   evas_object_del(event->object);
+}
+
+static void
 _ctx_new_folder(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
   Efm_File *file;
-  const char *dir;
-  char path[PATH_MAX];
-  int c;
+  Elm_Dialog_Decision *dialog;
+  Evas_Object *entry;
 
   file = elm_file_selector_file_get(data);
-  dir = efm_file_path_get(file);
+  dialog = efl_add(ELM_DIALOG_DECISION_CLASS, NULL);
 
-  snprintf(path, sizeof(path), "%s/new_directory", dir);
-  for(c = 0; ecore_file_exists(path); c++)
-    snprintf(path, sizeof(path), "%s/new_directory_%d", dir, c);
+  elm_win_title_set(dialog, "Give the file a name");
+  elm_dialog_icon_set(dialog, "dialog-question");
 
-  ecore_file_mkdir(path);
+  entry = elm_entry_add(dialog);
+  evas_object_size_hint_align_set(entry, EVAS_HINT_FILL, EVAS_HINT_FILL);
+  evas_object_size_hint_weight_set(entry, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+  elm_entry_single_line_set(entry, EINA_TRUE);
+  elm_entry_scrollable_set(entry, EINA_FALSE);
+  efl_content_set(dialog, entry);
+  elm_object_part_text_set(entry, "guide", "New directories name");
+  evas_object_show(entry);
+
+  evas_object_data_set(dialog, "__entry", entry);
+
+  evas_object_show(dialog);
+
+  efl_event_callback_add(dialog, ELM_DIALOG_DECISION_EVENT_APPLY, _apply, file);
+  efl_event_callback_add(dialog, ELM_DIALOG_DECISION_EVENT_CANCEL, _cancel, file);
 }
 
 static void

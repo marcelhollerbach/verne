@@ -1,4 +1,4 @@
-class Elm.Dialog (Efl.Ui.Win) {
+class Elm.Dialog (Efl.Ui.Win, Efl.Container) {
     [[Just a plain dialog]]
     methods {
         @property icon {
@@ -18,5 +18,7 @@ class Elm.Dialog (Efl.Ui.Win) {
     implements {
         Elm.Widget.part_text;
         Efl.Object.finalize;
+        Efl.Container.content { get; set; }
+        Efl.Container.content_unset;
     }
 }

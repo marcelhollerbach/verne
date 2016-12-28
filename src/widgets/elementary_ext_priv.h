@@ -10,6 +10,7 @@
 #include <Eio.h>
 #include <Evas.h>
 #include <Elementary.h>
+#include <Efl.h>
 
 #ifdef INEEDWIDGET
 # define ELM_INTERNAL_API_ARGESFSDFEFC
