@@ -13,6 +13,25 @@ typedef struct {
 
 static Evas_Object *_entry;
 
+void
+titlebar_forward_state_set(Eina_Bool state)
+{
+   if (state)
+     elm_object_signal_emit(layout, "verne,forward,enable", "verne");
+   else
+     elm_object_signal_emit(layout, "verne,forward,disable", "verne");
+}
+
+void
+titlebar_back_state_set(Eina_Bool state)
+{
+   if (state)
+     elm_object_signal_emit(layout, "verne,back,enable", "verne");
+   else
+     elm_object_signal_emit(layout, "verne,back,disable", "verne");
+
+}
+
 static void
 titlebar_whipe(Titlebar_Content *content)
 {

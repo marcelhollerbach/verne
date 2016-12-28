@@ -43,6 +43,8 @@ void config_shutdown(void);
 
 void titlebar_init(void);
 void titlebar_path_set(const char *path);
+void titlebar_forward_state_set(Eina_Bool state);
+void titlebar_back_state_set(Eina_Bool state);
 
 void hooks_init(void);
 void history_init(void);

@@ -224,6 +224,10 @@ collections{
                rel2.offset: -GAP -GAP;
                image.normal: "icon_arrow_left.png";
             }
+            desc { "disable"
+               inherit: "default";
+               color: 20 20 20 125;
+            }
          }
          image { "forward_img"
             scale : 1;
@@ -233,6 +237,10 @@ collections{
                rel1.offset: GAP GAP;
                rel2.offset: -GAP -GAP;
                image.normal: "icon_arrow_right.png";
+            }
+            desc { "disable"
+               inherit: "default";
+               color: 20 20 20 125;
             }
          }
          swallow { "verne.textbar"
@@ -259,19 +267,43 @@ collections{
          }
       }
       program {
-         signal: "mouse,clicked,*";
+         signal: "mouse,down,1";
          source: "forward_img";
          action: SIGNAL_EMIT "verne.history.forward" "theme";
       }
       program {
-         signal: "mouse,clicked,*";
+         signal: "mouse,down,1";
          source: "back_img";
          action: SIGNAL_EMIT "verne.history.back" "theme";
       }
       program {
-         signal: "mouse,clicked,*";
+         signal: "mouse,down,1";
          source: "fsaction";
          action: SIGNAL_EMIT "verne.fsaction.popup" "theme";
+      }
+      program {
+         signal: "verne,back,disable";
+         source: "verne";
+         action: STATE_SET disable;
+         target: "back_img";
+      }
+      program {
+         signal: "verne,back,enable";
+         source: "verne";
+         action: STATE_SET default;
+         target: "back_img";
+      }
+      program {
+         signal: "verne,forward,disable";
+         source: "verne";
+         action: STATE_SET disable;
+         target: "forward_img";
+      }
+      program {
+         signal: "verne,forward,enable";
+         source: "verne";
+         action: STATE_SET default;
+         target: "forward_img";
       }
    }
    group { "verne.about";
