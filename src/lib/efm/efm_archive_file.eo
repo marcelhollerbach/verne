@@ -19,7 +19,7 @@ class Efm.Archive.File (Efm.Fs.File) {
         .generate;
     }
     implements {
-        Efm.File.path.get;
+        Efm.File.path{get;}
         Efm.File.monitor;
         Efm.File.child_get;
         Efl.Object.destructor;

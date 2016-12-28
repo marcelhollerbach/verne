@@ -2,10 +2,10 @@ class Emous.Device.UDisks (Efl.Object, Emous.Device) {
     implements {
         Emous.Device.mount;
         Emous.Device.umount;
-        Emous.Device.state.get;
-        Emous.Device.displayname.get;
-        Emous.Device.mountpoints.get;
-        Emous.Device.size.get;
-        Emous.Device.type.get;
+        Emous.Device.state{get;}
+        Emous.Device.displayname{get;}
+        Emous.Device.mountpoints{get;}
+        Emous.Device.size{get;}
+        Emous.Device.type{get;}
     }
 }

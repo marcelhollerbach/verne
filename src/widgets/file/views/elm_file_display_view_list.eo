@@ -1,15 +1,15 @@
 class Elm.File.Display.View.List(Elm.Genlist, Elm.File.View)
 {
     implements {
-        Elm.File.View.name.get;
+        Elm.File.View.name{get;}
         Elm.File.View.search_items;
-        Elm.File.View.selection.get;
-        Elm.File.View.selection.set;
-        Elm.File.View.iconsize.set;
-        Elm.File.View.filter.set;
+        Elm.File.View.selection{get;}
+        Elm.File.View.selection{set;}
+        Elm.File.View.iconsize{set;}
+        Elm.File.View.filter{set;}
         Elm.File.View.size_get;
         Elm.File.View.count;
-        Elm.File.View.file.set;
+        Elm.File.View.file{set;}
         Efl.Object.constructor;
         Efl.Object.destructor;
     }

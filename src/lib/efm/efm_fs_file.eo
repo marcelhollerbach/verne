@@ -7,11 +7,11 @@ class Efm.Fs.File (Efm.File) {
         }
     }
     implements {
-        Efm.File.filename.get;
-        Efm.File.path.get;
-        Efm.File.fileending.get;
-        Efm.File.mimetype.get;
-        Efm.File.stat.get;
+        Efm.File.filename{get;}
+        Efm.File.path{get;}
+        Efm.File.fileending{get;}
+        Efm.File.mimetype{get;}
+        Efm.File.stat{get;}
         Efm.File.is_type;
         Efm.File.monitor;
         Efm.File.child_get;

@@ -12,7 +12,7 @@ class Efm.Fs.Monitor (Efl.Object, Efm.Monitor) {
         .install;
     }
     implements {
-        Efm.Monitor.file.get;
+        Efm.Monitor.file{get;}
         Efm.Monitor.filter;
         Efl.Object.destructor;
         Efl.Object.constructor;

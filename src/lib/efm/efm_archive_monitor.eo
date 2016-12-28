@@ -11,6 +11,6 @@ class Efm.Archive.Monitor (Efm.Fs.Monitor) {
         .generate;
     }
     implements {
-        Efm.Monitor.file.get;
+        Efm.Monitor.file{get;}
     }
 }

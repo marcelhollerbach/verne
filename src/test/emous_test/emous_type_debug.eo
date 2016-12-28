@@ -3,7 +3,7 @@ class Emous.Type.Debug (Efl.Object, Emous.Type) {
     methods {
     }
     implements {
-       Emous.Type.devices.get;
+       Emous.Type.devices{get;}
        Emous.Type.create;
        Emous.Type.creatable;
        Emous.Type.name_get;

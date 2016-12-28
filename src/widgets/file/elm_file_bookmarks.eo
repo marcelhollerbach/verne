@@ -7,8 +7,8 @@ class Elm.File.Bookmarks (Elm.Genlist, Efl.File) {
         }
     }
     implements {
-        Efl.File.file.set;
-        Efl.File.file.get;
+        Efl.File.file{set;}
+        Efl.File.file{get;}
         Efl.Object.constructor;
         Efl.Object.destructor;
         Efl.Object.finalize;
