@@ -97,13 +97,13 @@ abstract Efm.File(Efl.Object) {
     }
     implements {
         Efl.Object.constructor;
-        @empty Efm.File.is_type;
-        @empty Efm.File.stat{get;}
-        @empty Efm.File.fileending{get;}
-        @empty Efm.File.mimetype{get;}
-        @empty Efm.File.path{get;}
-        @empty Efm.File.filename{get;}
-        @empty Efm.File.monitor;
-        @empty Efm.File.child_get;
+        @empty .is_type;
+        @empty .stat{get;}
+        @empty .fileending{get;}
+        @empty .mimetype{get;}
+        @empty .path{get;}
+        @empty .filename{get;}
+        @empty .monitor;
+        @empty .child_get;
     }
 }

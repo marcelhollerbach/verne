@@ -135,7 +135,7 @@ class Elm.File.Selector (Elm.Layout) {
    implements {
       Efl.Object.constructor;
       Efl.Object.destructor;
-      Elm.Widget.event;
+      Elm.Widget.widget_event;
    }
 
    events {

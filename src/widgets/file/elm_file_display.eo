@@ -41,7 +41,7 @@ class Elm_File_Display (Elm.Layout) {
 
    implements {
       Efl.Object.constructor;
-      Elm.Widget.event;
+      Elm.Widget.widget_event;
    }
 
    events {

@@ -166,7 +166,7 @@ _elm_file_display_bookmarks_show_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data 
 }
 
 EOLIAN static Eina_Bool
-_elm_file_display_elm_widget_event(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd, Efl_Canvas_Object *source EINA_UNUSED, Evas_Callback_Type type, void *event_info)
+_elm_file_display_elm_widget_widget_event(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd, Efl_Canvas_Object *source EINA_UNUSED, Evas_Callback_Type type, void *event_info)
 {
    Evas_Event_Key_Down *ev;
 

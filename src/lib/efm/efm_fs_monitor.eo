@@ -13,7 +13,7 @@ class Efm.Fs.Monitor (Efl.Object, Efm.Monitor) {
     }
     implements {
         Efm.Monitor.file{get;}
-        Efm.Monitor.filter;
+        Efm.Monitor.filter{get; set;}
         Efl.Object.destructor;
         Efl.Object.constructor;
         Efl.Object.finalize;
