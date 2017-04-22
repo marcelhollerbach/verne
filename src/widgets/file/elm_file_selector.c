@@ -195,7 +195,7 @@ _elm_file_selector_view_set(Eo *obj, Elm_File_Selector_Data *pd, const Efl_Class
                                NULL, NULL, _dnd_view_drop_cb, obj);
      }
    pd->view.obj = efl_add(pd->view.klass, obj);
-   elm_drag_item_container_add(pd->view.obj, 0.3, 0.3, _dnd_item_get_cb, _dnd_data_get_cb);
+   elm_drag_item_container_add(pd->view.obj, 0.3, 0.1, _dnd_item_get_cb, _dnd_data_get_cb);
    elm_drop_target_add(pd->view.obj, ELM_SEL_FORMAT_TARGETS,
                                _dnd_view_enter_cb, obj, _dnd_view_leave_cb, obj,
                                NULL, NULL, _dnd_view_drop_cb, obj);
@@ -678,7 +678,7 @@ _search_update(Eo *obj, Elm_File_Selector_Data *pd)
  *======================================
  */
 EOLIAN static Eina_Bool
-_elm_file_selector_elm_widget_event(Eo *obj, Elm_File_Selector_Data *pd, Evas_Object *source EINA_UNUSED, Evas_Callback_Type type, void *event_info)
+_elm_file_selector_elm_widget_widget_event(Eo *obj, Elm_File_Selector_Data *pd, Evas_Object *source EINA_UNUSED, Evas_Callback_Type type, void *event_info)
 {
    Evas_Event_Key_Down *ev;
 
