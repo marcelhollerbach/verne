@@ -1054,7 +1054,7 @@ EOLIAN static Efl_Object*
 _elm_file_detail_efl_object_constructor(Eo *obj, Elm_File_Detail_Data *pd)
 {
    Eo *ret;
-   Evas_Object *bx;
+   Evas_Object *bx, *sc;
 
    ret = efl_constructor(efl_super(obj, ELM_FILE_DETAIL_CLASS));
 
@@ -1064,6 +1064,10 @@ _elm_file_detail_efl_object_constructor(Eo *obj, Elm_File_Detail_Data *pd)
      }
 
    bx = elm_box_add(obj);
+   sc = elm_scroller_add(obj);
+   elm_object_style_set(sc, "popup/no_inset_shadow");
+   elm_object_content_set(sc, bx);
+
    SEPERATOR
 
    LABEL(pd->name.label, "<b>Name:", 0.0, EINA_FALSE);
@@ -1088,7 +1092,7 @@ _elm_file_detail_efl_object_constructor(Eo *obj, Elm_File_Detail_Data *pd)
    SEPERATOR
    DETAIL_ROW_UNCHANGABLE(mtype, "<b>Mime Type:");
 
-   elm_object_part_content_set(obj, "content", bx);
+   elm_object_part_content_set(obj, "content", sc);
 
    return ret;
 }
