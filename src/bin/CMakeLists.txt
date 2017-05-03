@@ -11,7 +11,7 @@ LIST(APPEND JESUS_FILES
   main.h
   #titlebar.c
   #ui.c
-  config.c
+  #config.c
   #config.h
   #exec_ui.c
   #exec.c
