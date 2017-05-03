@@ -10,7 +10,7 @@ LIST(APPEND JESUS_FILES
   main.c
   main.h
   titlebar.c
-  ui.c
+  #ui.c
   config.c
   config.h
   exec_ui.c
