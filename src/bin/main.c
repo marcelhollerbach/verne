@@ -1,5 +1,5 @@
-#include "main.h"
-
+//#include "main.h"
+#include <Elementary.h>
 int
 elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 {
