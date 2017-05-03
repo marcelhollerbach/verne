@@ -1,10 +1,5 @@
 #include "main.h"
 
-Evas_Object *win;
-Evas_Object *preview;
-Evas_Object *selector;
-Evas_Object *layout;
-
 int
 elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 {
