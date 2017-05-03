@@ -13,7 +13,7 @@ LIST(APPEND JESUS_FILES
   #ui.c
   config.c
   config.h
-  exec_ui.c
+  #exec_ui.c
   exec.c
   hooks.c
   history.c
