@@ -20,8 +20,8 @@ LIST(APPEND JESUS_FILES
   #clipboard.c
   #fs_operation.c
   #shortcuts.c
-  #archive.h
-  #archive.c
+  archive.h
+  archive.c
   #about.c
   ${CMAKE_BINARY_DIR}/data/theme/default.edc.edj
 )
