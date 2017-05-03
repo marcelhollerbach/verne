@@ -14,12 +14,6 @@ on_done(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 }
 
 void
-exec_ui_open_with()
-{
-   printf("NOP\n");
-}
-
-void
 printHelp()
 {
    printf("usage: verne [Path] \n If path is not given $HOME will be taken, if this is not set / will be used.");

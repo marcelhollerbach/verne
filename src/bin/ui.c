@@ -1,14 +1,4 @@
-#ifndef EFL_BETA_API_SUPPORT
-#define EFL_BETA_API_SUPPORT
-#endif
-#ifndef EFL_EO_API_SUPPORT
-#define EFL_EO_API_SUPPORT
-#endif
-#ifndef ELM_INTERNAL_API_ARGESFSDFEFC
-#define ELM_INTERNAL_API_ARGESFSDFEFC
-#endif
-#include <Elementary.h>
-#include "ui.h"
+#include "main.h"
 
 static void
 _pubs_free_cb(void *data, const Efl_Event *event EINA_UNUSED)
