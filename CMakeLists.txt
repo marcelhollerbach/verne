@@ -10,7 +10,7 @@ option(Debug "Show the debug screen" OFF)
 enable_testing()
 set(CMAKE_BUILD_TYPE DEBUG)
 
-add_definitions ("-Wshadow -Wall -Wextra -fvisibility=hidden -std=gnu99 -g -Wshadow")
+add_definitions ("-Wall -Wextra -fvisibility=hidden -std=gnu99 -g -Wshadow")
 
 find_package(Eina REQUIRED)
 find_package(Eo 1.18 REQUIRED)

@@ -21,10 +21,6 @@ typedef struct {
     int version;
 } Config;
 
-typedef struct {
-
-} Global;
-
 typedef void (*Cmd_Choosen)(Efm_File *file, Efreet_Desktop *desk);
 
 extern Config *config;
