@@ -9,20 +9,20 @@ add_custom_command(
 LIST(APPEND JESUS_FILES
   main.c
   main.h
-  #titlebar.c
+  titlebar.c
   ui.c
   config.c
   config.h
-  #exec_ui.c
+  exec_ui.c
   exec.c
-  #hooks.c
-  #history.c
-  #clipboard.c
-  #fs_operation.c
-  #shortcuts.c
+  hooks.c
+  history.c
+  clipboard.c
+  fs_operation.c
+  shortcuts.c
   archive.h
   archive.c
-  #about.c
+  about.c
   ${CMAKE_BINARY_DIR}/data/theme/default.edc.edj
 )
 
