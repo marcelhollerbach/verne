@@ -1,5 +1,15 @@
-#include "main.h"
-
+#ifndef EFL_BETA_API_SUPPORT
+#define EFL_BETA_API_SUPPORT
+#endif
+#ifndef EFL_EO_API_SUPPORT
+#define EFL_EO_API_SUPPORT
+#endif
+#ifndef ELM_INTERNAL_API_ARGESFSDFEFC
+#define ELM_INTERNAL_API_ARGESFSDFEFC
+#endif
+#include <Elementary.h>
+#include "ui.h"
+#if 0
 static void
 _pubs_free_cb(void *data, const Efl_Event *event EINA_UNUSED)
 {
@@ -126,3 +136,10 @@ open_with2_main_win_create(Eo *__main_parent)
    return pub_widgets;
 }
 
+#endif
+Open_With2_Main_Win_Widgets *
+open_with2_main_win_create(Eo *__main_parent)
+{
+   printf("NOP\n");
+   return NULL;
+}
