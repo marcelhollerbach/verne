@@ -12,9 +12,9 @@ LIST(APPEND JESUS_FILES
   #titlebar.c
   ui.c
   config.c
-  config.h
+  #config.h
   #exec_ui.c
-  exec.c
+  #exec.c
   #hooks.c
   #history.c
   #clipboard.c
