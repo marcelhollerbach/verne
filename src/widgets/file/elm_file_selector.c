@@ -659,7 +659,7 @@ _elm_file_selector_elm_widget_widget_event(Eo *obj, Elm_File_Selector_Data *pd, 
         elm_file_selector_show_hidden_file_set(obj, !b);
      }
    if (ev->string && strlen(ev->string) == 1 &&
-         (isalnum(ev->string[0]) || ev->string[0] == '.')
+         (isprint(ev->string[0]) || ev->string[0] == '.')
       )
      {
         if (!pd->search.buffer)
