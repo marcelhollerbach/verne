@@ -1065,6 +1065,7 @@ _elm_file_detail_efl_object_constructor(Eo *obj, Elm_File_Detail_Data *pd)
 
    bx = elm_box_add(obj);
    sc = elm_scroller_add(obj);
+   elm_scroller_policy_set(sc, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_AUTO);
    elm_object_style_set(sc, "popup/no_inset_shadow");
    elm_object_content_set(sc, bx);
 
