@@ -8,6 +8,7 @@ typedef struct {
     Eina_Bool init;
     regex_t reg;
     const char *regexp;
+    int flags;
 } Filter;
 
 typedef struct
@@ -31,27 +32,28 @@ _efm_filter_whitelist_get(Eo *obj EINA_UNUSED, Efm_Filter_Data *pd)
 }
 
 EOLIAN static void
-_efm_filter_attribute_add(Eo *obj, Efm_Filter_Data *pd, Efm_Attribute attribute, char *reg)
+_efm_filter_attribute_add(Eo *obj, Efm_Filter_Data *pd, Efm_Attribute attribute, char *reg, int flags)
 {
    Filter *f;
 
    f = calloc(1, sizeof(Filter));
 
    f->regexp = eina_stringshare_add(reg);
+   f->flags = flags;
 
    pd->attribute[attribute] = eina_list_append(pd->attribute[attribute], f);
    POPULATE_CHANGE(obj);
 }
 
 EOLIAN static void
-_efm_filter_attribute_del(Eo *obj, Efm_Filter_Data *pd, Efm_Attribute attribute, char *req)
+_efm_filter_attribute_del(Eo *obj, Efm_Filter_Data *pd, Efm_Attribute attribute, char *req, int flags)
 {
    Filter *f;
    Eina_List *node;
 
    EINA_LIST_FOREACH(pd->attribute[attribute], node, f)
      {
-        if (!strcmp(f->regexp, req))
+        if (!strcmp(f->regexp, req) && f->flags == flags)
           {
              pd->attribute[attribute] = eina_list_remove(pd->attribute[attribute], f);
 
@@ -125,7 +127,7 @@ _attr_match(Efm_Filter_Data *pd, Efm_File *file)
           {
              if (!f->init)
                {
-                  if (regcomp(&f->reg, f->regexp, 0) != 0)
+                  if (regcomp(&f->reg, f->regexp, f->flags) != 0)
                     ERR("Failed to compile reg %s", f->regexp);
                   f->init = EINA_TRUE;
                }

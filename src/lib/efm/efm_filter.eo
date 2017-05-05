@@ -18,6 +18,7 @@ class Efm.Filter(Efl.Object) {
             params {
                 attribute : Efm.Attribute;
                 reg : ptr(char);
+                flags : int;
             }
         }
         attribute_del {
@@ -25,6 +26,7 @@ class Efm.Filter(Efl.Object) {
             params {
                 attribute : Efm.Attribute;
                 req : ptr(char);
+                flags : int;
             }
         }
         type_add {

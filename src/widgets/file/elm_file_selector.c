@@ -1,5 +1,6 @@
 #define INEEDWIDGET
 #include "../elementary_ext_priv.h"
+#include <regex.h>
 
 #define PRIV_DATA(o) Elm_File_Selector_Data *pd = efl_data_scope_get(o, ELM_FILE_SELECTOR_CLASS);
 #define STEP_SIZE 10
@@ -58,9 +59,9 @@ static void
 _filter_update_hidden(Eo *obj EINA_UNUSED, Elm_File_Selector_Data *pd)
 {
    if (!config->hidden_files)
-     efm_filter_attribute_add(pd->filter, EFM_ATTRIBUTE_FILENAME, "^[^\\.]");
+     efm_filter_attribute_add(pd->filter, EFM_ATTRIBUTE_FILENAME, "^[^\\.]", 0);
    else
-     efm_filter_attribute_del(pd->filter,EFM_ATTRIBUTE_FILENAME, "^[^\\.]");
+     efm_filter_attribute_del(pd->filter,EFM_ATTRIBUTE_FILENAME, "^[^\\.]", 0);
 }
 
 static void
@@ -610,7 +611,7 @@ _search_update(Eo *obj, Elm_File_Selector_Data *pd)
 
    if (pd->search.old_regex)
      {
-        efm_filter_attribute_del(pd->filter, EFM_ATTRIBUTE_FILENAME, pd->search.old_regex);
+        efm_filter_attribute_del(pd->filter, EFM_ATTRIBUTE_FILENAME, pd->search.old_regex, REG_ICASE);
         free(pd->search.old_regex);
         pd->search.old_regex = NULL;
      }
@@ -621,7 +622,7 @@ _search_update(Eo *obj, Elm_File_Selector_Data *pd)
         search = eina_strbuf_string_get(pd->search.buffer);
         elm_layout_signal_emit(obj, "search,enable", "elm");
         pd->search.old_regex = search ? strdup(search) : NULL;
-        efm_filter_attribute_add(pd->filter, EFM_ATTRIBUTE_FILENAME, pd->search.old_regex);
+        efm_filter_attribute_add(pd->filter, EFM_ATTRIBUTE_FILENAME, pd->search.old_regex, REG_ICASE);
      }
 
    if (!pd->search.old_regex)
