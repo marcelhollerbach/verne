@@ -5,7 +5,7 @@ group { name: "elm/file_selector/base/default";
     parts {
         swallow { "content"
            desc { "default";
-
+                min: 400 400;
            }
         }
         swallow { "waiting"

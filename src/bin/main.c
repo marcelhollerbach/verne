@@ -87,8 +87,8 @@ ui_init()
 
    shortcuts_init();
 
+   evas_object_size_hint_min_set(box, 700, 400);
    elm_win_resize_object_add(win, box);
-   evas_object_resize(win, 800,600);
    evas_object_show(win);
 }
 
