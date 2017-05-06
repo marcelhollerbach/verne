@@ -55,13 +55,17 @@ _efm_fs_file_efm_file_stat_get(Eo *obj EINA_UNUSED, Efm_Fs_File_Data *pd)
 EOLIAN static Eina_Bool
 _efm_fs_file_efm_file_is_type(Eo *obj EINA_UNUSED, Efm_Fs_File_Data *pd, Efm_File_Type type)
 {
+   struct stat st;
+
+   lstat(pd->path, &st);
+
    if (type == EFM_FILE_TYPE_SOCKET && S_ISSOCK(pd->st.st_mode))
      return EINA_TRUE;
    else if (type == EFM_FILE_TYPE_FIFO && S_ISFIFO(pd->st.st_mode))
      return EINA_TRUE;
    else if (type == EFM_FILE_TYPE_DIRECTORY && S_ISDIR(pd->st.st_mode))
      return EINA_TRUE;
-   else if (type == EFM_FILE_TYPE_SYM_LINK && S_ISLNK(pd->st.st_mode))
+   else if (type == EFM_FILE_TYPE_SYM_LINK && S_ISLNK(st.st_mode))
      return EINA_TRUE;
    else if (type == EFM_FILE_TYPE_REGULAR_FILE && S_ISREG(pd->st.st_mode))
      return EINA_TRUE;
