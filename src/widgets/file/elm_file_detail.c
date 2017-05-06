@@ -14,14 +14,23 @@ typedef struct {
 } Detail_Row_Mutable;
 
 typedef struct {
+  Evas_Object *label;
+  Evas_Object *display;
+  Evas_Object *change_display;
+  Evas_Object *table;
+  Evas_Object *button;
+} Name;
+
+typedef struct {
   Evas_Object *notify;
   Evas_Object *label;
 } Notify_Ui;
 
 typedef struct {
    Evas_Object *filepreview;
-   Detail_Row_Mutable perm, user, group, name;
+   Detail_Row_Mutable perm, user, group;
    Detail_Row_Immutable size, mtime, ctime, mtype;
+   Name name;
    struct {
       Evas_Object *segment;
       Evas_Object *permstring;
@@ -38,6 +47,7 @@ typedef struct {
      Notify_Ui chmod, chown;
    } changes;
    Efm_File *file;
+   Eina_Bool file_editable;
    Elm_File_MimeType_Cache *cache;
    Eina_Bool havy_setup;
 } Elm_File_Detail_Data;
@@ -58,38 +68,16 @@ static void detail_row_changable_changeable(Detail_Row_Mutable *row, Eina_Bool c
 static void _flip_update(Elm_File_Detail_Data *pd);
 static void _generate_permissions_str(char *buf, size_t s, int mode);
 
+
+static void _name_edit_mode(Elm_File_Detail_Data *pd, Eina_Bool edit);
+static void _name_update(Elm_File_Detail_Data *pd);
+
 typedef Evas_Object* (*Mimetype_Cb)(Evas_Object *parent, Elm_File_MimeType_Cache *cache, Efm_File *file);
 
 static Mimetype_Cb mimetype_cbs[MIME_TYPE_END];
 static char*       mimetype_names[MIME_TYPE_END] = {
   "text", "image", "video", "audio", "application", "mutlipart", "message", "-"
 };
-static void
-_switch_to_edit(Evas_Object *obj)
-{
-   Elm_File_Detail_Data *pd;
-   pd = efl_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
-
-   evas_object_hide(elm_object_parent_widget_get(pd->name.display));
-   evas_object_show(pd->name.change_display);
-   elm_object_focus_set(pd->name.change_display, EINA_TRUE);
-}
-
-static void
-_switch_to_edit_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
-{
-   _switch_to_edit(data);
-}
-
-static void
-_switch_to_display(Evas_Object *obj)
-{
-   Elm_File_Detail_Data *pd;
-   pd = efl_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
-
-   evas_object_show(elm_object_parent_widget_get(pd->name.display));
-   evas_object_hide(pd->name.change_display);
-}
 
 static void
 _hide(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
@@ -444,21 +432,12 @@ _update_stat(Elm_File_Detail_Data *pd, Efm_File *file)
    char buf[PATH_MAX];
    const char *mime_type;
    Efm_File_Stat *st;
-   Eina_Bool perm_right = EINA_FALSE;
-
 
    mime_type = efm_file_mimetype_get(file);
    st = efm_file_stat_get(file);
 
 
    if (!st) return;
-
-   //check if we have the right to change the permission
-   if (getuid() == 0)
-     perm_right = EINA_TRUE;
-
-   if (getuid() == (uid_t) st->uid)
-     perm_right = EINA_TRUE;
 
    {
       char *nicestr;
@@ -491,8 +470,8 @@ _update_stat(Elm_File_Detail_Data *pd, Efm_File *file)
    else
      snprintf(buf, sizeof(buf), "User not found");
 
-   detail_row_changable_changeable(&pd->user, perm_right);
-   if (!perm_right)
+   detail_row_changable_changeable(&pd->user, pd->file_editable);
+   if (!pd->file_editable)
      elm_object_text_set(pd->user.display, buf);
    else
      elm_object_text_set(pd->user.change_display, buf);
@@ -508,8 +487,8 @@ _update_stat(Elm_File_Detail_Data *pd, Efm_File *file)
    else
      snprintf(buf, sizeof(buf), "Group not found");
 
-   detail_row_changable_changeable(&pd->group, perm_right);
-   if (!perm_right)
+   detail_row_changable_changeable(&pd->group, pd->file_editable);
+   if (!pd->file_editable)
      elm_object_text_set(pd->group.display, buf);
    else
      elm_object_text_set(pd->group.change_display, buf);
@@ -517,8 +496,8 @@ _update_stat(Elm_File_Detail_Data *pd, Efm_File *file)
    //===========
    //Permissions
    //===========
-   detail_row_changable_changeable(&pd->perm, perm_right);
-   if (!perm_right)
+   detail_row_changable_changeable(&pd->perm, pd->file_editable);
+   if (!pd->file_editable)
      _generate_permissions(st, pd->perm.display);
    else
      {
@@ -585,7 +564,6 @@ _file_changed(void *data, const Efl_Event *event EINA_UNUSED)
 EOLIAN static void
 _elm_file_detail_file_set(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
 {
-   const char *filename;
    Efm_File_Stat *st;
 
    if (pd->file)
@@ -601,19 +579,23 @@ _elm_file_detail_file_set(Eo *obj, Elm_File_Detail_Data *pd, Efm_File *file)
    st = efm_file_stat_get(pd->file);
    efl_event_callback_add(pd->file, EFM_FILE_EVENT_CHANGED, _file_changed, obj);
 
-   filename = efm_file_filename_get(pd->file);
+
+   //update the editable flag
+   pd->file_editable = EINA_FALSE;
+   if (getuid() == 0)
+     pd->file_editable = EINA_TRUE;
+   if (getuid() == (uid_t)st->uid)
+     pd->file_editable = EINA_TRUE;
 
   _update_thumbnail(obj, pd, pd->file);
+
+  //update name
+  _name_update(pd);
 
   //update stats
   _update_stat(pd, pd->file);
 
   //update the name of the preview
-  elm_object_text_set(pd->name.change_display, filename);
-  elm_object_text_set(pd->name.display, filename);
-  elm_object_tooltip_text_set(pd->name.display, filename);
-  _switch_to_display(obj);
-
   pd->changes.user = NULL;
   pd->changes.group = NULL;
   pd->changes.mode = 0;
@@ -973,7 +955,7 @@ _key_down(void *data, const Efl_Event *ev)
         if (renamed)
           elm_file_detail_file_set(data, renamed);
 
-        _switch_to_display(data);
+        _name_edit_mode(pd, EINA_FALSE);
      }
    else if (!strcmp(efl_input_key_get(key), "Escape"))
      {
@@ -983,14 +965,61 @@ _key_down(void *data, const Efl_Event *ev)
 
         elm_object_text_set(pd->name.change_display, efm_file_filename_get(f));
 
-        _switch_to_display(data);
+        _name_edit_mode(pd, EINA_FALSE);
      }
 }
 
 static void
 _focus_out(void *data, const Efl_Event *event EINA_UNUSED)
 {
-   _switch_to_display(data);
+   Evas_Object *obj = data;
+
+   Elm_File_Detail_Data *pd = efl_data_scope_get(obj, ELM_FILE_DETAIL_CLASS);
+   _name_edit_mode(pd, EINA_TRUE);
+}
+
+static void
+_name_edit_mode(Elm_File_Detail_Data *pd, Eina_Bool edit)
+{
+   if (!edit)
+     {
+        evas_object_show(elm_object_parent_widget_get(pd->name.display));
+        evas_object_hide(pd->name.change_display);
+     }
+   else
+     {
+        evas_object_hide(elm_object_parent_widget_get(pd->name.display));
+        evas_object_show(pd->name.change_display);
+        elm_object_focus_set(pd->name.change_display, EINA_TRUE);
+     }
+}
+
+static void
+_name_update(Elm_File_Detail_Data *pd)
+{
+   const char *filename;
+
+   filename = efm_file_filename_get(pd->file);
+   elm_object_text_set(pd->name.change_display, filename);
+   elm_object_text_set(pd->name.display, filename);
+   elm_object_tooltip_text_set(pd->name.display, filename);
+   _name_edit_mode(pd, EINA_FALSE);
+
+   if (!pd->file_editable)
+     {
+        elm_object_disabled_set(pd->name.button, EINA_TRUE);
+     }
+   else
+     {
+        elm_object_disabled_set(pd->name.button, EINA_FALSE);
+     }
+}
+
+static void
+_name_to_edit_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+   Elm_File_Detail_Data *pd = efl_data_scope_get(data, ELM_FILE_DETAIL_CLASS);
+   _name_edit_mode(pd, EINA_TRUE);
 }
 
 static void
@@ -1027,9 +1056,9 @@ _name_init(Evas_Object *obj, Elm_Box *box)
    evas_object_size_hint_weight_set(pd->name.change_display, EVAS_HINT_EXPAND, 0.0);
    elm_table_pack(table, pd->name.change_display, 0, 0, 1, 1);
 
-   o = elm_button_add(box);
+   pd->name.button = o = elm_button_add(box);
    elm_object_part_content_set(o, "icon", ic);
-   evas_object_smart_callback_add(o, "clicked", _switch_to_edit_cb, obj);
+   evas_object_smart_callback_add(o, "clicked", _name_to_edit_cb, obj);
    elm_box_pack_end(bx, o);
    evas_object_show(o);
 
@@ -1044,9 +1073,10 @@ _name_init(Evas_Object *obj, Elm_Box *box)
 }
 
 EOLIAN static void
-_elm_file_detail_rename(Eo *obj, Elm_File_Detail_Data *pd EINA_UNUSED)
+_elm_file_detail_rename(Eo *obj EINA_UNUSED, Elm_File_Detail_Data *pd)
 {
-   _switch_to_edit(obj);
+   if (pd->file_editable)
+     _name_edit_mode(pd, EINA_TRUE);
 }
 
 
