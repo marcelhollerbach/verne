@@ -323,6 +323,18 @@ _anchor_clicked_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *e
    elm_file_selector_file_set(selector, file);
 }
 
+static void
+_key_down(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, Evas *e EINA_UNUSED, void *event_info)
+{
+   Evas_Event_Key_Down *down = event_info;
+
+   if (!strcmp(down->keyname, "Return"))
+     {
+        elm_object_focus_set(preview, EINA_TRUE);
+        down->event_flags |= EVAS_EVENT_FLAG_ON_HOLD;
+     }
+}
+
 void
 titlebar_init(void)
 {
@@ -334,6 +346,7 @@ titlebar_init(void)
    evas_object_smart_callback_add(_entry, "unfocused", _unfocus_cb, NULL);
    evas_object_smart_callback_add(_entry, "changed,user", _changed_cb, NULL);
    evas_object_smart_callback_add(_entry, "anchor,clicked", _anchor_clicked_cb, NULL);
+   evas_object_event_callback_add(_entry, EVAS_CALLBACK_KEY_DOWN, _key_down, NULL);
    evas_object_show(_entry);
 
    elm_object_part_content_set(layout, "verne.textbar", _entry);
