@@ -328,7 +328,7 @@ _key_down(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, Evas *e EINA_UNU
 {
    Evas_Event_Key_Down *down = event_info;
 
-   if (!strcmp(down->keyname, "Return"))
+   if (!strcmp(down->keyname, "Return") || !strcmp(down->keyname, "KP_Enter"))
      {
         elm_object_focus_set(preview, EINA_TRUE);
         down->event_flags |= EVAS_EVENT_FLAG_ON_HOLD;
