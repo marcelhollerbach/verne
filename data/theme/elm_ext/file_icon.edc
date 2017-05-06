@@ -13,6 +13,14 @@ group { name: "elm/file_icon/base/default";
                align: 0.5 1.0;
             }
          }
+         swallow { name: "indicator";
+            desc {
+               rel1.to: "content";
+               rel2.to: "content";
+               rel1.relative: 0.7 0.7;
+               rel2.relative: 0.9 0.9;
+            }
+         }
          textblock { name: "public.text";
             scale: 1;
             desc { "default"

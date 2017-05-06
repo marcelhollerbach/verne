@@ -3,7 +3,7 @@
 typedef struct
 {
    Efm_File *file;
-   Evas_Object *icon;
+   Evas_Object *icon, *indicator;
 
    Eina_Bool preview;
    Ecore_Timer *t;
@@ -14,15 +14,19 @@ typedef struct
 #define PRIV_DATA  Elm_File_Icon_Data *pd = efl_data_scope_get(obj, ELM_FILE_ICON_CLASS);
 
 static void
-_content_set(Evas_Object *obj, Evas_Object *c)
+_content_set(Evas_Object *obj, Evas_Object *icon, Evas_Object *indicator)
 {
    Evas_Object *oo;
 
    oo = elm_object_part_content_unset(obj, "content");
-   evas_object_hide(oo);
+   evas_object_del(oo);
+   oo = elm_object_part_content_unset(obj, "indicator");
+   evas_object_del(oo);
 
-   elm_object_part_content_set(obj, "content", c);
-   evas_object_show(c);
+   elm_object_part_content_set(obj, "content", icon);
+   evas_object_show(icon);
+   elm_object_part_content_set(obj, "indicator", indicator);
+   evas_object_show(indicator);
 }
 
 static Eina_Bool
@@ -108,6 +112,8 @@ _file_set(Eo *obj, Elm_File_Icon_Data *pd)
    filename = efm_file_filename_get(pd->file);
    fileextension = efm_file_fileending_get(pd->file);
 
+   pd->indicator = pd->icon = NULL;
+
    if (dir)
      {
         // add dnd
@@ -150,10 +156,14 @@ _file_set(Eo *obj, Elm_File_Icon_Data *pd)
         elm_object_part_text_set(obj, "public.text", filename);
      }
 
-   // set the new conecnt
-   _content_set(obj, pd->icon);
+   //update emblems etc
+   if (efm_file_is_type(pd->file, EFM_FILE_TYPE_SYM_LINK))
+     {
+        pd->indicator = elm_icon_add(obj);
+        elm_icon_standard_set(pd->indicator, "emblem-symbolic-link");
+     }
 
-   // set the text of the filename
+   _content_set(obj, pd->icon, pd->indicator);
 }
 
 EOLIAN static Efl_Object*
