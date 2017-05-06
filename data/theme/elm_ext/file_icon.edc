@@ -17,10 +17,10 @@ group { name: "elm/file_icon/base/default";
             scale: 1;
             desc { "default"
                rel1.relative: 0.0 1.0;
+               min: 0px 28px;
                align: 0.5 1.0;
                fixed: 1 1;
                text {
-                  min: 0 1;
                   style: "fileman_icon_name";
                   align: 0.5 0.0;
                }
