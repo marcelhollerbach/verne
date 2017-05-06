@@ -169,11 +169,22 @@ _work_start(void *data, const Efl_Event *event)
    evas_object_show(pd->work_indicator);
 }
 
+static void
+_event_rect_wheel(void *data, const Efl_Event *ev)
+{
+   if (!evas_key_modifier_is_set(evas_canvas_key_modifier_get(evas_object_evas_get(data)), "Control"))
+     return;
+
+   int icon_size = elm_file_selector_show_icon_size_get(data);
+   elm_file_selector_show_icon_size_set(data, icon_size - 5 * efl_input_pointer_wheel_delta_get(ev->info));
+}
+
 EFL_CALLBACKS_ARRAY_DEFINE(view_events,
   {ELM_FILE_VIEW_EVENT_ITEM_SELECT_SIMPLE, _view_selected_cb},
   {ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHOOSEN, _view_choosen_cb},
   {ELM_FILE_VIEW_EVENT_ITEM_SELECT_CHANGED, _view_select_changed_cb},
   {EFL_EVENT_POINTER_DOWN, _event_rect_mouse_down},
+  {EFL_EVENT_POINTER_WHEEL, _event_rect_wheel},
   {ELM_FILE_VIEW_EVENT_WORKING_DONE, _work_done},
   {ELM_FILE_VIEW_EVENT_WORKING_START, _work_start}
 );
