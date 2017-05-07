@@ -83,7 +83,7 @@ _menu_start_cb(void *data, const Efl_Event *event)
    st = efm_file_stat_get(ev->file);
    it = elm_menu_item_add(menu, NULL, "document-new", "Rename", _ctx_rename, data);
 
-   if (getuid() != (uid_t)st->uid)
+   if (st)
      elm_object_item_disabled_set(it, !(getuid() == (uid_t)st->uid));
 }
 
