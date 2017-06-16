@@ -172,7 +172,8 @@ _work_start(void *data, const Efl_Event *event)
 static void
 _event_rect_wheel(void *data, const Efl_Event *ev)
 {
-   if (!evas_key_modifier_is_set(evas_canvas_key_modifier_get(evas_object_evas_get(data)), "Control"))
+   const Evas_Modifier *mod = evas_key_modifier_get(evas_object_evas_get(data));
+   if (!evas_key_modifier_is_set(mod, "Control"))
      return;
 
    int icon_size = elm_file_selector_show_icon_size_get(data);

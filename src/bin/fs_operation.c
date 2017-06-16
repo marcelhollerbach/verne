@@ -231,7 +231,7 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
       {
          Evas_Object *op_layout, *progress, *sep;
 
-         op_layout = efl_add(ELM_LAYOUT_CLASS, obj);
+         op_layout = elm_layout_add(obj);
          evas_object_size_hint_weight_set(op_layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
          evas_object_size_hint_align_set(op_layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
          switch(operation->type)
@@ -245,7 +245,7 @@ _popup_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *emission EINA_UN
                 efl_file_set(op_layout, THEME_PATH"/default.edc.edj", "verne.fs_op.copy");
 
               // add progressbar
-              progress = efl_add(ELM_PROGRESSBAR_CLASS, obj);
+              progress = elm_progressbar_add(obj);
               efl_wref_add(progress, &operation->ui.progress);
               // set part and text
               elm_object_part_content_set(op_layout, "verne.progress", progress);
