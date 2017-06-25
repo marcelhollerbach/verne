@@ -235,7 +235,7 @@ titlebar_link_get(Titlebar_Content *content)
 
         eina_strbuf_append_buffer(result, buf);
         if (eina_list_next(node))
-          eina_strbuf_append(result, "/");
+          eina_strbuf_append(result, "/"); /*this is not ever given to the entry, this MUST BE NOT escaped ! */
      }
 
    return result;
