@@ -50,14 +50,14 @@ static void
 _ctx_bookmarks_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
    PRIV_DATA(data)
-   elm_file_display_hide_bookmarks_set(data, pd->hide_bookmarks);
+   elm_file_display_hide_bookmarks_set(data, !pd->hide_bookmarks);
 }
 
 static void
 _ctx_preview_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
    PRIV_DATA(data)
-   elm_file_display_hide_fileinfo_set(data, pd->hide_fileinfo);
+   elm_file_display_hide_fileinfo_set(data, !pd->hide_fileinfo);
 }
 
 static void
