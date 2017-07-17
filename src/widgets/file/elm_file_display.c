@@ -9,8 +9,8 @@ typedef struct
    Evas_Object *bookmark;
    Evas_Object *selector;
 
-   Eina_Bool preview_show;
-   Eina_Bool bookmarks_show;
+   Eina_Bool hide_fileinfo;
+   Eina_Bool hide_bookmarks;
 } Elm_File_Display_Data;
 
 static void
@@ -50,16 +50,14 @@ static void
 _ctx_bookmarks_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
    PRIV_DATA(data)
-
-   elm_file_display_bookmarks_show_set(data, !pd->bookmarks_show);
+   elm_file_display_hide_bookmarks_set(data, !pd->hide_bookmarks);
 }
 
 static void
 _ctx_preview_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event EINA_UNUSED)
 {
    PRIV_DATA(data)
-
-   elm_file_display_filepreview_show_set(data, !pd->preview_show);
+   elm_file_display_hide_fileinfo_set(data, !pd->hide_fileinfo);
 }
 
 static void
@@ -98,7 +96,7 @@ _menu_end_cb(void *data, const Efl_Event *event)
    // Bookmarks enable / disable
    it = elm_menu_item_add(menu, NULL, NULL, NULL, _ctx_bookmarks_cb, data);
    ck = elm_check_add(menu);
-   elm_check_state_set(ck, pd->bookmarks_show);
+   elm_check_state_set(ck, pd->hide_bookmarks);
    elm_object_text_set(ck, "Bookmarks");
    elm_object_item_content_set(it, ck);
    evas_object_show(ck);
@@ -106,23 +104,36 @@ _menu_end_cb(void *data, const Efl_Event *event)
    // Filepreview enable / disable
    it = elm_menu_item_add(menu, NULL, NULL, NULL, _ctx_preview_cb, data);
    ck = elm_check_add(menu);
-   elm_check_state_set(ck, pd->preview_show);
+   elm_check_state_set(ck, pd->hide_fileinfo);
    elm_object_text_set(ck, "File Details");
    elm_object_item_content_set(it, ck);
    evas_object_show(ck);
 }
 
 EOLIAN static Efl_Object *
-_elm_file_display_efl_object_constructor(Eo *obj, Elm_File_Display_Data *pd EINA_UNUSED)
+_elm_file_display_efl_object_constructor(Eo *obj, Elm_File_Display_Data *pd)
 {
    Eo *eo;
    Evas_Object *o;
    Eo *cache;
 
+   elm_ext_config_init();
+
+   if (config->hide_fileinfo != 0)
+     {
+        pd->hide_fileinfo = EINA_TRUE;
+     } else {
+        pd->hide_fileinfo = EINA_FALSE;
+     }
+
+   if (config->hide_bookmarks != 0)
+     {
+        pd->hide_bookmarks = EINA_TRUE;
+     } else {
+        pd->hide_bookmarks = EINA_FALSE;
+     }
+
    eo = efl_constructor(efl_super(obj, ELM_FILE_DISPLAY_CLASS));
-   // XXX: take a config ?
-   elm_file_display_bookmarks_show_set(obj, EINA_TRUE);
-   elm_file_display_filepreview_show_set(obj, EINA_TRUE);
 
    if (!elm_layout_theme_set(obj, "file_display", "base", "default"))
      {
@@ -151,23 +162,29 @@ _elm_file_display_efl_object_constructor(Eo *obj, Elm_File_Display_Data *pd EINA
    elm_object_part_content_set(obj, "filepreview", o);
    evas_object_show(o);
 
+
+   elm_file_display_hide_bookmarks_set(obj, pd->hide_bookmarks);
+   elm_file_display_hide_fileinfo_set(obj, pd->hide_fileinfo);
+
    return eo;
 }
 
 EOLIAN static void
-_elm_file_display_bookmarks_show_set(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd, Eina_Bool bookmark)
+_elm_file_display_hide_bookmarks_set(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd, Eina_Bool hide)
 {
-   pd->bookmarks_show = bookmark;
-   if (pd->bookmarks_show)
+   config->hide_bookmarks = hide;
+   elm_ext_config_save();
+   pd->hide_bookmarks = hide;
+   if (!pd->hide_bookmarks)
      elm_layout_signal_emit(obj, "bookmark,visible", "elm");
    else
      elm_layout_signal_emit(obj, "bookmark,invisible", "elm");
 }
 
 EOLIAN static Eina_Bool
-_elm_file_display_bookmarks_show_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd)
+_elm_file_display_hide_bookmarks_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd)
 {
-   return pd->bookmarks_show;
+   return pd->hide_bookmarks;
 }
 
 EOLIAN static Eina_Bool
@@ -189,23 +206,25 @@ _elm_file_display_elm_widget_widget_event(Eo *obj EINA_UNUSED, Elm_File_Display_
 }
 
 EOLIAN static void
-_elm_file_display_filepreview_show_set(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd, Eina_Bool filepreview)
+_elm_file_display_hide_fileinfo_set(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd, Eina_Bool hide)
 {
-   pd->preview_show = filepreview;
-   if (pd->preview_show)
+   config->hide_fileinfo = hide;
+   elm_ext_config_save();
+   pd->hide_fileinfo = hide;
+   if (!pd->hide_fileinfo)
      elm_layout_signal_emit(obj, "filepreview,visible", "elm");
    else
      elm_layout_signal_emit(obj, "filepreview,invisible", "elm");
 }
 
 EOLIAN static Eina_Bool
-_elm_file_display_filepreview_show_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd)
+_elm_file_display_hide_fileinfo_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd)
 {
-   return pd->preview_show;
+   return pd->hide_fileinfo;
 }
 
 EOLIAN static Evas_Object *
-_elm_file_display_filepreview_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd)
+_elm_file_display_fileinfo_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd)
 {
   return pd->detail;
 }

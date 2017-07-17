@@ -72,8 +72,8 @@ elm_main(int argc EINA_UNUSED, char **argv EINA_UNUSED)
 #if 1
    ic = efl_add(ELM_FILE_DISPLAY_CLASS, win);
 
-   elm_file_display_bookmarks_show_set(ic, EINA_FALSE);
-   elm_file_display_filepreview_show_set(ic, EINA_FALSE);
+   elm_file_display_hide_bookmarks_set(ic, EINA_FALSE);
+   elm_file_display_hide_fileinfo_set(ic, EINA_FALSE);
    evas_object_size_hint_align_set(ic, EVAS_HINT_FILL, EVAS_HINT_FILL);
    evas_object_size_hint_weight_set(ic, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    elm_box_pack_end(bx, ic);

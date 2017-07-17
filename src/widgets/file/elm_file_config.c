@@ -24,7 +24,8 @@ _standart_setup(Config *c)
   c->display_gtk = 1;
   c->viewname = eina_stringshare_add("Grid");
   c->icon_size = 110;
-
+  c->hide_bookmarks = 0;
+  c->hide_fileinfo = 0;
   c->sort.type = ELM_FILE_SELECTOR_SORT_TYPE_NAME;
   c->sort.folder_placement = ELM_FILE_SELECTOR_FOLDER_PLACEMENT_FIRST;
   // TODO add good standart values
@@ -185,6 +186,8 @@ elm_ext_config_init(void)
    ADD_BASIC("only_folder", only_folder, EET_T_CHAR);
    ADD_BASIC("hidden_files", hidden_files, EET_T_CHAR);
    ADD_BASIC("image_preview", image_preview, EET_T_CHAR);
+   ADD_BASIC("hide_fileinfo", hide_fileinfo, EET_T_CHAR);
+   ADD_BASIC("hide_bookmarks", hide_bookmarks, EET_T_CHAR);
    ADD_BASIC("sort_type", sort.type, EET_T_INT);
    ADD_BASIC("folder_placement", sort.folder_placement, EET_T_INT);
    ADD_BASIC("reverse", sort.reverse, EET_T_CHAR);
