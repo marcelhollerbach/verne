@@ -1,24 +1,24 @@
 class Elm_File_Display (Elm.Layout) {
    [[ The file display widget class used to display the files and dirs of a specific path]]
    methods {
-      @property bookmarks_show {
-         [[Enable the bookmars view if this is false the user is unable to move it it]]
+      @property hide_bookmarks {
+         [[Enable the bookmarks view or not]]
          values {
-            bookmark : bool; [[ true if you want to display the bookmarks, false if not]]
+            bookmarks : bool; [[ true if you want to display the bookmarks, false if not]]
          }
       }
-      @property filepreview_show {
-         [[Enable the filepreview display or not]]
+      @property hide_fileinfo {
+         [[Enable the fileinfo view or not]]
          values {
-            filepreview : bool; [[ true if you want to display the filepreview, false if not]]
+            fileinfo : bool; [[ true if you want to display the fileinfo, false if not]]
          }
       }
-      @property filepreview {
+      @property fileinfo {
          get {
 
          }
          values {
-            filepreview : Efl.Canvas.Object;
+            fileinfo : Efl.Canvas.Object;
          }
       }
       @property bookmarks {
@@ -26,7 +26,7 @@ class Elm_File_Display (Elm.Layout) {
 
          }
          values {
-            bookmark : Efl.Canvas.Object;
+            bookmarks : Efl.Canvas.Object;
          }
       }
       @property selector {

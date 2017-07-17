@@ -10,6 +10,8 @@ typedef struct
    char hidden_files;
    char only_folder;
    char image_preview;
+   char hide_fileinfo;
+   char hide_bookmarks;
    struct{
       int folder_placement;
       int type;
