@@ -1,4 +1,4 @@
-class Elm.File.Detail(Elm.Layout) {
+class Elm.File.Detail(Efl.Ui.Layout) {
     methods {
         @property file {
             values {

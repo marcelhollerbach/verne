@@ -7,7 +7,7 @@
 #define CONFIG_VERSION "0.2"
 #define CONFIG_KEY CONFIG_NAME"-"CONFIG_VERSION
 
-typedef struct $
+typedef struct
 {
   const char *path;
   Eio_Monitor *filewatcher;

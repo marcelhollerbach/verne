@@ -1,4 +1,4 @@
-class Elm.File.Icon (Elm.Layout, Efm.File) {
+class Elm.File.Icon (Efl.Ui.Layout, Efm.File) {
    methods {
       @property file {
         values {

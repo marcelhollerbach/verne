@@ -1,4 +1,4 @@
-class Elm_File_Display (Elm.Layout) {
+class Elm_File_Display (Efl.Ui.Layout) {
    [[ The file display widget class used to display the files and dirs of a specific path]]
    methods {
       @property hide_bookmarks {

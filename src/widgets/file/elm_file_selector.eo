@@ -24,7 +24,7 @@ struct Elm.File.Selector.Dnd_Drop_Event {
    file : Elm.File.Icon; [[Icon where the file is dropped above]]
 }
 
-class Elm.File.Selector (Elm.Layout) {
+class Elm.File.Selector (Efl.Ui.Layout) {
    [[ The file display widget class used to display the files and dirs of a specific path]]
    methods {
       view_pool_add @class {
