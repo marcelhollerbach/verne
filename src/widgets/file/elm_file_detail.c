@@ -791,6 +791,7 @@ _permission_init(Evas_Object *obj, Elm_File_Detail_Data *pd) {
    pd->perm.change_display = elm_table_add(obj);
 
    pd->perm2.segment = elm_segment_control_add(obj);
+   evas_object_size_hint_min_set(pd->perm2.segment, 168, 31);
    evas_object_smart_callback_add(pd->perm2.segment, "changed", _segment_changed_cb, obj);
    //init elements
    for (int i = 0; segments[i]; i++)
