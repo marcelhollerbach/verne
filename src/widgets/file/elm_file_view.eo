@@ -1,3 +1,5 @@
+struct @extern Eina.Rectangle;
+
 interface Elm.File.View {
    [[ Interface to abstract communication between the elm.file.selector and the displaying view]]
    methods {

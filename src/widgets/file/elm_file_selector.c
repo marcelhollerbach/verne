@@ -1,4 +1,5 @@
 #define INEEDWIDGET
+#define ELM_WIDGET_PROTECTED
 #include "../elementary_ext_priv.h"
 #include <regex.h>
 
@@ -656,31 +657,34 @@ _search_update(Eo *obj, Elm_File_Selector_Data *pd)
  * Key down Event stuff
  *======================================
  */
-EOLIAN static Eina_Bool
-_elm_file_selector_elm_widget_widget_event(Eo *obj, Elm_File_Selector_Data *pd, Evas_Object *source EINA_UNUSED, Evas_Callback_Type type, void *event_info)
-{
-   Evas_Event_Key_Down *ev;
 
-   if (type != EVAS_CALLBACK_KEY_DOWN)
+EOLIAN static Eina_Bool
+_elm_file_selector_elm_widget_widget_event(Eo *obj, Elm_File_Selector_Data *pd, const Efl_Event *eo_event, Efl_Canvas_Object *source EINA_UNUSED)
+{
+   Efl_Input_Key *ev;
+
+   if (eo_event->desc != EFL_EVENT_KEY_DOWN)
      return EINA_FALSE;
-   ev = event_info;
+   ev = eo_event->info;
+
    // XXX: add some code for more "general" shortcuts
-   if (evas_key_modifier_is_set(ev->modifiers, "Control") && (!strcmp(ev->key, "H") || !strcmp(ev->key, "h")))
+   if (efl_input_modifier_enabled_get(ev, EFL_INPUT_MODIFIER_CONTROL, NULL) && (!strcmp(efl_input_key_get(ev), "H") || !strcmp(efl_input_key_get(ev), "h")))
      {
         Eina_Bool b;
         b = elm_file_selector_show_hidden_file_get(obj);
         elm_file_selector_show_hidden_file_set(obj, !b);
      }
-   if (ev->string && strlen(ev->string) == 1 &&
-         (isprint(ev->string[0]) || ev->string[0] == '.')
+   const char *string = efl_input_key_string_get(ev);
+   if (string && strlen(string) == 1 &&
+         (isprint(string[0]) || string[0] == '.')
       )
      {
         if (!pd->search.buffer)
           pd->search.buffer = eina_strbuf_new();
-        eina_strbuf_append_char(pd->search.buffer, ev->string[0]);
+        eina_strbuf_append_char(pd->search.buffer, string[0]);
         _search_update(obj, pd);
      }
-   else if (!strcmp(ev->key, "BackSpace"))
+   else if (!strcmp(efl_input_key_get(ev), "BackSpace"))
      {
         int oldlength;
         char *oldstr;
@@ -708,7 +712,7 @@ _elm_file_selector_elm_widget_widget_event(Eo *obj, Elm_File_Selector_Data *pd, 
         free(oldstr);
         _search_update(obj, pd);
      }
-   else if (!strcmp(ev->key, "Escape"))
+   else if (!strcmp(efl_input_key_get(ev), "Escape"))
      {
         eina_strbuf_free(pd->search.buffer);
         pd->search.buffer = NULL;

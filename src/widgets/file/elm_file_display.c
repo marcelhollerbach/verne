@@ -1,4 +1,5 @@
 #define INEEDWIDGET
+#define ELM_WIDGET_PROTECTED
 #include "../elementary_ext_priv.h"
 
 #define PRIV_DATA(o) Elm_File_Display_Data *pd = efl_data_scope_get(o, ELM_FILE_DISPLAY_CLASS);
@@ -187,17 +188,18 @@ _elm_file_display_hide_bookmarks_get(Eo *obj EINA_UNUSED, Elm_File_Display_Data 
    return pd->hide_bookmarks;
 }
 
-EOLIAN static Eina_Bool
-_elm_file_display_elm_widget_widget_event(Eo *obj EINA_UNUSED, Elm_File_Display_Data *pd, Efl_Canvas_Object *source EINA_UNUSED, Evas_Callback_Type type, void *event_info)
-{
-   Evas_Event_Key_Down *ev;
 
-   if (type != EVAS_CALLBACK_KEY_DOWN)
+EOLIAN static Eina_Bool
+_elm_file_display_elm_widget_widget_event(Eo *obj, Elm_File_Display_Data *pd, const Efl_Event *eo_event, Efl_Canvas_Object *source EINA_UNUSED)
+{
+   Efl_Input_Key *ev;
+
+   if (eo_event->desc != EFL_EVENT_KEY_DOWN)
      return EINA_FALSE;
 
-   ev = event_info;
+   ev = eo_event->info;
 
-   if (!strcmp(ev->key, "F2"))
+   if (!strcmp(efl_input_key_get(ev), "F2"))
      {
         elm_file_detail_rename(pd->detail);
         return EINA_TRUE;
