@@ -141,21 +141,16 @@ _elm_dialog_efl_object_finalize(Eo *obj, Elm_Dialog_Data *pd)
 }
 
 EOLIAN static void
-_elm_dialog_elm_widget_part_text_set(Eo *obj EINA_UNUSED, Elm_Dialog_Data *pd, const char * part, const char *label)
+_elm_dialog_text_set(Eo *obj EINA_UNUSED, Elm_Dialog_Data *pd, const char *text)
 {
-   if (!part)
-     {
-        eina_stringshare_replace(&pd->main, label);
-        elm_object_text_set(pd->text, pd->main);
-     }
+   eina_stringshare_replace(&pd->main, text);
+   elm_object_text_set(pd->text, pd->main);
 }
 
-
 EOLIAN static const char *
-_elm_dialog_elm_widget_part_text_get(Eo *obj EINA_UNUSED, Elm_Dialog_Data *pd, const char * part)
+_elm_dialog_text_get(Eo *obj EINA_UNUSED, Elm_Dialog_Data *pd)
 {
-  if (!part) return pd->main;
-  return NULL;
+   return pd->main;
 }
 
 #include "elm_dialog.eo.x"

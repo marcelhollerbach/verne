@@ -160,7 +160,7 @@ _ask(Eina_List *passes, Efm_File *basic)
    obj = efl_add(ELM_DIALOG_CLASS, NULL);
    elm_win_title_set(obj, "Copy or Move");
    elm_dialog_icon_set(obj, "dialog-question");
-   elm_object_text_set(obj, eina_strbuf_string_get(buf));
+   elm_dialog_text_set(obj, eina_strbuf_string_get(buf));
    efl_key_data_set(obj, "__passes", passes);
    efl_key_data_set(obj, "__file", basic);
    bx = elm_dialog_control_box_get(obj);

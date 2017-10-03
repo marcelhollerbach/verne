@@ -14,9 +14,13 @@ class Elm.Dialog (Efl.Ui.Win, Efl.Container) {
                 box : Efl.Ui.Box;
             }
         }
+        @property text {
+            values {
+                text : string;
+            }
+        }
     }
     implements {
-        Elm.Widget.part_text { set; get; }
         Efl.Object.finalize;
         Efl.Container.content { get; set; }
         Efl.Container.content_unset;
