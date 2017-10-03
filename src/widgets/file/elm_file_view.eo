@@ -14,7 +14,7 @@ interface Elm.File.View {
       }
       search_items {
          params {
-            select : ptr(Eina.Rectangle);
+            select : Eina.Rect;
          }
          return : list<Elm.File.Icon>;
       }
@@ -38,9 +38,7 @@ interface Elm.File.View {
       }
       size_get {
          [[Give back the actual size where dnd and rect selection should work]]
-         params {
-            size : ptr(Eina.Rectangle);
-         }
+         return : Eina.Rect;
       }
       count {
          [[get the numbers of displayed items]]

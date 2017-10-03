@@ -12,7 +12,7 @@ typedef struct
 {
    struct {
      Evas_Object *selection;
-     Evas_Point startpoint;
+     Eina_Position2D startpoint;
    }event;
 
    struct {
@@ -310,8 +310,8 @@ _event_rect_mouse_move(void *data, const Efl_Event *event)
 {
    PRIV_DATA(data)
    Efl_Input_Pointer *ev = event->info;
-   Eina_Rectangle view, selection;
-   int move_x, move_y;
+   Eina_Rect view, selection;
+   Eina_Position2D move;
 
    if (!pd->event.selection)
      {
@@ -321,15 +321,14 @@ _event_rect_mouse_move(void *data, const Efl_Event *event)
         evas_object_show(pd->event.selection);
      }
 
-   selection.x = pd->event.startpoint.x;
-   selection.y = pd->event.startpoint.y;
+   selection.pos = pd->event.startpoint;
 
-   efl_input_pointer_position_get(ev, &move_x, &move_y);
+   move = efl_input_pointer_position_get(ev);
 
-   selection.w = move_x - pd->event.startpoint.x;
-   selection.h = move_y - pd->event.startpoint.y;
+   selection.w = move.x - pd->event.startpoint.x;
+   selection.h = move.y - pd->event.startpoint.y;
 
-   elm_file_view_size_get(pd->view.obj, &view);
+   view = elm_file_view_size_get(pd->view.obj);
 
    if (selection.w < 0)
      {
@@ -373,14 +372,14 @@ _event_rect_mouse_up(void *data, const Efl_Event *event)
 {
    PRIV_DATA(data);
    Eina_List *sel;
-   Eina_Rectangle selection;
+   Eina_Rect selection;
 
    evas_object_geometry_get(pd->event.selection, &selection.x, &selection.y, &selection.w, &selection.h);
    evas_object_del(pd->event.selection);
    pd->event.selection = NULL;
 
    /* call for selection*/
-   sel = elm_file_view_search_items(pd->view.obj, &selection);
+   sel = elm_file_view_search_items(pd->view.obj, selection);
    elm_file_view_selection_set(pd->view.obj, sel);
 
    efl_event_callback_del(event->object, EFL_EVENT_POINTER_MOVE, _event_rect_mouse_move, data);
@@ -393,21 +392,20 @@ _event_rect_mouse_down(void *data, const Efl_Event *event)
    PRIV_DATA(data)
    Eina_List *icons;
    Efl_Input_Pointer *ev = event->info;
-   Eina_Rectangle view, search;
+   Eina_Rect view, search;
 
-   EINA_RECTANGLE_SET(&search, 0, 0, 1, 1);
-   efl_input_pointer_position_get(ev, &search.x, &search.y);
+   search.pos = efl_input_pointer_position_get(ev);
+   search.size.h = search.size.w = 1;
 
-   icons = elm_file_view_search_items(pd->view.obj, &search);
-   elm_file_view_size_get(pd->view.obj, &view);
+   icons = elm_file_view_search_items(pd->view.obj, search);
+   view = elm_file_view_size_get(pd->view.obj);
 
-   if (!eina_rectangle_coords_inside(&view, search.x, search.y))
+   if (!eina_rectangle_coords_inside(&view.rect, search.pos.x, search.pos.y))
      return;
 
    if (efl_input_pointer_button_get(ev) == 1 && !icons)
      {
-        pd->event.startpoint.x = search.x;
-        pd->event.startpoint.y = search.y;
+        pd->event.startpoint = search.pos;
         efl_event_callback_add(event->object, EFL_EVENT_POINTER_MOVE, _event_rect_mouse_move, data);
         efl_event_callback_add(event->object, EFL_EVENT_POINTER_UP, _event_rect_mouse_up, data);
      }
@@ -429,10 +427,10 @@ _dnd_item_get_cb(Evas_Object *obj, Evas_Coord x, Evas_Coord y, int *xposret, int
    Eina_List *icons;
    Elm_File_Icon *icon;
    int xx,yy;
-   Eina_Rectangle search;
+   Eina_Rect search;
 
-   EINA_RECTANGLE_SET(&search, x, y, 1, 1);
-   icons = elm_file_view_search_items(obj, &search);
+   EINA_RECTANGLE_SET(&search.rect, x, y, 1, 1);
+   icons = elm_file_view_search_items(obj, search);
 
    if (!icons)
      return NULL;

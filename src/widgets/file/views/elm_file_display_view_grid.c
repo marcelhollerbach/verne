@@ -24,7 +24,7 @@ _elm_file_display_view_grid_elm_file_view_name_get(Eo *obj EINA_UNUSED, void *pd
 }
 
 EOLIAN static Eina_List*
-_elm_file_display_view_grid_elm_file_view_search_items(Eo *obj EINA_UNUSED, Elm_File_Display_View_Grid_Data *pd EINA_UNUSED, Eina_Rectangle *view)
+_elm_file_display_view_grid_elm_file_view_search_items(Eo *obj EINA_UNUSED, Elm_File_Display_View_Grid_Data *pd EINA_UNUSED, Eina_Rect view)
 {
    int x1 = 0, y1 = 0;
    Elm_Object_Item *it;
@@ -33,9 +33,9 @@ _elm_file_display_view_grid_elm_file_view_search_items(Eo *obj EINA_UNUSED, Elm_
 
    size = _calc_icon_size(pd->config.icon_size);
 
-   for (x1 = view->x; x1 < view->x+view->w; x1 += size)
+   for (x1 = view.x; x1 < view.x+view.w; x1 += size)
      {
-        for (y1 = view->y; y1 < view->y+view->h; y1 += size)
+        for (y1 = view.y; y1 < view.y+view.h; y1 += size)
           {
              Evas_Object *content;
 
@@ -134,10 +134,13 @@ _elm_file_display_view_grid_elm_file_view_iconsize_set(Eo *obj, Elm_File_Display
     elm_gengrid_item_size_set(obj, size, size);
 }
 
-EOLIAN static void
-_elm_file_display_view_grid_elm_file_view_size_get(Eo *obj, Elm_File_Display_View_Grid_Data *pd EINA_UNUSED, Eina_Rectangle *size)
+EOLIAN static Eina_Rect
+_elm_file_display_view_grid_elm_file_view_size_get(Eo *obj, Elm_File_Display_View_Grid_Data *pd EINA_UNUSED)
 {
-    elm_interface_scrollable_content_viewport_geometry_get(obj, &size->x, &size->y, &size->w, &size->h);
+    Eina_Rect size;
+    elm_interface_scrollable_content_viewport_geometry_get(obj, &size.x, &size.y, &size.w, &size.h);
+
+    return size;
 }
 
 static Evas_Object *

@@ -15,14 +15,14 @@ _elm_file_display_view_list_elm_file_view_name_get(Eo *obj EINA_UNUSED, void *pd
 }
 
 EOLIAN static Eina_List*
-_elm_file_display_view_list_elm_file_view_search_items(Eo *obj, Elm_File_Display_View_List_Data *pd EINA_UNUSED, Eina_Rectangle *search)
+_elm_file_display_view_list_elm_file_view_search_items(Eo *obj, Elm_File_Display_View_List_Data *pd EINA_UNUSED, Eina_Rect search)
 {
    Elm_Object_Item *item;
    Eina_List *result = NULL;
 
-   for (int x = search->x; x < search->x+search->w; x += 100)
+   for (int x = search.x; x < search.x+search.w; x += 100)
      {
-        for (int y = search->y; y < search->y+search->h; y += 100)
+        for (int y = search.y; y < search.y+search.h; y += 100)
           {
              Evas_Object *icon;
              item = elm_genlist_at_xy_item_get(obj, x, y, 0);
@@ -112,10 +112,12 @@ _elm_file_display_view_list_elm_file_view_file_set(Eo *obj, Elm_File_Display_Vie
   elm_genlist_clear(obj);
 }
 
-EOLIAN static void
-_elm_file_display_view_list_elm_file_view_size_get(Eo *obj EINA_UNUSED, Elm_File_Display_View_List_Data *pd EINA_UNUSED, Eina_Rectangle *size)
+EOLIAN static Eina_Rect
+_elm_file_display_view_list_elm_file_view_size_get(Eo *obj EINA_UNUSED, Elm_File_Display_View_List_Data *pd EINA_UNUSED)
 {
-   elm_interface_scrollable_content_viewport_geometry_get(obj, &size->x, &size->y, &size->w, &size->h);
+   Eina_Rect size;
+   elm_interface_scrollable_content_viewport_geometry_get(obj, &size.x, &size.y, &size.w, &size.h);
+   return size;
 }
 
 EOLIAN static void
