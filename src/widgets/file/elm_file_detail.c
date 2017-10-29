@@ -1050,7 +1050,7 @@ _name_init(Evas_Object *obj, Elm_Box *box)
 
    pd->name.change_display = elm_entry_add(obj);
    efl_event_callback_add(pd->name.change_display, EFL_EVENT_KEY_DOWN, _key_down, obj);
-   efl_event_callback_add(pd->name.change_display, ELM_WIDGET_EVENT_UNFOCUSED, _focus_out, obj);
+   efl_event_callback_add(pd->name.change_display, EFL_UI_WIDGET_EVENT_UNFOCUSED, _focus_out, obj);
    elm_entry_single_line_set(pd->name.change_display, EINA_TRUE);
    elm_entry_scrollable_set(pd->name.change_display, EINA_TRUE);
    evas_object_size_hint_align_set(pd->name.change_display, EVAS_HINT_FILL, EVAS_HINT_FILL);
